@@ -109,7 +109,7 @@ namespace Questor
 
             if (!LoginToEVE.LoadDirectEVEInstance()) return;
             
-            if (!LoginToEVE.VerifyDirectEVESupportInstancesAvailable()) return;
+            //if (!LoginToEVE.VerifyDirectEVESupportInstancesAvailable()) return;
             
             if (!Logging.DebugDisableAutoLogin)
             {

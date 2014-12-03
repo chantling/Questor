@@ -80,33 +80,7 @@ namespace ValueDump
                 return;
             }
             #endregion Load DirectEVE
-
-            #region Verify DirectEVE Support Instances
-            //
-            // Verify DirectEVE Support Instances
-            //
-
-            try
-            {
-                if (Cache.Instance.DirectEve != null && Cache.Instance.DirectEve.HasSupportInstances())
-                {
-                    Logging.Log("ValueDump", "You have a valid directeve.lic file and have instances available", Logging.Orange);
-                }
-                else
-                {
-                    Logging.Log("ValueDump", "You have 0 Support Instances available [ Cache.Instance.DirectEve.HasSupportInstances() is false ]", Logging.Orange);
-                    return;
-                }
-
-            }
-            catch (Exception exception)
-            {
-                Logging.Log("ValueDump", "Exception while checking: _directEve.HasSupportInstances() - exception was: [" + exception + "]", Logging.Orange);
-                return;
-            }
-
-            #endregion Verify DirectEVE Support Instances
-
+            
             try
             {
                 Cache.Instance.DirectEve.OnFrame += ValuedumpOnFrame;
