@@ -456,6 +456,17 @@ namespace Questor
 
             Time.Instance.LastFrame = DateTime.UtcNow;
 
+            int pulseDelay = 400;
+            if (Cache.Instance.InSpace) pulseDelay = 800;
+            if (Cache.Instance.InStation) pulseDelay = 400;
+
+            if (DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < pulseDelay)
+            {
+                return false;
+            }
+            
+            _lastQuestorPulse = DateTime.UtcNow;
+
             if (Cache.Instance.DirectEve.Login.AtLogin)
             {
                 if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.DirectEve.Login.AtLogin)", Logging.Debug);
@@ -474,17 +485,6 @@ namespace Questor
                 if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (!Cache.Instance.InSpace && !Cache.Instance.InStation)", Logging.Debug);
                 return false;
             }
-
-            int pulseDelay = 400;
-            if (Cache.Instance.InSpace) pulseDelay = 800;
-            if (Cache.Instance.InStation) pulseDelay = 400;
-
-            if (DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < pulseDelay)
-            {
-                return false;
-            }
-            
-            _lastQuestorPulse = DateTime.UtcNow;
 
             if (!Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
             {
@@ -572,7 +572,7 @@ namespace Questor
             
             if (Cache.Instance.Paused ) //|| DateTime.UtcNow < _nextQuestorAction)
             {
-                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.Paused || DateTime.UtcNow < _nextQuestorAction)", Logging.Debug);
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.Paused)", Logging.Debug);
                 Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
                 Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
                 Cache.Instance.GotoBaseNow = false;
