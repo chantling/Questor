@@ -898,5 +898,17 @@ namespace Questor.Modules.Activities
                 return false;
             }
         }
+
+        public static void SoftwareDetailsCCPMaySee()
+        {
+            string computerName = Environment.MachineName;
+            string userName = Environment.UserName;
+            string osVersion = Environment.OSVersion.ToString();
+        }
+
+        public static void HardwareDetailsCCPMaySee()
+        {
+            
+        }
     }
 }

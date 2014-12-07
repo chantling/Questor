@@ -63,6 +63,7 @@ namespace Questor.Modules.Combat
         private static int _weaponNumber;
         private static int MaxCharges { get; set; }
         private static DateTime _lastCombatProcessState;
+        private static DateTime _lastReloadAll;
         private static int _reloadAllIteration;
         public static IEnumerable<EntityCache> highValueTargetsTargeted;
         public static IEnumerable<EntityCache> lowValueTargetsTargeted;
@@ -1283,7 +1284,15 @@ namespace Questor.Modules.Combat
         // (enough/correct) ammo is loaded, false if wrong/not enough ammo is loaded
         private static bool ReloadNormalAmmo(ModuleCache weapon, EntityCache entity, int weaponNumber, bool force = false)
         {
-            if (Combat.WeaponGroupId == 53) return true;
+            if (Cache.Instance.Weapons.Any(i => i.TypeId == (int)TypeID.CivilianGatlingAutocannon
+                                                 || i.TypeId == (int)TypeID.CivilianGatlingPulseLaser
+                                                 || i.TypeId == (int)TypeID.CivilianGatlingRailgun
+                                                 || i.TypeId == (int)TypeID.CivilianLightElectronBlaster))
+            {
+                //Logging.Log("ReloadAll", "Civilian guns do not use ammo.", Logging.Debug);
+                return true;
+            }
+
             if (entity == null)
             {
                 entity = Cache.Instance.MyShipEntity;
@@ -1608,7 +1617,15 @@ namespace Questor.Modules.Combat
 
         private static bool ReloadEnergyWeaponAmmo(ModuleCache weapon, EntityCache entity, int weaponNumber)
         {
-            if (Combat.WeaponGroupId == 53) return true;
+            if (Cache.Instance.Weapons.Any(i => i.TypeId == (int)TypeID.CivilianGatlingAutocannon
+                                                 || i.TypeId == (int)TypeID.CivilianGatlingPulseLaser
+                                                 || i.TypeId == (int)TypeID.CivilianGatlingRailgun
+                                                 || i.TypeId == (int)TypeID.CivilianLightElectronBlaster))
+            {
+                //Logging.Log("ReloadAll", "Civilian guns do not use ammo.", Logging.Debug);
+                return true;
+            }
+
             // Get ammo based on damage type
             IEnumerable<Ammo> correctAmmo = Combat.Ammo.Where(a => a.DamageType == MissionSettings.CurrentDamageType).ToList();
 
@@ -1718,40 +1735,55 @@ namespace Questor.Modules.Combat
         {
             // We need the cargo bay open for both reload actions
             //if (!Cache.Instance.OpenCargoHold("Combat: ReloadAmmo")) return false;
-            if (weapon.GroupId == 53) return true;
+            if (Cache.Instance.Weapons.Any(i => i.TypeId == (int)TypeID.CivilianGatlingAutocannon
+                                             || i.TypeId == (int)TypeID.CivilianGatlingPulseLaser
+                                             || i.TypeId == (int)TypeID.CivilianGatlingRailgun
+                                             || i.TypeId == (int)TypeID.CivilianLightElectronBlaster))
+            {
+                Logging.Log("ReloadAll", "Civilian guns do not use ammo.", Logging.Debug);
+                return true;
+            }
 
             return weapon.IsEnergyWeapon ? ReloadEnergyWeaponAmmo(weapon, entity, weaponNumber) : ReloadNormalAmmo(weapon, entity, weaponNumber, force);
         }
 
         public static bool ReloadAll(EntityCache entity, bool force = false)
         {
-            if (Logging.DebugReloadAll)
+            const int reloadAllDelay = 400;
+            if (DateTime.UtcNow.Subtract(_lastReloadAll).TotalMilliseconds < reloadAllDelay)
             {
-                if (Cache.Instance.MyShipEntity.Name == Settings.Instance.TransportShipName)
-                {
-                    Logging.Log("ReloadAll", "You are in your TransportShip named [" + Settings.Instance.TransportShipName + "], no need to reload ammo!", Logging.Debug);
-                    return true;
-                }
-
-                if (Cache.Instance.MyShipEntity.Name == Settings.Instance.TravelShipName)
-                {
-                    Logging.Log("ReloadAll", "You are in your TravelShipName named [" + Settings.Instance.TravelShipName + "], no need to reload ammo!", Logging.Debug);
-                    return true;
-                }
-
-                if (Cache.Instance.MyShipEntity.GroupId == (int)Group.Shuttle)
-                {
-                    Logging.Log("ReloadAll", "You are in a Shuttle, no need to reload ammo!", Logging.Debug);
-                    return true;
-                }
-
-                if (Combat.WeaponGroupId == 53)
-                {
-                    Logging.Log("ReloadAll", "Your guns do not use ammo. [ WeaponGroupId is 53 ]", Logging.Debug);
-                    return true;
-                }
+                return false;
             }
 
+            _lastReloadAll = DateTime.UtcNow;
+            
+            if (Cache.Instance.MyShipEntity.Name == Settings.Instance.TransportShipName)
+            {
+                if (Logging.DebugReloadAll) Logging.Log("ReloadAll", "You are in your TransportShip named [" + Settings.Instance.TransportShipName + "], no need to reload ammo!", Logging.Debug);
+                return true;
+            }
+
+            if (Cache.Instance.MyShipEntity.Name == Settings.Instance.TravelShipName)
+            {
+                if (Logging.DebugReloadAll) Logging.Log("ReloadAll", "You are in your TravelShipName named [" + Settings.Instance.TravelShipName + "], no need to reload ammo!", Logging.Debug);
+                return true;
+            }
+
+            if (Cache.Instance.MyShipEntity.GroupId == (int)Group.Shuttle)
+            {
+                if (Logging.DebugReloadAll) Logging.Log("ReloadAll", "You are in a Shuttle, no need to reload ammo!", Logging.Debug);
+                return true;
+            }
+
+            if (Cache.Instance.Weapons.Any(i => i.TypeId == (int)TypeID.CivilianGatlingAutocannon
+                                                || i.TypeId == (int)TypeID.CivilianGatlingPulseLaser
+                                                || i.TypeId == (int)TypeID.CivilianGatlingRailgun
+                                                || i.TypeId == (int)TypeID.CivilianLightElectronBlaster))
+            {
+                if (Logging.DebugReloadAll) Logging.Log("ReloadAll", "Civilian guns do not use ammo.", Logging.Debug);
+                return true;
+            }
+            
             _weaponNumber = 0;
             if (Logging.DebugReloadAll) Logging.Log("debug ReloadAll:", "Weapons (or stacks of weapons?): [" + Cache.Instance.Weapons.Count() + "]", Logging.Orange);
 

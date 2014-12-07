@@ -1261,7 +1261,10 @@ namespace Questor.Modules.Actions
                 return false;
             }
 
-            if (Combat.WeaponGroupId == 53) //civilian guns of all types
+            if (Cache.Instance.Weapons.Any(i => i.TypeId == (int)TypeID.CivilianGatlingAutocannon
+                                                 || i.TypeId == (int)TypeID.CivilianGatlingPulseLaser
+                                                 || i.TypeId == (int)TypeID.CivilianGatlingRailgun
+                                                 || i.TypeId == (int)TypeID.CivilianLightElectronBlaster))
             {
                 Logging.Log("Arm.MoveItems", "No ammo needed for civilian guns: done", Logging.White);
                 ChangeArmState(ArmState.MoveAmmo);
@@ -1304,7 +1307,10 @@ namespace Questor.Modules.Actions
                     return false;
                 }
 
-                if (Combat.WeaponGroupId == 53) //civilian guns of all types
+                if (Cache.Instance.Weapons.Any(i => i.TypeId == (int)TypeID.CivilianGatlingAutocannon
+                                                 || i.TypeId == (int)TypeID.CivilianGatlingPulseLaser
+                                                 || i.TypeId == (int)TypeID.CivilianGatlingRailgun
+                                                 || i.TypeId == (int)TypeID.CivilianLightElectronBlaster))
                 {
                     Logging.Log(WeAreInThisStateForLogs(), "No ammo needed for civilian guns: done", Logging.White);
                     ChangeArmState(ArmState.StackAmmoHangar);
