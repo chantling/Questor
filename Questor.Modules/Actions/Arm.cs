@@ -90,8 +90,8 @@ namespace Questor.Modules.Actions
         {
             try
             {
-                MissionSettings.AmmoTypesToLoad = new List<Ammo>();
-                MissionSettings.AmmoTypesToLoad.AddRange(Combat.Ammo.Where(a => a.DamageType == _damageType).Select(a => a.Clone()));
+                MissionSettings.AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
+                MissionSettings.AmmoTypesToLoad.AddOrUpdate(Combat.Ammo.Where(a => a.DamageType == _damageType).Select(a => a.Clone()).FirstOrDefault(), DateTime.UtcNow);
             }
             catch (Exception ex)
             {
@@ -1326,7 +1326,7 @@ namespace Questor.Modules.Actions
                 // make sure we actually have something in the list of AmmoToLoad before trying to load ammo.
                 //
 
-                Ammo CurrentAmmoToLoad = MissionSettings.AmmoTypesToLoad.FirstOrDefault();
+                Ammo CurrentAmmoToLoad = MissionSettings.AmmoTypesToLoad.FirstOrDefault().Key;
                 if (CurrentAmmoToLoad == null)
                 {
                     if (Logging.DebugArm) Logging.Log("Arm.MoveAmmo", "We have no more ammo types to be loaded. We have to be finished with arm.", Logging.Debug);
@@ -1354,9 +1354,9 @@ namespace Questor.Modules.Actions
                             return false;
                         }
 
-                        foreach (Ammo ammo in MissionSettings.AmmoTypesToLoad)
+                        foreach (KeyValuePair<Ammo, DateTime> ammo in MissionSettings.AmmoTypesToLoad)
                         {
-                            Logging.Log("Arm", "Ammohangar was Missing [" + ammo.Quantity + "] units of ammo: [ " + ammo.Description + " ] with TypeId [" + ammo.TypeId + "] trying item hangar next", Logging.Orange);
+                            Logging.Log("Arm", "Ammohangar was Missing [" + ammo.Key.Quantity + "] units of ammo: [ " + ammo.Key.Description + " ] with TypeId [" + ammo.Key.TypeId + "] trying item hangar next", Logging.Orange);
                         }
 
                         try
@@ -1380,9 +1380,9 @@ namespace Questor.Modules.Actions
                                     return false;
                                 }
 
-                                foreach (Ammo ammo in MissionSettings.AmmoTypesToLoad)
+                                foreach (KeyValuePair<Ammo, DateTime> ammo in MissionSettings.AmmoTypesToLoad)
                                 {
-                                    Logging.Log("Arm", "Itemhangar was Missing [" + ammo.Quantity + "] units of ammo: [ " + ammo.Description + " ] with TypeId [" + ammo.TypeId + "]", Logging.Orange);
+                                    Logging.Log("Arm", "Itemhangar was Missing [" + ammo.Key.Quantity + "] units of ammo: [ " + ammo.Key.Description + " ] with TypeId [" + ammo.Key.TypeId + "]", Logging.Orange);
                                 }
 
                                 ChangeArmState(ArmState.NotEnoughAmmo);
@@ -1430,7 +1430,7 @@ namespace Questor.Modules.Actions
                                             //
                                             // if we have moved all the ammo of this type that needs to be moved remove this type of ammo from the list of ammos that need to be moved
                                             // 
-                                            MissionSettings.AmmoTypesToLoad.RemoveAll(a => a.TypeId == CurrentAmmoToLoad.TypeId);
+                                            MissionSettings.AmmoTypesToLoad.Remove(CurrentAmmoToLoad);
                                             return false;
                                         }
                                     }
@@ -1457,9 +1457,9 @@ namespace Questor.Modules.Actions
 
                 if (MissionSettings.AmmoTypesToLoad.Any()) //if we still have any ammo to load here then we must be missing ammo
                 {
-                    foreach (Ammo ammo in MissionSettings.AmmoTypesToLoad)
+                    foreach (KeyValuePair<Ammo, DateTime> ammo in MissionSettings.AmmoTypesToLoad)
                     {
-                        Logging.Log("Arm.MoveAmmo", "Missing [" + ammo.Quantity + "] units of ammo: [ " + ammo.Description + " ] with TypeId [" + ammo.TypeId + "]", Logging.Orange);
+                        Logging.Log("Arm.MoveAmmo", "Missing [" + ammo.Key.Quantity + "] units of ammo: [ " + ammo.Key.Description + " ] with TypeId [" + ammo.Key.TypeId + "]", Logging.Orange);
                     }
 
                     ChangeArmState(ArmState.NotEnoughAmmo);
@@ -1587,8 +1587,7 @@ namespace Questor.Modules.Actions
                         //
                         // if we have moved all the ammo of this type that needs to be moved remove this type of ammo from the list of ammos that need to be moved
                         // 
-                        MissionSettings.AmmoTypesToLoad.RemoveAll(a => a.TypeId == CurrentMiningCrystalsToLoad.TypeId);
-                        CrystalsToLoad.RemoveAll(a => a.TypeId == CurrentMiningCrystalsToLoad.TypeId);
+                        CrystalsToLoad.Remove(CurrentMiningCrystalsToLoad);
                         return false;
                     }
 

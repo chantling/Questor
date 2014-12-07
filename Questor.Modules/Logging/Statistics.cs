@@ -1,5 +1,7 @@
 ﻿
 
+using Questor.Modules.Actions;
+
 namespace Questor.Modules.Logging
 {
     using System;
@@ -876,7 +878,7 @@ namespace Questor.Modules.Logging
             }
 
             // Seeing as we completed a mission, we will have loyalty points for this agent
-            if (Cache.Instance.Agent.LoyaltyPoints == -1)
+            if (AgentInteraction.Agent.LoyaltyPoints == -1)
             {
                 AgentLPRetrievalAttempts++;
                 Logging.Log("Statistics", "WriteMissionStatistics: We do not have loyalty points with the current agent yet, still -1, attempt # [" + AgentLPRetrievalAttempts + "] retrying...", Logging.White);
@@ -889,7 +891,7 @@ namespace Questor.Modules.Logging
             if (Logging.DebugStatistics) Logging.Log("Statistics", "We jumped through all the hoops: now do the mission logging", Logging.White);
             SessionIskGenerated = (SessionIskGenerated + (Cache.Instance.MyWalletBalance - Cache.Instance.Wealth));
             SessionLootGenerated = (SessionLootGenerated + Statistics.LootValue);
-            SessionLPGenerated = (SessionLPGenerated + (Cache.Instance.Agent.LoyaltyPoints - Statistics.LoyaltyPoints));
+            SessionLPGenerated = (SessionLPGenerated + (AgentInteraction.Agent.LoyaltyPoints - Statistics.LoyaltyPoints));
             Logging.Log("Statistics", "Printing All Statistics Related Variables to the console log:", Logging.White);
             Logging.Log("Statistics", "Mission Name: [" + MissionSettings.MissionName + "]", Logging.White);
             Logging.Log("Statistics", "Faction: [" + MissionSettings.FactionName + "]", Logging.White);
@@ -902,7 +904,7 @@ namespace Questor.Modules.Logging
             Logging.Log("Statistics", "Wealth before mission: [ " + Cache.Instance.Wealth + "]", Logging.White);
             Logging.Log("Statistics", "Wealth after mission: [ " + Cache.Instance.MyWalletBalance + "]", Logging.White);
             Logging.Log("Statistics", "Value of Loot from the mission: [" + Statistics.LootValue + "]", Logging.White);
-            Logging.Log("Statistics", "Total LP after mission:  [" + Cache.Instance.Agent.LoyaltyPoints + "]", Logging.White);
+            Logging.Log("Statistics", "Total LP after mission:  [" + AgentInteraction.Agent.LoyaltyPoints + "]", Logging.White);
             Logging.Log("Statistics", "Total LP before mission: [" + Statistics.LoyaltyPoints + "]", Logging.White);
             Logging.Log("Statistics", "LostDrones: [" + Statistics.LostDrones + "]", Logging.White);
             Logging.Log("Statistics", "DroneRecalls: [" + Statistics.DroneRecalls + "]", Logging.White);
@@ -950,7 +952,7 @@ namespace Questor.Modules.Logging
                 line += ((int)DateTime.UtcNow.Subtract(Statistics.StartedMission).TotalMinutes) + ";";                             // Total Time doing Mission
                 line += ((int)(Cache.Instance.MyWalletBalance - Cache.Instance.Wealth)) + ";";                                              // Isk (balance difference from start and finish of mission: is not accurate as the wallet ticks from bounty kills are every x minutes)
                 line += Statistics.LootValue + ";";                                                                                // Loot
-                line += (Cache.Instance.Agent.LoyaltyPoints - Statistics.LoyaltyPoints) + ";\r\n";                                 // LP
+                line += (AgentInteraction.Agent.LoyaltyPoints - Statistics.LoyaltyPoints) + ";\r\n";                                 // LP
 
                 // The mission is finished
                 File.AppendAllText(MissionStats1LogFile, line);
@@ -978,7 +980,7 @@ namespace Questor.Modules.Logging
                 line2 += ((int)Statistics.FinishedMission.Subtract(Statistics.StartedMission).TotalMinutes) + ";"; // TimeMission
                 line2 += ((int)(Cache.Instance.MyWalletBalance - Cache.Instance.Wealth)) + ";";                                      // Isk
                 line2 += Statistics.LootValue + ";";                                                                        // Loot
-                line2 += (Cache.Instance.Agent.LoyaltyPoints - Statistics.LoyaltyPoints) + ";";                             // LP
+                line2 += (AgentInteraction.Agent.LoyaltyPoints - Statistics.LoyaltyPoints) + ";";                             // LP
                 line2 += Statistics.LostDrones + ";";                                                                       // Lost Drones
                 line2 += Statistics.AmmoConsumption + ";";                                                                  // Ammo Consumption
                 line2 += Statistics.AmmoValue + ";\r\n";                                                                    // Ammo Value
@@ -1009,7 +1011,7 @@ namespace Questor.Modules.Logging
                 line3 += ((int)Statistics.FinishedMission.Subtract(Statistics.StartedMission).TotalMinutes) + ";";         // TimeMission
                 line3 += ((long)(Cache.Instance.MyWalletBalance - Cache.Instance.Wealth)) + ";";                                             // Isk
                 line3 += ((long)Statistics.LootValue) + ";";                                                                        // Loot
-                line3 += ((long)Cache.Instance.Agent.LoyaltyPoints - Statistics.LoyaltyPoints) + ";";                               // LP
+                line3 += ((long)AgentInteraction.Agent.LoyaltyPoints - Statistics.LoyaltyPoints) + ";";                               // LP
                 line3 += Statistics.DroneRecalls + ";";                                                                             // Lost Drones
                 line3 += "LostDrones:" + Statistics.LostDrones + ";";                                                               // Lost Drones
                 line3 += Statistics.AmmoConsumption + ";";                                                                          // Ammo Consumption
@@ -1066,7 +1068,7 @@ namespace Questor.Modules.Logging
             // Disable next log line
             Statistics.MissionLoggingCompleted = true;
             Statistics.LootValue = 0;
-            Statistics.LoyaltyPoints = Cache.Instance.Agent.LoyaltyPoints;
+            Statistics.LoyaltyPoints = AgentInteraction.Agent.LoyaltyPoints;
             Statistics.StartedMission = DateTime.UtcNow;
             Statistics.FinishedMission = DateTime.UtcNow; //this may need to be reset to DateTime.MinValue, but that was causing other issues...
             MissionSettings.MissionName = string.Empty;

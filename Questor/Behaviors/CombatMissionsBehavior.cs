@@ -97,14 +97,14 @@ namespace Questor.Behaviors
                 return false;
             }
 
-            if (Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid)
+            if (AgentInteraction.Agent == null || !AgentInteraction.Agent.IsValid)
             {
+                AgentInteraction.AgentId = Cache.Instance.AgentId;
                 Logging.Log("Settings", "Unable to locate agent [" + Cache.Instance.CurrentAgent + "]", Logging.White);
                 ValidSettings = false;
                 return false;
             }
-
-            AgentInteraction.AgentId = Cache.Instance.AgentId;
+            
             return true;
         }
 
@@ -158,7 +158,7 @@ namespace Questor.Behaviors
             {
                 if (Logging.DebugWeShouldBeInSpaceORInStationAndOutOfSessionChange) Logging.Log("Debug3", "if (!Cache.Instance.InSpace && !Cache.Instance.InStation)", Logging.Debug);
                 //wait... we must be in a session change
-                return false;
+                //return false;
             }
 
             if ((Cache.Instance.InStation && DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(16)) || //if we are in Station and are still in session change
@@ -1320,10 +1320,17 @@ namespace Questor.Behaviors
             {
                 return false;
             }
+
             // Only pulse state changes every 1.5s
-            //if (DateTime.UtcNow.Subtract(_lastPulse).TotalMilliseconds < Time.Instance.QuestorPulse_milliseconds) //default: 1500ms
-            //    return;
-            //_lastPulse = DateTime.UtcNow;
+
+            int pulseDelay = 400;
+            if (Cache.Instance.InSpace) pulseDelay = 800;
+            if (Cache.Instance.InStation) pulseDelay = 400;
+
+            if (DateTime.UtcNow.Subtract(_lastPulse).TotalMilliseconds < pulseDelay) 
+                return false;
+            
+            _lastPulse = DateTime.UtcNow;
 
             // Invalid settings, quit while we're ahead
             if (!ValidSettings)
@@ -1459,6 +1466,7 @@ namespace Questor.Behaviors
 
         public void ProcessState()
         {
+            if (Logging.DebugCombatMissionBehavior) Logging.Log("CombatMissionBehavior", "public void ProcessState()", Logging.Debug);
             if (!CMBEveryPulse()) return;
 
             switch (_States.CurrentCombatMissionBehaviorState)

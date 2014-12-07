@@ -165,7 +165,7 @@ namespace QuestorManager
                             System.Threading.Thread.Sleep(50);
                         }
 
-                        Logging.Log("Startup", "Launching QuestorUI", Logging.Teal);
+                        Logging.Log("Startup", "Launching QuestorManagerUI", Logging.Teal);
                         Application.Run(new QuestorManagerUI());
 
                         while (!Cleanup.SignalToQuitQuestor)

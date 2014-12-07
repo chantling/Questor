@@ -504,7 +504,7 @@ namespace Questor.Modules.Logging
 
         public static void ShowConsoleWindow()
         {
-            Logging.Log("AdaptEVE", "Showing Console Window", Logging.White);
+            Logging.Log("Adapt", "Showing Console Window", Logging.White);
             IntPtr handle = GetConsoleWindow();
             if (handle == IntPtr.Zero)
             {
@@ -518,7 +518,7 @@ namespace Questor.Modules.Logging
 
         public static void HideConsoleWindow()
         {
-            Logging.Log("AdaptEVE", "Hiding Console Window", Logging.White);
+            Logging.Log("Adapt", "Hiding Console Window", Logging.White);
             IntPtr handle = GetConsoleWindow();
             ShowWindow(handle, SW_HIDE);
         }
@@ -559,6 +559,7 @@ namespace Questor.Modules.Logging
         public static bool DebugChat { get; set; }
         public static bool DebugCleanup { get; set; }
         public static bool DebugClearPocket { get; set; }
+        public static bool DebugCombatMissionBehavior { get; set; }
         public static bool DebugCourierMissions { get; set; }
         public static bool DebugDecline { get; set; }
         public static bool DebugDefense { get; set; }
@@ -614,6 +615,7 @@ namespace Questor.Modules.Logging
         public static bool DebugPreLogin { get; set; }
         public static bool DebugQuestorLoader { get; set; }
         public static bool DebugQuestorManager { get; set; }
+        public static bool DebugQuestorEVEOnFrame { get; set; }
         public static bool DebugReloadAll { get; set; }
         public static bool DebugReloadorChangeAmmo { get; set; }
         public static bool DebugRemoteRepair { get; set; }

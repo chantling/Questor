@@ -308,6 +308,7 @@ namespace Questor.Modules.Lookup
                 Logging.DebugChat = (bool?)CharacterSettingsXml.Element("debugChat") ?? (bool?)CommonSettingsXml.Element("debugChat") ?? false;
                 Logging.DebugCleanup = (bool?)CharacterSettingsXml.Element("debugCleanup") ?? (bool?)CommonSettingsXml.Element("debugCleanup") ?? false;
                 Logging.DebugClearPocket = (bool?)CharacterSettingsXml.Element("debugClearPocket") ?? (bool?)CommonSettingsXml.Element("debugClearPocket") ?? false;
+                Logging.DebugCombatMissionBehavior = (bool?)CharacterSettingsXml.Element("debugCombatMissionBehavior") ?? (bool?)CommonSettingsXml.Element("debugCombatMissionBehavior") ?? false;
                 Logging.DebugCourierMissions = (bool?)CharacterSettingsXml.Element("debugCourierMissions") ?? (bool?)CommonSettingsXml.Element("debugCourierMissions") ?? false;
                 Logging.DebugDecline = (bool?)CharacterSettingsXml.Element("debugDecline") ?? (bool?)CommonSettingsXml.Element("debugDecline") ?? false;
                 Logging.DebugDefense = (bool?)CharacterSettingsXml.Element("debugDefense") ?? (bool?)CommonSettingsXml.Element("debugDefense") ?? false;
@@ -364,6 +365,7 @@ namespace Questor.Modules.Lookup
                 Logging.DebugPreferredPrimaryWeaponTarget = (bool?)CharacterSettingsXml.Element("debugPreferredPrimaryWeaponTarget") ?? (bool?)CommonSettingsXml.Element("debugPreferredPrimaryWeaponTarget") ?? false;
                 Logging.DebugPreLogin = (bool?)CharacterSettingsXml.Element("debugPreferredPrimaryWeaponTarget") ?? (bool?)CommonSettingsXml.Element("debugPreferredPrimaryWeaponTarget") ?? false;
                 Logging.DebugQuestorManager = (bool?)CharacterSettingsXml.Element("debugQuestorManager") ?? (bool?)CommonSettingsXml.Element("debugQuestorManager") ?? false;
+                Logging.DebugQuestorEVEOnFrame = (bool?)CharacterSettingsXml.Element("debugQuestorEVEOnFrame") ?? (bool?)CommonSettingsXml.Element("debugQuestorEVEOnFrame") ?? false;
                 Logging.DebugReloadAll = (bool?)CharacterSettingsXml.Element("debugReloadAll") ?? (bool?)CommonSettingsXml.Element("debugReloadAll") ?? false;
                 Logging.DebugReloadorChangeAmmo = (bool?)CharacterSettingsXml.Element("debugReloadOrChangeAmmo") ?? (bool?)CommonSettingsXml.Element("debugReloadOrChangeAmmo") ?? false;
                 Logging.DebugRemoteRepair = (bool?)CharacterSettingsXml.Element("debugRemoteRepair") ?? (bool?)CommonSettingsXml.Element("debugRemoteRepair") ?? false;

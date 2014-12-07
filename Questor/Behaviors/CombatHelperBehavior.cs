@@ -28,6 +28,7 @@ namespace Questor.Behaviors
     public class CombatHelperBehavior
     {
         public DateTime LastAction;
+        private DateTime _lastPulse;
         public static long AgentID;
 
         private readonly Stopwatch _watch;
@@ -37,6 +38,7 @@ namespace Questor.Behaviors
         private bool ValidSettings { get; set; }
 
         public static int CombatHelperBehaviorInstances = 0;
+        public static DateTime LastCombatMissionBehaviorPulse = DateTime.UtcNow;
 
         public CombatHelperBehavior()
         {
@@ -122,6 +124,15 @@ namespace Questor.Behaviors
 
         public void ProcessState()
         {
+            int pulseDelay = 400;
+            if (Cache.Instance.InSpace) pulseDelay = 800;
+            if (Cache.Instance.InStation) pulseDelay = 400;
+
+            if (DateTime.UtcNow.Subtract(_lastPulse).TotalMilliseconds < pulseDelay)
+                return;
+
+            _lastPulse = DateTime.UtcNow;
+
             // Invalid settings, quit while we're ahead
             if (!ValidSettings)
             {

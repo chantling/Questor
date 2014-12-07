@@ -1,4 +1,6 @@
 ﻿
+using Questor.Modules.Lookup;
+
 namespace Questor
 {
     using System;
@@ -80,7 +82,6 @@ namespace Questor
             //    }
             //}
 
-            
             ParseArgs(args);
             if (LoginToEVE.OptionallyLoadPreLoginSettingsFromINI(args))
             {
@@ -111,6 +112,8 @@ namespace Questor
             
             //if (!LoginToEVE.VerifyDirectEVESupportInstancesAvailable()) return;
             
+            Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;
+
             if (!Logging.DebugDisableAutoLogin)
             {
                 try
@@ -161,7 +164,7 @@ namespace Questor
                         _questor = new Questor();
 
                         int intdelayQuestorUI = 0;
-                        while (intdelayQuestorUI < 50) //2.5sec = 50ms x 50
+                        while (intdelayQuestorUI < 200) //10sec = 200ms x 50
                         {
                             intdelayQuestorUI++;
                             System.Threading.Thread.Sleep(50);

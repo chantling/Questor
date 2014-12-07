@@ -23,8 +23,8 @@ namespace Questor.Modules.Lookup
         public int LootingDelay_milliseconds = 800;                         // Delay between loot attempts
         public int WarpScrambledNoDelay_seconds = 10;                       // Time after you are no longer warp scrambled to consider it IMPORTANT That you warp soon
         public int RemoveBookmarkDelay_seconds = 5;                         // Delay between each removal of a bookmark
-        public int QuestorPulseInSpace_milliseconds = 600;                  // Used to delay the next pulse, units: milliseconds. Default is 600
-        public int QuestorPulseInStation_milliseconds = 400;                // Used to delay the next pulse, units: milliseconds. Default is 400
+        public int QuestorPulseInSpace_milliseconds = 1500;                 // Used to delay the next pulse, units: milliseconds. Default is 600
+        public int QuestorPulseInStation_milliseconds = 500;                // Used to delay the next pulse, units: milliseconds. Default is 400
         public int DefenceDelay_milliseconds = 1500;                        // Delay between defence actions
         public int AfterburnerDelay_milliseconds = 3500;                    //
         public int RepModuleDelay_milliseconds = 2500;                      //
@@ -40,7 +40,7 @@ namespace Questor.Modules.Lookup
         public int WebDelay_milliseconds = 220;                             //
         public int RemoteRepairerDelay_milliseconds = 220;                  //
         public int WarpDisruptorDelay_milliseconds = 220;                   //
-        public int PainterDelay_milliseconds = 800;                        // This is the delay between target painter activations and should stagger the painters somewhat (purposely)
+        public int PainterDelay_milliseconds = 800;                         // This is the delay between target painter activations and should stagger the painters somewhat (purposely)
         public int ValidateSettings_seconds = 15;                           // This is the delay between character settings validation attempts. The settings will be reloaded at this interval if they have changed. Default is 15
         public int SetupLogPathDelay_seconds = 10;                          // Why is this delay here? this can likely be removed with some testing... Default is 10
         public int SessionRunningTimeUpdate_seconds = 15;                   // This is used to update the session running time counter every x seconds: default is 15 seconds
@@ -176,6 +176,7 @@ namespace Questor.Modules.Lookup
         public DateTime NextModuleDisableAutoReload { get; set; }
 
         public DateTime QuestorStarted_DateTime = DateTime.UtcNow;
+        public DateTime LoginStarted_DateTime = DateTime.UtcNow;
         public static DateTime EnteredCloseQuestor_DateTime { get; set; }
 
         public DateTime StartedBoosting { get; set; }

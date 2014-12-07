@@ -1355,16 +1355,17 @@ namespace Questor.Modules.Combat
                     correctAmmoInCargo = correctAmmoToUse.Where(a => Cache.Instance.CurrentShipsCargo != null && Cache.Instance.CurrentShipsCargo.Items.Any(i => i.TypeId == a.TypeId && i.Quantity >= Combat.MinimumAmmoCharges)).ToList();
 
                     //check if mission specific ammo is defined
-                    if (MissionSettings.AmmoTypesToLoad.Count() != 0)
+                    if (MissionSettings.AmmoTypesToLoad.Count() != 0 && Cache.Instance.CurrentShipsCargo != null)
                     {
-                        correctAmmoInCargo = MissionSettings.AmmoTypesToLoad.Where(a => a.DamageType == MissionSettings.CurrentDamageType).ToList();
+                        //correctAmmoInCargo = Cache.Instance.CurrentShipsCargo.Items.Where(i => i.TypeName == MissionSettings.AmmoTypesToLoad.FirstOrDefault().ToString());
+                        //correctAmmoInCargo = MissionSettings.AmmoTypesToLoad.Where(MissionSettings.CurrentDamageType).ToList();
                     }
 
                     // Check if we still have that ammo in our cargo
                     correctAmmoInCargo = correctAmmoInCargo.Where(a => Cache.Instance.CurrentShipsCargo != null && Cache.Instance.CurrentShipsCargo.Items.Any(i => i.TypeId == a.TypeId && i.Quantity >= Combat.MinimumAmmoCharges)).ToList();
                     if (MissionSettings.AmmoTypesToLoad.Count() != 0)
                     {
-                        correctAmmoInCargo = MissionSettings.AmmoTypesToLoad;
+                        //correctAmmoInCargo = MissionSettings.AmmoTypesToLoad;
                     }
 
                     // We are out of ammo! :(
@@ -1401,14 +1402,14 @@ namespace Questor.Modules.Combat
                     //check if mission specific ammo is defined
                     if (MissionSettings.AmmoTypesToLoad.Count() != 0)
                     {
-                        correctAmmoInCargo = MissionSettings.AmmoTypesToLoad.Where(a => a.DamageType == MissionSettings.CurrentDamageType).ToList();
+                        //correctAmmoInCargo = MissionSettings.AmmoTypesToLoad.Where(a => a.DamageType == MissionSettings.CurrentDamageType).ToList();
                     }
 
                     // Check if we still have that ammo in our cargo
                     correctAmmoInCargo = correctAmmoInCargo.Where(a => Cache.Instance.CurrentShipsCargo != null && Cache.Instance.CurrentShipsCargo.Items.Any(i => i.TypeId == a.TypeId && i.Quantity >= Combat.MinimumAmmoCharges)).ToList();
                     if (MissionSettings.AmmoTypesToLoad.Count() != 0)
                     {
-                        correctAmmoInCargo = MissionSettings.AmmoTypesToLoad;
+                       //correctAmmoInCargo = MissionSettings.AmmoTypesToLoad;
                     }
 
                     // We are out of ammo! :(
@@ -1617,14 +1618,14 @@ namespace Questor.Modules.Combat
             //check if mission specific ammo is defined
             if (MissionSettings.AmmoTypesToLoad.Count() != 0)
             {
-                correctAmmoInCargo = MissionSettings.AmmoTypesToLoad.Where(a => a.DamageType == MissionSettings.CurrentDamageType).ToList();
+                //correctAmmoInCargo = MissionSettings.AmmoTypesToLoad.Where(a => a.DamageType == MissionSettings.CurrentDamageType).ToList();
             }
 
             // Check if we still have that ammo in our cargo
             correctAmmoInCargo = correctAmmoInCargo.Where(a => Cache.Instance.CurrentShipsCargo != null && Cache.Instance.CurrentShipsCargo.Items.Any(e => e.TypeId == a.TypeId && e.Quantity >= Combat.MinimumAmmoCharges)).ToList();
             if (MissionSettings.AmmoTypesToLoad.Count() != 0)
             {
-                correctAmmoInCargo = MissionSettings.AmmoTypesToLoad;
+                //correctAmmoInCargo = MissionSettings.AmmoTypesToLoad;
             }
 
             // We are out of ammo! :(
@@ -1984,7 +1985,8 @@ namespace Questor.Modules.Combat
                     if (MissionSettings.AmmoTypesToLoad.Count() != 0)
                     {
                         if (Logging.DebugActivateWeapons) Logging.Log("Combat", "ActivateWeapons: deactivate: MissionAmmocount is not 0", Logging.Teal);
-                        ammo = MissionSettings.AmmoTypesToLoad.FirstOrDefault(a => a.TypeId == weapon.Charge.TypeId);
+                        var x = 0;
+                        //ammo = MissionSettings.AmmoTypesToLoad.TryGetValue((Ammo)weapon.Charge.TypeName, DateTime.Now);
                     }
 
                     // How can this happen? Someone manually loaded ammo

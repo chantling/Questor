@@ -90,7 +90,14 @@ namespace Questor.Modules.Actions
 
         public static DirectAgent Agent
         {
-            get { return Cache.Instance.DirectEve.GetAgentById(AgentId); }
+            get
+            {
+                DirectAgent _agent = Cache.Instance.DirectEve.GetAgentById(AgentId);
+                Cache.Instance.AgentStationName = Cache.Instance.DirectEve.GetLocationName(_agent.StationId);
+                Cache.Instance.AgentStationID = _agent.StationId;
+                Cache.Instance.AgentSolarSystemID = _agent.SolarSystemId;
+                return _agent;
+            }
         }
 
         public static bool ForceAccept { get; set; }
@@ -595,7 +602,7 @@ namespace Questor.Modules.Actions
                         //MissionSettings.GetDungeonId(html);
                         MissionSettings.SetmissionXmlPath(Logging.FilterPath(MissionSettings.MissionName));
 
-                        MissionSettings.AmmoTypesToLoad = new List<Ammo>();
+                        MissionSettings.AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
                         if (File.Exists(MissionSettings.MissionXmlPath))
                         {
                             MissionSettings.LoadMissionXMLData();
@@ -667,7 +674,7 @@ namespace Questor.Modules.Actions
 
                 if (DateTime.UtcNow < _lastAgentAction.AddSeconds(1)) return;
 
-                if (Cache.Instance.Agent.LoyaltyPoints == -1 && Agent.Level > 1)
+                if (AgentInteraction.Agent.LoyaltyPoints == -1 && Agent.Level > 1)
                 {
                     if (LoyaltyPointCounter < 3)
                     {
@@ -679,7 +686,7 @@ namespace Questor.Modules.Actions
                 }
 
                 LoyaltyPointCounter = 0;
-                Statistics.LoyaltyPoints = Cache.Instance.Agent.LoyaltyPoints;
+                Statistics.LoyaltyPoints = AgentInteraction.Agent.LoyaltyPoints;
                 Cache.Instance.Wealth = Cache.Instance.DirectEve.Me.Wealth;
                 Logging.Log("AgentInteraction", "Saying [Accept]", Logging.Yellow);
                 accept.Say();

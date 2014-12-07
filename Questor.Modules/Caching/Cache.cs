@@ -9,6 +9,7 @@
 // -------------------------------------------------------------------------------
 
 
+using LavishSettingsAPI;
 using Questor.Modules.EVEInteration;
 
 namespace Questor.Modules.Caching
@@ -43,7 +44,7 @@ namespace Questor.Modules.Caching
         /// <summary>
         ///   agentId cache
         /// </summary>
-        private long? _agentId;
+        private long? _agentId { get; set; }
 
         /// <summary>
         ///   Current Storyline Mission Agent
@@ -567,12 +568,12 @@ namespace Questor.Modules.Caching
             {
                 if (_containerInSpace == null)
                 {
-                    //_containerInSpace = 
-                    return _containerInSpace;
+                    return null;
                 }
 
                 return _containerInSpace;
             }
+
             set { _containerInSpace = value; }
         }
 
@@ -901,7 +902,11 @@ namespace Questor.Modules.Caching
                     {
                         try
                         {
-                            if (_agent == null) _agent = DirectEve.GetAgentByName(CurrentAgent);
+                            if (_agent == null)
+                            {
+                                _agent = Cache.Instance.DirectEve.GetAgentByName(CurrentAgent);
+                            }
+
                             _agentId = _agent.AgentId;
 
                             return (long)_agentId;
@@ -932,7 +937,12 @@ namespace Questor.Modules.Caching
                     {
                         try
                         {
-                            if (_agent == null) _agent = DirectEve.GetAgentByName(CurrentAgent);
+                            if (_agent == null)
+                            {
+                                _agent = Cache.Instance.DirectEve.GetAgentByName(CurrentAgent);
+                                return null;
+                            }
+
                             if (_agent != null)
                             {
                                 _agentId = _agent.AgentId;
@@ -945,6 +955,7 @@ namespace Questor.Modules.Caching
                                 //Logging.Log("Cache: CurrentAgent", "AgentStationID [" + Cache.Instance.AgentStationID + "]", Logging.White);
                                 //Logging.Log("Cache: CurrentAgent", "AgentSolarSystemName [" + Cache.Instance.AgentSolarSystemName + "]", Logging.White);
                                 //Logging.Log("Cache: CurrentAgent", "AgentSolarSystemID [" + Cache.Instance.AgentSolarSystemID + "]", Logging.White);
+                                return _agent;
                             }
                         }
                         catch (Exception ex)
@@ -952,8 +963,16 @@ namespace Questor.Modules.Caching
                             Logging.Log("Cache.Agent", "Unable to process agent section of [" + Logging.CharacterSettingsPath + "] make sure you have a valid agent listed! Pausing so you can fix it. [" + ex.Message + "]", Logging.Debug);
                             Cache.Instance.Paused = true;
                         }
-                        if (_agentId != null) return _agent ?? (_agent = DirectEve.GetAgentById(_agentId.Value));
+
+                        if (_agentId != null)
+                        {
+                            return _agent ?? (_agent = Cache.Instance.DirectEve.GetAgentById(_agentId.Value));
+                        }
+
+                        Logging.Log("Cache.Agent", "if (_agentId == null)", Logging.Debug);
                     }
+
+                    Logging.Log("Cache.Agent", "if (!Settings.Instance.CharacterXMLExists)", Logging.Debug);
                     return null;
                 }
                 catch (Exception exception)
@@ -1507,6 +1526,7 @@ namespace Questor.Modules.Caching
                             return true;
                         }
                     }
+
                     return false;
                 }
                 catch (Exception ex)

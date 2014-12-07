@@ -236,33 +236,6 @@ namespace Questor.Modules.Activities
             #endregion Load DirectEVE
         }
 
-        public static bool VerifyDirectEVESupportInstancesAvailable()
-        {
-            #region Verify DirectEVE Support Instances
-
-            //
-            // Verify DirectEVE Support Instances
-            //
-
-            try
-            {
-                if (Cache.Instance.DirectEve != null && Cache.Instance.DirectEve.HasSupportInstances())
-                {
-                    Logging.Log("Startup", "You have a valid directeve.lic file and have instances available", Logging.Orange);
-                    return true;
-                }
-                
-                Logging.Log("Startup", "You have 0 Support Instances available [ Cache.Instance.DirectEve.HasSupportInstances() is false ]", Logging.Orange);
-                return false;
-            }
-            catch (Exception exception)
-            {
-                Logging.Log("Startup", "Exception while checking: _directEve.HasSupportInstances() - exception was: [" + exception + "]", Logging.Orange);
-                return false;
-            }
-
-            #endregion Verify DirectEVE Support Instances
-        }
         public static void WaitToLoginUntilSchedulerSaysWeShould()
         {
             string path = Logging.PathToCurrentDirectory;
@@ -446,7 +419,7 @@ namespace Questor.Modules.Activities
 
             if (DateTime.UtcNow < _lastServerStatusCheckWasNotOK.AddSeconds(RandomNumber(10, 20)))
             {
-                Logging.Log("LoginOnFrame", "lastServerStatusCheckWasNotOK = [" + _lastServerStatusCheckWasNotOK.ToShortTimeString() + "] waiting 10 to 20 seconds.", Logging.White);
+                //Logging.Log("LoginOnFrame", "lastServerStatusCheckWasNotOK = [" + _lastServerStatusCheckWasNotOK.ToShortTimeString() + "] waiting 10 to 20 seconds.", Logging.White);
                 return;
             }
 
@@ -493,9 +466,13 @@ namespace Questor.Modules.Activities
             // If the session is ready, then we are done :)
             if (Cache.Instance.DirectEve.Session.IsReady)
             {
-                Logging.Log("Startup", "We have successfully logged in", Logging.White);
-                Time.Instance.LastSessionIsReady = DateTime.UtcNow;
-                loggedInAndreadyToStartQuestorUI = true;
+                if (DateTime.UtcNow > Time.Instance.LoginStarted_DateTime.AddSeconds(50))
+                {
+                    Logging.Log("Startup", "We have successfully logged in", Logging.White);
+                    Time.Instance.LastSessionIsReady = DateTime.UtcNow;
+                    loggedInAndreadyToStartQuestorUI = true;    
+                }
+                
                 return;
             }
 

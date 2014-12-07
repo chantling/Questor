@@ -34,7 +34,7 @@ namespace Questor
         //private readonly Defense _defense;
 
         private DateTime _lastQuestorPulse;
-        private static DateTime _nextQuestorAction = DateTime.UtcNow.AddHours(-1);
+        //private static DateTime _nextQuestorAction = DateTime.UtcNow.AddHours(-1);
         private readonly CombatMissionsBehavior _combatMissionsBehavior;
         //private readonly MissionSettings _combatMissionSettings;
         private readonly CombatHelperBehavior _combatHelperBehavior;
@@ -458,26 +458,32 @@ namespace Questor
 
             if (Cache.Instance.DirectEve.Login.AtLogin)
             {
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.DirectEve.Login.AtLogin)", Logging.Debug);
                 //if we somehow manage to get the questor GUI running on the login screen, do nothing.
                 return false;
             }
 
             if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
             {
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))", Logging.Debug);
                 return false;
             }
 
-            // Only pulse state changes every 1.5s
-            if (Cache.Instance.InSpace && DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < Time.Instance.QuestorPulseInSpace_milliseconds) //default: 1000ms
+            if (!Cache.Instance.InSpace && !Cache.Instance.InStation)
+            {
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (!Cache.Instance.InSpace && !Cache.Instance.InStation)", Logging.Debug);
+                return false;
+            }
+
+            int pulseDelay = 400;
+            if (Cache.Instance.InSpace) pulseDelay = 800;
+            if (Cache.Instance.InStation) pulseDelay = 400;
+
+            if (DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < pulseDelay)
             {
                 return false;
             }
-
-            if (Cache.Instance.InStation && DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < Time.Instance.QuestorPulseInStation_milliseconds) //default: 400ms
-            {
-                return false;
-            }
-
+            
             _lastQuestorPulse = DateTime.UtcNow;
 
             if (!Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
@@ -507,6 +513,7 @@ namespace Questor
             // Session is not ready yet, do not continue
             if (!Cache.Instance.DirectEve.Session.IsReady)
             {
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (!Cache.Instance.DirectEve.Session.IsReady)", Logging.Debug);
                 return false;
             }
 
@@ -523,6 +530,8 @@ namespace Questor
                     Time.Instance.NextInSpaceorInStation = DateTime.UtcNow;
                     return true;
                 }
+
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < Time.Instance.NextInSpaceorInStation)", Logging.Debug);
                 return false;
             }
 
@@ -537,6 +546,7 @@ namespace Questor
                 Statistics.SessionRunningTime = (int)DateTime.UtcNow.Subtract(Time.Instance.QuestorStarted_DateTime).TotalMinutes;
                 Time.Instance.LastUpdateOfSessionRunningTime = DateTime.UtcNow;
             }
+
             return true;
         }
 
@@ -560,8 +570,9 @@ namespace Questor
             // We also always check panic
             Defense.ProcessState();
             
-            if (Cache.Instance.Paused || DateTime.UtcNow < _nextQuestorAction)
+            if (Cache.Instance.Paused ) //|| DateTime.UtcNow < _nextQuestorAction)
             {
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.Paused || DateTime.UtcNow < _nextQuestorAction)", Logging.Debug);
                 Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
                 Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
                 Cache.Instance.GotoBaseNow = false;
@@ -579,7 +590,11 @@ namespace Questor
             }
 
             // When in warp there's nothing we can do, so ignore everything
-            if (Cache.Instance.InSpace && Cache.Instance.InWarp) return;
+            if (Cache.Instance.InSpace && Cache.Instance.InWarp)
+            {
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.EVEOnFrame", "if (Cache.Instance.InSpace && Cache.Instance.InWarp)", Logging.Debug);
+                return;
+            }
 
             switch (_States.CurrentQuestorState)
             {
