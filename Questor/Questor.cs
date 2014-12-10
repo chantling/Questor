@@ -467,12 +467,14 @@ namespace Questor
             
             _lastQuestorPulse = DateTime.UtcNow;
 
-            if (Cache.Instance.DirectEve.Login.AtLogin)
-            {
-                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.DirectEve.Login.AtLogin)", Logging.Debug);
-                //if we somehow manage to get the questor GUI running on the login screen, do nothing.
-                return false;
-            }
+            if (!Cache.Instance.DirectEve.Session.IsReady) return false;
+
+            //if (Cache.Instance.DirectEve.Login.AtLogin)
+            //{
+            //    if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.DirectEve.Login.AtLogin)", Logging.Debug);
+            //    //if we somehow manage to get the questor GUI running on the login screen, do nothing.
+            //    return false;
+            //}
 
             if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
             {
