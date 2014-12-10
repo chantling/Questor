@@ -119,6 +119,7 @@ namespace Questor
                 try
                 {
                     Cache.Instance.DirectEve.OnFrame += LoginToEVE.LoginOnFrame;
+                    LoginToEVE.useLoginOnFrameEvent = true;
                 }
                 catch (Exception ex)
                 {
@@ -126,71 +127,73 @@ namespace Questor
                 }
 
                 // Sleep until we're loggedInAndreadyToStartQuestorUI
-                while (!LoginToEVE.loggedInAndreadyToStartQuestorUI)
+                while (LoginToEVE.useLoginOnFrameEvent)
                 {
                     System.Threading.Thread.Sleep(50); //this runs while we wait to login
                 }
 
-                if (LoginToEVE.loggedInAndreadyToStartQuestorUI)
+                if (!LoginToEVE.useLoginOnFrameEvent)
                 {
                     try
                     {
+                        Logging.Log("Startup", "We are logged into EVE: unRegistering LoginOnFrame Event, wait 3 sec", Logging.Teal);
                         Cache.Instance.DirectEve.OnFrame -= LoginToEVE.LoginOnFrame;
+                        LoginToEVE.StartTime = DateTime.Now;
                     }
                     catch (Exception ex)
                     {
                         Logging.Log("Startup", "DirectEVE.Dispose: Exception [" + ex + "]", Logging.White);
                     }
+                }
 
-                    // If the last parameter is false, then we only auto-login
-                    if (LoginToEVE._loginOnly)
+                while (DateTime.UtcNow < LoginToEVE.StartTime.AddSeconds(3)) //wait a few seconds
+                {
+                    System.Threading.Thread.Sleep(50); //this runs while we wait for the LoginOnframe Event to unregister
+                }
+
+                // If the last parameter is false, then we only auto-login
+                if (LoginToEVE._loginOnly)
+                {
+                    Logging.Log("Startup", "_loginOnly: done and exiting", Logging.Teal);
+                    return;
+                }
+
+                //
+                // We should only get this far if run if we are already logged in...
+                // launch questor
+                //
+                try
+                {
+                    Logging.Log("Startup", "Launching Questor", Logging.Teal);
+                    _questor = new Questor();
+
+                    int intdelayQuestorUI = 0;
+                    while (intdelayQuestorUI < 200) //10sec = 200ms x 50
                     {
-                        Logging.Log("Startup", "_loginOnly: done and exiting", Logging.Teal);
-                        return;
+                        intdelayQuestorUI++;
+                        System.Threading.Thread.Sleep(50);
                     }
 
+                    Logging.Log("Startup", "Launching QuestorUI", Logging.Teal);
+                    Application.Run(new QuestorUI());
 
-                    LoginToEVE.StartTime = DateTime.Now;
-
-                    //
-                    // We should only get this far if run if we are already logged in...
-                    // launch questor
-                    //
-                    try
+                    while (!Cleanup.SignalToQuitQuestor)
                     {
-
-                        Logging.Log("Startup", "We are logged in.", Logging.Teal);
-                        Logging.Log("Startup", "Launching Questor", Logging.Teal);
-                        _questor = new Questor();
-
-                        int intdelayQuestorUI = 0;
-                        while (intdelayQuestorUI < 200) //10sec = 200ms x 50
-                        {
-                            intdelayQuestorUI++;
-                            System.Threading.Thread.Sleep(50);
-                        }
-
-                        Logging.Log("Startup", "Launching QuestorUI", Logging.Teal);
-                        Application.Run(new QuestorUI());
-
-                        while (!Cleanup.SignalToQuitQuestor)
-                        {
-                            System.Threading.Thread.Sleep(50); //this runs while questor is running.
-                        }
-
-                        Logging.Log("Startup", "Exiting Questor", Logging.Teal);
-
+                        System.Threading.Thread.Sleep(50); //this runs while questor is running.
                     }
-                    catch (Exception ex)
-                    {
-                        Logging.Log("Startup", "Exception [" + ex + "]", Logging.Teal);
-                    }
-                    finally
-                    {
-                        Cleanup.DirecteveDispose();
-                        AppDomain.Unload(AppDomain.CurrentDomain);
-                    }
-                }    
+
+                    Logging.Log("Startup", "Exiting Questor", Logging.Teal);
+
+                }
+                catch (Exception ex)
+                {
+                    Logging.Log("Startup", "Exception [" + ex + "]", Logging.Teal);
+                }
+                finally
+                {
+                    Cleanup.DirecteveDispose();
+                    AppDomain.Unload(AppDomain.CurrentDomain);
+                }
             }
             else
             {

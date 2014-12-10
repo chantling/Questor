@@ -88,22 +88,6 @@ namespace Questor
                 return;
             }
 
-            try
-            {
-                if (Cache.Instance.DirectEve.HasSupportInstances())
-                {
-                    Logging.Log("Questor", "You have a valid directeve.lic file and have instances available", Logging.Orange);
-                }
-                else
-                {
-                    Logging.Log("Questor", "You have 0 Support Instances available [ _directEve.HasSupportInstances() is false ]", Logging.Orange);
-                }
-            }
-            catch (Exception exception)
-            {
-                Logging.Log("Questor", "Exception while checking: _directEve.HasSupportInstances() in questor.cs - exception was: [" + exception + "]", Logging.Orange);
-            }
-
             if (LoginToEVE.StartTime.AddMinutes(10) < LoginToEVE.StopTime)
             {
                 Time.Instance.StopTime = LoginToEVE.StopTime;
@@ -135,6 +119,7 @@ namespace Questor
 
             try
             {
+                Logging.Log("Questor", "Register EVEOnFrame Event", Logging.White);
                 //
                 // setup the [ Cache.Instance.DirectEve.OnFrame ] Event triggered on every new frame to call EVEOnFrame()
                 //
@@ -151,6 +136,8 @@ namespace Questor
                 Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
                 Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
             }
+
+            Logging.Log("Questor", "Questor.", Logging.White);
         }
 
         public void RunOnceAfterStartup()
@@ -457,8 +444,8 @@ namespace Questor
             Time.Instance.LastFrame = DateTime.UtcNow;
 
             int pulseDelay = 400;
-            if (Cache.Instance.InSpace) pulseDelay = 800;
-            if (Cache.Instance.InStation) pulseDelay = 400;
+            if (Cache.Instance.InSpace) pulseDelay = Time.Instance.QuestorPulseInSpace_milliseconds;
+            if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
 
             if (DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < pulseDelay)
             {

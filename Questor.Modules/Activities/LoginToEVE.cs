@@ -17,6 +17,7 @@ namespace Questor.Modules.Activities
     public static class LoginToEVE
     {
         public static bool loggedInAndreadyToStartQuestorUI;
+        public static bool useLoginOnFrameEvent;
         public static List<CharSchedule> CharSchedules { get; private set; }
         public static DateTime QuestorProgramLaunched = DateTime.UtcNow;
         private static bool _questorScheduleSaysWeShouldLoginNow;
@@ -470,7 +471,7 @@ namespace Questor.Modules.Activities
                 {
                     Logging.Log("Startup", "We have successfully logged in", Logging.White);
                     Time.Instance.LastSessionIsReady = DateTime.UtcNow;
-                    loggedInAndreadyToStartQuestorUI = true;    
+                    useLoginOnFrameEvent = false;    
                 }
                 
                 return;

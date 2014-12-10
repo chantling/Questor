@@ -23,8 +23,8 @@ namespace Questor.Modules.Lookup
         public int LootingDelay_milliseconds = 800;                         // Delay between loot attempts
         public int WarpScrambledNoDelay_seconds = 10;                       // Time after you are no longer warp scrambled to consider it IMPORTANT That you warp soon
         public int RemoveBookmarkDelay_seconds = 5;                         // Delay between each removal of a bookmark
-        public int QuestorPulseInSpace_milliseconds = 1500;                 // Used to delay the next pulse, units: milliseconds. Default is 600
-        public int QuestorPulseInStation_milliseconds = 500;                // Used to delay the next pulse, units: milliseconds. Default is 400
+        public int QuestorPulseInSpace_milliseconds = 800;                 // Used to delay the next pulse, units: milliseconds. Default is 600
+        public int QuestorPulseInStation_milliseconds = 800;                // Used to delay the next pulse, units: milliseconds. Default is 400
         public int DefenceDelay_milliseconds = 1500;                        // Delay between defence actions
         public int AfterburnerDelay_milliseconds = 3500;                    //
         public int RepModuleDelay_milliseconds = 2500;                      //
