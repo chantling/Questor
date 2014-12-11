@@ -79,7 +79,7 @@
                             }    
                         }
                     }
-                    catch (IOException ex)
+                    catch (IOException)
                     {
                         //Logging.Log("AgentsDeclineTimes", "IOException: [" + ex + "]", Logging.Debug);
                     }

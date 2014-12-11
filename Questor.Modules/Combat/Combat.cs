@@ -64,7 +64,7 @@ namespace Questor.Modules.Combat
         private static int MaxCharges { get; set; }
         private static DateTime _lastCombatProcessState;
         private static DateTime _lastReloadAll;
-        private static int _reloadAllIteration;
+        //private static int _reloadAllIteration;
         public static IEnumerable<EntityCache> highValueTargetsTargeted;
         public static IEnumerable<EntityCache> lowValueTargetsTargeted;
         public static int? maxHighValueTargets;
@@ -1850,11 +1850,11 @@ namespace Questor.Modules.Combat
                 }
 
                 if (Logging.DebugReloadAll) Logging.Log("debug ReloadAll", "completely reloaded all weapons", Logging.White);
-                _reloadAllIteration = 0;
+                //_reloadAllIteration = 0;
                 return true;
             }
             
-            _reloadAllIteration = 0;
+            //_reloadAllIteration = 0;
             return true;
         }
 
@@ -2017,7 +2017,7 @@ namespace Questor.Modules.Combat
                     if (MissionSettings.AmmoTypesToLoad.Count() != 0)
                     {
                         if (Logging.DebugActivateWeapons) Logging.Log("Combat", "ActivateWeapons: deactivate: MissionAmmocount is not 0", Logging.Teal);
-                        var x = 0;
+                        //var x = 0;
                         //ammo = MissionSettings.AmmoTypesToLoad.TryGetValue((Ammo)weapon.Charge.TypeName, DateTime.Now);
                     }
 

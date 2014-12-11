@@ -225,7 +225,6 @@ namespace Questor.Modules.Lookup
         public static string FittingToLoad { get; set; } // stores name of the final fitting we want to use
         public static string MissionSpecificShip { get; set; } //stores name of mission specific ship
         public static string FactionSpecificShip { get; set; } //stores name of mission specific ship
-        public static string DefaultFittingName { get; set; } //stores name of the default fitting
         public static string CurrentFit { get; set; }
         public static string FactionFittingForThisMissionsFaction { get; set; }
         public static string FactionName { get; set; }

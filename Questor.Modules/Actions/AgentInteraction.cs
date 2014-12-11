@@ -876,7 +876,7 @@ namespace Questor.Modules.Actions
                         XElement faction = xml.Root.Elements("faction").FirstOrDefault(f => (string)f.Attribute("logo") == logo);
 
                         //Cache.Instance.FactionFit = "Default";
-                        MissionSettings.FittingToLoad = MissionSettings.DefaultFitting.ToString();
+                        MissionSettings.FittingToLoad = MissionSettings.DefaultFitting.FittingName.ToLower();
                         MissionSettings.FactionName = "Default";
                         if (faction != null)
                         {

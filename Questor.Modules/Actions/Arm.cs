@@ -132,11 +132,8 @@ namespace Questor.Modules.Actions
 
             if (Settings.Instance.UseFittingManager)
             {
-
-
                 //Set fitting to default
-                MissionSettings.DefaultFittingName = MissionSettings.DefaultFitting.FittingName;
-                MissionSettings.FittingToLoad = MissionSettings.DefaultFittingName;
+                MissionSettings.FittingToLoad = MissionSettings.DefaultFitting.FittingName.ToLower();
                 MissionSettings.MissionSpecificShip = null;
                 MissionSettings.FactionSpecificShip = null;
                 MissionSettings.ChangeMissionShipFittings = false;
@@ -152,19 +149,19 @@ namespace Questor.Modules.Actions
 
                 if (MissionSettings.ListOfMissionFittings.Any(m => m.Mission.ToLower() == missionDetailsForMissionItems.Name.ToLower())) //priority goes to mission-specific fittings
                 {
-                    MissionFitting FittingNameTouseForThisMission;
+                    MissionFitting fittingNameTouseForThisMission;
 
                     // if we have got multiple copies of the same mission, find the one with the matching faction
                     if (MissionSettings.ListOfMissionFittings.Any(m => m.Faction.ToLower() == MissionSettings.FactionName.ToLower() && (m.Mission.ToLower() == missionDetailsForMissionItems.Name.ToLower())))
                     {
-                        FittingNameTouseForThisMission = MissionSettings.ListOfMissionFittings.FirstOrDefault(m => m.Faction.ToLower() == MissionSettings.FactionName.ToLower() && (m.Mission.ToLower() == missionDetailsForMissionItems.Name.ToLower()));
+                        fittingNameTouseForThisMission = MissionSettings.ListOfMissionFittings.FirstOrDefault(m => m.Faction.ToLower() == MissionSettings.FactionName.ToLower() && (m.Mission.ToLower() == missionDetailsForMissionItems.Name.ToLower()));
                     }
                     else //otherwise just use the first copy of that mission
                     {
-                        FittingNameTouseForThisMission = MissionSettings.ListOfMissionFittings.FirstOrDefault(m => m.Mission.ToLower() == missionDetailsForMissionItems.Name.ToLower());
+                        fittingNameTouseForThisMission = MissionSettings.ListOfMissionFittings.FirstOrDefault(m => m.Mission.ToLower() == missionDetailsForMissionItems.Name.ToLower());
                     }
 
-                    if (FittingNameTouseForThisMission != null)
+                    if (fittingNameTouseForThisMission != null)
                     {
                         //
                         //
@@ -173,19 +170,19 @@ namespace Questor.Modules.Actions
                         //
                         //
                         //
-                        MissionSettings.MissionSpecificShip = FittingNameTouseForThisMission.Ship;
+                        MissionSettings.MissionSpecificShip = fittingNameTouseForThisMission.Ship;
                         //
                         // if we have the drone type specified in the mission fitting entry use it, otherwise do not overwrite the default or the drone type specified by the faction
                         //
-                        if (FittingNameTouseForThisMission.DroneTypeID != null)
+                        if (fittingNameTouseForThisMission.DroneTypeID != null)
                         {
-                            MissionSettings.MissionDroneTypeID = (int)FittingNameTouseForThisMission.DroneTypeID;
+                            MissionSettings.MissionDroneTypeID = (int)fittingNameTouseForThisMission.DroneTypeID;
                         }
 
-                        if (!(FittingNameTouseForThisMission.Fitting == "" && MissionSettings.MissionSpecificShip != "")) // if we have both specified a mission specific ship and a fitting, then apply that fitting to the ship
+                        if (!(fittingNameTouseForThisMission.Fitting == "" && MissionSettings.MissionSpecificShip != "")) // if we have both specified a mission specific ship and a fitting, then apply that fitting to the ship
                         {
                             MissionSettings.ChangeMissionShipFittings = true;
-                            MissionSettings.FittingToLoad = FittingNameTouseForThisMission.Fitting;
+                            MissionSettings.FittingToLoad = fittingNameTouseForThisMission.Fitting;
                         }
                         else if (!string.IsNullOrEmpty(MissionSettings.FactionFittingForThisMissionsFaction))
                         {
@@ -203,7 +200,7 @@ namespace Questor.Modules.Actions
 
                 if (MissionSettings.FittingToLoad == "") // otherwise use the default
                 {
-                    MissionSettings.FittingToLoad = MissionSettings.DefaultFittingName;
+                    MissionSettings.FittingToLoad = MissionSettings.DefaultFitting.FittingName.ToLower();
                 }
             }
 
@@ -685,8 +682,7 @@ namespace Questor.Modules.Actions
                     //todo: fix this
                     if (MissionSettings.DefaultFitting == null)
                     {
-                        MissionSettings.DefaultFittingName = MissionSettings.DefaultFitting.FittingName;
-                        MissionSettings.FittingToLoad = MissionSettings.DefaultFittingName;
+                        MissionSettings.FittingToLoad = MissionSettings.DefaultFitting.FittingName.ToLower();
                     }
 
                     if (Logging.DebugFittingMgr) Logging.Log(module, "Character Settings XML says Default Fitting is [" + MissionSettings.DefaultFitting + "]", Logging.White);
@@ -703,7 +699,7 @@ namespace Questor.Modules.Actions
                                 Logging.Log(module, "[" + i + "] Found a Fitting Named [" + fitting.Name + "]", Logging.Teal);
                             }
 
-                            if (fitting.Name.ToLower().Equals(MissionSettings.DefaultFittingName.ToLower()))
+                            if (fitting.Name.ToLower().Equals(MissionSettings.DefaultFitting.FittingName.ToLower()))
                             {
                                 DefaultFittingChecked = true;
                                 DefaultFittingFound = true;
@@ -723,7 +719,7 @@ namespace Questor.Modules.Actions
 
                     if (!DefaultFittingFound)
                     {
-                        Logging.Log("Arm.LoadFitting", "Error! Could not find Default Fitting [" + MissionSettings.DefaultFittingName.ToLower() + "].  Disabling fitting manager.", Logging.Orange);
+                        Logging.Log("Arm.LoadFitting", "Error! Could not find Default Fitting [" + MissionSettings.DefaultFitting.FittingName.ToLower() + "].  Disabling fitting manager.", Logging.Orange);
                         DefaultFittingChecked = true;
                         DefaultFittingFound = false;
                         Settings.Instance.UseFittingManager = false;
@@ -1173,7 +1169,7 @@ namespace Questor.Modules.Actions
                             }
 
                             Logging.Log(WeAreInThisStateForLogs(), "Could not find fitting - switching to default", Logging.Orange);
-                            MissionSettings.FittingToLoad = MissionSettings.DefaultFittingName;
+                            MissionSettings.FittingToLoad = MissionSettings.DefaultFitting.FittingName;
                             ChangeArmState(ArmState.MoveDrones, true);
                             return false;
                         }
