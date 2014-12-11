@@ -675,14 +675,25 @@ namespace Questor.Modules.Actions
                 {
                     if (Cache.Instance.FittingManagerWindow == null)
                     {
-                        Logging.Log("FindDefaultFitting", "FittingManagerWindow is null", Logging.Debug);
+                        Logging.Log("Arm.FindDefaultFitting", "FittingManagerWindow is null", Logging.Debug);
                         return false;
                     }
 
-                    //todo: fix this
-                    if (MissionSettings.DefaultFitting == null)
+                    if (MissionSettings.ListofFactionFittings.Exists(m => m.FactionName.ToLower() == "default"))
                     {
+                        MissionSettings.DefaultFitting = MissionSettings.ListofFactionFittings.Find(m => m.FactionName.ToLower() == "default");
+                        if (string.IsNullOrEmpty(MissionSettings.DefaultFitting.FittingName))
+                        {
+                            Settings.Instance.UseFittingManager = false;
+                            Logging.Log("Arm.FindDefaultFitting", "Error! No default fitting specified or fitting is incorrect.  Fitting manager will not be used.", Logging.Orange);
+                        }
+
                         MissionSettings.FittingToLoad = MissionSettings.DefaultFitting.FittingName.ToLower();
+                    }
+                    else
+                    {
+                        Settings.Instance.UseFittingManager = false;
+                        Logging.Log("Arm.FindDefaultFitting", "Error! No default fitting specified or fitting is incorrect.  Fitting manager will not be used.", Logging.Orange);
                     }
 
                     if (Logging.DebugFittingMgr) Logging.Log(module, "Character Settings XML says Default Fitting is [" + MissionSettings.DefaultFitting + "]", Logging.White);
