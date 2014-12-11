@@ -217,7 +217,7 @@ namespace Questor.Modules.Lookup
 		            }
 
 		            DirectMarketWindow marketWindow = Cache.Instance.DirectEve.Windows.OfType<DirectMarketWindow>().FirstOrDefault();
-		            if (Cache.Instance.DirectEve.HasSupportInstances())
+		            if (true)
 		            {
 		                if (marketWindow == null)
 		                {

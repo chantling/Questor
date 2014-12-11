@@ -175,7 +175,7 @@ namespace Questor.Storylines
                 return StorylineState.AcceptMission;
             }
 
-            if (Cache.Instance.DirectEve.HasSupportInstances())
+            if (true)
             {
                 // We do not have enough ore, open the market window
                 if (marketWindow == null)

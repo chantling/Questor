@@ -1079,7 +1079,7 @@ namespace Questor.Modules.Actions
         {
             try
             {
-                if (Cache.Instance.DirectEve.HasSupportInstances() && Panic.UseStationRepair && Arm.NeedRepair)
+                if (Panic.UseStationRepair && Arm.NeedRepair)
                 {
                     if (!Cache.Instance.RepairItems(WeAreInThisStateForLogs())) return false; //attempt to use repair facilities if avail in station
                 }

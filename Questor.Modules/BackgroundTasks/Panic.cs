@@ -568,10 +568,11 @@ namespace Questor.Modules.BackgroundTasks
                     return false;
                 }
 
-                if (Cache.Instance.DirectEve.HasSupportInstances() && UseStationRepair)
+                if (UseStationRepair)
                 {
                     if (!Cache.Instance.RepairItems("Repair Function")) return false; //attempt to use repair facilities if avail in station
                 }
+
                 Logging.Log("Panic", "We're in a station, resume mission", Logging.Red);
                 _States.CurrentPanicState = _delayedResume ? PanicState.DelayedResume : PanicState.Resume;
             }

@@ -690,17 +690,6 @@ namespace Questor.Modules.Activities
 
             if (Cache.Instance.DirectEve.Login.AtLogin && !Cache.Instance.DirectEve.Login.IsLoading && !Cache.Instance.DirectEve.Login.IsConnecting)
             {
-                if (!Cache.Instance.DirectEve.HasSupportInstances())
-                {
-                    Logging.Log("Startup", "DirectEVE Requires Active Support Instances to use the convenient like Auto-Login, Market Functions (ValueDump and Market involving storylines) among other features.", Logging.White);
-                    Logging.Log("Startup", "Make sure you have support instances and that you have downloaded your directeve.lic file and placed it in the .net programs folder with your directeve.dll", Logging.White);
-                    _humanInterventionRequired = true;
-                    return;
-                }
-
-                //
-                // we must have support instances available, after a delay, login
-                //
                 if (DateTime.UtcNow.Subtract(QuestorSchedulerReadyToLogin).TotalMilliseconds > RandomNumber(Time.Instance.EVEAccountLoginDelayMinimum_seconds * 1000, Time.Instance.EVEAccountLoginDelayMaximum_seconds * 1000))
                 {
                     Logging.Log("Startup", "Login account [" + Logging.EVELoginUserName + "]", Logging.White);
