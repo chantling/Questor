@@ -438,367 +438,390 @@ namespace Questor
 
         public bool OnframeProcessEveryPulse()
         {
-            // New frame, invalidate old cache
-            Cache.Instance.InvalidateCache();
-
-            Time.Instance.LastFrame = DateTime.UtcNow;
-
-            int pulseDelay = 400;
-            if (Cache.Instance.InSpace) pulseDelay = Time.Instance.QuestorPulseInSpace_milliseconds;
-            if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
-
-            if (DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < pulseDelay)
+            try
             {
-                return false;
-            }
-            
-            _lastQuestorPulse = DateTime.UtcNow;
+                // New frame, invalidate old cache
+                Cache.Instance.InvalidateCache();
 
-            if (!Cache.Instance.DirectEve.Session.IsReady) return false;
+                Time.Instance.LastFrame = DateTime.UtcNow;
 
-            //if (Cache.Instance.DirectEve.Login.AtLogin)
-            //{
-            //    if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.DirectEve.Login.AtLogin)", Logging.Debug);
-            //    //if we somehow manage to get the questor GUI running on the login screen, do nothing.
-            //    return false;
-            //}
+                int pulseDelay = 400;
+                if (Cache.Instance.InSpace) pulseDelay = Time.Instance.QuestorPulseInSpace_milliseconds;
+                if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
 
-            if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
-            {
-                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))", Logging.Debug);
-                return false;
-            }
-
-            if (!Cache.Instance.InSpace && !Cache.Instance.InStation)
-            {
-                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (!Cache.Instance.InSpace && !Cache.Instance.InStation)", Logging.Debug);
-                return false;
-            }
-
-            if (!Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
-            {
-                // Update settings (settings only load if character name changed)
-                if (!Settings.Instance.DefaultSettingsLoaded)
+                if (DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < pulseDelay)
                 {
-                    Settings.Instance.LoadSettings();
-                }
-            }
-
-            if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(30))
-            {
-                Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-            }
-
-            // Start _cleanup.ProcessState
-            // Description: Closes Windows, and eventually other things considered 'cleanup' useful to more than just Questor(Missions) but also Anomalies, Mining, etc
-            //
-            Cleanup.ProcessState();
-            Statistics.ProcessState();
-            _innerspaceCommands.ProcessState();
-            
-            // Done
-            // Cleanup State: ProcessState
-
-            // Session is not ready yet, do not continue
-            if (!Cache.Instance.DirectEve.Session.IsReady)
-            {
-                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (!Cache.Instance.DirectEve.Session.IsReady)", Logging.Debug);
-                return false;
-            }
-
-            if (Cache.Instance.DirectEve.Session.IsReady)
-            {
-                Time.Instance.LastSessionIsReady = DateTime.UtcNow;
-            }
-
-            if (DateTime.UtcNow < Time.Instance.NextInSpaceorInStation)
-            {
-                if (Cache.Instance.ActiveShip.GroupId == (int)Group.Capsule)
-                {
-                    Logging.Log("Panic", "We are in a pod. Don't wait for the session wait timer to expire!", Logging.Red);
-                    Time.Instance.NextInSpaceorInStation = DateTime.UtcNow;
-                    return true;
+                    return false;
                 }
 
-                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < Time.Instance.NextInSpaceorInStation)", Logging.Debug);
+                _lastQuestorPulse = DateTime.UtcNow;
+
+                //if (Cache.Instance.DirectEve.Login.AtLogin)
+                //{
+                //    if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.DirectEve.Login.AtLogin)", Logging.Debug);
+                //    //if we somehow manage to get the questor GUI running on the login screen, do nothing.
+                //    return false;
+                //}
+
+                if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
+                {
+                    if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))", Logging.Debug);
+                    return false;
+                }
+
+                if (!Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
+                {
+                    // Update settings (settings only load if character name changed)
+                    if (!Settings.Instance.DefaultSettingsLoaded)
+                    {
+                        Settings.Instance.LoadSettings();
+                    }
+                }
+
+                //if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.OnframeProcessEveryPulse", "return;", Logging.Debug);
+                //return false;
+                
+                if (!Cache.Instance.InSpace && !Cache.Instance.InStation)
+                {
+                    if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (!Cache.Instance.InSpace && !Cache.Instance.InStation)", Logging.Debug);
+                    return false;
+                }
+
+                if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(30))
+                {
+                    Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
+                }
+
+                // Start _cleanup.ProcessState
+                // Description: Closes Windows, and eventually other things considered 'cleanup' useful to more than just Questor(Missions) but also Anomalies, Mining, etc
+                //
+
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "Cleanup.ProcessState();", Logging.Debug);
+                Cleanup.ProcessState();
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "Statistics.ProcessState();", Logging.Debug);
+                Statistics.ProcessState();
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "_innerspaceCommands.ProcessState();", Logging.Debug);
+                _innerspaceCommands.ProcessState();
+
+                // Done
+                // Cleanup State: ProcessState
+
+                // Session is not ready yet, do not continue
+                if (!Cache.Instance.DirectEve.Session.IsReady)
+                {
+                    if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (!Cache.Instance.DirectEve.Session.IsReady)", Logging.Debug);
+                    return false;
+                }
+
+                if (Cache.Instance.DirectEve.Session.IsReady)
+                {
+                    Time.Instance.LastSessionIsReady = DateTime.UtcNow;
+                }
+
+                if (DateTime.UtcNow < Time.Instance.NextInSpaceorInStation)
+                {
+                    if (Cache.Instance.ActiveShip.GroupId == (int)Group.Capsule)
+                    {
+                        Logging.Log("Panic", "We are in a pod. Don't wait for the session wait timer to expire!", Logging.Red);
+                        Time.Instance.NextInSpaceorInStation = DateTime.UtcNow;
+                        return true;
+                    }
+
+                    if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < Time.Instance.NextInSpaceorInStation)", Logging.Debug);
+                    return false;
+                }
+
+                // Check 3D rendering
+                if (Cache.Instance.DirectEve.Session.IsInSpace && Cache.Instance.DirectEve.Rendering3D != !Settings.Instance.Disable3D)
+                {
+                    Cache.Instance.DirectEve.Rendering3D = !Settings.Instance.Disable3D;
+                }
+
+                if (DateTime.UtcNow.Subtract(Time.Instance.LastUpdateOfSessionRunningTime).TotalSeconds < Time.Instance.SessionRunningTimeUpdate_seconds)
+                {
+                    Statistics.SessionRunningTime = (int)DateTime.UtcNow.Subtract(Time.Instance.QuestorStarted_DateTime).TotalMinutes;
+                    Time.Instance.LastUpdateOfSessionRunningTime = DateTime.UtcNow;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logging.Log("Questor.OnframeProcessEveryPulse", "Exception [" + ex + "]", Logging.Debug);
                 return false;
             }
-
-            // Check 3D rendering
-            if (Cache.Instance.DirectEve.Session.IsInSpace && Cache.Instance.DirectEve.Rendering3D != !Settings.Instance.Disable3D)
-            {
-                Cache.Instance.DirectEve.Rendering3D = !Settings.Instance.Disable3D;
-            }
-
-            if (DateTime.UtcNow.Subtract(Time.Instance.LastUpdateOfSessionRunningTime).TotalSeconds < Time.Instance.SessionRunningTimeUpdate_seconds)
-            {
-                Statistics.SessionRunningTime = (int)DateTime.UtcNow.Subtract(Time.Instance.QuestorStarted_DateTime).TotalMinutes;
-                Time.Instance.LastUpdateOfSessionRunningTime = DateTime.UtcNow;
-            }
-
-            return true;
         }
 
         private void EVEOnFrame(object sender, EventArgs e)
         {
-            if (!OnframeProcessEveryPulse()) return;
-            if (Logging.DebugOnframe) Logging.Log("Questor", "OnFrame: this is Questor.cs [" + DateTime.UtcNow + "] by default the next InSpace pulse will be in [" + Time.Instance.QuestorPulseInSpace_milliseconds + "]milliseconds", Logging.Teal);
-
-            RunOnceAfterStartup();
-            RunOnceInStationAfterStartup();
-
-            if (!Cache.Instance.Paused)
+            try
             {
-                if (DateTime.UtcNow.Subtract(Time.Instance.LastWalletCheck).TotalMinutes > Time.Instance.WalletCheck_minutes && !Settings.Instance.DefaultSettingsLoaded)
-                {
-                    WalletCheck();
-                }
-            }
+                if (!OnframeProcessEveryPulse()) return;
+                if (Logging.DebugOnframe) Logging.Log("Questor", "OnFrame: this is Questor.cs [" + DateTime.UtcNow + "] by default the next InSpace pulse will be in [" + Time.Instance.QuestorPulseInSpace_milliseconds + "]milliseconds", Logging.Teal);
 
-            // We always check our defense state if we're in space, regardless of questor state
-            // We also always check panic
-            Defense.ProcessState();
-            
-            if (Cache.Instance.Paused ) //|| DateTime.UtcNow < _nextQuestorAction)
-            {
-                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.Paused)", Logging.Debug);
-                Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
-                Cache.Instance.GotoBaseNow = false;
-                Cleanup.SessionState = string.Empty;
+                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.EVEOnFrame", "return;", Logging.Debug);
                 return;
-            }
+                RunOnceAfterStartup();
+                RunOnceInStationAfterStartup();
 
-            if (Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
-            {
-                if (_States.CurrentQuestorState != QuestorState.CloseQuestor)
+                if (!Cache.Instance.Paused)
                 {
-                    _States.CurrentQuestorState = QuestorState.CloseQuestor;
-                    Cleanup.BeginClosingQuestor();
-                }
-            }
-
-            // When in warp there's nothing we can do, so ignore everything
-            if (Cache.Instance.InSpace && Cache.Instance.InWarp)
-            {
-                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.EVEOnFrame", "if (Cache.Instance.InSpace && Cache.Instance.InWarp)", Logging.Debug);
-                return;
-            }
-
-            switch (_States.CurrentQuestorState)
-            {
-                case QuestorState.Idle:
-                    if (TimeCheck()) return; //Should we close questor due to stoptime or runtime?
-
-                    if (!SkillQueueCheck()) return; //if we need to train skills we return here, on the next pass we will be _States.CurrentQuestorState = QuestorSate.SkillTrainer
-
-                    if (Cache.Instance.StopBot)
+                    if (DateTime.UtcNow.Subtract(Time.Instance.LastWalletCheck).TotalMinutes > Time.Instance.WalletCheck_minutes && !Settings.Instance.DefaultSettingsLoaded)
                     {
-                        if (Logging.DebugIdle) Logging.Log("Questor", "Cache.Instance.StopBot = true - this is set by the LocalWatch code so that we stay in station when local is unsafe", Logging.Orange);
-                        return;
+                        WalletCheck();
                     }
+                }
 
-                    if (_States.CurrentQuestorState == QuestorState.Idle && Settings.Instance.CharacterMode != "none" && Settings.Instance.CharacterName != null)
+                // We always check our defense state if we're in space, regardless of questor state
+                // We also always check panic
+                Defense.ProcessState();
+
+                if (Cache.Instance.Paused) //|| DateTime.UtcNow < _nextQuestorAction)
+                {
+                    if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.Paused)", Logging.Debug);
+                    Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
+                    Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                    Cache.Instance.GotoBaseNow = false;
+                    Cleanup.SessionState = string.Empty;
+                    return;
+                }
+
+                if (Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
+                {
+                    if (_States.CurrentQuestorState != QuestorState.CloseQuestor)
                     {
+                        _States.CurrentQuestorState = QuestorState.CloseQuestor;
+                        Cleanup.BeginClosingQuestor();
+                    }
+                }
+
+                // When in warp there's nothing we can do, so ignore everything
+                if (Cache.Instance.InSpace && Cache.Instance.InWarp)
+                {
+                    if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.EVEOnFrame", "if (Cache.Instance.InSpace && Cache.Instance.InWarp)", Logging.Debug);
+                    return;
+                }
+
+                switch (_States.CurrentQuestorState)
+                {
+                    case QuestorState.Idle:
+                        if (TimeCheck()) return; //Should we close questor due to stoptime or runtime?
+
+                        if (!SkillQueueCheck()) return; //if we need to train skills we return here, on the next pass we will be _States.CurrentQuestorState = QuestorSate.SkillTrainer
+
+                        if (Cache.Instance.StopBot)
+                        {
+                            if (Logging.DebugIdle) Logging.Log("Questor", "Cache.Instance.StopBot = true - this is set by the LocalWatch code so that we stay in station when local is unsafe", Logging.Orange);
+                            return;
+                        }
+
+                        if (_States.CurrentQuestorState == QuestorState.Idle && Settings.Instance.CharacterMode != "none" && Settings.Instance.CharacterName != null)
+                        {
+                            _States.CurrentQuestorState = QuestorState.Start;
+                            return;
+                        }
+
+                        Logging.Log("Questor", "Settings.Instance.CharacterMode = [" + Settings.Instance.CharacterMode + "]", Logging.Orange);
+                        _States.CurrentQuestorState = QuestorState.Error;
+                        break;
+
+                    case QuestorState.CombatMissionsBehavior:
+
+                        //
+                        // QuestorState will stay here until changed externally by the behavior we just kicked into starting
+                        //
+                        _combatMissionsBehavior.ProcessState();
+                        break;
+
+                    case QuestorState.SkillTrainer:
+
+                        //
+                        // QuestorState will stay here until changed externally by the behavior we just kicked into starting
+                        //
+                        SkillTrainerClass.ProcessState();
+                        break;
+
+                    case QuestorState.CombatHelperBehavior:
+
+                        //
+                        // QuestorState will stay here until changed externally by the behavior we just kicked into starting
+                        //
+                        _combatHelperBehavior.ProcessState();
+                        break;
+
+                    case QuestorState.DedicatedBookmarkSalvagerBehavior:
+
+                        //
+                        // QuestorState will stay here until changed externally by the behavior we just kicked into starting
+                        //
+                        _dedicatedBookmarkSalvagerBehavior.ProcessState();
+                        break;
+
+                    case QuestorState.DebugHangarsBehavior:
+
+                        //
+                        // QuestorState will stay here until changed externally by the behavior we just kicked into starting
+                        //
+                        _debugHangarsBehavior.ProcessState();
+                        break;
+
+                    case QuestorState.DebugReloadAll:
+                        if (!Combat.ReloadAll(Cache.Instance.EntitiesNotSelf.OrderBy(t => t.Distance).FirstOrDefault(t => t.Distance < (double)Distances.OnGridWithMe))) return;
                         _States.CurrentQuestorState = QuestorState.Start;
+                        break;
+
+                    case QuestorState.Mining:
+                        _miningBehavior.ProcessState();
+                        break;
+
+                    case QuestorState.Start:
+                        switch (Settings.Instance.CharacterMode.ToLower())
+                        {
+                            case "combat missions":
+                            case "combat_missions":
+                            case "dps":
+                                Logging.Log("Questor", "Start Mission Behavior", Logging.White);
+                                _States.CurrentQuestorState = QuestorState.CombatMissionsBehavior;
+                                break;
+
+                            case "salvage":
+                                Logging.Log("Questor", "Start Salvaging Behavior", Logging.White);
+                                _States.CurrentQuestorState = QuestorState.DedicatedBookmarkSalvagerBehavior;
+                                break;
+
+                            case "mining":
+                                Logging.Log("Questor", "Start Mining Behavior", Logging.White);
+                                _States.CurrentQuestorState = QuestorState.Mining;
+                                _States.CurrentMiningState = MiningState.Start;
+                                break;
+
+                            case "combat helper":
+                            case "combat_helper":
+                            case "combathelper":
+                                Logging.Log("Questor", "Start CombatHelper Behavior", Logging.White);
+                                _States.CurrentQuestorState = QuestorState.CombatHelperBehavior;
+                                break;
+
+                            case "custom":
+                                Logging.Log("Questor", "Start Custom Behavior", Logging.White);
+                                //_States.CurrentQuestorState = QuestorState.BackgroundBehavior;
+                                break;
+
+                            case "directionalscanner":
+                                Logging.Log("Questor", "Start DirectionalScanner Behavior", Logging.White);
+                                _States.CurrentQuestorState = QuestorState.DirectionalScannerBehavior;
+                                break;
+                        }
+                        break;
+
+                    case QuestorState.CloseQuestor:
+                        if (Cleanup.ReasonToStopQuestor == string.Empty)
+                        {
+                            Cleanup.ReasonToStopQuestor = "case QuestorState.CloseQuestor:";
+                        }
+
+                        Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
                         return;
-                    }
 
-                    Logging.Log("Questor", "Settings.Instance.CharacterMode = [" + Settings.Instance.CharacterMode + "]", Logging.Orange);
-                    _States.CurrentQuestorState = QuestorState.Error;
-                    break;
+                    case QuestorState.DebugCloseQuestor:
 
-                case QuestorState.CombatMissionsBehavior:
+                        //Logging.Log("ISBoxerCharacterSet: " + Settings.Instance.Lavish_ISBoxerCharacterSet);
+                        //Logging.Log("Profile: " + Settings.Instance.Lavish_InnerspaceProfile);
+                        //Logging.Log("Game: " + Settings.Instance.Lavish_Game);
+                        Logging.Log("Questor", "CloseQuestorCMDUplinkInnerspaceProfile: " + Settings.Instance.CloseQuestorCMDUplinkInnerspaceProfile, Logging.White);
+                        Logging.Log("Questor", "CloseQuestorCMDUplinkISboxerCharacterSet: " + Settings.Instance.CloseQuestorCMDUplinkIsboxerCharacterSet, Logging.White);
+                        Logging.Log("Questor", "CloseQuestorArbitraryOSCmd" + Settings.Instance.CloseQuestorArbitraryOSCmd, Logging.White);
+                        Logging.Log("Questor", "CloseQuestorOSCmdContents" + Settings.Instance.CloseQuestorOSCmdContents, Logging.White);
+                        Logging.Log("Questor", "WalletBalanceChangeLogOffDelay: " + Settings.Instance.WalletBalanceChangeLogOffDelay, Logging.White);
+                        Logging.Log("Questor", "WalletBalanceChangeLogOffDelayLogoffOrExit: " + Settings.Instance.WalletBalanceChangeLogOffDelayLogoffOrExit, Logging.White);
+                        Logging.Log("Questor", "EVEProcessMemoryCeiling: " + Settings.Instance.EVEProcessMemoryCeiling, Logging.White);
+                        Logging.Log("Questor", "Cache.Instance.CloseQuestorCMDExitGame: " + Cache.Instance.CloseQuestorCMDExitGame, Logging.White);
+                        Logging.Log("Questor", "Cache.Instance.CloseQuestorCMDLogoff: " + Cache.Instance.CloseQuestorCMDLogoff, Logging.White);
+                        Logging.Log("Questor", "Cache.Instance.CloseQuestorEndProcess: " + Cache.Instance.CloseQuestorEndProcess, Logging.White);
+                        Logging.Log("Questor", "Time.EnteredCloseQuestor_DateTime: " + Time.EnteredCloseQuestor_DateTime.ToShortTimeString(), Logging.White);
+                        _States.CurrentQuestorState = QuestorState.Error;
+                        return;
 
-                    //
-                    // QuestorState will stay here until changed externally by the behavior we just kicked into starting
-                    //
-                    _combatMissionsBehavior.ProcessState();
-                    break;
+                    case QuestorState.DebugWindows:
+                        List<DirectWindow> windows = Cache.Instance.Windows;
 
-                case QuestorState.SkillTrainer:
-
-                    //
-                    // QuestorState will stay here until changed externally by the behavior we just kicked into starting
-                    //
-                    SkillTrainerClass.ProcessState();
-                    break;
-
-                case QuestorState.CombatHelperBehavior:
-
-                    //
-                    // QuestorState will stay here until changed externally by the behavior we just kicked into starting
-                    //
-                    _combatHelperBehavior.ProcessState();
-                    break;
-
-                case QuestorState.DedicatedBookmarkSalvagerBehavior:
-
-                    //
-                    // QuestorState will stay here until changed externally by the behavior we just kicked into starting
-                    //
-                    _dedicatedBookmarkSalvagerBehavior.ProcessState();
-                    break;
-
-                case QuestorState.DebugHangarsBehavior:
-
-                    //
-                    // QuestorState will stay here until changed externally by the behavior we just kicked into starting
-                    //
-                    _debugHangarsBehavior.ProcessState();
-                    break;
-
-                case QuestorState.DebugReloadAll:
-                    if (!Combat.ReloadAll(Cache.Instance.EntitiesNotSelf.OrderBy(t => t.Distance).FirstOrDefault(t => t.Distance < (double)Distances.OnGridWithMe))) return;
-                    _States.CurrentQuestorState = QuestorState.Start;
-                    break;
-
-                case QuestorState.Mining:
-                    _miningBehavior.ProcessState();
-                    break;
-
-                case QuestorState.Start:
-                    switch (Settings.Instance.CharacterMode.ToLower())
-                    {
-                        case "combat missions":
-                        case "combat_missions":
-                        case "dps":
-                            Logging.Log("Questor", "Start Mission Behavior", Logging.White);
-                            _States.CurrentQuestorState = QuestorState.CombatMissionsBehavior;
-                            break;
-
-                        case "salvage":
-                            Logging.Log("Questor", "Start Salvaging Behavior", Logging.White);
-                            _States.CurrentQuestorState = QuestorState.DedicatedBookmarkSalvagerBehavior;
-                            break;
-
-                        case "mining":
-                            Logging.Log("Questor", "Start Mining Behavior", Logging.White);
-                            _States.CurrentQuestorState = QuestorState.Mining;
-                            _States.CurrentMiningState = MiningState.Start;
-                            break;
-
-                        case "combat helper":
-                        case "combat_helper":
-                        case "combathelper":
-                            Logging.Log("Questor", "Start CombatHelper Behavior", Logging.White);
-                            _States.CurrentQuestorState = QuestorState.CombatHelperBehavior;
-                            break;
-
-                        case "custom":
-                            Logging.Log("Questor", "Start Custom Behavior", Logging.White);
-                            //_States.CurrentQuestorState = QuestorState.BackgroundBehavior;
-                            break;
-
-                        case "directionalscanner":
-                            Logging.Log("Questor", "Start DirectionalScanner Behavior", Logging.White);
-                            _States.CurrentQuestorState = QuestorState.DirectionalScannerBehavior;
-                            break;
-                    }
-                    break;
-
-                case QuestorState.CloseQuestor:
-                    if (Cleanup.ReasonToStopQuestor == string.Empty)
-                    {
-                        Cleanup.ReasonToStopQuestor = "case QuestorState.CloseQuestor:";
-                    }
-
-                    Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
-                    return;
-
-                case QuestorState.DebugCloseQuestor:
-
-                    //Logging.Log("ISBoxerCharacterSet: " + Settings.Instance.Lavish_ISBoxerCharacterSet);
-                    //Logging.Log("Profile: " + Settings.Instance.Lavish_InnerspaceProfile);
-                    //Logging.Log("Game: " + Settings.Instance.Lavish_Game);
-                    Logging.Log("Questor", "CloseQuestorCMDUplinkInnerspaceProfile: " + Settings.Instance.CloseQuestorCMDUplinkInnerspaceProfile, Logging.White);
-                    Logging.Log("Questor", "CloseQuestorCMDUplinkISboxerCharacterSet: " + Settings.Instance.CloseQuestorCMDUplinkIsboxerCharacterSet, Logging.White);
-                    Logging.Log("Questor", "CloseQuestorArbitraryOSCmd" + Settings.Instance.CloseQuestorArbitraryOSCmd, Logging.White);
-                    Logging.Log("Questor", "CloseQuestorOSCmdContents" + Settings.Instance.CloseQuestorOSCmdContents, Logging.White);
-                    Logging.Log("Questor", "WalletBalanceChangeLogOffDelay: " + Settings.Instance.WalletBalanceChangeLogOffDelay, Logging.White);
-                    Logging.Log("Questor", "WalletBalanceChangeLogOffDelayLogoffOrExit: " + Settings.Instance.WalletBalanceChangeLogOffDelayLogoffOrExit, Logging.White);
-                    Logging.Log("Questor", "EVEProcessMemoryCeiling: " + Settings.Instance.EVEProcessMemoryCeiling, Logging.White);
-                    Logging.Log("Questor", "Cache.Instance.CloseQuestorCMDExitGame: " + Cache.Instance.CloseQuestorCMDExitGame, Logging.White);
-                    Logging.Log("Questor", "Cache.Instance.CloseQuestorCMDLogoff: " + Cache.Instance.CloseQuestorCMDLogoff, Logging.White);
-                    Logging.Log("Questor", "Cache.Instance.CloseQuestorEndProcess: " + Cache.Instance.CloseQuestorEndProcess, Logging.White);
-                    Logging.Log("Questor", "Time.EnteredCloseQuestor_DateTime: " + Time.EnteredCloseQuestor_DateTime.ToShortTimeString(), Logging.White);
-                    _States.CurrentQuestorState = QuestorState.Error;
-                    return;
-
-                case QuestorState.DebugWindows:
-                    List<DirectWindow> windows = Cache.Instance.Windows;
-
-                    if (windows != null && windows.Any())
-                    {
-                        foreach (DirectWindow window in windows)
+                        if (windows != null && windows.Any())
                         {
-                            Logging.Log("Questor", "--------------------------------------------------", Logging.Orange);
-                            Logging.Log("Questor", "Debug_Window.Name: [" + window.Name + "]", Logging.White);
-                            Logging.Log("Questor", "Debug_Window.Caption: [" + window.Caption + "]", Logging.White);
-                            Logging.Log("Questor", "Debug_Window.Type: [" + window.Type + "]", Logging.White);
-                            Logging.Log("Questor", "Debug_Window.IsModal: [" + window.IsModal + "]", Logging.White);
-                            Logging.Log("Questor", "Debug_Window.IsDialog: [" + window.IsDialog + "]", Logging.White);
-                            Logging.Log("Questor", "Debug_Window.Id: [" + window.Id + "]", Logging.White);
-                            Logging.Log("Questor", "Debug_Window.IsKillable: [" + window.IsKillable + "]", Logging.White);
-                            Logging.Log("Questor", "Debug_Window.Html: [" + window.Html + "]", Logging.White);
+                            foreach (DirectWindow window in windows)
+                            {
+                                Logging.Log("Questor", "--------------------------------------------------", Logging.Orange);
+                                Logging.Log("Questor", "Debug_Window.Name: [" + window.Name + "]", Logging.White);
+                                Logging.Log("Questor", "Debug_Window.Caption: [" + window.Caption + "]", Logging.White);
+                                Logging.Log("Questor", "Debug_Window.Type: [" + window.Type + "]", Logging.White);
+                                Logging.Log("Questor", "Debug_Window.IsModal: [" + window.IsModal + "]", Logging.White);
+                                Logging.Log("Questor", "Debug_Window.IsDialog: [" + window.IsDialog + "]", Logging.White);
+                                Logging.Log("Questor", "Debug_Window.Id: [" + window.Id + "]", Logging.White);
+                                Logging.Log("Questor", "Debug_Window.IsKillable: [" + window.IsKillable + "]", Logging.White);
+                                Logging.Log("Questor", "Debug_Window.Html: [" + window.Html + "]", Logging.White);
+                            }
+
+                            //Logging.Log("Questor", "Debug_InventoryWindows", Logging.White);
+                            //foreach (DirectWindow window in windows)
+                            //{
+                            //    if (window.Type.Contains("inventory"))
+                            //    {
+                            //        Logging.Log("Questor", "Debug_Window.Name: [" + window.Name + "]", Logging.White);
+                            //        Logging.Log("Questor", "Debug_Window.Type: [" + window.Type + "]", Logging.White);
+                            //        Logging.Log("Questor", "Debug_Window.Caption: [" + window.Caption + "]", Logging.White);
+                            //        //Logging.Log("Questor", "Debug_Window.Type: [" + window. + "]", Logging.White);
+                            //    }
+                            //}
                         }
-
-                        //Logging.Log("Questor", "Debug_InventoryWindows", Logging.White);
-                        //foreach (DirectWindow window in windows)
-                        //{
-                        //    if (window.Type.Contains("inventory"))
-                        //    {
-                        //        Logging.Log("Questor", "Debug_Window.Name: [" + window.Name + "]", Logging.White);
-                        //        Logging.Log("Questor", "Debug_Window.Type: [" + window.Type + "]", Logging.White);
-                        //        Logging.Log("Questor", "Debug_Window.Caption: [" + window.Caption + "]", Logging.White);
-                        //        //Logging.Log("Questor", "Debug_Window.Type: [" + window. + "]", Logging.White);
-                        //    }
-                        //}
-                    }
-                    else
-                    {
-                        Logging.Log("Questor", "DebugWindows: No Windows Found", Logging.White);
-                    }
-                    _States.CurrentQuestorState = QuestorState.Error;
-                    return;
-
-                case QuestorState.DebugInventoryTree:
-
-                    if (Cache.Instance.PrimaryInventoryWindow.ExpandCorpHangarView())
-                    {
-                        Logging.Log("DebugInventoryTree", "ExpandCorpHangar executed", Logging.Teal);
-                    }
-                    Logging.Log("DebugInventoryTree", "--------------------------------------------------", Logging.Orange);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.Name: [" + Cache.Instance.PrimaryInventoryWindow.Name + "]", Logging.White);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.Caption: [" + Cache.Instance.PrimaryInventoryWindow.Caption + "]", Logging.White);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.Type: [" + Cache.Instance.PrimaryInventoryWindow.Type + "]", Logging.White);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.IsModal: [" + Cache.Instance.PrimaryInventoryWindow.IsModal + "]", Logging.White);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.IsDialog: [" + Cache.Instance.PrimaryInventoryWindow.IsDialog + "]", Logging.White);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.Id: [" + Cache.Instance.PrimaryInventoryWindow.Id + "]", Logging.White);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.IsKillable: [" + Cache.Instance.PrimaryInventoryWindow.IsKillable + "]", Logging.White);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.IsReady: [" + Cache.Instance.PrimaryInventoryWindow.IsReady + "]", Logging.White);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.LocationFlag: [" + Cache.Instance.PrimaryInventoryWindow.LocationFlag + "]", Logging.White);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.currInvIdName: " + Cache.Instance.PrimaryInventoryWindow.currInvIdName, Logging.Red);
-                    Logging.Log("DebugInventoryTree", "InventoryWindow.currInvIdName: " + Cache.Instance.PrimaryInventoryWindow.currInvIdItem, Logging.Red);
-
-                    foreach (Int64 itemInTree in Cache.Instance.IDsinInventoryTree)
-                    {
-                        if (Cache.Instance.PrimaryInventoryWindow.GetIdsFromTree(false).Contains(itemInTree))
+                        else
                         {
-                            Cache.Instance.PrimaryInventoryWindow.SelectTreeEntryByID(itemInTree);
-                            Cache.Instance.IDsinInventoryTree.Remove(itemInTree);
-                            break;
+                            Logging.Log("Questor", "DebugWindows: No Windows Found", Logging.White);
                         }
-                    }
-                    break;
+                        _States.CurrentQuestorState = QuestorState.Error;
+                        return;
 
-                //case QuestorState.BackgroundBehavior:
+                    case QuestorState.DebugInventoryTree:
 
-                //
-                // QuestorState will stay here until changed externally by the behavior we just kicked into starting
-                //
-                //_backgroundbehavior.ProcessState();
-                //break;
+                        if (Cache.Instance.PrimaryInventoryWindow.ExpandCorpHangarView())
+                        {
+                            Logging.Log("DebugInventoryTree", "ExpandCorpHangar executed", Logging.Teal);
+                        }
+                        Logging.Log("DebugInventoryTree", "--------------------------------------------------", Logging.Orange);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.Name: [" + Cache.Instance.PrimaryInventoryWindow.Name + "]", Logging.White);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.Caption: [" + Cache.Instance.PrimaryInventoryWindow.Caption + "]", Logging.White);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.Type: [" + Cache.Instance.PrimaryInventoryWindow.Type + "]", Logging.White);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.IsModal: [" + Cache.Instance.PrimaryInventoryWindow.IsModal + "]", Logging.White);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.IsDialog: [" + Cache.Instance.PrimaryInventoryWindow.IsDialog + "]", Logging.White);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.Id: [" + Cache.Instance.PrimaryInventoryWindow.Id + "]", Logging.White);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.IsKillable: [" + Cache.Instance.PrimaryInventoryWindow.IsKillable + "]", Logging.White);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.IsReady: [" + Cache.Instance.PrimaryInventoryWindow.IsReady + "]", Logging.White);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.LocationFlag: [" + Cache.Instance.PrimaryInventoryWindow.LocationFlag + "]", Logging.White);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.currInvIdName: " + Cache.Instance.PrimaryInventoryWindow.currInvIdName, Logging.Red);
+                        Logging.Log("DebugInventoryTree", "InventoryWindow.currInvIdName: " + Cache.Instance.PrimaryInventoryWindow.currInvIdItem, Logging.Red);
+
+                        foreach (Int64 itemInTree in Cache.Instance.IDsinInventoryTree)
+                        {
+                            if (Cache.Instance.PrimaryInventoryWindow.GetIdsFromTree(false).Contains(itemInTree))
+                            {
+                                Cache.Instance.PrimaryInventoryWindow.SelectTreeEntryByID(itemInTree);
+                                Cache.Instance.IDsinInventoryTree.Remove(itemInTree);
+                                break;
+                            }
+                        }
+                        break;
+
+                    //case QuestorState.BackgroundBehavior:
+
+                    //
+                    // QuestorState will stay here until changed externally by the behavior we just kicked into starting
+                    //
+                    //_backgroundbehavior.ProcessState();
+                    //break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.Log("Questor.EVEOnFrame", "Exception [" + ex + "]", Logging.Debug);
+                return;
             }
         }
 
