@@ -559,8 +559,8 @@ namespace Questor
                 if (!OnframeProcessEveryPulse()) return;
                 if (Logging.DebugOnframe) Logging.Log("Questor", "OnFrame: this is Questor.cs [" + DateTime.UtcNow + "] by default the next InSpace pulse will be in [" + Time.Instance.QuestorPulseInSpace_milliseconds + "]milliseconds", Logging.Teal);
 
-                if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.EVEOnFrame", "return;", Logging.Debug);
-                return;
+                //if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.EVEOnFrame", "return;", Logging.Debug);
+                //return;
                 RunOnceAfterStartup();
                 RunOnceInStationAfterStartup();
 
