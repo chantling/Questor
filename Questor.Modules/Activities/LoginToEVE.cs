@@ -807,12 +807,12 @@ namespace Questor.Modules.Activities
 
                     switch (sLine[0].ToLower())
                     {
-                        case "eveloginusername":
+                        case "gameloginusername":
                             Logging.EVELoginUserName = sLine[1];
                             Logging.Log("PreLoginSettings", "EVELoginUserName [" + Logging.EVELoginUserName + "]", Logging.Debug);
                             break;
 
-                        case "eveloginpassword":
+                        case "gameloginpassword":
                             Logging.EVELoginPassword = sLine[1];
                             Logging.Log("PreLoginSettings", "EVELoginPassword [" + Logging.EVELoginPassword + "]", Logging.Debug);
                             break;
@@ -855,11 +855,6 @@ namespace Questor.Modules.Activities
                         case "debugonframe":
                             Logging.DebugOnframe = bool.Parse(sLine[1]);
                             Logging.Log("PreLoginSettings", "DebugOnframe: [" + Logging.DebugOnframe + "]", Logging.Debug);
-                            break;
-
-                        case "loadadapteve":
-                            _loadAdaptEVE = bool.Parse(sLine[1]);
-                            Logging.Log("PreLoginSettings", "_loadAdaptEVE [" + _loadAdaptEVE + "]", Logging.Debug);
                             break;
                     }
                 }
