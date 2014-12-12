@@ -1313,7 +1313,137 @@ namespace Questor.Behaviors
 
             return;
         }
-        
+
+        private void PrepareStorylineGotoBaseCMBState()
+        {
+            if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "PrepareStorylineGotoBase: AvoidBumpingThings()",Logging.White);
+
+            if (NavigateOnGrid.AvoidBumpingThingsBool)
+            {
+                if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "PrepareStorylineGotoBase: if (Settings.Instance.AvoidBumpingThings)", Logging.White);
+                NavigateOnGrid.AvoidBumpingThings(Cache.Instance.BigObjects.FirstOrDefault(), "CombatMissionsBehaviorState.PrepareStorylineGotoBase");
+            }
+
+            if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "PrepareStorylineGotoBase: Traveler.TravelHome()", Logging.White);
+
+            if (Settings.Instance.StoryLineBaseBookmark != "")
+            {
+                if (!Traveler.TravelToBookmarkName(Settings.Instance.StoryLineBaseBookmark, "CombatMissionsBehavior.TravelHome"))
+                {
+                    Traveler.TravelHome("CombatMissionsBehavior.TravelHome");
+                }
+            }
+            else
+            {
+                Traveler.TravelHome("CombatMissionsBehavior.TravelHome");
+            }
+
+            if (_States.CurrentTravelerState == TravelerState.AtDestination && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(5))
+            {
+                if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "PrepareStorylineGotoBase: We are at destination", Logging.White);
+                Cache.Instance.GotoBaseNow = false; //we are there - turn off the 'forced' gotobase
+                if (AgentInteraction.AgentId != 0)
+                {
+                    try
+                    {
+                        MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentInteraction.AgentId, true);
+                    }
+                    catch (Exception exception)
+                    {
+                        Logging.Log("CombatMissionsBehavior", "Cache.Instance.Mission = Cache.Instance.GetAgentMission(AgentID); [" + exception + "]", Logging.Teal);
+                        return;
+                    }
+                }
+
+                _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Storyline;
+                return;
+            }
+
+            return;
+        }
+        private void GotoNearestStationCMBState()
+        {
+            if (!Cache.Instance.InSpace || (Cache.Instance.InSpace && Cache.Instance.InWarp)) return;
+            EntityCache station = null;
+            if (Cache.Instance.Stations != null && Cache.Instance.Stations.Any())
+            {
+                station = Cache.Instance.Stations.OrderBy(x => x.Distance).FirstOrDefault();
+            }
+
+            if (station != null)
+            {
+                if (station.Distance > (int)Distances.WarptoDistance)
+                {
+                    if (station.WarpTo())
+                    {
+                        Logging.Log("CombatMissionsBehavior.GotoNearestStation", "[" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]", Logging.White);
+                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Salvage;
+                        return;
+                    }
+
+                    return;
+                }
+
+                if (station.Distance < (int)Distances.DockingRange)
+                {
+                    if (station.Dock())
+                    {
+                        Logging.Log("CombatMissionsBehavior.GotoNearestStation", "[" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]", Logging.White);
+                    }
+                }
+                else
+                {
+                    if (Cache.Instance.Approaching == null || Cache.Instance.Approaching.Id != station.Id ||
+                        Cache.Instance.MyShipEntity.Velocity < 50)
+                    {
+                        if (station.Approach())
+                        {
+                            Logging.Log("CombatMissionsBehavior.GotoNearestStation", "Approaching [" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]", Logging.White);
+                        }
+                    }
+                }
+
+                return;
+            }
+            
+            _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;
+            return;
+        }
+
+        private void StorylineReturnToBaseCMBState()
+        {
+            if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "StorylineReturnToBase: AvoidBumpingThings()", Logging.White);
+
+            if (NavigateOnGrid.AvoidBumpingThingsBool)
+            {
+                if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "StorylineReturnToBase: if (Settings.Instance.AvoidBumpingThings)", Logging.White);
+                NavigateOnGrid.AvoidBumpingThings(Cache.Instance.BigObjects.FirstOrDefault(), "CombatMissionsBehaviorState.StorylineReturnToBase");
+            }
+
+            if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "StorylineReturnToBase: TravelToStorylineBase", Logging.White);
+
+            if (Settings.Instance.StoryLineBaseBookmark != "")
+            {
+                if (!Traveler.TravelToBookmarkName(Settings.Instance.StoryLineBaseBookmark, "CombatMissionsBehavior.TravelToStorylineBase"))
+                {
+                    Traveler.TravelHome("CombatMissionsBehavior.TravelToStorylineBase");
+                }
+            }
+            else
+            {
+                Traveler.TravelHome("CombatMissionsBehavior.TravelToStorylineBase");
+            }
+
+            if (_States.CurrentTravelerState == TravelerState.AtDestination && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(5))
+            {
+                if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "StorylineReturnToBase: We are at destination", Logging.White);
+                Cache.Instance.GotoBaseNow = false; //we are there - turn off the 'forced' gotobase
+                _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Switch;
+            }
+
+            return;
+        }
+
         private bool CMBEveryPulse()
         {
             if (Logging.DebugDisableCombatMissionsBehavior)
@@ -1466,260 +1596,159 @@ namespace Questor.Behaviors
 
         public void ProcessState()
         {
-            if (Logging.DebugCombatMissionBehavior) Logging.Log("CombatMissionBehavior", "public void ProcessState()", Logging.Debug);
-            if (!CMBEveryPulse()) return;
-
-            switch (_States.CurrentCombatMissionBehaviorState)
+            try
             {
-                case CombatMissionsBehaviorState.Idle:
-                    IdleCMBState();
-                    break;
+                if (Logging.DebugCombatMissionBehavior) Logging.Log("CombatMissionBehavior", "public void ProcessState()", Logging.Debug);
+                if (!CMBEveryPulse()) return;
 
-                case CombatMissionsBehaviorState.DelayedStart:
-                    DelayedStartCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.DelayedGotoBase:
-                    DelayedGotoBaseCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.Cleanup:
-                    CleanupCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.Start:
-                    StartCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.Switch:
-                    SwitchCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.Arm:
-                    ArmCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.LocalWatch:
-                    LocalWatchCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.WaitingforBadGuytoGoAway:
-                    WaitingFoBadGuyToGoAway();
-                    break;
-
-                case CombatMissionsBehaviorState.WarpOutStation:
-                    WarpOutBookmarkCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.GotoMission:
-                    GotoMissionCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.ExecuteMission:
-                    ExecuteMissionCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.GotoBase:
-                    GotoBaseCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.CompleteMission:
-                    CompleteMissionCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.Statistics:
-                    StatisticsCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.UnloadLoot:
-                    UnloadLootCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.CheckBookmarkAge:
-                    if (Logging.DebugDisableCombatMissionsBehavior) Logging.Log("CombatMissionsBehaviorState", "Checking for any old bookmarks that may still need to be removed.", Logging.White);
-                    if (!Cache.Instance.DeleteUselessSalvageBookmarks("RemoveOldBookmarks")) return;
-                    _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.BeginAfterMissionSalvaging;
-                    Statistics.StartedSalvaging = DateTime.UtcNow;
-                    break;
-
-                case CombatMissionsBehaviorState.BeginAfterMissionSalvaging:
-                    BeginAftermissionSalvagingCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.GotoSalvageBookmark:
-                    SalvageGotoBookmarkCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.Salvage:
-                    SalvageCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.SalvageUseGate:
-                    SalageUseGateCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.SalvageNextPocket:
-                    SalvageNextPocketCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.PrepareStorylineSwitchAgents:
-                    Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
-                    Logging.Log("AgentInteraction", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
-                    _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.PrepareStorylineGotoBase;
-                    break;
-
-                case CombatMissionsBehaviorState.PrepareStorylineGotoBase:
-                    if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "PrepareStorylineGotoBase: AvoidBumpingThings()", Logging.White);
-
-                    if (NavigateOnGrid.AvoidBumpingThingsBool)
-                    {
-                        if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "PrepareStorylineGotoBase: if (Settings.Instance.AvoidBumpingThings)", Logging.White);
-                        NavigateOnGrid.AvoidBumpingThings(Cache.Instance.BigObjects.FirstOrDefault(), "CombatMissionsBehaviorState.PrepareStorylineGotoBase");
-                    }
-
-                    if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "PrepareStorylineGotoBase: Traveler.TravelHome()", Logging.White);
-
-                    if(Settings.Instance.StoryLineBaseBookmark != "")
-                    {
-                        if(!Traveler.TravelToBookmarkName(Settings.Instance.StoryLineBaseBookmark, "CombatMissionsBehavior.TravelHome"))
-                        {
-                            Traveler.TravelHome("CombatMissionsBehavior.TravelHome");
-                        }
-                    }
-                    else
-                        Traveler.TravelHome("CombatMissionsBehavior.TravelHome");
-
-                    if (_States.CurrentTravelerState == TravelerState.AtDestination && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(5)) // || DateTime.UtcNow.Subtract(Time.EnteredCloseQuestor_DateTime).TotalMinutes > 10)
-                    {
-                        if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "PrepareStorylineGotoBase: We are at destination", Logging.White);
-                        Cache.Instance.GotoBaseNow = false; //we are there - turn off the 'forced' gotobase
-                        if (AgentInteraction.AgentId != 0)
-                        {
-                            try
-                            {
-                                MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentInteraction.AgentId, true);
-                            }
-                            catch (Exception exception)
-                            {
-                                Logging.Log("CombatMissionsBehavior", "Cache.Instance.Mission = Cache.Instance.GetAgentMission(AgentID); [" + exception + "]", Logging.Teal);
-                            }
-                        }
-
-                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Storyline;
-                    }
-
-                    break;
-
-                case CombatMissionsBehaviorState.Storyline:
-                    _storyline.ProcessState();
-
-                    if (_States.CurrentStorylineState == StorylineState.Done)
-                    {
-                        Logging.Log("CombatMissionsBehavior.Storyline", "We have completed the storyline, returning to base", Logging.White);
-                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.StorylineReturnToBase;
+                switch (_States.CurrentCombatMissionBehaviorState)
+                {
+                    case CombatMissionsBehaviorState.Idle:
+                        IdleCMBState();
                         break;
-                    }
-                    break;
 
-                case CombatMissionsBehaviorState.StorylineReturnToBase:
-                    if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "StorylineReturnToBase: AvoidBumpingThings()", Logging.White);
+                    case CombatMissionsBehaviorState.DelayedStart:
+                        DelayedStartCMBState();
+                        break;
 
-                    if (NavigateOnGrid.AvoidBumpingThingsBool)
-                    {
-                        if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "StorylineReturnToBase: if (Settings.Instance.AvoidBumpingThings)", Logging.White);
-                        NavigateOnGrid.AvoidBumpingThings(Cache.Instance.BigObjects.FirstOrDefault(), "CombatMissionsBehaviorState.StorylineReturnToBase");
-                    }
+                    case CombatMissionsBehaviorState.DelayedGotoBase:
+                        DelayedGotoBaseCMBState();
+                        break;
 
-                    if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "StorylineReturnToBase: TravelToStorylineBase", Logging.White);
+                    case CombatMissionsBehaviorState.Cleanup:
+                        CleanupCMBState();
+                        break;
 
-                    if (Settings.Instance.StoryLineBaseBookmark != "")
-                    {
-                        if (!Traveler.TravelToBookmarkName(Settings.Instance.StoryLineBaseBookmark, "CombatMissionsBehavior.TravelToStorylineBase"))
+                    case CombatMissionsBehaviorState.Start:
+                        StartCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.Switch:
+                        SwitchCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.Arm:
+                        ArmCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.LocalWatch:
+                        LocalWatchCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.WaitingforBadGuytoGoAway:
+                        WaitingFoBadGuyToGoAway();
+                        break;
+
+                    case CombatMissionsBehaviorState.WarpOutStation:
+                        WarpOutBookmarkCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.GotoMission:
+                        GotoMissionCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.ExecuteMission:
+                        ExecuteMissionCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.GotoBase:
+                        GotoBaseCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.CompleteMission:
+                        CompleteMissionCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.Statistics:
+                        StatisticsCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.UnloadLoot:
+                        UnloadLootCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.CheckBookmarkAge:
+                        if (Logging.DebugDisableCombatMissionsBehavior) Logging.Log("CombatMissionsBehaviorState", "Checking for any old bookmarks that may still need to be removed.", Logging.White);
+                        if (!Cache.Instance.DeleteUselessSalvageBookmarks("RemoveOldBookmarks")) return;
+                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.BeginAfterMissionSalvaging;
+                        Statistics.StartedSalvaging = DateTime.UtcNow;
+                        break;
+
+                    case CombatMissionsBehaviorState.BeginAfterMissionSalvaging:
+                        BeginAftermissionSalvagingCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.GotoSalvageBookmark:
+                        SalvageGotoBookmarkCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.Salvage:
+                        SalvageCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.SalvageUseGate:
+                        SalageUseGateCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.SalvageNextPocket:
+                        SalvageNextPocketCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.PrepareStorylineSwitchAgents:
+                        Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
+                        Logging.Log("AgentInteraction", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
+                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.PrepareStorylineGotoBase;
+                        break;
+
+                    case CombatMissionsBehaviorState.PrepareStorylineGotoBase:
+                        PrepareStorylineGotoBaseCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.Storyline:
+                        _storyline.ProcessState();
+                        if (_States.CurrentStorylineState == StorylineState.Done)
                         {
-                            Traveler.TravelHome("CombatMissionsBehavior.TravelToStorylineBase");
-                        }
-                    }
-                    else
-                        Traveler.TravelHome("CombatMissionsBehavior.TravelToStorylineBase");
-
-                    if (_States.CurrentTravelerState == TravelerState.AtDestination && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(5))
-                    {
-                        if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "StorylineReturnToBase: We are at destination", Logging.White);
-                        Cache.Instance.GotoBaseNow = false; //we are there - turn off the 'forced' gotobase
-
-                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Switch;
-                    }
-
-                    break;
-
-                case CombatMissionsBehaviorState.CourierMission:
-
-                    if (_States.CurrentCourierMissionCtrlState == CourierMissionCtrlState.Idle)
-                        _States.CurrentCourierMissionCtrlState = CourierMissionCtrlState.GotoPickupLocation;
-
-                    _courierMissionCtrl.ProcessState();
-
-                    if (_States.CurrentCourierMissionCtrlState == CourierMissionCtrlState.Done)
-                    {
-                        _States.CurrentCourierMissionCtrlState = CourierMissionCtrlState.Idle;
-                        Cache.Instance.CourierMission = false;
-                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
-                    }
-                    break;
-
-                case CombatMissionsBehaviorState.Traveler:
-                    TravelerCMBState();
-                    break;
-
-                case CombatMissionsBehaviorState.GotoNearestStation:
-                    if (!Cache.Instance.InSpace || (Cache.Instance.InSpace && Cache.Instance.InWarp)) return;
-                    EntityCache station = null;
-                    if (Cache.Instance.Stations != null && Cache.Instance.Stations.Any())
-                    {
-                        station = Cache.Instance.Stations.OrderBy(x => x.Distance).FirstOrDefault();    
-                    }
-
-                    if (station != null)
-                    {
-                        if (station.Distance > (int)Distances.WarptoDistance)
-                        {
-                            if (station.WarpTo())
-                            {
-                                Logging.Log("CombatMissionsBehavior.GotoNearestStation", "[" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]", Logging.White);
-                                _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Salvage;
-                                break;
-                            }
-                            
+                            Logging.Log("CombatMissionsBehavior.Storyline", "We have completed the storyline, returning to base", Logging.White);
+                            _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.StorylineReturnToBase;
                             break;
                         }
+                        break;
 
-                        if (station.Distance < (int) Distances.DockingRange)
-                        {
-                            if (station.Dock())
-                            {
-                                Logging.Log("CombatMissionsBehavior.GotoNearestStation", "[" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]", Logging.White);       
-                            }
-                        }
-                        else
-                        {
-                            if (Cache.Instance.Approaching == null || Cache.Instance.Approaching.Id != station.Id || Cache.Instance.MyShipEntity.Velocity < 50)
-                            {
-                                if (station.Approach())
-                                {
-                                    Logging.Log("CombatMissionsBehavior.GotoNearestStation", "Approaching [" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]", Logging.White);    
-                                }
-                            }   
-                        }
-                    }
-                    else
-                    {
-                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error; //should we goto idle here?
-                    }
-                    break;
+                    case CombatMissionsBehaviorState.StorylineReturnToBase:
+                        StorylineReturnToBaseCMBState();
+                        break;
 
-                case CombatMissionsBehaviorState.Default:
-                    _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Idle;
-                    break;
+                    case CombatMissionsBehaviorState.CourierMission:
+
+                        if (_States.CurrentCourierMissionCtrlState == CourierMissionCtrlState.Idle)
+                            _States.CurrentCourierMissionCtrlState = CourierMissionCtrlState.GotoPickupLocation;
+
+                        _courierMissionCtrl.ProcessState();
+
+                        if (_States.CurrentCourierMissionCtrlState == CourierMissionCtrlState.Done)
+                        {
+                            _States.CurrentCourierMissionCtrlState = CourierMissionCtrlState.Idle;
+                            Cache.Instance.CourierMission = false;
+                            _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
+                        }
+                        break;
+
+                    case CombatMissionsBehaviorState.Traveler:
+                        TravelerCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.GotoNearestStation:
+                        GotoNearestStationCMBState();
+                        break;
+
+                    case CombatMissionsBehaviorState.Default:
+                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Idle;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.Log("CombatMissionBehavior", "Exception [" + ex + "]", Logging.Debug);
             }
         }
     }
