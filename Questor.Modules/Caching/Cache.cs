@@ -2548,6 +2548,8 @@ namespace Questor.Modules.Caching
                     EntityIsEntutyIShouldLeaveAlone.Clear();
                     EntityHaveLootRights.Clear();
                     EntityIsStargate.Clear();
+
+                    Cache.Instance.LootedContainers.Clear();
                     return;
                 }
 
