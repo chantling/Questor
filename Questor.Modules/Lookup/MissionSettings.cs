@@ -32,7 +32,7 @@ namespace Questor.Modules.Lookup
         static MissionSettings()
         {
             ChangeMissionShipFittings = false;
-            DefaultFitting = new FactionFitting(); 
+            DefaultFittingName = null;
             FactionBlacklist = new List<string>();
             ListOfAgents = new List<AgentsList>();
             ListofFactionFittings = new List<FactionFitting>();
@@ -47,13 +47,146 @@ namespace Questor.Modules.Lookup
             DamageTypesInMissionXML = new List<DamageType>();
         }
 
+        private static List<FactionFitting> _listofFactionFittings;
         //
         // Fitting Settings - if enabled
         //
-        public static List<FactionFitting> ListofFactionFittings { get; private set; }
+        public static List<FactionFitting> ListofFactionFittings
+        {
+            get
+            {
+                try
+                {
+                    if (Settings.Instance.UseFittingManager) //no need to look for or load these settings if FittingManager is disabled
+                    {
+                        if (_listofFactionFittings != null && _listofFactionFittings.Any())
+                        {
+                            return _listofFactionFittings;
+                        }
+
+                        //
+                        // if _listofFactionFittings is empty make sure it is NOT null!
+                        //
+                        _listofFactionFittings = new List<FactionFitting>();
+
+                        XElement factionFittings = Settings.Instance.CharacterSettingsXml.Element("factionFittings") ??
+                                                   Settings.Instance.CharacterSettingsXml.Element("factionfittings") ??
+                                                   Settings.Instance.CommonSettingsXml.Element("factionFittings") ??
+                                                   Settings.Instance.CommonSettingsXml.Element("factionfittings");
+
+                        if (factionFittings != null)
+                        {
+                            string factionFittingXmlElementName = "";
+                            if (factionFittings.Elements("factionFitting").Any())
+                            {
+                                factionFittingXmlElementName = "factionFitting";
+                            }
+                            else
+                            {
+                                factionFittingXmlElementName = "factionfitting";
+                            }
+
+                            int i = 0;
+                            foreach (XElement factionfitting in factionFittings.Elements(factionFittingXmlElementName))
+                            {
+                                i++;
+                                MissionSettings._listofFactionFittings.Add(new FactionFitting(factionfitting));
+                                if (Logging.DebugFittingMgr) Logging.Log("Settings.LoadMFactionFitting", "[" + i + "] Faction Fitting [" + factionfitting + "]", Logging.Teal);
+                            }
+
+                            return _listofFactionFittings;
+                        }
+                        
+                        Settings.Instance.UseFittingManager = false;
+                        if (Logging.DebugFittingMgr) Logging.Log("Settings", "No faction fittings specified.  Fitting manager will not be used.", Logging.Orange);
+                        return new List<FactionFitting>();
+                    }
+
+                    return new List<FactionFitting>();
+                }
+                catch (Exception exception)
+                {
+                    Logging.Log("Settings", "Error Loading Faction Fittings Settings [" + exception + "]", Logging.Teal);
+                    return new List<FactionFitting>();
+                }
+            }
+
+            private set
+            {
+                _listofFactionFittings = value;
+            }
+        }
+
         public static List<AgentsList> ListOfAgents { get; set; }
-        public static List<MissionFitting> ListOfMissionFittings { get; private set; }
-        public static FactionFitting DefaultFitting { get; set; }
+
+        private static List<MissionFitting> _listOfMissionFittings;
+        public static List<MissionFitting> ListOfMissionFittings
+        {
+            get
+            {
+                //
+                // Load List of Mission Fittings available for Fitting based on the name of the mission
+                //
+                try
+                {
+                    XElement xmlElementMissionFittingsSection = Settings.Instance.CharacterSettingsXml.Element("missionfittings") ?? Settings.Instance.CommonSettingsXml.Element("missionfittings");
+                    if (Settings.Instance.UseFittingManager) //no need to look for or load these settings if FittingManager is disabled
+                    {
+                        if (xmlElementMissionFittingsSection != null)
+                        {
+                            if (Logging.DebugFittingMgr) Logging.Log("Settings", "Loading Mission Fittings", Logging.White);
+                            int i = 0;
+                            foreach (XElement missionfitting in xmlElementMissionFittingsSection.Elements("missionfitting"))
+                            {
+                                i++;
+                                MissionSettings._listOfMissionFittings.Add(new MissionFitting(missionfitting));
+                                if (Logging.DebugFittingMgr) Logging.Log("Settings.LoadMissionFittings", "[" + i + "] Mission Fitting [" + missionfitting + "]", Logging.Teal);
+                            }
+
+                            if (Logging.DebugFittingMgr) Logging.Log("Settings", "        Mission Fittings now has [" + MissionSettings._listOfMissionFittings.Count + "] entries", Logging.White);
+                            return _listOfMissionFittings;
+                        }
+
+                        return new List<MissionFitting>();
+                    }
+
+                    return new List<MissionFitting>();
+                }
+                catch (Exception exception)
+                {
+                    Logging.Log("Settings", "Error Loading Mission Fittings Settings [" + exception + "]", Logging.Teal);
+                    return new List<MissionFitting>();
+                }
+            }
+
+            private set
+            {
+                _listOfMissionFittings = value;
+            }
+        }
+
+        private static string _defaultFittingName;
+
+        private static FactionFitting _defaultFitting;
+        public static string DefaultFittingName
+        {
+            get
+            {
+                if (ListofFactionFittings != null && ListofFactionFittings.Any())
+                {
+                    _defaultFitting = ListofFactionFittings.Find(m => m.FactionName.ToLower() == "default");
+                    _defaultFittingName = _defaultFitting.FittingName;
+                    return _defaultFittingName;
+                }
+
+                Logging.Log("MissionSettings", "DefaultFittingName - no fitting found for the faction named [ default ], assuming a fitting name of [ default ] exists", Logging.Debug);
+                return "default";
+            }
+            set
+            {
+                _defaultFittingName = value;
+            }
+        }
 
         public static DirectAgentMission Mission;
         public static DirectAgentMission FirstAgentMission;
@@ -76,7 +209,6 @@ namespace Questor.Modules.Lookup
         public static int BlackListedMissionsDeclined = 0;
         public static string LastBlacklistMissionDeclined = string.Empty;
         
-
         //
         // Pocket Specific Settings (we should make these ALL settable via the mission XML inside of pockets
         //
@@ -222,11 +354,148 @@ namespace Questor.Modules.Lookup
         /// </summary>
         public static List<string> MissionItems { get; private set; }
 
-        public static string FittingToLoad { get; set; } // stores name of the final fitting we want to use
+        private static string _fittingToLoad; //name of the final fitting we want to use
+
+        public static string FittingToLoad 
+        {
+            get
+            {
+                if (MissionFittingNameForThisMissionName == null)
+                {
+                    if (FactionFittingNameForThisMissionsFaction == null)
+                    {
+                        //
+                        // if both mission and faction fittings are null we need to try to locate and use the default fitting
+                        //
+                        _fittingToLoad = MissionSettings.DefaultFittingName.ToLower();
+                    }
+
+                    _fittingToLoad = FactionFittingNameForThisMissionsFaction;
+                    return _fittingToLoad;
+                }
+
+                _fittingToLoad = FactionFittingNameForThisMissionsFaction;
+                return _fittingToLoad;
+            }
+
+            set
+            {
+                _fittingToLoad = value;
+            }
+        }
+
+
         public static string MissionSpecificShip { get; set; } //stores name of mission specific ship
         public static string FactionSpecificShip { get; set; } //stores name of mission specific ship
         public static string CurrentFit { get; set; }
-        public static string FactionFittingForThisMissionsFaction { get; set; }
+
+        private static string _factionFittingNameForThisMissionsFaction;
+
+        private static FactionFitting _factionFittingForThisMissionsFaction;
+        public static string FactionFittingNameForThisMissionsFaction
+        {
+            get
+            {
+                if (_factionFittingNameForThisMissionsFaction == null)
+                {
+                    if (MissionSettings.ListofFactionFittings.Any(i => i.FactionName.ToLower() == FactionName.ToLower()))
+                    {
+                        if (MissionSettings.ListofFactionFittings.FirstOrDefault(m => m.FactionName.ToLower() == FactionName.ToLower()) != null)
+                        {
+                            FactionFitting tempFitting = MissionSettings.ListofFactionFittings.FirstOrDefault(m => m.FactionName.ToLower() == FactionName.ToLower());
+                            if (tempFitting != null)
+                            {
+                                _factionFittingNameForThisMissionsFaction = tempFitting.ToString();
+                                if (_factionFittingForThisMissionsFaction.DroneTypeID != null && _factionFittingForThisMissionsFaction.DroneTypeID != 0)
+                                {
+                                    Drones.FactionDroneTypeID = (int)_factionFittingForThisMissionsFaction.DroneTypeID;
+                                }
+
+                                Logging.Log("AgentInteraction", "Faction fitting: " + _factionFittingForThisMissionsFaction.FactionName + "Using DroneTypeID [" + Drones.DroneTypeID + "]", Logging.Yellow);
+                                return _factionFittingNameForThisMissionsFaction;
+                            }
+
+                            return null;
+                        }
+
+                        return null;
+                    }
+
+                    return null;
+                }
+
+                return _factionFittingNameForThisMissionsFaction;
+            }
+
+            set { _factionFittingNameForThisMissionsFaction = value; }
+        }
+
+        private static string _missionFittingNameForThisMissionName;
+
+        private static MissionFitting _missionFittingForThisMissionName;
+        public static string MissionFittingNameForThisMissionName
+        {
+            get
+            {
+                if (_missionFittingForThisMissionName == null)
+                {
+                    if (MissionSettings.ListOfMissionFittings != null && MissionSettings.ListOfMissionFittings.Any(i => i.MissionName.ToLower() == Mission.Name))
+                    {
+                        IEnumerable<MissionFitting> tempListOfMissionFittings = MissionSettings.ListOfMissionFittings.Where(i => i.MissionName.ToLower() == Mission.Name);
+                        if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())
+                        {
+                            foreach (MissionFitting fittingMatchingFaction in tempListOfMissionFittings)
+                            {
+                                if (fittingMatchingFaction.FactionName != null)
+                                {
+                                    if (fittingMatchingFaction.FactionName == MissionSettings.FactionName)
+                                    {
+                                        _missionFittingForThisMissionName = fittingMatchingFaction;
+                                        _missionFittingNameForThisMissionName = fittingMatchingFaction.FittingName;
+                                        if (fittingMatchingFaction.DroneTypeID != null)
+                                        {
+                                            MissionSettings.MissionDroneTypeID = fittingMatchingFaction.DroneTypeID;
+                                        }
+                                        
+                                        //_fitting.Ship - this should allow for mission specific ships... if we want to allow for that
+                                        return _missionFittingNameForThisMissionName;
+                                    }
+
+                                    continue;
+                                }
+
+                                continue;
+                            }
+
+                            MissionFitting fitting = tempListOfMissionFittings.FirstOrDefault();
+                            if (fitting != null)
+                            {
+                                _missionFittingForThisMissionName = fitting;
+                                _missionFittingNameForThisMissionName = fitting.FittingName;
+                                if (fitting.DroneTypeID != null)
+                                {
+                                    MissionSettings.MissionDroneTypeID = fitting.DroneTypeID;
+                                }
+
+                                //_fitting.Ship - this should allow for mission specific ships... if we want to allow for that
+                                return _missionFittingNameForThisMissionName;    
+                            }
+
+                            return null;
+                        }
+
+                        return null;
+                    }
+
+                    return null;
+                }
+
+                return _factionFittingNameForThisMissionsFaction;
+            }
+
+            set { _factionFittingNameForThisMissionsFaction = value; }
+        }
+
         public static string FactionName { get; set; }
         public static bool UseMissionShip { get; set; } // flags whether we're using a mission specific ship
         public static bool ChangeMissionShipFittings { get; set; } // used for situations in which missionShip's specified, but no faction or mission fittings are; prevents default
@@ -328,8 +597,22 @@ namespace Questor.Modules.Lookup
         public static void ClearMissionSpecificSettings()
         {
             //
-            // this is now done when LoadMissionXMLData and/or when refreshing Mission
+            // Clear Mission Specific Settings
             //
+            MissionSettings.MissionDronesKillHighValueTargets = null;
+            MissionSettings.MissionWeaponGroupId = 0;
+            MissionSettings.MissionWarpAtDistanceRange = 0;
+            MissionSettings.MissionXMLIsAvailable = true;
+            MissionSettings.MissionDroneTypeID = null;
+            MissionSettings.MissionKillSentries = null;
+            MissionSettings.MissionUseDrones = null;
+            MissionSettings.MissionOrbitDistance = null;
+            MissionSettings.MissionOptimalRange = null;
+            MissionSettings.MissionDamageType = null;
+            MissionSettings._factionFittingNameForThisMissionsFaction = null;
+            MissionSettings._factionFittingForThisMissionsFaction = null;
+            MissionSettings._fittingToLoad = null;
+            MissionSettings._listOfMissionFittings.Clear();
         }
 
         public static void ClearFactionSpecificSettings()
@@ -341,6 +624,7 @@ namespace Questor.Modules.Lookup
             MissionSettings.FactionOrbitDistance = null;
             MissionSettings.FactionDamageType = null;
             MissionSettings.ManualDamageType = null;
+            MissionSettings._listofFactionFittings.Clear();
         }
 
         public static IDictionary<TKey, TValue> AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
@@ -357,23 +641,12 @@ namespace Questor.Modules.Lookup
             return dictionary;
         }
 
-        public static void LoadMissionXMLData()
+        public static void LoadMissionXmlData()
         {
             Logging.Log("AgentInteraction", "Loading mission xml [" + MissionName + "] from [" + MissionSettings.MissionXmlPath + "]", Logging.Yellow);
-            //
-            // Clear Mission Specific Settings
-            //
-            MissionSettings.MissionDronesKillHighValueTargets = null;
-            MissionSettings.MissionWeaponGroupId = 0;
-            MissionSettings.MissionWarpAtDistanceRange = 0;
-            MissionSettings.MissionXMLIsAvailable = true;
-            MissionSettings.MissionDroneTypeID = null;
-            MissionSettings.MissionKillSentries = null;
-            MissionSettings.MissionUseDrones = null;
-            MissionSettings.MissionOrbitDistance = null;
-            MissionSettings.MissionOptimalRange = null;
-            MissionSettings.MissionDamageType = null;
-            
+
+            ClearMissionSpecificSettings();
+
             //FactionDamageType, 
             //MissionDamageType,
             //PocketDamageType, 

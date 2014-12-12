@@ -605,7 +605,7 @@ namespace Questor.Modules.Actions
                         MissionSettings.AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
                         if (File.Exists(MissionSettings.MissionXmlPath))
                         {
-                            MissionSettings.LoadMissionXMLData();
+                            MissionSettings.LoadMissionXmlData();
                         }
                         else
                         {
@@ -875,8 +875,6 @@ namespace Questor.Modules.Actions
                     {
                         XElement faction = xml.Root.Elements("faction").FirstOrDefault(f => (string)f.Attribute("logo") == logo);
 
-                        //Cache.Instance.FactionFit = "Default";
-                        MissionSettings.FittingToLoad = MissionSettings.DefaultFitting.FittingName.ToLower();
                         MissionSettings.FactionName = "Default";
                         if (faction != null)
                         {
@@ -887,31 +885,6 @@ namespace Questor.Modules.Actions
                             {
                                 return true;
                             }
-
-                            if (Settings.Instance.UseFittingManager && MissionSettings.ListofFactionFittings.Any(m => m.FactionName.ToLower() == factionName.ToLower()))
-                            {
-                                FactionFitting _factionFittingForThisMissionsFaction = MissionSettings.ListofFactionFittings.FirstOrDefault(m => m.FactionName.ToLower() == factionName.ToLower());
-                                if (_factionFittingForThisMissionsFaction != null)
-                                {
-                                    MissionSettings.FactionFittingForThisMissionsFaction = _factionFittingForThisMissionsFaction.FittingName;
-                                    //
-                                    // if we have the drone type specified in the mission fitting entry use it, otherwise do not overwrite the default or the drone type specified by the faction
-                                    //
-                                    if (_factionFittingForThisMissionsFaction.DroneTypeID != null && _factionFittingForThisMissionsFaction.DroneTypeID != 0)
-                                    {
-                                        Drones.FactionDroneTypeID = (int)_factionFittingForThisMissionsFaction.DroneTypeID;
-                                    }
-                                    Logging.Log("AgentInteraction", "Faction fitting: " + _factionFittingForThisMissionsFaction.FactionName + "Using DroneTypeID [" + Drones.DroneTypeID + "]", Logging.Yellow);
-                                }
-                                else
-                                {
-                                    MissionSettings.FactionFittingForThisMissionsFaction = null;
-                                    Logging.Log("AgentInteraction", "Faction fitting: No fittings defined for [ " + factionName + " ]", Logging.Yellow);
-                                }
-
-                                //Cache.Instance.Fitting = Cache.Instance.FactionFit;
-                                return false;
-                            }
                         }
                         else
                         {
@@ -919,21 +892,9 @@ namespace Questor.Modules.Actions
                         }
                     }
                 }
-                else if (Settings.Instance.UseFittingManager) //only load the default fitting if we did not find the faction logo in the mission html.
+                else 
                 {
                     MissionSettings.FactionName = "Default";
-                    FactionFitting factionFitting = MissionSettings.ListofFactionFittings.FirstOrDefault(m => m.FactionName.ToLower() == "default");
-                    if (factionFitting != null)
-                    {
-                        MissionSettings.FactionFittingForThisMissionsFaction = factionFitting.FittingName;
-                        Logging.Log("AgentInteraction", "Faction fitting: " + factionFitting.FactionName, Logging.Yellow);
-                    }
-                    else
-                    {
-                        Logging.Log("AgentInteraction", "Faction fitting: No fittings defined for [ " + MissionSettings.FactionName + " ]", Logging.Orange);
-                    }
-
-                    //Cache.Instance.Fitting = Cache.Instance.FactionFit;
                 }
                 return false;
             }

@@ -253,15 +253,15 @@ namespace Questor.Modules.Lookup
         public event EventHandler<EventArgs> SettingsLoaded;
 
         public bool DefaultSettingsLoaded;
-
-        public void ReadSettingsFromXML(XElement CharacterSettingsXml)
+        public XElement CommonSettingsXml { get; set; }
+        public XElement CharacterSettingsXml { get; set; }
+        public void ReadSettingsFromXML()
         {
             try
             {
                 Settings.Instance.CommonSettingsFileName = (string)CharacterSettingsXml.Element("commonSettingsFileName") ?? "common.xml";
                 Settings.Instance.CommonSettingsPath = System.IO.Path.Combine(Settings.Instance.Path, Settings.Instance.CommonSettingsFileName);
 
-                XElement CommonSettingsXml;
                 if (File.Exists(Settings.Instance.CommonSettingsPath))
                 {
                     Settings.Instance.CommonXMLExists = true;
@@ -889,102 +889,6 @@ namespace Questor.Modules.Lookup
                     catch (Exception exception)
                     {
                         Logging.Log("Settings", "Error Loading Agent Settings [" + exception + "]", Logging.Teal);
-                    }
-
-                    //
-                    // Load List of Faction Fittings available for Fittings chosen based on the faction of the mission
-                    //
-                    try
-                    {
-                        MissionSettings.ListofFactionFittings.Clear();
-
-                        if (UseFittingManager) //no need to look for or load these settings if FittingManager is disabled
-                        {
-                            XElement factionFittings = CharacterSettingsXml.Element("factionFittings") ??
-                                                       CharacterSettingsXml.Element("factionfittings") ??
-                                                       CommonSettingsXml.Element("factionFittings") ??
-                                                       CommonSettingsXml.Element("factionfittings");
-
-                            if (factionFittings != null)
-                            {
-                                string factionFittingXMLElementName = "";
-                                if (factionFittings.Elements("factionFitting").Any())
-                                {
-                                    factionFittingXMLElementName = "factionFitting";
-                                }
-                                else
-                                {
-                                    factionFittingXMLElementName = "factionfitting";
-                                }
-
-                                int i = 0;
-                                foreach (XElement factionfitting in factionFittings.Elements(factionFittingXMLElementName))
-                                {
-                                    i++;
-                                    MissionSettings.ListofFactionFittings.Add(new FactionFitting(factionfitting));
-                                    if (Logging.DebugFittingMgr) Logging.Log("Settings.LoadMFactionFitting", "[" + i + "] Faction Fitting [" + factionfitting + "]", Logging.Teal);
-
-                                }
-
-                                //
-                                // if we have no default fitting do not use fitting manager
-                                //
-                                if (MissionSettings.ListofFactionFittings.Exists(m => m.FactionName.ToLower() == "default"))
-                                {
-                                    MissionSettings.DefaultFitting = MissionSettings.ListofFactionFittings.Find(m => m.FactionName.ToLower() == "default");
-                                    if (string.IsNullOrEmpty(MissionSettings.DefaultFitting.FittingName))
-                                    {
-                                        UseFittingManager = false;
-                                        Logging.Log("Settings", "Error! No default fitting specified or fitting is incorrect.  Fitting manager will not be used.", Logging.Orange);
-                                    }
-
-                                    Logging.Log("Settings", "Faction Fittings defined. Fitting manager will be used when appropriate.", Logging.White);
-                                }
-                                else
-                                {
-                                    UseFittingManager = false;
-                                    Logging.Log("Settings", "Error! No default fitting specified or fitting is incorrect.  Fitting manager will not be used.", Logging.Orange);
-                                }
-                            }
-                            else
-                            {
-                                UseFittingManager = false;
-                                Logging.Log("Settings", "No faction fittings specified.  Fitting manager will not be used.", Logging.Orange);
-                            }
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        Logging.Log("Settings", "Error Loading Faction Fittings Settings [" + exception + "]", Logging.Teal);
-                    }
-
-                    //
-                    // Load List of Mission Fittings available for Fitting based on the name of the mission
-                    //
-                    try
-                    {
-                        MissionSettings.ListOfMissionFittings.Clear();
-                        XElement xmlElementMissionFittingsSection = CharacterSettingsXml.Element("missionfittings") ?? CommonSettingsXml.Element("missionfittings");
-                        if (UseFittingManager) //no need to look for or load these settings if FittingManager is disabled
-                        {
-                            if (xmlElementMissionFittingsSection != null)
-                            {
-                                Logging.Log("Settings", "Loading Mission Fittings", Logging.White);
-                                int i = 0;
-                                foreach (XElement missionfitting in xmlElementMissionFittingsSection.Elements("missionfitting"))
-                                {
-                                    i++;
-                                    MissionSettings.ListOfMissionFittings.Add(new MissionFitting(missionfitting));
-                                    if (Logging.DebugFittingMgr) Logging.Log("Settings.LoadMissionFittings", "[" + i + "] Mission Fitting [" + missionfitting + "]", Logging.Teal);
-
-                                }
-                                Logging.Log("Settings", "        Mission Fittings now has [" + MissionSettings.ListOfMissionFittings.Count + "] entries", Logging.White);
-                            }
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        Logging.Log("Settings", "Error Loading Mission Fittings Settings [" + exception + "]", Logging.Teal);
                     }
 
                     //
@@ -1687,7 +1591,7 @@ namespace Questor.Modules.Lookup
             else //if the settings file exists - load the characters settings XML
             {
                 Settings.Instance.CharacterXMLExists = true;
-                XElement CharacterSettingsXml;
+                ;
                 using (XmlTextReader reader = new XmlTextReader(Logging.CharacterSettingsPath))
                 {
                     reader.EntityHandling = EntityHandling.ExpandEntities;
@@ -1702,7 +1606,7 @@ namespace Questor.Modules.Lookup
                 {
                     if (File.Exists(Logging.CharacterSettingsPath)) _lastModifiedDateOfMySettingsFile = File.GetLastWriteTime(Logging.CharacterSettingsPath);
                     if (File.Exists(Settings.Instance.CommonSettingsPath)) _lastModifiedDateOfMyCommonSettingsFile = File.GetLastWriteTime(CommonSettingsPath);
-                    ReadSettingsFromXML(CharacterSettingsXml);
+                    ReadSettingsFromXML();
                 }
             }
 
