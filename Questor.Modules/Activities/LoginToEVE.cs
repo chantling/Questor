@@ -817,6 +817,16 @@ namespace Questor.Modules.Activities
                             Logging.Log("PreLoginSettings", "EVELoginPassword [" + Logging.EVELoginPassword + "]", Logging.Debug);
                             break;
 
+                        case "eveloginusername":
+                            Logging.EVELoginUserName = sLine[1];
+                            Logging.Log("PreLoginSettings", "EVELoginUserName [" + Logging.EVELoginUserName + "]", Logging.Debug);
+                            break;
+
+                        case "eveloginpassword":
+                            Logging.EVELoginPassword = sLine[1];
+                            Logging.Log("PreLoginSettings", "EVELoginPassword [" + Logging.EVELoginPassword + "]", Logging.Debug);
+                            break;
+
                         case "characternametologin":
                             Logging.MyCharacterName = sLine[1];
                             Logging.Log("PreLoginSettings", "MyCharacterName [" + Logging.MyCharacterName + "]", Logging.Debug);
