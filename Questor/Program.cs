@@ -131,24 +131,23 @@ namespace Questor
                 {
                     System.Threading.Thread.Sleep(50); //this runs while we wait to login
                 }
-
-                if (!LoginToEVE.useLoginOnFrameEvent)
+                
+                try
                 {
-                    try
-                    {
-                        Logging.Log("Startup", "We are logged into EVE: unRegistering LoginOnFrame Event, wait 3 sec", Logging.Teal);
-                        Cache.Instance.DirectEve.OnFrame -= LoginToEVE.LoginOnFrame;
-                        LoginToEVE.StartTime = DateTime.Now;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logging.Log("Startup", "DirectEVE.Dispose: Exception [" + ex + "]", Logging.White);
-                    }
+                    Logging.Log("Startup", "We are logged into EVE: unRegistering LoginOnFrame Event, wait 3 sec", Logging.Teal);
+                    Cache.Instance.DirectEve.OnFrame -= LoginToEVE.LoginOnFrame;
+                    LoginToEVE.StartTime = DateTime.Now;
+                    LoginToEVE.DoneLoggingInToEVETimeStamp = DateTime.UtcNow;
+                }
+                catch (Exception ex)
+                {
+                    Logging.Log("Startup", "DirectEVE.Dispose: Exception [" + ex + "]", Logging.White);
                 }
 
-                while (DateTime.UtcNow < LoginToEVE.StartTime.AddSeconds(3)) //wait a few seconds
+                while (DateTime.UtcNow < LoginToEVE.DoneLoggingInToEVETimeStamp.AddSeconds(5)) //wait a few seconds
                 {
-                    System.Threading.Thread.Sleep(50); //this runs while we wait for the LoginOnframe Event to unregister
+                    Logging.Log("Startup", "Waiting a few seconds before launching Questor", Logging.White);
+                    System.Threading.Thread.Sleep(1000); //this runs while we wait for the LoginOnframe Event to unregister
                 }
 
                 // If the last parameter is false, then we only auto-login

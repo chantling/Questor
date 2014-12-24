@@ -1167,9 +1167,11 @@ namespace Questor.Modules.Caching
             }
         }
 
+        private IEnumerable<EntityCache> _wrecks;
+        
         public IEnumerable<EntityCache> Wrecks
         {
-            get { return _containers ?? (_containers = Cache.Instance.EntitiesOnGrid.Where(e => (e.GroupId == (int)Group.Wreck)).ToList()); }
+            get { return _wrecks ?? (_wrecks = Cache.Instance.EntitiesOnGrid.Where(e => (e.GroupId == (int)Group.Wreck)).ToList()); }
         }
 
         public IEnumerable<EntityCache> UnlootedContainers
@@ -2317,6 +2319,7 @@ namespace Questor.Modules.Caching
                 _unlootedWrecksAndSecureCans = null;
                 _weapons = null;
                 _windows = null;
+                _wrecks = null;
             }
             catch (Exception exception)
             {

@@ -439,7 +439,9 @@ namespace Questor.Modules.Lookup
             {
                 if (_missionFittingForThisMissionName == null)
                 {
-                    if (MissionSettings.ListOfMissionFittings != null && MissionSettings.ListOfMissionFittings.Any(i => i.MissionName.ToLower() == Mission.Name))
+                    if (MissionSettings.ListOfMissionFittings != null 
+                        && MissionSettings.ListOfMissionFittings.Any() 
+                        && MissionSettings.ListOfMissionFittings.Any(i =>  i.MissionName != null && !string.IsNullOrEmpty(Mission.Name) && i.MissionName.ToLower() == Mission.Name))
                     {
                         IEnumerable<MissionFitting> tempListOfMissionFittings = MissionSettings.ListOfMissionFittings.Where(i => i.MissionName.ToLower() == Mission.Name);
                         if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())

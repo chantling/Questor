@@ -113,6 +113,7 @@ namespace Questor.Modules.Activities
         private static DateTime _lastServerStatusCheckWasNotOK = DateTime.MinValue;
         public static DateTime StartTime = DateTime.MaxValue;
         public static DateTime StopTime = DateTime.MinValue;
+        public static DateTime DoneLoggingInToEVETimeStamp = DateTime.MaxValue;
         public static List<string> _QuestorParamaters;
         public static string PreLoginSettingsINI;
 

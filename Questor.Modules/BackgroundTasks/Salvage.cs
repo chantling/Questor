@@ -34,7 +34,7 @@ namespace Questor.Modules.BackgroundTasks
         //public static int SalvageInstances;
         internal static List<ModuleCache> salvagers;
         private static List<EntityCache> wrecks;
-        private static List<EntityCache> containersInRange;
+
         public static List<int> WreckBlackList { get; set; }
         public static bool WreckBlackListSmallWrecks { get; set; }
         public static bool WreckBlackListMediumWrecks { get; set; }
@@ -763,9 +763,9 @@ namespace Questor.Modules.BackgroundTasks
                 if (Logging.DebugLootWrecks)
                 {
                     int containersInRangeCount = 0;
-                    if (containersInRange.Any())
+                    if (Cache.Instance.Containers.Any(i => i.Distance < (double)Distances.ScoopRange))
                     {
-                        containersInRangeCount = containersInRange.Count();
+                        containersInRangeCount = Cache.Instance.Containers.Count(i => i.Distance < (double)Distances.ScoopRange);
                     }
 
                     List<EntityCache> containersOutOfRange = Cache.Instance.Containers.Where(e => e.Distance >= (int)Distances.SafeScoopRange).ToList();
@@ -775,8 +775,8 @@ namespace Questor.Modules.BackgroundTasks
                         containersOutOfRangeCount = containersOutOfRange.Count();
                     }
 
-                    if (containersInRangeCount < 1) Logging.Log("Salvage", "Debug: containersInRange count [" + containersInRangeCount + "]", Logging.Teal);
-                    if (containersOutOfRangeCount < 1) Logging.Log("Salvage", "Debug: containersOutOfRange count [" + containersOutOfRangeCount + "]", Logging.Teal);
+                    Logging.Log("Salvage", "Debug: containersInRange count [" + containersInRangeCount + "]", Logging.Teal);
+                    Logging.Log("Salvage", "Debug: containersOutOfRange count [" + containersOutOfRangeCount + "]", Logging.Teal);
                 }
 
                 if (Cache.Instance.CurrentShipsCargo == null)
@@ -1076,6 +1076,7 @@ namespace Questor.Modules.BackgroundTasks
                         return;
                     }
 
+                    if (Logging.DebugLootWrecks) Logging.Log("Salvage.LootWrecks","Reached End of LootWrecks Routine w/o finding a wreck to loot",Logging.Debug);
                     //add cont proceed this tick
                     //if (containersProcessedThisTick < Settings.Instance.NumberOfModulesToActivateInCycle)
                     //{
@@ -1252,7 +1253,6 @@ namespace Questor.Modules.BackgroundTasks
                 //
                 salvagers = null;
                 wrecks = null;
-                containersInRange = null;
             }
             catch (Exception exception)
             {
