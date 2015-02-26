@@ -155,6 +155,7 @@ namespace Questor.Modules.Actions
             {
                 Logging.Log("QuestorManager.BookmarkDestination", "Warping to bookmark [" + Logging.Yellow + bookmark.Title + Logging.White + "][" + Math.Round((distance / 1000) / 149598000, 2) + "] AU away. Which is [" + Math.Round((distance / 1000), 2) + "]", Logging.White);
                 nextAction = DateTime.UtcNow.AddSeconds(30);
+                Time.Instance.NextWarpAction = DateTime.UtcNow.AddSeconds(5);
                 return false;
             }
             

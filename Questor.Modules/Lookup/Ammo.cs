@@ -28,6 +28,7 @@ namespace Questor.Modules.Lookup
             {
                 TypeId = (int)ammo.Attribute("typeId");
                 DamageType = (DamageType)Enum.Parse(typeof(DamageType), (string)ammo.Attribute("damageType"));
+                Name = (string)ammo.Attribute("name");
                 Range = (int)ammo.Attribute("range");
                 Quantity = (int)ammo.Attribute("quantity");
                 Description = (string)ammo.Attribute("description") ?? (string)ammo.Attribute("typeId");

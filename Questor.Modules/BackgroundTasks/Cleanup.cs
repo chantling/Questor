@@ -167,7 +167,7 @@ namespace Questor.Modules.BackgroundTasks
                             if (DateTime.UtcNow > CloseQuestorDelay)
                             {
                                 Logging.Log("Questor", "Exiting eve now.", Logging.White);
-                                DirecteveDispose();
+                                BeginClosingQuestor();
                                 return false;
                             }
                             return false;
@@ -198,7 +198,7 @@ namespace Questor.Modules.BackgroundTasks
                             if (DateTime.UtcNow > CloseQuestorDelay)
                             {
                                 Logging.Log("Questor", "Exiting eve now.", Logging.White);
-                                DirecteveDispose();
+                                BeginClosingQuestor();
                                 return false;
                             }
                             return false;
@@ -228,9 +228,10 @@ namespace Questor.Modules.BackgroundTasks
                             if (DateTime.UtcNow > CloseQuestorDelay)
                             {
                                 Logging.Log("Questor", "Exiting eve now.", Logging.White);
-                                DirecteveDispose();
+                                BeginClosingQuestor();
                                 return false;
                             }
+
                             return false;
                         }
 
@@ -253,7 +254,7 @@ namespace Questor.Modules.BackgroundTasks
                             if (DateTime.UtcNow > CloseQuestorDelay)
                             {
                                 Logging.Log("Questor", "Exiting eve now.", Logging.White);
-                                DirecteveDispose();
+                                BeginClosingQuestor();
                                 return false;
                             }
                             return false;
@@ -279,7 +280,7 @@ namespace Questor.Modules.BackgroundTasks
                         if (DateTime.UtcNow > CloseQuestorDelay)
                         {
                             Logging.Log("Questor", "Exiting eve now.", Logging.White);
-                            DirecteveDispose();
+                            BeginClosingQuestor();
                             return false;
                         }
                     }
@@ -302,7 +303,7 @@ namespace Questor.Modules.BackgroundTasks
             if (DateTime.UtcNow > CloseQuestorDelay)
             {
                 Logging.Log("Questor", "Closing with: Process.GetCurrentProcess().Kill()", Logging.White);
-                DirecteveDispose();
+                BeginClosingQuestor();
                 return false;
             }
             return false;

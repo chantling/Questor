@@ -30,6 +30,7 @@ namespace Questor.Modules.Combat
         static Combat()
         {
             //Interlocked.Increment(ref CombatInstances);
+            Ammo = new List<Ammo>();
         }
 
         //~Combat()
@@ -1316,7 +1317,7 @@ namespace Questor.Modules.Combat
                     //
                     if (DateTime.UtcNow < Time.Instance.LastChangedAmmoTimeStamp[weapon.ItemId].AddSeconds(Time.Instance.EnforcedDelayBetweenArbitraryAmmoChanges))
                     {
-                        if (weapon.CurrentCharges >= Combat.MinimumAmmoCharges && !force)
+                        if ((long)weapon.MaxRange == 0 && !force)
                         {
                             if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "[" + weapon.TypeName + "] last reloaded [" + DateTime.UtcNow.Subtract(Time.Instance.LastChangedAmmoTimeStamp[weapon.ItemId]).TotalSeconds + "sec ago] [ " + weapon.CurrentCharges + " ] charges in [" + Cache.Instance.Weapons.Count() + "] total weapons, minimum of [" + Combat.MinimumAmmoCharges + "] charges, MaxCharges is [" + weapon.MaxCharges + "]", Logging.Orange);
                             return true;
@@ -1501,42 +1502,22 @@ namespace Questor.Modules.Combat
                 return false;
             }
 
-            // Do We have enough ammo loaded?
-            if (weapon.Charge != null && weapon.Charge.TypeId == ammo.TypeId)
+            // Do we have ANY ammo loaded? MaxRange would be 0 if we have no ammo at all.
+            if ((long)weapon.MaxRange != 0 && weapon.Charge.TypeId == ammo.TypeId)
             {
-                if (weapon.CurrentCharges >= Combat.MinimumAmmoCharges && !force)
+                //Force a reload even through we have some ammo loaded already?
+                if (!force)
                 {
-                    if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "[" + weaponNumber + "][ " + weapon.CurrentCharges + " ] charges in [" + Cache.Instance.Weapons.Count() + "] total weapons, minimum of [" + Combat.MinimumAmmoCharges + "] charges, MaxCharges is [" + weapon.MaxCharges + "]", Logging.Orange);
+                    if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "[" + weaponNumber + "] MaxRange [ " + weapon.MaxRange + " ] if we have 0 charges MaxRange will be 0", Logging.Orange);
                     Time.Instance.LastReloadAttemptTimeStamp[weapon.ItemId] = DateTime.UtcNow;
                     return true;
                 }
 
-                if (weapon.CurrentCharges >= weapon.MaxCharges && force)
-                {
-                    //
-                    // even if force is true do not reload a weapon that is already full!
-                    //
-                    if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "[" + weaponNumber + "][ " + weapon.CurrentCharges + " ] charges in [" + Cache.Instance.Weapons.Count() + "] total weapons, MaxCharges [" + weapon.MaxCharges + "]", Logging.Orange);
+                //we must have ammo, no need to reload at the moment\
+                if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "[" + weaponNumber + "] MaxRange [ " + weapon.MaxRange + " ] if we have 0 charges MaxRange will be 0", Logging.Orange);
                     Time.Instance.LastReloadAttemptTimeStamp[weapon.ItemId] = DateTime.UtcNow;
                     return true;
                 }
-
-                if (force && weapon.CurrentCharges < weapon.MaxCharges)
-                {
-                    //
-                    // allow the reload (and log it!)
-                    //
-                    if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "[" + weaponNumber + "][ " + weapon.CurrentCharges + " ] charges in [" + Cache.Instance.Weapons.Count() + "] total weapons, MaxCharges [" + weapon.MaxCharges + "] - forced reloading proceeding", Logging.Orange);
-                }
-
-            }
-
-            // Retry later, assume its ok now
-            //if (!weapon.MatchingAmmo.Any())
-            //{
-            //    LastWeaponReload[weapon.ItemId] = DateTime.UtcNow; //mark this weapon as reloaded... by the time we need to reload this timer will have aged enough...
-            //    return true;
-            //}
 
             DirectItem charge = null;
             if (Cache.Instance.CurrentShipsCargo != null) 
@@ -3357,6 +3338,7 @@ namespace Questor.Modules.Combat
             {
                 if (DateTime.UtcNow < _lastCombatProcessState.AddMilliseconds(350) || Logging.DebugDisableCombat) //if it has not been 500ms since the last time we ran this ProcessState return. We can't do anything that close together anyway
                 {
+                    if (Logging.DebugCombat) Logging.Log("Combat.ProcessState", "if (DateTime.UtcNow < _lastCombatProcessState.AddMilliseconds(350) || Logging.DebugDisableCombat)", Logging.Debug);
                     return;
                 }
 
@@ -3375,12 +3357,14 @@ namespace Questor.Modules.Combat
                     Cache.Instance.ActiveShip.Entity.IsCloaked))  // There is no combat when cloaked
                 {
                     _States.CurrentCombatState = CombatState.Idle;
+                    if (Logging.DebugCombat) Logging.Log("Combat.ProcessState", "NotIdle, NotOutOfAmmo and InStation or NotInspace or ActiveShip is null or cloaked", Logging.Debug);
                     return;
                 }
 
                 if (Cache.Instance.InStation)
                 {
                     _States.CurrentCombatState = CombatState.Idle;
+                    if (Logging.DebugCombat) Logging.Log("Combat.ProcessState", "We are in station, do nothing", Logging.Debug);
                     return;
                 }
 
@@ -3551,6 +3535,7 @@ namespace Questor.Modules.Combat
                             !Cache.Instance.InWarp)) // no longer in warp
                         {
                             _States.CurrentCombatState = CombatState.CheckTargets;
+                            if (Logging.DebugCombat) Logging.Log("Combat.ProcessState", "We are in space and ActiveShip is null or Cloaked or we arent in the combatship or we are in warp", Logging.Debug);
                             return;
                         }
                         break;

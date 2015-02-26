@@ -815,7 +815,16 @@ namespace Questor.Modules.Activities
                 stopWhenAggressed = false;
             }
 
-            IEnumerable<EntityCache> targets = Cache.Instance.EntitiesByName(target, Cache.Instance.EntitiesOnGrid).ToList();
+            List<EntityCache> targets = new List<EntityCache>();
+            if (Cache.Instance.EntitiesOnGrid != null && Cache.Instance.EntitiesOnGrid.Any())
+            {
+                //Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Looking for Target [" + target + "] in List of Entities On Grid. EntitiesOnGrid.Count [" + Cache.Instance.EntitiesOnGrid.Count() + "]", Logging.Debug);
+                if (Cache.Instance.EntitiesByName(target, Cache.Instance.EntitiesOnGrid) != null && Cache.Instance.EntitiesByName(target, Cache.Instance.EntitiesOnGrid).Any())
+                {
+                    targets = Cache.Instance.EntitiesByName(target, Cache.Instance.EntitiesOnGrid).ToList();    
+                }
+            }
+            
             if (!targets.Any())
             {
                 Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "no entities found named [" + target + "] proceeding to next action", Logging.Teal);

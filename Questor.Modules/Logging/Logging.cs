@@ -559,6 +559,7 @@ namespace Questor.Modules.Logging
         public static bool DebugChat { get; set; }
         public static bool DebugCleanup { get; set; }
         public static bool DebugClearPocket { get; set; }
+        public static bool DebugCombat { get; set; }
         public static bool DebugCombatMissionBehavior { get; set; }
         public static bool DebugCourierMissions { get; set; }
         public static bool DebugDecline { get; set; }
@@ -580,6 +581,7 @@ namespace Questor.Modules.Logging
         public static bool DebugDroneHealth { get; set; }
         public static bool DebugEachWeaponsVolleyCache { get; set; }
         public static bool DebugEntityCache { get; set; }
+        public static bool DebugExecuteMission { get; set; }
         public static bool DebugExceptions { get; set; }
         public static bool DebugFittingMgr { get; set; }
         public static bool DebugFleetSupportSlave { get; set; }
@@ -589,7 +591,6 @@ namespace Questor.Modules.Logging
         public static bool DebugGotobase { get; set; }
         public static bool DebugGreyList { get; set; }
         public static bool DebugHangars { get; set; }
-        public static bool DebugHasExploded { get; set; }
         public static bool DebugIdle { get; set; }
         public static bool DebugInSpace { get; set; }
         public static bool DebugInStation { get; set; }

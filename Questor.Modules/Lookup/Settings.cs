@@ -30,7 +30,21 @@ namespace Questor.Modules.Lookup
         /// <summary>
         /// Singleton implementation
         /// </summary>
-        public static Settings Instance = new Settings();
+        static Settings _instance;
+
+        public static Settings Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new Settings();
+                }
+
+                return _instance;
+            }
+        }
+
         public string CharacterName;
         private DateTime _lastModifiedDateOfMySettingsFile;
         private DateTime _lastModifiedDateOfMyCommonSettingsFile;
@@ -308,6 +322,7 @@ namespace Questor.Modules.Lookup
                 Logging.DebugChat = (bool?)CharacterSettingsXml.Element("debugChat") ?? (bool?)CommonSettingsXml.Element("debugChat") ?? false;
                 Logging.DebugCleanup = (bool?)CharacterSettingsXml.Element("debugCleanup") ?? (bool?)CommonSettingsXml.Element("debugCleanup") ?? false;
                 Logging.DebugClearPocket = (bool?)CharacterSettingsXml.Element("debugClearPocket") ?? (bool?)CommonSettingsXml.Element("debugClearPocket") ?? false;
+                Logging.DebugCombat = (bool?)CharacterSettingsXml.Element("debugCombat") ?? (bool?)CommonSettingsXml.Element("debugCombat") ?? false;
                 Logging.DebugCombatMissionBehavior = (bool?)CharacterSettingsXml.Element("debugCombatMissionBehavior") ?? (bool?)CommonSettingsXml.Element("debugCombatMissionBehavior") ?? false;
                 Logging.DebugCourierMissions = (bool?)CharacterSettingsXml.Element("debugCourierMissions") ?? (bool?)CommonSettingsXml.Element("debugCourierMissions") ?? false;
                 Logging.DebugDecline = (bool?)CharacterSettingsXml.Element("debugDecline") ?? (bool?)CommonSettingsXml.Element("debugDecline") ?? false;
@@ -330,6 +345,7 @@ namespace Questor.Modules.Lookup
                 Logging.DebugDroneHealth = (bool?)CharacterSettingsXml.Element("debugDroneHealth") ?? (bool?)CommonSettingsXml.Element("debugDroneHealth") ?? false;
                 Logging.DebugEachWeaponsVolleyCache = (bool?)CharacterSettingsXml.Element("debugEachWeaponsVolleyCache") ?? (bool?)CommonSettingsXml.Element("debugEachWeaponsVolleyCache") ?? false;
                 Logging.DebugEntityCache = (bool?)CharacterSettingsXml.Element("debugEntityCache") ?? (bool?)CommonSettingsXml.Element("debugEntityCache") ?? false;
+                Logging.DebugExecuteMission = (bool?)CharacterSettingsXml.Element("debugExecutMission") ?? (bool?)CommonSettingsXml.Element("debugExecutMission") ?? false;
                 Logging.DebugExceptions = (bool?)CharacterSettingsXml.Element("debugExceptions") ?? (bool?)CommonSettingsXml.Element("debugExceptions") ?? false;
                 Logging.DebugFittingMgr = (bool?)CharacterSettingsXml.Element("debugFittingMgr") ?? (bool?)CommonSettingsXml.Element("debugFittingMgr") ?? false;
                 Logging.DebugFleetSupportSlave = (bool?)CharacterSettingsXml.Element("debugFleetSupportSlave") ?? (bool?)CommonSettingsXml.Element("debugFleetSupportSlave") ?? false;
@@ -339,7 +355,6 @@ namespace Questor.Modules.Lookup
                 Logging.DebugGotobase = (bool?)CharacterSettingsXml.Element("debugGotobase") ?? (bool?)CommonSettingsXml.Element("debugGotobase") ?? false;
                 Logging.DebugGreyList = (bool?)CharacterSettingsXml.Element("debugGreyList") ?? (bool?)CommonSettingsXml.Element("debugGreyList") ?? false;
                 Logging.DebugHangars = (bool?)CharacterSettingsXml.Element("debugHangars") ?? (bool?)CommonSettingsXml.Element("debugHangars") ?? false;
-                Logging.DebugHasExploded = (bool?)CharacterSettingsXml.Element("debugHasExploded") ?? (bool?)CommonSettingsXml.Element("debugHasExploded") ?? false;
                 Logging.DebugIdle = (bool?)CharacterSettingsXml.Element("debugIdle") ?? (bool?)CommonSettingsXml.Element("debugIdle") ?? false;
                 Logging.DebugInSpace = (bool?)CharacterSettingsXml.Element("debugInSpace") ?? (bool?)CommonSettingsXml.Element("debugInSpace") ?? false;
                 Logging.DebugInStation = (bool?)CharacterSettingsXml.Element("debugInStation") ?? (bool?)CommonSettingsXml.Element("debugInStation") ?? false;
@@ -1176,7 +1191,6 @@ namespace Questor.Modules.Lookup
                 Logging.DebugGotobase = false;
                 Logging.DebugGreyList = false;
                 Logging.DebugHangars = false;
-                Logging.DebugHasExploded = false;
                 Logging.DebugIdle = false;
                 Logging.DebugInWarp = false;
                 Logging.DebugItemHangar = false;

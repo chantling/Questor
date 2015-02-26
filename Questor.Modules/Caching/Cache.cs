@@ -36,6 +36,18 @@ namespace Questor.Modules.Caching
         /// </summary>
         private static Cache _instance = new Cache();
 
+        public static Cache Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new Cache();
+                }
+                return _instance;
+            }
+        }
+
         /// <summary>
         ///   _agent cache //cleared in InvalidateCache 
         /// </summary>
@@ -329,12 +341,6 @@ namespace Questor.Modules.Caching
         ///   List of containers that have been looted
         /// </summary>
         public HashSet<long> LootedContainers { get; private set; }
-
-        
-        public static Cache Instance
-        {
-            get { return _instance; }
-        }
 
         public bool ExitWhenIdle;
         public bool StopBot;
@@ -679,21 +685,19 @@ namespace Questor.Modules.Caching
 
         public string _agentName = "";
 
-        private bool _paused;
-        public bool Paused
-        {
-            get
-            {
-                return _paused;
-            }
-            set
-            {
-                _paused = value;
-            }
-        }
+        public bool Paused { get; set; }
 
         public long TotalMegaBytesOfMemoryUsed = 0;
         public double MyWalletBalance { get; set; }
+
+        public bool UpdateMyWalletBalance()
+        {
+            //we know we are connected here
+            Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
+            Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+            return true;
+        }
+
         public string CurrentPocketAction { get; set; }
         public float AgentEffectiveStandingtoMe;
         public string AgentEffectiveStandingtoMeText;
@@ -1301,7 +1305,8 @@ namespace Questor.Modules.Caching
                 {
                     if (_entitiesOnGrid == null)
                     {
-                        return Cache.Instance.Entities.Where(e => e.IsOnGridWithMe);
+                        _entitiesOnGrid = Cache.Instance.Entities.Where(e => e.IsOnGridWithMe).ToList();
+                        return _entitiesOnGrid;
                     }
 
                     return _entitiesOnGrid;
@@ -1325,7 +1330,8 @@ namespace Questor.Modules.Caching
                 {
                     if (_entities == null)
                     {
-                        return Cache.Instance.DirectEve.Entities.Where(e => e.IsValid && !e.HasExploded && !e.HasReleased && e.CategoryId != (int)CategoryID.Charge).Select(i => new EntityCache(i)).ToList();
+                        _entities = Cache.Instance.DirectEve.Entities.Where(e => e.IsValid && !e.HasExploded && !e.HasReleased && e.CategoryId != (int)CategoryID.Charge).Select(i => new EntityCache(i)).ToList();
+                        return _entities;
                     }
 
                     return _entities;
@@ -1349,7 +1355,8 @@ namespace Questor.Modules.Caching
                 {
                     if (_chargeEntities == null)
                     {
-                        return Cache.Instance.DirectEve.Entities.Where(e => e.IsValid && !e.HasExploded && !e.HasReleased && e.CategoryId == (int)CategoryID.Charge).Select(i => new EntityCache(i)).ToList();
+                        _chargeEntities = Cache.Instance.DirectEve.Entities.Where(e => e.IsValid && !e.HasExploded && !e.HasReleased && e.CategoryId == (int)CategoryID.Charge).Select(i => new EntityCache(i)).ToList();
+                        return _chargeEntities;
                     }
 
                     return _chargeEntities;
@@ -1384,7 +1391,7 @@ namespace Questor.Modules.Caching
         public Dictionary<long, bool> EntityHaveLootRights = new Dictionary<long, bool>();
         public Dictionary<long, bool> EntityIsStargate = new Dictionary<long, bool>();
 
-
+        private IEnumerable<EntityCache> _entitiesActivelyBeingLocked;
         public IEnumerable<EntityCache> EntitiesActivelyBeingLocked
         {
             get
@@ -1394,12 +1401,22 @@ namespace Questor.Modules.Caching
                     return new List<EntityCache>();
                 }
 
-                IEnumerable<EntityCache> _entitiesActivelyBeingLocked = Cache.Instance.EntitiesOnGrid.Where(i => i.IsTargeting).ToList();
-                if (_entitiesActivelyBeingLocked.Any())
+                if (Cache.Instance.EntitiesOnGrid.Any())
                 {
+                    if (_entitiesActivelyBeingLocked == null)
+                    {
+                        _entitiesActivelyBeingLocked = Cache.Instance.EntitiesOnGrid.Where(i => i.IsTargeting).ToList();
+                        if (_entitiesActivelyBeingLocked.Any())
+                        {
+                            return _entitiesActivelyBeingLocked;
+                        }
+
+                        return new List<EntityCache>();
+                    }
+
                     return _entitiesActivelyBeingLocked;
                 }
-
+                
                 return new List<EntityCache>();
             }
         }
@@ -1561,29 +1578,21 @@ namespace Questor.Modules.Caching
                                     Time.Instance.LastInWarp = DateTime.UtcNow;
                                     return true;
                                 }
-                                else
-                                {
-                                    if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "We are not in warp.Cache.Instance.ActiveShip.Entity.Mode  is [" + Cache.Instance.ActiveShip.Entity.Mode + "]", Logging.Teal);
-                                    return false;
-                                }
-                            }
-                            else
-                            {
-                                if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "Why are we checking for InWarp if Cache.Instance.ActiveShip.Entity is Null? (session change?)", Logging.Teal);
+                                
+                                if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "We are not in warp.Cache.Instance.ActiveShip.Entity.Mode  is [" + (int)Cache.Instance.MyShipEntity.Mode + "]", Logging.Teal);
                                 return false;
                             }
-                        }
-                        else
-                        {
-                            if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "Why are we checking for InWarp if Cache.Instance.ActiveShip is Null? (session change?)", Logging.Teal);
+                            
+                            if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "Why are we checking for InWarp if Cache.Instance.ActiveShip.Entity is Null? (session change?)", Logging.Teal);
                             return false;
                         }
-                    }
-                    else
-                    {
-                        if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "Why are we checking for InWarp while docked or between session changes?", Logging.Teal);
+                        
+                        if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "Why are we checking for InWarp if Cache.Instance.ActiveShip is Null? (session change?)", Logging.Teal);
                         return false;
                     }
+                    
+                    if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "Why are we checking for InWarp while docked or between session changes?", Logging.Teal);
+                    return false;
                 }
                 catch (Exception exception)
                 {
@@ -1956,21 +1965,29 @@ namespace Questor.Modules.Caching
             {
                 try
                 {
-                    //if (_approaching == null)
-                    //{
-                    DirectEntity ship = Cache.Instance.ActiveShip.Entity;
-                    if (ship != null && ship.IsValid)
+                    if (_approaching == null)
                     {
-                        _approaching = EntityById(ship.FollowId);
-                    }
-                    //}
+                        DirectEntity ship = Cache.Instance.ActiveShip.Entity;
+                        if (ship != null && ship.IsValid && !ship.HasExploded && !ship.HasReleased)
+                        {
+                            if (ship.FollowId != 0)
+                            {
+                                _approaching = EntityById(ship.FollowId);
+                                if (_approaching != null && _approaching.IsValid)
+                                {
+                                    return _approaching;
+                                }
 
-                    if (_approaching != null && _approaching.IsValid)
-                    {
-                        return _approaching;
-                    }
+                                return null;
+                            }
 
-                    return null;
+                            return null;
+                        }
+
+                        return null;
+                    }
+                    
+                    return _approaching;
                 }
                 catch (Exception exception)
                 {

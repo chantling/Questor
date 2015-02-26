@@ -355,9 +355,8 @@ namespace Questor.Modules.Combat
             catch (Exception ex)
             {
                 Logging.Log("RemoveDronePriorityTargets", "Exception [" + ex + "]", Logging.Debug);
+                return false;
             }
-
-            return false;
         }
 
         public static void AddDronePriorityTargetsByName(string stringEntitiesToAdd)
@@ -383,6 +382,7 @@ namespace Questor.Modules.Combat
             catch (Exception ex)
             {
                 Logging.Log("AddDronePriorityTargetsByName", "Exception [" + ex + "]", Logging.Debug);
+                return;
             }
         }
 

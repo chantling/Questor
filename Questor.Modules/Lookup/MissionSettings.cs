@@ -439,9 +439,7 @@ namespace Questor.Modules.Lookup
             {
                 if (_missionFittingForThisMissionName == null)
                 {
-                    if (MissionSettings.ListOfMissionFittings != null 
-                        && MissionSettings.ListOfMissionFittings.Any() 
-                        && MissionSettings.ListOfMissionFittings.Any(i =>  i.MissionName != null && !string.IsNullOrEmpty(Mission.Name) && i.MissionName.ToLower() == Mission.Name))
+                    if (MissionSettings.ListOfMissionFittings != null && MissionSettings.ListOfMissionFittings.Any(i => i.MissionName.ToLower() == Mission.Name))
                     {
                         IEnumerable<MissionFitting> tempListOfMissionFittings = MissionSettings.ListOfMissionFittings.Where(i => i.MissionName.ToLower() == Mission.Name);
                         if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())
@@ -755,29 +753,52 @@ namespace Questor.Modules.Lookup
             try
             {
                 Logging.Log("LoadSpecificAmmo", "Clearing existing list of Ammo To load", Logging.White);
-                if (Combat.Ammo.Any(a => a.DamageType == MissionSettings.CurrentDamageType))
+                if (Cache.Instance.Weapons.Any(i => i.TypeId == (int)TypeID.CivilianGatlingAutocannon
+                                                 || i.TypeId == (int)TypeID.CivilianGatlingPulseLaser
+                                                 || i.TypeId == (int)TypeID.CivilianGatlingRailgun
+                                                 || i.TypeId == (int)TypeID.CivilianLightElectronBlaster))
                 {
-                    Ammo _ammo = Combat.Ammo.Where(a => a.DamageType == MissionSettings.CurrentDamageType).Select(a => a.Clone()).FirstOrDefault();
-                    if (_ammo != null)
-                    {
-                        Logging.Log("LoadSpecificAmmo", "Adding [" + _ammo.Name + "] to the list of MissionAmmo to load", Logging.White);
-                        MissionSettings.AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
-                        foreach (KeyValuePair<DamageType, DateTime> _missionDamageType in  DamageTypesForThisMission)
-                        {
-                            MissionSettings.AmmoTypesToLoad.AddOrUpdate(Combat.Ammo.Where(a => a.DamageType == _missionDamageType.Key).Select(a => a.Clone()).FirstOrDefault(), DateTime.UtcNow);
-                        }
-
-                        int intAmmoToLoad = 0;
-                        foreach (KeyValuePair<Ammo, DateTime> _ammoTypeToLoad in MissionSettings.AmmoTypesToLoad)
-                        {
-                            intAmmoToLoad++;
-                            Logging.Log("LoadSpecificAmmo", "AmmoTypesToLoad [" + intAmmoToLoad + "] Name: [" + _ammoTypeToLoad.Key.Name + "] DamageType: [" + _ammoTypeToLoad.Key.DamageType + "] Range: [" + _ammoTypeToLoad.Key.Range + "] Quantity: [" + _ammoTypeToLoad.Key.Quantity + "]" , Logging.White);    
-                        }
-
-                        return;
-                    }
-
+                    Logging.Log("LoadSpecificAmmo", "No ammo needed for civilian guns: no ammo added to MissionAmmo to load", Logging.White);
                     return;
+                }
+
+                MissionSettings.AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
+                if (MissionDamageType != null)
+                {
+                    if (Combat.Ammo.Any(a => a.DamageType == MissionSettings.MissionDamageType))
+                    {
+                        foreach (KeyValuePair<DamageType, DateTime> missionDamageType in DamageTypesForThisMission)
+                        {
+                            Logging.Log("LoadSpecificAmmo.mission", "DamageType [" + missionDamageType + "] is one of the damagetypes we should load", Logging.White);
+                            KeyValuePair<DamageType, DateTime> damageTypeToSearchFor = missionDamageType;
+                            foreach (Ammo specificAmmoType in Combat.Ammo.Where(a => a.DamageType == damageTypeToSearchFor.Key).Select(a => a.Clone()))
+                            {
+                                Logging.Log("LoadSpecificAmmo.mission", "Adding [" + specificAmmoType + "] to the list of AmmoTypes to load. It is defined as [" + missionDamageType + "]", Logging.White);
+                                MissionSettings.AmmoTypesToLoad.AddOrUpdate(specificAmmoType, DateTime.UtcNow);    
+                            }
+                        }
+                    }
+                }
+
+                if (FactionDamageType != null && !MissionSettings.AmmoTypesToLoad.Any())
+                {
+                    if (Combat.Ammo.Any(a => a.DamageType == MissionSettings.FactionDamageType))
+                    {
+                        Logging.Log("LoadSpecificAmmo.faction", "DamageType [" + FactionDamageType + "] is one of the damagetypes we should load", Logging.White);
+                        foreach (Ammo specificAmmoType in Combat.Ammo.Where(a => a.DamageType == FactionDamageType).Select(a => a.Clone()))
+                        {
+                            Logging.Log("LoadSpecificAmmo.faction", "Adding [" + specificAmmoType + "] to the list of AmmoTypes to load. It is defined as [" + FactionDamageType + "]", Logging.White);
+                            MissionSettings.AmmoTypesToLoad.AddOrUpdate(specificAmmoType, DateTime.UtcNow);
+                        }
+                    }
+                }
+
+                Logging.Log("LoadSpecificAmmo", "Done building the AmmoToLoad List. AmmoToLoad list follows:", Logging.White);
+                int intAmmoToLoad = 0;
+                foreach (KeyValuePair<Ammo, DateTime> ammoTypeToLoad in MissionSettings.AmmoTypesToLoad)
+                {
+                    intAmmoToLoad++;
+                    Logging.Log("LoadSpecificAmmo", "AmmoTypesToLoad [" + intAmmoToLoad + "] Name: [" + ammoTypeToLoad.Key.Name + "] DamageType: [" + ammoTypeToLoad.Key.DamageType + "] Range: [" + ammoTypeToLoad.Key.Range + "] Quantity: [" + ammoTypeToLoad.Key.Quantity + "]" , Logging.White);    
                 }
 
                 return;
@@ -927,7 +948,7 @@ namespace Questor.Modules.Lookup
                         {
                             if (FactionDamageType == null)
                             {
-                                Logging.Log("CurrentDamageType", "Note: ManualDamageType, PocketDamageType, MissionDamageType and FactionDamageType we all NULL, defaulting to EM ", Logging.Debug);
+                                if (Logging.DebugCombat) Logging.Log("CurrentDamageType", "Note: ManualDamageType, PocketDamageType, MissionDamageType and FactionDamageType were all NULL, defaulting to EM ", Logging.Debug);
                                 return DamageType.EM;
                             }
 

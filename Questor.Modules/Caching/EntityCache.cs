@@ -447,11 +447,8 @@ namespace Questor.Modules.Caching
                         {
                             Logging.Log("EntityCache.Name", "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" + MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Debug);
                         }
-                        if (String.IsNullOrEmpty(_givenName))
-                        {
-                            _typeName = _directEntity.TypeName;
-                        }
-
+                        
+                        _typeName = _directEntity.TypeName;
                         return _typeName ?? "";
                     }
 

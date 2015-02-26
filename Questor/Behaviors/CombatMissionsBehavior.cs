@@ -427,8 +427,7 @@ namespace Questor.Behaviors
             {
                 // we know we are connected if we were able to arm the ship - update the lastknownGoodConnectedTime
                 // we may be out of drones/ammo but disconnecting/reconnecting will not fix that so update the timestamp
-                Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                if (!Cache.Instance.UpdateMyWalletBalance()) return;
                 Logging.Log("Arm", "Armstate.NotEnoughAmmo", Logging.Orange);
                 Arm.ChangeArmState(ArmState.Idle);
                 ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.Error);
@@ -439,8 +438,7 @@ namespace Questor.Behaviors
             {
                 // we know we are connected if we were able to arm the ship - update the lastknownGoodConnectedTime
                 // we may be out of drones/ammo but disconnecting/reconnecting will not fix that so update the timestamp
-                Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                if (!Cache.Instance.UpdateMyWalletBalance()) return;
                 Logging.Log("Arm", "Armstate.NotEnoughDrones", Logging.Orange);
                 Arm.ChangeArmState(ArmState.Idle);
                 ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.Error);
@@ -450,8 +448,7 @@ namespace Questor.Behaviors
             if (_States.CurrentArmState == ArmState.Done)
             {
                 //we know we are connected if we were able to arm the ship - update the lastknownGoodConnectedTime
-                Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                if (!Cache.Instance.UpdateMyWalletBalance()) return;
                 Arm.ChangeArmState(ArmState.Idle);
                 _States.CurrentDroneState = DroneState.WaitingForTargets;
                 _States.CurrentCombatMissionBehaviorState = Cache.Instance.CourierMission ? CombatMissionsBehaviorState.CourierMission : CombatMissionsBehaviorState.LocalWatch;
@@ -465,10 +462,10 @@ namespace Questor.Behaviors
         {
             if (Settings.Instance.UseLocalWatch)
             {
+                if (!Cache.Instance.UpdateMyWalletBalance()) return; 
                 Time.Instance.LastLocalWatchAction = DateTime.UtcNow;
-                Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
 
+                if (Logging.DebugArm) Logging.Log("CombatMissionsBehavior.LocalWatch", "Starting: Is LocalSafe check...", Logging.White);
                 if (Cache.Instance.LocalSafe(Settings.Instance.LocalBadStandingPilotsToTolerate, Settings.Instance.LocalBadStandingLevelToConsiderBad))
                 {
                     Logging.Log("CombatMissionsBehavior.LocalWatch", "local is clear", Logging.White);
@@ -487,8 +484,7 @@ namespace Questor.Behaviors
         
         private void WaitingFoBadGuyToGoAway()
         {
-            Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-            Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+            if (!Cache.Instance.UpdateMyWalletBalance()) return; 
             if (DateTime.UtcNow.Subtract(Time.Instance.LastLocalWatchAction).TotalMinutes < Time.Instance.WaitforBadGuytoGoAway_minutes + Cache.Instance.RandomNumber(1, 3))
             {
                 return;
@@ -707,13 +703,19 @@ namespace Questor.Behaviors
         
         private void ExecuteMissionCMBState()
         {
-            if (!Cache.Instance.InSpace) return; //if we are not in space and out of session change wait.
+            if (!Cache.Instance.InSpace) 
+            {
+                if (Logging.DebugExecuteMission) Logging.Log("ExecuteMissionCmbState", "if (!Cache.Instance.InSpace)", Logging.Debug);
+                return; //if we are not in space and out of session change wait.
+            }   
 
             //
             // Execution time will vary heavily on the mission!
             //
 
+            if (Logging.DebugExecuteMission) Logging.Log("ExecuteMissionCmbState", "Start: _combatMissionCtrl.ProcessState();", Logging.Debug);
             _combatMissionCtrl.ProcessState();
+            if (Logging.DebugExecuteMission) Logging.Log("ExecuteMissionCmbState", "Start: Combat.ProcessState();", Logging.Debug);
             Combat.ProcessState();
             Drones.ProcessState();
             Salvage.ProcessState();
@@ -787,7 +789,15 @@ namespace Questor.Behaviors
                         }
 
                         Logging.Log("CombatMissionsBehavior.Traveler", "Destination: [" + Cache.Instance.DirectEve.Navigation.GetLocation(destination.Last()).Name + "]", Logging.White);
-                        Traveler.Destination = new SolarSystemDestination(destination.LastOrDefault());
+                        int lastSolarSystemInRoute = destination.LastOrDefault();
+						if (lastSolarSystemInRoute != null)
+                        {
+                            Logging.Log("CombatMissionsBehavior.Traveler", "Destination: [" + lastSolarSystemInRoute + "]", Logging.White);
+                            Traveler.Destination = new SolarSystemDestination(destination.LastOrDefault());
+                            return;
+                        }
+
+                        Logging.Log("CombatHelperBehavior.Traveler", "Destination: was supposed to be locationID [" + lastSolarSystemInRoute + "] but we couldnt find a solarsystem with that locationID!", Logging.White);
                         return;
                     }
 
@@ -797,8 +807,7 @@ namespace Questor.Behaviors
                 Traveler.ProcessState();
 
                 //we also assume you are connected during a manual set of questor into travel mode (safe assumption considering someone is at the kb)
-                Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                if (!Cache.Instance.UpdateMyWalletBalance()) return; 
 
                 if (_States.CurrentTravelerState == TravelerState.AtDestination)
                 {
@@ -1221,8 +1230,7 @@ namespace Questor.Behaviors
             if (_States.CurrentTravelerState == TravelerState.AtDestination || Cache.Instance.GateInGrid())
             {
                 //we know we are connected if we were able to arm the ship - update the lastknownGoodConnectedTime
-                Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                if (!Cache.Instance.UpdateMyWalletBalance()) return; 
                 _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Salvage;
                 Traveler.Destination = null;
                 return;
@@ -1293,8 +1301,7 @@ namespace Questor.Behaviors
             if (distance > (int)Distances.NextPocketDistance)
             {
                 //we know we are connected here...
-                Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                if (!Cache.Instance.UpdateMyWalletBalance()) return; 
 
                 Logging.Log("CombatMissionsBehavior.Salvage", "We have moved to the next Pocket [" + Math.Round(distance / 1000, 0) + "k away]", Logging.White);
 
@@ -1448,6 +1455,7 @@ namespace Questor.Behaviors
         {
             if (Logging.DebugDisableCombatMissionsBehavior)
             {
+                Logging.Log("CmbEveryPulse", "DebugDisableCombatMissionsBehavior true", Logging.Debug);
                 return false;
             }
 
@@ -1461,20 +1469,6 @@ namespace Questor.Behaviors
                 return false;
             
             _lastPulse = DateTime.UtcNow;
-
-            // Invalid settings, quit while we're ahead
-            if (!ValidSettings)
-            {
-                if (DateTime.UtcNow > _lastValidSettingsCheck.AddSeconds(Time.Instance.ValidateSettings_seconds)) //default is a 15 second interval
-                {
-                    if (ValidateCombatMissionSettings())
-                    {
-                        _lastValidSettingsCheck = DateTime.UtcNow;    
-                    }
-                }
-
-                return false;
-            }
 
             //If local unsafe go to base and do not start mission again (for the whole session?)
             if (Settings.Instance.FinishWhenNotSafe && (_States.CurrentCombatMissionBehaviorState != CombatMissionsBehaviorState.GotoNearestStation))

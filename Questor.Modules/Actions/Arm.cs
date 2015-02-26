@@ -599,6 +599,9 @@ namespace Questor.Modules.Actions
                 DefaultFittingFound = false;
                 if (!DefaultFittingChecked)
                 {
+                    
+                    if (Logging.DebugFittingMgr) Logging.Log(module, "Character Settings XML says Default Fitting is [" + MissionSettings.DefaultFittingName + "]", Logging.White);
+
                     if (Cache.Instance.FittingManagerWindow == null)
                     {
                         Logging.Log("Arm.FindDefaultFitting", "FittingManagerWindow is null", Logging.Debug);

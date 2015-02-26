@@ -226,9 +226,7 @@ namespace Questor.Behaviors
 
                     if (Settings.Instance.AutoStart)
                     {
-                        //we know we are connected here
-                        Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                        Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                        if (!Cache.Instance.UpdateMyWalletBalance()) return;
 
                         // Don't start a new action an hour before downtime
                         if (DateTime.UtcNow.Hour == 10)
@@ -307,9 +305,8 @@ namespace Questor.Behaviors
                         else
                         {
                             Logging.Log("DedicatedBookmarkSalvagerBehavior.LocalWatch", "Bad standings pilots in local: We will stay 5 minutes in the station and then we will check if it is clear again", Logging.White);
+                            if (!Cache.Instance.UpdateMyWalletBalance()) return;
                             _States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.WaitingforBadGuytoGoAway;
-                            Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                            Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
                         }
                     }
                     else
@@ -319,8 +316,7 @@ namespace Questor.Behaviors
                     break;
 
                 case DedicatedBookmarkSalvagerBehaviorState.WaitingforBadGuytoGoAway:
-                    Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                    Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                    if (!Cache.Instance.UpdateMyWalletBalance()) return;
                     if (DateTime.UtcNow.Subtract(Time.Instance.LastLocalWatchAction).TotalMinutes < Time.Instance.WaitforBadGuytoGoAway_minutes)
                     {
                         //TODO: add debug logging here
@@ -415,8 +411,7 @@ namespace Questor.Behaviors
                         Time.Instance.NextSalvageTrip = DateTime.UtcNow.AddMinutes(Time.Instance.DelayBetweenSalvagingSessions_minutes);
                     }
                     //we know we are connected here
-                    Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                    Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                    if (!Cache.Instance.UpdateMyWalletBalance()) return;
 
                     Salvage.OpenWrecks = true;
                     if (Cache.Instance.InStation)
@@ -488,11 +483,11 @@ namespace Questor.Behaviors
                         _States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoSalvageBookmark;
 
                         //we know we are connected here
-                        Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
                         Time.Instance.LastInWarp = DateTime.UtcNow;
-                        Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                        if (!Cache.Instance.UpdateMyWalletBalance()) return;
                         return;
                     }
+
                     break;
 
                 case DedicatedBookmarkSalvagerBehaviorState.GotoSalvageBookmark:
@@ -504,8 +499,8 @@ namespace Questor.Behaviors
                         Time.Instance.LastAccelerationGateDetected = DateTime.UtcNow;
 
                         //we know we are connected here
-                        Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                        Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                        if (!Cache.Instance.UpdateMyWalletBalance()) return;
+
                         _States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.BeginAfterMissionSalvaging;
                         Traveler.Destination = null;
                         Time.Instance.NextSalvageTrip = DateTime.UtcNow.AddMinutes(Time.Instance.DelayBetweenSalvagingSessions_minutes);
@@ -517,10 +512,9 @@ namespace Questor.Behaviors
                         Logging.Log("DedicatedBookmarkSalvagerBehavior", "GotoSalvageBookmark: Gate not found, we can start salvaging", Logging.White);
 
                         //we know we are connected here
-                        Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-                        Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
-                        Time.Instance.LastInWarp = DateTime.UtcNow;
+                        if (!Cache.Instance.UpdateMyWalletBalance()) return;
 
+                        Time.Instance.LastInWarp = DateTime.UtcNow;
                         _States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.Salvage;
                         Traveler.Destination = null;
                         return;

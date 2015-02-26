@@ -795,6 +795,7 @@ namespace Questor.Modules.BackgroundTasks
                 }
                 else
                 {
+                    freeCargoCapacity = Cache.Instance.CurrentShipsCargo.Capacity;
                     if (Logging.DebugLootWrecks) Logging.Log("Salvage.LootWrecks", "if (!Cache.Instance.CurrentShipsCargo.Items.Any()) - really? 0 items in cargo?", Logging.Teal);
                 }
 
@@ -1006,6 +1007,12 @@ namespace Questor.Modules.BackgroundTasks
 
                                         if (moveTheseItems.Count > 0)
                                         {
+											Logging.Log("Salvage","We are full, not enough room for the mission item. Heading back to base to dump loot.",Logging.Debug);
+                                            //GotoBase and dump loot in the hopes that we can grab what we need on the next run
+                                            if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior) _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
+                                            if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior) _States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
+                                            if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior) _States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
+											/**
                                             // jettison loot
                                             if (DateTime.UtcNow.Subtract(Time.Instance.LastJettison).TotalSeconds < Time.Instance.DelayBetweenJetcans_seconds)
                                             {
@@ -1020,6 +1027,7 @@ namespace Questor.Modules.BackgroundTasks
                                             Cache.Instance.CurrentShipsCargo.Jettison(moveTheseItems.Select(i => i.ItemId));
                                             Time.Instance.NextLootAction = DateTime.UtcNow.AddMilliseconds(Time.Instance.LootingDelay_milliseconds);
                                             Time.Instance.LastJettison = DateTime.UtcNow;
+											**/
                                             return;
                                         }
 

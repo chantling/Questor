@@ -785,18 +785,30 @@ namespace Questor.Modules.Activities
                 {
                     index++;
                     if (line.StartsWith(";"))
+                    {
+                        //Logging.Log("PreLoginSettings.Comment", line, Logging.Debug);
                         continue;
+                    }
 
                     if (line.StartsWith("["))
+                    {
+                        //Logging.Log("PreLoginSettings.Section", line, Logging.Debug);
                         continue;
+                    }
 
                     if (string.IsNullOrWhiteSpace(line))
+                    {
+                        //Logging.Log("PreLoginSettings.RawIniData-StartsWithWhitespaceSpace", line, Logging.Debug);
                         continue;
+                    }
 
                     if (string.IsNullOrEmpty(line))
+                    {
+                        //Logging.Log("PreLoginSettings.RawIniData-IsNullOrEmpty", line, Logging.Debug);
                         continue;
+                    }
 
-                    
+                    //Logging.Log("PreLoginSettings.RawIniData", line, Logging.Debug);
                     
                     string[] sLine = line.Split(new string[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
                     //Logging.Log("PreLoginSettings", "Processing line: [" + index + "] of [" + Path.GetFileName(iniFile).Substring(0, 4) + "_MyINIFileRedacted_] Found Var: [" + sLine[0] + "] Found Value: [" + sLine[1] + "]", Logging.Debug);
@@ -829,8 +841,17 @@ namespace Questor.Modules.Activities
                             break;
 
                         case "characternametologin":
-                            Logging.MyCharacterName = sLine[1];
-                            Logging.Log("PreLoginSettings", "MyCharacterName [" + Logging.MyCharacterName + "]", Logging.Debug);
+                            try
+                            {
+                                Logging.MyCharacterName = sLine[1];
+                                //Logging.MyCharacterName = Logging.MyCharacterName.Replace("_", " ");
+                                Logging.Log("PreLoginSettings", "MyCharacterName [" + Logging.MyCharacterName + "]", Logging.Debug);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logging.Log("PreLoginSettings.characternametologin", "Exception [" + ex + "]", Logging.Debug);
+                            }
+                            
                             break;
 
                         case "questorloginonly":
@@ -893,18 +914,6 @@ namespace Questor.Modules.Activities
                 Logging.Log("Startup.PreLoginSettings", "Exception [" + exception + "]", Logging.Debug);
                 return false;
             }
-        }
-
-        public static void SoftwareDetailsCCPMaySee()
-        {
-            string computerName = Environment.MachineName;
-            string userName = Environment.UserName;
-            string osVersion = Environment.OSVersion.ToString();
-        }
-
-        public static void HardwareDetailsCCPMaySee()
-        {
-            
         }
     }
 }

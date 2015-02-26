@@ -22,6 +22,8 @@ namespace Questor.Modules.Actions
 
         public MissionBookmarkDestination2(DirectAgentMissionBookmark bookmark)
         {
+            if (!Cache.Instance.DirectEve.Session.IsReady) return;
+
             if (bookmark == null)
             {
                 Logging.Log("QuestorManager.MissionBookmarkDestination", "Invalid mission bookmark!", Logging.Red);
