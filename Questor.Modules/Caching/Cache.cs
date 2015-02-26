@@ -4955,6 +4955,15 @@ namespace Questor.Modules.Caching
                                     doneUsingRepairWindow = true;
                                     return false;
                                 }
+
+                                if (window.Html.Contains("How much would you liuke to repair?"))
+                                {
+                                    if (window.Html != null) Logging.Log("RepairItems", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.White);
+                                    Logging.Log(module, "Closing Quote for Repairing All with OK", Logging.White);
+                                    window.AnswerModal("OK");
+                                    doneUsingRepairWindow = true;
+                                    return false;
+                                }
                             }
                         }
                     }
