@@ -100,13 +100,15 @@ namespace Questor.Modules.Activities
 
             Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(2);
             if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem - Iterating- next iteration should be in no less than [1] second ", Logging.Teal);
+            
 
+            _destinationRoute = null;
             _destinationRoute = Cache.Instance.DirectEve.Navigation.GetDestinationPath();
-
-            if (_destinationRoute.Count == 0 || _destinationRoute.All(d => d != solarSystemId))
+            
+            if (_destinationRoute == null || _destinationRoute.Count == 0 || _destinationRoute.All(d => d != solarSystemId))
             {
-                if (Logging.DebugTraveler) if (_destinationRoute.Count == 0) Logging.Log("Traveler", "NavigateToBookmarkSystem: We have no destination", Logging.Teal);
-                if (Logging.DebugTraveler) if (_destinationRoute.All(d => d != solarSystemId)) Logging.Log("Traveler", "NavigateToBookmarkSystem: the destination is not currently set to solarsystemId [" + solarSystemId + "]", Logging.Teal);
+                if (_destinationRoute != null || _destinationRoute != null && _destinationRoute.Count == 0) Logging.Log("Traveler", "NavigateToBookmarkSystem: We have no destination", Logging.Teal);
+                if (_destinationRoute != null || _destinationRoute != null && _destinationRoute.All(d => d != solarSystemId)) Logging.Log("Traveler", "NavigateToBookmarkSystem: the destination is not currently set to solarsystemId [" + solarSystemId + "]", Logging.Teal);
 
                 // We do not have the destination set
                 if (DateTime.UtcNow > _nextGetLocation || _location == null)
