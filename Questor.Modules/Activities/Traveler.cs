@@ -56,7 +56,7 @@ namespace Questor.Modules.Activities
         {
             _location = Cache.Instance.DirectEve.Navigation.GetLocation(stationId);
             if (Logging.DebugTraveler) Logging.Log("Traveler", "Location = [" + Logging.Yellow + Cache.Instance.DirectEve.Navigation.GetLocationName(stationId) + Logging.Green + "]", Logging.Green);
-            if (_location.IsValid)
+            if (_location != null && _location.IsValid)
             {
                 _locationErrors = 0;
                 if (Logging.DebugTraveler) Logging.Log("Traveler", "Setting destination to [" + Logging.Yellow + _location.Name + Logging.Green + "]", Logging.Teal);
@@ -101,26 +101,25 @@ namespace Questor.Modules.Activities
             Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(2);
             if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem - Iterating- next iteration should be in no less than [1] second ", Logging.Teal);
             
-
             _destinationRoute = null;
             _destinationRoute = Cache.Instance.DirectEve.Navigation.GetDestinationPath();
             
             if (_destinationRoute == null || _destinationRoute.Count == 0 || _destinationRoute.All(d => d != solarSystemId))
             {
-                if (_destinationRoute != null || _destinationRoute != null && _destinationRoute.Count == 0) Logging.Log("Traveler", "NavigateToBookmarkSystem: We have no destination", Logging.Teal);
-                if (_destinationRoute != null || _destinationRoute != null && _destinationRoute.All(d => d != solarSystemId)) Logging.Log("Traveler", "NavigateToBookmarkSystem: the destination is not currently set to solarsystemId [" + solarSystemId + "]", Logging.Teal);
+                if (_destinationRoute != null || (_destinationRoute != null && _destinationRoute.Count == 0)) Logging.Log("Traveler", "NavigateToBookmarkSystem: We have no destination", Logging.Teal);
+                if (_destinationRoute != null || (_destinationRoute != null && _destinationRoute.All(d => d != solarSystemId))) Logging.Log("Traveler", "NavigateToBookmarkSystem: the destination is not currently set to solarsystemId [" + solarSystemId + "]", Logging.Teal);
 
                 // We do not have the destination set
                 if (DateTime.UtcNow > _nextGetLocation || _location == null)
                 {
-                    if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem: getting Location of solarSystemId [" + solarSystemId + "]", Logging.Teal);
+                    Logging.Log("Traveler", "NavigateToBookmarkSystem: getting Location of solarSystemId [" + solarSystemId + "]", Logging.Teal);
                     _nextGetLocation = DateTime.UtcNow.AddSeconds(10);
                     _location = Cache.Instance.DirectEve.Navigation.GetLocation(solarSystemId);
                     Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(2);
                     return;
                 }
 
-                if (_location.IsValid)
+                if (_location != null && _location.IsValid)
                 {
                     _locationErrors = 0;
                     Logging.Log("Traveler", "Setting destination to [" + Logging.Yellow + _location.Name + Logging.Green + "]", Logging.Green);
@@ -188,11 +187,12 @@ namespace Questor.Modules.Activities
             {
                 //useful?a
             }
+
             DirectSolarSystem solarSystemInRoute = Cache.Instance.DirectEve.SolarSystems[waypoint];
 
             if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior || _States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
             {
-                if (solarSystemInRoute.Security < 0.45 && (Cache.Instance.ActiveShip.GroupId != (int)Group.Shuttle || Cache.Instance.ActiveShip.GroupId != (int)Group.Frigate || Cache.Instance.ActiveShip.GroupId != (int)Group.Interceptor))
+                if (solarSystemInRoute != null && solarSystemInRoute.Security < 0.45 && (Cache.Instance.ActiveShip.GroupId != (int)Group.Shuttle || Cache.Instance.ActiveShip.GroupId != (int)Group.Frigate || Cache.Instance.ActiveShip.GroupId != (int)Group.Interceptor))
                 {
                     Logging.Log("Traveler", "NavigateToBookmarkSystem: Next Waypoint is: [" + _locationName + "] which is LOW SEC! This should never happen. Turning off AutoStart and going home.", Logging.Teal);
                     Settings.Instance.AutoStart = false;
