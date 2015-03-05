@@ -99,8 +99,19 @@ namespace Questor.Behaviors
 
             if (AgentInteraction.Agent == null || !AgentInteraction.Agent.IsValid)
             {
-                AgentInteraction.AgentId = Cache.Instance.AgentId;
-                Logging.Log("Settings", "Unable to locate agent [" + Cache.Instance.CurrentAgent + "]", Logging.White);
+                if (Cache.Instance.AgentId != null)
+                {
+                    AgentInteraction.AgentId = (long)Cache.Instance.AgentId;
+                    if (AgentInteraction.Agent == null) Logging.Log("Agent", "AgentInteraction.Agent == null", Logging.Debug);
+                    if (AgentInteraction.Agent != null && !AgentInteraction.Agent.IsValid) Logging.Log("Agent", "!AgentInteraction.Agent.IsValid", Logging.Debug);
+                }
+                else
+                {
+                    if (Cache.Instance.AgentId == null) Logging.Log("Agent", "Cache.Instance.AgentId == null", Logging.Debug);
+                    if (Cache.Instance.Agent == null) Logging.Log("Agent", "Cache.Instance.Agent == null", Logging.Debug);
+                }
+                
+                Logging.Log("Agent", "Unable to locate agent [" + Cache.Instance.CurrentAgent + "]", Logging.White);
                 ValidSettings = false;
                 return false;
             }

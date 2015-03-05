@@ -896,7 +896,7 @@ namespace Questor.Modules.Caching
             }
         }
 
-        public long AgentId
+        public long? AgentId
         {
             get
             {
@@ -918,15 +918,16 @@ namespace Questor.Modules.Caching
                         catch (Exception ex)
                         {
                             Logging.Log("Cache.AgentId", "Is your Agent List defined properly? Unable to get agent details for the Agent Named [" + CurrentAgent + "][" + ex.Message + "]", Logging.Debug);
-                            return -1;
+                            return null;
                         }
                     }
-                    return -1;
+
+                    return null;
                 }
                 catch (Exception exception)
                 {
                     Logging.Log("Cache.AgentId", "Exception [" + exception + "]", Logging.Debug);
-                    return -1;
+                    return null;
                 }
             }
         }
