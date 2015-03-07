@@ -1784,11 +1784,17 @@ namespace Questor.Modules.Combat
 
                     if (Time.Instance.LastReloadAttemptTimeStamp != null && Time.Instance.LastReloadAttemptTimeStamp.ContainsKey(weapon.ItemId))
                     {
-                        if (DateTime.UtcNow < Time.Instance.LastReloadAttemptTimeStamp[weapon.ItemId].AddSeconds(Cache.Instance.RandomNumber(2,5)))
+                        if (DateTime.UtcNow < Time.Instance.LastReloadAttemptTimeStamp[weapon.ItemId].AddSeconds(Cache.Instance.RandomNumber(5, 10)))
                         {
                             if (Logging.DebugReloadAll) Logging.Log("debug ReloadAll", "Weapon [" + _weaponNumber + "] was just attempted to be reloaded [" + Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastReloadAttemptTimeStamp[weapon.ItemId]).TotalSeconds, 0) + "] seconds ago , moving on to next weapon", Logging.White);
                             continue;
                         }
+                    }
+
+                    if (weapon.CurrentCharges == weapon.MaxCharges)
+                    {
+                        if (Logging.DebugReloadAll) Logging.Log("debug ReloadAll", "Weapon [" + _weaponNumber + "] has [" + weapon.CurrentCharges + "] charges. MaxCharges is [" + weapon.MaxCharges + "]: checking next weapon", Logging.White);
+                        continue;
                     }
 
                     // Reloading energy weapons prematurely just results in unnecessary error messages, so let's not do that
