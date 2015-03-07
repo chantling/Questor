@@ -672,6 +672,7 @@ namespace Questor.Modules.Lookup
                         {
                             Logging.Log("LoadSpecificAmmo", "Adding [" + new Ammo(ammo).Name + "] to the list of ammo to load: from: ammoTypes", Logging.White);
                             AmmoTypesToLoad.AddOrUpdate(new Ammo(ammo), DateTime.UtcNow);
+                            MissionSettings.loadedAmmo = true;
                         }
 
                         //Cache.Instance.DamageType
@@ -686,6 +687,7 @@ namespace Questor.Modules.Lookup
                         {
                             Logging.Log("LoadSpecificAmmo", "Adding [" + new Ammo(ammo).Name + "] to the list of ammo to load: from: missionammo", Logging.White);
                             AmmoTypesToLoad.AddOrUpdate(new Ammo(ammo), DateTime.UtcNow);
+                            MissionSettings.loadedAmmo = true;
                         }
 
                         //Cache.Instance.DamageType
@@ -752,7 +754,6 @@ namespace Questor.Modules.Lookup
         {
             try
             {
-                Logging.Log("LoadSpecificAmmo", "Clearing existing list of Ammo To load", Logging.White);
                 if (Cache.Instance.Weapons.Any(i => i.TypeId == (int)TypeID.CivilianGatlingAutocannon
                                                  || i.TypeId == (int)TypeID.CivilianGatlingPulseLaser
                                                  || i.TypeId == (int)TypeID.CivilianGatlingRailgun
@@ -762,6 +763,7 @@ namespace Questor.Modules.Lookup
                     return;
                 }
 
+                Logging.Log("LoadSpecificAmmo", "Clearing existing list of Ammo To load", Logging.White);
                 MissionSettings.AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
                 if (MissionDamageType != null)
                 {
