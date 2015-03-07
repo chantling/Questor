@@ -104,7 +104,7 @@ namespace Questor.Modules.Actions
 
         public static AgentInteractionPurpose Purpose { get; set; }
 
-        private static void MyStandingsAreTooLowSwitchAgents()
+        private static bool MyStandingsAreTooLowSwitchAgents()
         {
             try
             {
@@ -123,17 +123,24 @@ namespace Questor.Modules.Actions
                 {
                     Logging.Log("MyStandingsAreTooLowSwitchAgents", "Setting DeclineTimer on [" + Cache.Instance.CurrentAgentText + "] to 16 hours", Logging.Yellow);
                     currentAgent.DeclineTimer = DateTime.UtcNow.AddHours(16);
+                    CloseConversation();
                 }
-                CloseConversation();
-                Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
-                Cache.Instance.CurrentAgentText = Cache.Instance.CurrentAgent.ToString(CultureInfo.InvariantCulture);
-                Logging.Log("MyStandingsAreTooLowSwitchAgents", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
-                _States.CurrentAgentInteractionState = AgentInteractionState.ChangeAgent;
-                return;
+                
+                if (Cache.Instance.SwitchAgent() != null)
+                {
+                    Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
+                    Cache.Instance.CurrentAgentText = Cache.Instance.CurrentAgent.ToString(CultureInfo.InvariantCulture);
+                    Logging.Log("MyStandingsAreTooLowSwitchAgents", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
+                    _States.CurrentAgentInteractionState = AgentInteractionState.ChangeAgent;
+                    return true;
+                }
+                
+                return false;
             }
             catch (Exception exception)
             {
                 Logging.Log("MyStandingsAreTooLowSwitchAgents", "Exception [" + exception + "]", Logging.Teal);
+                return false;
             }
         }
 
@@ -178,7 +185,7 @@ namespace Questor.Modules.Actions
                         if (Cache.Instance.StandingUsedToAccessAgent < StandingsNeededToAccessLevel1Agent)
                         {
                             Logging.Log("AgentInteraction.StartConversation", "Our Standings to [" + Agent.Name + "] are [" + Cache.Instance.StandingUsedToAccessAgent + "] < [" + StandingsNeededToAccessLevel1Agent + "]", Logging.Orange);
-                            MyStandingsAreTooLowSwitchAgents();
+                            if (!MyStandingsAreTooLowSwitchAgents()) return;
                             return;
                         }
                         break;
@@ -187,7 +194,7 @@ namespace Questor.Modules.Actions
                         if (Cache.Instance.StandingUsedToAccessAgent < StandingsNeededToAccessLevel2Agent)
                         {
                             Logging.Log("AgentInteraction.StartConversation", "Our Standings to [" + Agent.Name + "] are [" + Cache.Instance.StandingUsedToAccessAgent + "] < [" + StandingsNeededToAccessLevel2Agent + "]", Logging.Orange);
-                            MyStandingsAreTooLowSwitchAgents();
+                            if (!MyStandingsAreTooLowSwitchAgents()) return;
                             return;
                         }
                         break;
@@ -196,7 +203,7 @@ namespace Questor.Modules.Actions
                         if (Cache.Instance.StandingUsedToAccessAgent < StandingsNeededToAccessLevel3Agent)
                         {
                             Logging.Log("AgentInteraction.StartConversation", "Our Standings to [" + Agent.Name + "] are [" + Cache.Instance.StandingUsedToAccessAgent + "] < [" + StandingsNeededToAccessLevel3Agent + "]", Logging.Orange);
-                            MyStandingsAreTooLowSwitchAgents();
+                            if (!MyStandingsAreTooLowSwitchAgents()) return;
                             return;
                         }
                         break;
@@ -205,7 +212,7 @@ namespace Questor.Modules.Actions
                         if (Cache.Instance.StandingUsedToAccessAgent < StandingsNeededToAccessLevel4Agent)
                         {
                             Logging.Log("AgentInteraction.StartConversation", "Our Standings to [" + Agent.Name + "] are [" + Cache.Instance.StandingUsedToAccessAgent + "] < [" + StandingsNeededToAccessLevel4Agent + "]", Logging.Orange);
-                            MyStandingsAreTooLowSwitchAgents();
+                            if (!MyStandingsAreTooLowSwitchAgents()) return;
                             return;
                         }
                         break;
@@ -214,7 +221,7 @@ namespace Questor.Modules.Actions
                         if (Cache.Instance.StandingUsedToAccessAgent < StandingsNeededToAccessLevel5Agent)
                         {
                             Logging.Log("AgentInteraction.StartConversation", "Our Standings to [" + Agent.Name + "] are [" + Cache.Instance.StandingUsedToAccessAgent + "] < [" + StandingsNeededToAccessLevel5Agent + "]", Logging.Orange);
-                            MyStandingsAreTooLowSwitchAgents();
+                            if (!MyStandingsAreTooLowSwitchAgents()) return;
                             return;
                         }
                         break;
@@ -909,27 +916,30 @@ namespace Questor.Modules.Actions
         {
             try
             {
-                DirectAgentWindow agentWindow = Agent.Window;
-                if (agentWindow == null)
+                if (Agent != null)
                 {
-                    Logging.Log("AgentInteraction", "Done", Logging.Yellow);
-                    ChangeAgentInteractionState(AgentInteractionState.Done);
-                }
-
-                if (agentWindow != null && agentWindow.IsReady)
-                {
-                    if (DateTime.UtcNow < _lastAgentAction.AddSeconds(2))
+                    DirectAgentWindow agentWindow = Agent.Window;
+                    if (agentWindow == null)
                     {
-                        //Logging.Log("AgentInteraction.CloseConversation", "will continue in [" + Math.Round(_nextAgentAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "]sec", Logging.Yellow);
-                        return;
+                        Logging.Log("AgentInteraction", "Done", Logging.Yellow);
+                        ChangeAgentInteractionState(AgentInteractionState.Done);
                     }
 
-                    Logging.Log("AgentInteraction", "Attempting to close Agent Window", Logging.Yellow);
-                    _lastAgentAction = DateTime.UtcNow;
-                    agentWindow.Close();
-                }
+                    if (agentWindow != null && agentWindow.IsReady)
+                    {
+                        if (DateTime.UtcNow < _lastAgentAction.AddSeconds(2))
+                        {
+                            //Logging.Log("AgentInteraction.CloseConversation", "will continue in [" + Math.Round(_nextAgentAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "]sec", Logging.Yellow);
+                            return;
+                        }
 
-                MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentId, true);
+                        Logging.Log("AgentInteraction", "Attempting to close Agent Window", Logging.Yellow);
+                        _lastAgentAction = DateTime.UtcNow;
+                        agentWindow.Close();
+                    }
+
+                    MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentId, true);    
+                }
             }
             catch (Exception exception)
             {
