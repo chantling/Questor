@@ -706,9 +706,16 @@ namespace Questor.Modules.Lookup
 
                     //DamageTypesForThisMission = new List<DamageType>();
                     DamageTypesInMissionXML = missionXml.XPathSelectElements("//damagetype").Select(e => (DamageType)Enum.Parse(typeof(DamageType), (string)e, true)).ToList();
-                    foreach (DamageType _damageTypeElement in DamageTypesInMissionXML)
+                    foreach (DamageType damageTypeElement in DamageTypesInMissionXML)
                     {
-                        DamageTypesForThisMission.AddOrUpdate(_damageTypeElement, DateTime.UtcNow);
+                        DamageTypesForThisMission.AddOrUpdate(damageTypeElement, DateTime.UtcNow);
+                        DamageType damageTypeElementCopy = damageTypeElement;
+                        foreach (Ammo _ammoType in Combat.Ammo.Where(i => i.DamageType == damageTypeElementCopy))
+                        {
+                            Logging.Log("AgentInteraction", "Mission XML for [" + MissionName + "] specified to load [" + damageTypeElementCopy + "] Damagetype. Adding [" + _ammoType.Name + "][" + _ammoType.TypeId +"] to the list of ammoToLoad", Logging.White);
+                            AmmoTypesToLoad.AddOrUpdate((_ammoType), DateTime.UtcNow);
+                            loadedAmmo = true;
+                        }
                     }
 
                     if (DamageTypesForThisMission.Any() && !AmmoTypesToLoad.Any())
