@@ -807,9 +807,6 @@ namespace Questor.Behaviors
                             Traveler.Destination = new SolarSystemDestination(destination.LastOrDefault());
                             return;
                         }
-
-                        Logging.Log("CombatHelperBehavior.Traveler", "Destination: was supposed to be locationID [" + lastSolarSystemInRoute + "] but we couldnt find a solarsystem with that locationID!", Logging.White);
-                        return;
                     }
 
                     return;

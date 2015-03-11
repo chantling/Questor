@@ -253,13 +253,6 @@ namespace Questor.Storylines
                 }
                 return StorylineState.PreAcceptMission;
             }
-
-            Logging.Log("MaterialsForWarPreparation", "No DirectEVE Instances Available: free version detected. Buy/Sell support not available. Blacklisting agent for this Questor session!", Logging.Orange);
-
-            // Close the market window
-            if (marketWindow != null) marketWindow.Close();
-            // No, black list the agent in this Questor session (note we will never decline storylines!)
-            return StorylineState.BlacklistAgent;
         }
 
         /// <summary>
