@@ -591,7 +591,7 @@ namespace Questor.Modules.Lookup
             MissionSettings.PocketOrbitDistance = null;
             MissionSettings.PocketUseDrones = null;
             MissionSettings.PocketDamageType = null;
-            MissionSettings.ManualDamageType = null;
+            //MissionSettings.ManualDamageType = null;
         }
 
         public static void ClearMissionSpecificSettings()
@@ -623,7 +623,7 @@ namespace Questor.Modules.Lookup
             MissionSettings.FactionOptimalRange = null;
             MissionSettings.FactionOrbitDistance = null;
             MissionSettings.FactionDamageType = null;
-            MissionSettings.ManualDamageType = null;
+            //MissionSettings.ManualDamageType = null;
             MissionSettings._listofFactionFittings.Clear();
         }
 
@@ -955,8 +955,8 @@ namespace Questor.Modules.Lookup
         {
             get
             {
-                if (ManualDamageType == null)
-                {
+                //if (ManualDamageType == null)
+                //{
                     if (PocketDamageType == null)
                     {
                         if (MissionDamageType == null)
@@ -974,9 +974,8 @@ namespace Questor.Modules.Lookup
                     }
 
                     return (DamageType)PocketDamageType;
-                }
-
-                return (DamageType) ManualDamageType;
+                //}
+                //return (DamageType) ManualDamageType;
             }
         }
 
@@ -986,7 +985,7 @@ namespace Questor.Modules.Lookup
         public static DamageType? FactionDamageType { get; set; }
         public static DamageType? MissionDamageType { get; set; }
         public static DamageType? PocketDamageType { get; set; }
-        public static DamageType? ManualDamageType { get; set; }
+        //public static DamageType? ManualDamageType { get; set; }
         public static Dictionary<DamageType, DateTime> DamageTypesForThisMission  { get; set; }
         public static IEnumerable<DamageType> DamageTypesInMissionXML { get; set; }
 

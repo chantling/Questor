@@ -579,21 +579,21 @@ namespace Questor
                 //    }
                 //}
 
-                if ((string) DamageTypeComboBox.SelectedItem != "Auto")
-                {
-                    if ((string)DamageTypeComboBox.SelectedItem != MissionSettings.ManualDamageType.ToString() && !DamageTypeComboBox.DroppedDown)
-                    {
-                        DamageTypeComboBox.SelectedItem = MissionSettings.ManualDamageType.ToString();
-                    }    
-                }
+                //if ((string) DamageTypeComboBox.SelectedItem != "Auto")
+                //{
+                //    if ((string)DamageTypeComboBox.SelectedItem != MissionSettings.ManualDamageType.ToString() && !DamageTypeComboBox.DroppedDown)
+                //    {
+                //        DamageTypeComboBox.SelectedItem = MissionSettings.ManualDamageType.ToString();
+                //    }    
+                //}
 
-                if ((string) DamageTypeComboBox.SelectedItem == "Auto")
-                {
-                    if (MissionSettings.ManualDamageType != null && !DamageTypeComboBox.DroppedDown)
-                    {
-                        MissionSettings.ManualDamageType = null;
-                    }
-                }
+                //if ((string) DamageTypeComboBox.SelectedItem == "Auto")
+                //{
+                //    if (MissionSettings.ManualDamageType != null && !DamageTypeComboBox.DroppedDown)
+                //    {
+                //        MissionSettings.ManualDamageType = null;
+                //    }
+                //}
                 
 
                 //
@@ -892,17 +892,17 @@ namespace Questor
 
         private void DamageTypeComboBoxSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (DamageTypeComboBox.Text != null && !string.IsNullOrEmpty(DamageTypeComboBox.Text))
-            {
-                if (DamageTypeComboBox.Text.ToLower() == "Auto".ToLower())
-                {
-                    MissionSettings.ManualDamageType = null;
-                    return;
-                }
+            //if (DamageTypeComboBox.Text != null && !string.IsNullOrEmpty(DamageTypeComboBox.Text))
+            //{
+                //if (DamageTypeComboBox.Text.ToLower() == "Auto".ToLower())
+                //{
+                //    MissionSettings.ManualDamageType = null;
+                //    return;
+                //}
 
-                MissionSettings.ManualDamageType = (DamageType)Enum.Parse(typeof(DamageType), DamageTypeComboBox.Text);
-                return;    
-            }
+                //MissionSettings.ManualDamageType = (DamageType)Enum.Parse(typeof(DamageType), DamageTypeComboBox.Text);
+                //return;    
+            //}
 
             return;
         }
