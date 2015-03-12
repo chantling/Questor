@@ -951,7 +951,7 @@ namespace Questor.Modules.Lookup
         /// <summary>
         ///   Best damage type for the mission
         /// </summary>
-        public static DamageType CurrentDamageType
+        public static DamageType? CurrentDamageType
         {
             get
             {
@@ -963,8 +963,14 @@ namespace Questor.Modules.Lookup
                         {
                             if (FactionDamageType == null)
                             {
-                                if (Logging.DebugCombat) Logging.Log("CurrentDamageType", "Note: ManualDamageType, PocketDamageType, MissionDamageType and FactionDamageType were all NULL, defaulting to EM ", Logging.Debug);
-                                return DamageType.EM;
+                                if (Logging.DebugCombat) Logging.Log("CurrentDamageType", "Note: ManualDamageType, PocketDamageType, MissionDamageType and FactionDamageType were all NULL, defaulting to 1st Ammo listed in AmmoToLoad", Logging.Debug);
+                                if (AmmoTypesToLoad != null && AmmoTypesToLoad.Any())
+                                {
+                                    DamageType currentDamageType = AmmoTypesToLoad.FirstOrDefault().Key.DamageType;
+                                    return currentDamageType;
+                                }
+
+                                return null;
                             }
 
                             return (DamageType) FactionDamageType;
