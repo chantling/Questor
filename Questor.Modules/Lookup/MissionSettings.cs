@@ -37,6 +37,7 @@ namespace Questor.Modules.Lookup
             ListOfAgents = new List<AgentsList>();
             ListofFactionFittings = new List<FactionFitting>();
             ListOfMissionFittings = new List<MissionFitting>();
+            _listOfMissionFittings = new List<MissionFitting>();
             AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
             MissionBlacklist = new List<string>();
             MissionGreylist = new List<string>();
@@ -439,54 +440,68 @@ namespace Questor.Modules.Lookup
             {
                 if (_missionFittingForThisMissionName == null)
                 {
-                    if (MissionSettings.ListOfMissionFittings != null && MissionSettings.ListOfMissionFittings.Any(i => i.MissionName.ToLower() == Mission.Name))
+                    if (MissionSettings.ListOfMissionFittings != null)
                     {
-                        IEnumerable<MissionFitting> tempListOfMissionFittings = MissionSettings.ListOfMissionFittings.Where(i => i.MissionName.ToLower() == Mission.Name);
-                        if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())
+                        if (MissionSettings.ListOfMissionFittings.Any())
                         {
-                            foreach (MissionFitting fittingMatchingFaction in tempListOfMissionFittings)
+                            if (MissionSettings.ListOfMissionFittings.Any(i => i.MissionName.ToLower() == Mission.Name))
                             {
-                                if (fittingMatchingFaction.FactionName != null)
+                                IEnumerable<MissionFitting> tempListOfMissionFittings = MissionSettings.ListOfMissionFittings.Where(i => i.MissionName.ToLower() == Mission.Name);
+                                if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())
                                 {
-                                    if (fittingMatchingFaction.FactionName == MissionSettings.FactionName)
+                                    foreach (MissionFitting fittingMatchingFaction in tempListOfMissionFittings)
                                     {
-                                        _missionFittingForThisMissionName = fittingMatchingFaction;
-                                        _missionFittingNameForThisMissionName = fittingMatchingFaction.FittingName;
-                                        if (fittingMatchingFaction.DroneTypeID != null)
+                                        if (fittingMatchingFaction.FactionName != null)
                                         {
-                                            MissionSettings.MissionDroneTypeID = fittingMatchingFaction.DroneTypeID;
+                                            if (fittingMatchingFaction.FactionName == MissionSettings.FactionName)
+                                            {
+                                                _missionFittingForThisMissionName = fittingMatchingFaction;
+                                                _missionFittingNameForThisMissionName = fittingMatchingFaction.FittingName;
+                                                if (fittingMatchingFaction.DroneTypeID != null)
+                                                {
+                                                    MissionSettings.MissionDroneTypeID = fittingMatchingFaction.DroneTypeID;
+                                                }
+
+                                                //_fitting.Ship - this should allow for mission specific ships... if we want to allow for that
+                                                return _missionFittingNameForThisMissionName;
+                                            }
+
+                                            continue;
                                         }
-                                        
+
+                                        continue;
+                                    }
+
+                                    MissionFitting fitting = tempListOfMissionFittings.FirstOrDefault();
+                                    if (fitting != null)
+                                    {
+                                        _missionFittingForThisMissionName = fitting;
+                                        _missionFittingNameForThisMissionName = fitting.FittingName;
+                                        if (fitting.DroneTypeID != null)
+                                        {
+                                            MissionSettings.MissionDroneTypeID = fitting.DroneTypeID;
+                                        }
+
                                         //_fitting.Ship - this should allow for mission specific ships... if we want to allow for that
                                         return _missionFittingNameForThisMissionName;
                                     }
 
-                                    continue;
+                                    return null;
                                 }
 
-                                continue;
+                                Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())", Logging.Debug);
+                                return null;
                             }
 
-                            MissionFitting fitting = tempListOfMissionFittings.FirstOrDefault();
-                            if (fitting != null)
-                            {
-                                _missionFittingForThisMissionName = fitting;
-                                _missionFittingNameForThisMissionName = fitting.FittingName;
-                                if (fitting.DroneTypeID != null)
-                                {
-                                    MissionSettings.MissionDroneTypeID = fitting.DroneTypeID;
-                                }
-
-                                //_fitting.Ship - this should allow for mission specific ships... if we want to allow for that
-                                return _missionFittingNameForThisMissionName;    
-                            }
-
+                            Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (!MissionSettings.ListOfMissionFittings.Any(i => i.MissionName.ToLower() == Mission.Name))", Logging.Debug);
                             return null;
                         }
 
+                        Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (!MissionSettings.ListOfMissionFittings.Any())", Logging.Debug);
                         return null;
                     }
 
+                    Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (MissionSettings.ListOfMissionFittings == null )", Logging.Debug);
                     return null;
                 }
 
