@@ -687,6 +687,7 @@ namespace Questor.Modules.Lookup
                         {
                             Logging.Log("LoadSpecificAmmo", "Adding [" + new Ammo(ammo).Name + "] to the list of ammo to load: from: ammoTypes", Logging.White);
                             AmmoTypesToLoad.AddOrUpdate(new Ammo(ammo), DateTime.UtcNow);
+                            MissionSettings.MissionDamageType = (DamageType)Enum.Parse(typeof(DamageType), (string)ammo, true);
                             MissionSettings.loadedAmmo = true;
                         }
 
@@ -702,6 +703,7 @@ namespace Questor.Modules.Lookup
                         {
                             Logging.Log("LoadSpecificAmmo", "Adding [" + new Ammo(ammo).Name + "] to the list of ammo to load: from: missionammo", Logging.White);
                             AmmoTypesToLoad.AddOrUpdate(new Ammo(ammo), DateTime.UtcNow);
+                            MissionSettings.MissionDamageType = (DamageType) Enum.Parse(typeof (DamageType), (string)ammo, true);
                             MissionSettings.loadedAmmo = true;
                         }
 
@@ -729,6 +731,7 @@ namespace Questor.Modules.Lookup
                         {
                             Logging.Log("AgentInteraction", "Mission XML for [" + MissionName + "] specified to load [" + damageTypeElementCopy + "] Damagetype. Adding [" + _ammoType.Name + "][" + _ammoType.TypeId +"] to the list of ammoToLoad", Logging.White);
                             AmmoTypesToLoad.AddOrUpdate((_ammoType), DateTime.UtcNow);
+                            MissionSettings.MissionDamageType = _ammoType.DamageType;
                             loadedAmmo = true;
                         }
                     }
@@ -1003,6 +1006,8 @@ namespace Questor.Modules.Lookup
         //
         // FactionDamageType, MissionDamageType, PocketDamageType, ManualDamageType
         //
+
+        public static DamageType DefaultDamageType { get; set; }
         public static DamageType? FactionDamageType { get; set; }
         public static DamageType? MissionDamageType { get; set; }
         public static DamageType? PocketDamageType { get; set; }
@@ -1012,7 +1017,7 @@ namespace Questor.Modules.Lookup
 
         public static DamageType GetFactionDamageType(string html)
         {
-            DamageType DamageTypeToUse;
+            DamageType damageTypeToUse;
             // We are going to check damage types
             Regex logoRegex = new Regex("img src=\"factionlogo:(?<factionlogo>\\d+)");
 
@@ -1032,29 +1037,25 @@ namespace Questor.Modules.Lookup
                         Logging.Log("GetMissionDamageType", "[" + MissionName + "] Faction [" + FactionName + "]", Logging.Yellow);
                         if (faction.Attribute("damagetype") != null)
                         {
-                            DamageTypeToUse = ((DamageType) Enum.Parse(typeof (DamageType), (string) faction.Attribute("damagetype")));
-                            Logging.Log("GetMissionDamageType", "Faction DamageType defined as [" + DamageTypeToUse + "]", Logging.Yellow);
-                            return DamageTypeToUse;
+                            damageTypeToUse = ((DamageType) Enum.Parse(typeof (DamageType), (string) faction.Attribute("damagetype")));
+                            Logging.Log("GetMissionDamageType", "Faction DamageType defined as [" + damageTypeToUse + "]", Logging.Yellow);
+                            return (DamageType)damageTypeToUse;
                         }
 
-                        DamageTypeToUse = DamageType.EM;
-                        Logging.Log("GetMissionDamageType", "DamageType not found for Faction [" + FactionName + "], Defaulting to DamageType  [" + DamageTypeToUse + "]", Logging.Yellow);
-                        return DamageTypeToUse;
+                        Logging.Log("GetMissionDamageType", "DamageType not found for Faction [" + FactionName + "], Defaulting to DamageType  [" + MissionSettings.DefaultDamageType + "]", Logging.Yellow);
+                        return MissionSettings.DefaultDamageType;
                     }
 
-                    DamageTypeToUse = DamageType.EM;
-                    Logging.Log("GetMissionDamageType", "Faction not found in factions.xml, Defaulting to DamageType  [" + DamageTypeToUse + "]", Logging.Yellow);
-                    return DamageTypeToUse;
+                    Logging.Log("GetMissionDamageType", "Faction not found in factions.xml, Defaulting to DamageType  [" + MissionSettings.DefaultDamageType + "]", Logging.Yellow);
+                    return MissionSettings.DefaultDamageType;
                 }
 
-                DamageTypeToUse = DamageType.EM;
-                Logging.Log("GetMissionDamageType", "Factions.xml is missing, Defaulting to DamageType  [" + DamageTypeToUse + "]", Logging.Yellow);
-                return DamageTypeToUse;
+                Logging.Log("GetMissionDamageType", "Factions.xml is missing, Defaulting to DamageType  [" + MissionSettings.DefaultDamageType + "]", Logging.Yellow);
+                return MissionSettings.DefaultDamageType;
             }
 
-            DamageTypeToUse = DamageType.EM;
-            Logging.Log("GetMissionDamageType", "Faction logo not matched, Defaulting to DamageType  [" + DamageTypeToUse + "]", Logging.Yellow);
-            return DamageTypeToUse;
+            Logging.Log("GetMissionDamageType", "Faction logo not matched, Defaulting to DamageType  [" + MissionSettings.DefaultDamageType + "]", Logging.Yellow);
+            return MissionSettings.DefaultDamageType;
         }
 
         public static void UpdateMissionName(long AgentID = 0)

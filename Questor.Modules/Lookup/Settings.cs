@@ -674,7 +674,7 @@ namespace Questor.Modules.Lookup
                     //
                     try
                     {
-
+                        MissionSettings.DefaultDamageType = (DamageType)Enum.Parse(typeof(DamageType), (string)CharacterSettingsXml.Element("defaultDamageType") ?? (string)CommonSettingsXml.Element("defaultDamageType") ?? "EM", true);
                         Combat.WeaponGroupId = (int?)CharacterSettingsXml.Element("weaponGroupId") ?? (int?)CommonSettingsXml.Element("weaponGroupId") ?? 0;
                         Combat.DontShootFrigatesWithSiegeorAutoCannons = (bool?)CharacterSettingsXml.Element("DontShootFrigatesWithSiegeorAutoCannons") ?? (bool?)CommonSettingsXml.Element("DontShootFrigatesWithSiegeorAutoCannons") ?? false;
                         Combat.maxHighValueTargets = (int?)CharacterSettingsXml.Element("maximumHighValueTargets") ?? (int?)CommonSettingsXml.Element("maximumHighValueTargets") ?? 2;
