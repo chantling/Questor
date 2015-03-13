@@ -392,7 +392,7 @@ namespace Questor.Modules.Lookup
 
         private static string _factionFittingNameForThisMissionsFaction;
 
-        private static FactionFitting _factionFittingForThisMissionsFaction;
+        private static FactionFitting FactionFittingForThisMissionsFaction { get; set; }
         public static string FactionFittingNameForThisMissionsFaction
         {
             get
@@ -403,16 +403,16 @@ namespace Questor.Modules.Lookup
                     {
                         if (MissionSettings.ListofFactionFittings.FirstOrDefault(m => m.FactionName.ToLower() == FactionName.ToLower()) != null)
                         {
-                            FactionFitting tempFitting = MissionSettings.ListofFactionFittings.FirstOrDefault(m => m.FactionName.ToLower() == FactionName.ToLower());
-                            if (tempFitting != null)
+                            FactionFittingForThisMissionsFaction = MissionSettings.ListofFactionFittings.FirstOrDefault(m => m.FactionName.ToLower() == FactionName.ToLower());
+                            if (FactionFittingForThisMissionsFaction != null)
                             {
-                                _factionFittingNameForThisMissionsFaction = tempFitting.ToString();
-                                if (_factionFittingForThisMissionsFaction.DroneTypeID != null && _factionFittingForThisMissionsFaction.DroneTypeID != 0)
+                                _factionFittingNameForThisMissionsFaction = FactionFittingForThisMissionsFaction.FittingName;
+                                if (FactionFittingForThisMissionsFaction.DroneTypeID != null && FactionFittingForThisMissionsFaction.DroneTypeID != 0)
                                 {
-                                    Drones.FactionDroneTypeID = (int)_factionFittingForThisMissionsFaction.DroneTypeID;
+                                    Drones.FactionDroneTypeID = (int)FactionFittingForThisMissionsFaction.DroneTypeID;
                                 }
 
-                                Logging.Log("AgentInteraction", "Faction fitting: " + _factionFittingForThisMissionsFaction.FactionName + "Using DroneTypeID [" + Drones.DroneTypeID + "]", Logging.Yellow);
+                                Logging.Log("AgentInteraction", "Faction fitting: " + FactionFittingForThisMissionsFaction.FactionName + "Using DroneTypeID [" + Drones.DroneTypeID + "]", Logging.Yellow);
                                 return _factionFittingNameForThisMissionsFaction;
                             }
 
@@ -625,7 +625,7 @@ namespace Questor.Modules.Lookup
             MissionSettings.MissionOptimalRange = null;
             MissionSettings.MissionDamageType = null;
             MissionSettings._factionFittingNameForThisMissionsFaction = null;
-            MissionSettings._factionFittingForThisMissionsFaction = null;
+            MissionSettings.FactionFittingForThisMissionsFaction = null;
             MissionSettings._fittingToLoad = null;
             MissionSettings._listOfMissionFittings.Clear();
         }
