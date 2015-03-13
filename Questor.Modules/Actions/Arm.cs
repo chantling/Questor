@@ -1026,7 +1026,7 @@ namespace Questor.Modules.Actions
         {
             try
             {
-                if (Settings.Instance.UseFittingManager)
+                if (Settings.Instance.UseFittingManager && MissionSettings.Mission != null)
                 {
                     //If we are already loading a fitting...
                     if (ItemsAreBeingMoved)

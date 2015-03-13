@@ -189,8 +189,8 @@ namespace Questor.Modules.Lookup
             }
         }
 
-        public static DirectAgentMission Mission;
-        public static DirectAgentMission FirstAgentMission;
+        public static DirectAgentMission Mission { get; set; }
+        public static DirectAgentMission FirstAgentMission { get; set; }
         public static IEnumerable<DirectAgentMission> myAgentMissionList { get; set; }
         public static bool MissionXMLIsAvailable { get; set; }
         public static string MissionXmlPath { get; set; }
@@ -444,7 +444,7 @@ namespace Questor.Modules.Lookup
                     {
                         if (MissionSettings.ListOfMissionFittings.Any())
                         {
-                            if (MissionSettings.ListOfMissionFittings.Any(i => i.MissionName.ToLower() == Mission.Name))
+                            if (MissionSettings.ListOfMissionFittings.Any(i => i.MissionName != null && MissionSettings.Mission != null && i.MissionName.ToLower() == Mission.Name))
                             {
                                 IEnumerable<MissionFitting> tempListOfMissionFittings = MissionSettings.ListOfMissionFittings.Where(i => i.MissionName.ToLower() == Mission.Name);
                                 if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())
@@ -493,7 +493,7 @@ namespace Questor.Modules.Lookup
                                 return null;
                             }
 
-                            Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (!MissionSettings.ListOfMissionFittings.Any(i => i.MissionName.ToLower() == Mission.Name))", Logging.Debug);
+                            Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (!MissionSettings.ListOfMissionFittings.Any(i => i.MissionName != null && Mission != null && i.MissionName.ToLower() == Mission.Name))", Logging.Debug);
                             return null;
                         }
 
