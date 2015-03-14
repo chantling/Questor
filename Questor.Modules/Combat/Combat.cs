@@ -1317,7 +1317,7 @@ namespace Questor.Modules.Combat
                     //
                     if (DateTime.UtcNow < Time.Instance.LastChangedAmmoTimeStamp[weapon.ItemId].AddSeconds(Time.Instance.EnforcedDelayBetweenArbitraryAmmoChanges))
                     {
-                        if ((long)weapon.MaxRange == 0 && !force)
+                        if ((long)weapon.CurrentCharges != 0 && !force)
                         {
                             if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "[" + weapon.TypeName + "] last reloaded [" + DateTime.UtcNow.Subtract(Time.Instance.LastChangedAmmoTimeStamp[weapon.ItemId]).TotalSeconds + "sec ago] [ " + weapon.CurrentCharges + " ] charges in [" + Cache.Instance.Weapons.Count() + "] total weapons, minimum of [" + Combat.MinimumAmmoCharges + "] charges, MaxCharges is [" + weapon.MaxCharges + "]", Logging.Orange);
                             return true;
