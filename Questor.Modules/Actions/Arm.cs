@@ -492,8 +492,16 @@ namespace Questor.Modules.Actions
                 Logging.Log("Arm.MoveDronesToDroneBay", "Dronebay details: Capacity [" + Drones.DroneBay.Capacity + "] UsedCapacity [" + Drones.DroneBay.UsedCapacity + "]", Logging.White);
                 if (Drones.DroneBay.Capacity == Drones.DroneBay.UsedCapacity)
                 {
-                    Logging.Log("Arm.MoveDronesToDroneBay", "Dronebay is Full. No need to move any more drones.", Logging.White);
-                    ChangeArmState(StateToChangeToWhenDoneMoving);
+                    if (Drones.DroneBay.Items.Any()
+                        && Drones.DroneBay.Items.FirstOrDefault() != null
+                        && Drones.DroneBay.Items.FirstOrDefault().TypeId == Drones.DroneTypeID)
+                    {
+                        Logging.Log("Arm.MoveDronesToDroneBay", "Dronebay is Full. No need to move any more drones.", Logging.White);
+                        ChangeArmState(StateToChangeToWhenDoneMoving);
+                        return false;    
+                    }
+
+                    Logging.Log("Arm.MoveDronesToDroneBay", "DroneBay at Capacity but [ !Drones.DroneBay.Items.Any() ] or [ + Drones.DroneBay.Items.FirstOrDefault().TypeId != Drones.DroneTypeID + ]", Logging.Debug);
                     return false;
                 }
 
