@@ -1502,8 +1502,8 @@ namespace Questor.Modules.Combat
                 return false;
             }
 
-            // Do we have ANY ammo loaded? MaxRange would be 0 if we have no ammo at all.
-            if ((long)weapon.MaxRange != 0 && weapon.Charge.TypeId == ammo.TypeId)
+            // Do we have ANY ammo loaded? CurrentCharges would be 0 if we have no ammo at all.
+            if ((long)weapon.CurrentCharges != 0 && weapon.Charge.TypeId == ammo.TypeId)
             {
                 //Force a reload even through we have some ammo loaded already?
                 if (!force)
@@ -1515,9 +1515,9 @@ namespace Questor.Modules.Combat
 
                 //we must have ammo, no need to reload at the moment\
                 if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "[" + weaponNumber + "] MaxRange [ " + weapon.MaxRange + " ] if we have 0 charges MaxRange will be 0", Logging.Orange);
-                    Time.Instance.LastReloadAttemptTimeStamp[weapon.ItemId] = DateTime.UtcNow;
-                    return true;
-                }
+                Time.Instance.LastReloadAttemptTimeStamp[weapon.ItemId] = DateTime.UtcNow;
+                return true;
+            }
 
             DirectItem charge = null;
             if (Cache.Instance.CurrentShipsCargo != null) 
