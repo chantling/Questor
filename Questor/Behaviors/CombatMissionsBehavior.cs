@@ -1697,9 +1697,13 @@ namespace Questor.Behaviors
                         break;
 
                     case CombatMissionsBehaviorState.PrepareStorylineSwitchAgents:
-                        Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
-                        Logging.Log("AgentInteraction", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
-                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.PrepareStorylineGotoBase;
+                        if (Cache.Instance.SwitchAgent() != null)
+                        {
+                            Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
+                            Logging.Log("AgentInteraction", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
+                            _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.PrepareStorylineGotoBase;    
+                        }
+                        
                         break;
 
                     case CombatMissionsBehaviorState.PrepareStorylineGotoBase:

@@ -422,6 +422,30 @@ namespace Questor.Modules.Lookup
                         return null;
                     }
 
+                    //
+                    // Assume the faction named Default has a fit assigned (we couldnt find the actual faction assigned to a fit (we tried above))
+                    //
+                    if (MissionSettings.ListofFactionFittings.Any(i => i.FactionName.ToLower() == "Default".ToLower()))
+                    {
+                        if (MissionSettings.ListofFactionFittings.FirstOrDefault(m => m.FactionName.ToLower() == "Default".ToLower()) != null)
+                        {
+                            FactionFittingForThisMissionsFaction = MissionSettings.ListofFactionFittings.FirstOrDefault(m => m.FactionName.ToLower() == "Default".ToLower());
+                            if (FactionFittingForThisMissionsFaction != null)
+                            {
+                                _factionFittingNameForThisMissionsFaction = FactionFittingForThisMissionsFaction.FittingName;
+                                if (FactionFittingForThisMissionsFaction.DroneTypeID != null && FactionFittingForThisMissionsFaction.DroneTypeID != 0)
+                                {
+                                    Drones.FactionDroneTypeID = (int)FactionFittingForThisMissionsFaction.DroneTypeID;
+                                }
+
+                                Logging.Log("AgentInteraction", "Faction fitting: " + FactionFittingForThisMissionsFaction.FactionName + "Using DroneTypeID [" + Drones.DroneTypeID + "]", Logging.Yellow);
+                                return _factionFittingNameForThisMissionsFaction;
+                            }
+
+                            return null;
+                        }
+                    }
+
                     return null;
                 }
 

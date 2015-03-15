@@ -121,7 +121,7 @@ namespace Questor.Modules.Actions
                 //
                 if (currentAgent != null)
                 {
-                    Logging.Log("MyStandingsAreTooLowSwitchAgents", "Setting DeclineTimer on [" + Cache.Instance.CurrentAgentText + "] to 16 hours", Logging.Yellow);
+                    Logging.Log("MyStandingsAreTooLowSwitchAgents", "Setting DeclineTimer on [" + Cache.Instance.CurrentAgent + "] to 16 hours", Logging.Yellow);
                     currentAgent.DeclineTimer = DateTime.UtcNow.AddHours(16);
                     CloseConversation();
                 }
@@ -129,7 +129,6 @@ namespace Questor.Modules.Actions
                 if (Cache.Instance.SwitchAgent() != null)
                 {
                     Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
-                    Cache.Instance.CurrentAgentText = Cache.Instance.CurrentAgent.ToString(CultureInfo.InvariantCulture);
                     Logging.Log("MyStandingsAreTooLowSwitchAgents", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
                     _States.CurrentAgentInteractionState = AgentInteractionState.ChangeAgent;
                     return true;
@@ -304,21 +303,25 @@ namespace Questor.Modules.Actions
                         //
                         //Change Agents
                         //
-                        AgentsList _currentAgent = MissionSettings.ListOfAgents.FirstOrDefault(i => i.Name == Cache.Instance.CurrentAgentText);
+                        AgentsList _currentAgent = MissionSettings.ListOfAgents.FirstOrDefault(i => i.Name == Cache.Instance.CurrentAgent);
                         if (_currentAgent != null)
                         {
-                            Logging.Log("AgentInteraction.ReplyToAgent", "Our current agent [" + Cache.Instance.CurrentAgentText + "] does not have any more missions for us. Attempting to change agents" + Cache.Instance.CurrentAgent, Logging.Yellow);
+                            Logging.Log("AgentInteraction.ReplyToAgent", "Our current agent [" + Cache.Instance.CurrentAgent + "] does not have any more missions for us. Attempting to change agents" + Cache.Instance.CurrentAgent, Logging.Yellow);
                             _currentAgent.DeclineTimer = DateTime.UtcNow.AddDays(5);
                         }
                         CloseConversation();
+
+                        if (Cache.Instance.SwitchAgent() != null)
+                        {
+                            Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
+                            Logging.Log("AgentInteraction.ReplyToAgent", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
+                            ChangeAgentInteractionState(AgentInteractionState.ChangeAgent, true);    
+                        }
                         
-                        Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
-                        Logging.Log("AgentInteraction.ReplyToAgent", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
-                        ChangeAgentInteractionState(AgentInteractionState.ChangeAgent, true);
                         return;    
                     }
 
-                    Logging.Log("AgentInteraction.ReplyToAgent", "Our current agent [" + Cache.Instance.CurrentAgentText + "] does not have any more missions for us. Define more / different agents in the character XML. Pausing." + Cache.Instance.CurrentAgent, Logging.Yellow);
+                    Logging.Log("AgentInteraction.ReplyToAgent", "Our current agent [" + Cache.Instance.CurrentAgent + "] does not have any more missions for us. Define more / different agents in the character XML. Pausing." + Cache.Instance.CurrentAgent, Logging.Yellow);
                     Cache.Instance.Paused = true;
                 }
 
@@ -813,12 +816,17 @@ namespace Questor.Modules.Actions
                         //
                         //Change Agents
                         //
-                        Logging.Log("AgentInteraction.DeclineMission", "Setting DeclineTimer on [" + Cache.Instance.CurrentAgentText + "] to [" + secondsToWait + "] seconds from now", Logging.Yellow);
+                        Logging.Log("AgentInteraction.DeclineMission", "Setting DeclineTimer on [" + Cache.Instance.CurrentAgent + "] to [" + secondsToWait + "] seconds from now", Logging.Yellow);
                         if (_currentAgent != null) _currentAgent.DeclineTimer = DateTime.UtcNow.AddSeconds(secondsToWait);
                         CloseConversation();
-                        Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
-                        Logging.Log("AgentInteraction.DeclineMission", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
-                        ChangeAgentInteractionState(AgentInteractionState.ChangeAgent, true);
+
+                        if (Cache.Instance.SwitchAgent() != null)
+                        {
+                            Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
+                            Logging.Log("AgentInteraction.DeclineMission", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
+                            ChangeAgentInteractionState(AgentInteractionState.ChangeAgent, true);    
+                        }
+                        
                         return;
                     }
 

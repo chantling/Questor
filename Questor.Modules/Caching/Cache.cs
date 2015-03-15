@@ -683,7 +683,7 @@ namespace Questor.Modules.Caching
 
         public bool AllAgentsStillInDeclineCoolDown { get; set; }
 
-        public string _agentName = "";
+        public string _agentName { get; set; }
 
         public bool Paused { get; set; }
 
@@ -709,7 +709,7 @@ namespace Questor.Modules.Caching
         public string AgentStationName;
         public long AgentSolarSystemID;
         //public string AgentSolarSystemName;
-        public string CurrentAgentText = string.Empty;
+        //public string CurrentAgentText = string.Empty;
         public string CurrentAgent
         {
             get
@@ -722,9 +722,11 @@ namespace Questor.Modules.Caching
                         {
                             try
                             {
-                                _agentName = SwitchAgent();
-                                Logging.Log("Cache.CurrentAgent", "[ " + _agentName + " ] AgentID [ " + AgentId + " ]", Logging.White);
-                                Cache.Instance.CurrentAgentText = CurrentAgent.ToString(CultureInfo.InvariantCulture);
+                                if (SwitchAgent() != null)
+                                {
+                                    _agentName = SwitchAgent();
+                                    Logging.Log("Cache.CurrentAgent", "[ " + _agentName + " ] AgentID [ " + AgentId + " ]", Logging.White);
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -747,7 +749,6 @@ namespace Questor.Modules.Caching
             {
                 try
                 {
-                    CurrentAgentText = value.ToString(CultureInfo.InvariantCulture);
                     _agentName = value;
                 }
                 catch (Exception ex)

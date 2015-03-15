@@ -1036,7 +1036,7 @@ namespace Questor
 
             try
             {
-                AgentNameData.Text = Cache.Instance.CurrentAgentText;
+                AgentNameData.Text = Cache.Instance.CurrentAgent;
                 AgentEffectiveStandingsData.Text = Cache.Instance.AgentEffectiveStandingtoMeText;
 
                 //DeclinedTimeData.Text = Cache.Instance.CurrentAgent.DeclineTimer;
