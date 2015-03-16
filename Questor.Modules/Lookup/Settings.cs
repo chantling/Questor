@@ -890,8 +890,7 @@ namespace Questor.Modules.Lookup
                             }
                             else
                             {
-                                Logging.Log("Settings", "agentList exists in your characters config but no agents were listed.",
-                                    Logging.Red);
+                                Logging.Log("Settings", "agentList exists in your characters config but no agents were listed.", Logging.Red);
                             }
                         }
                         else

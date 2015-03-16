@@ -99,15 +99,14 @@ namespace Questor.Behaviors
 
             if (AgentInteraction.Agent == null || !AgentInteraction.Agent.IsValid)
             {
-                if (Cache.Instance.AgentId != null)
+                if (Cache.Instance.Agent != null)
                 {
-                    AgentInteraction.AgentId = (long)Cache.Instance.AgentId;
+                    AgentInteraction.AgentId = (long)Cache.Instance.Agent.AgentId;
                     if (AgentInteraction.Agent == null) Logging.Log("Agent", "AgentInteraction.Agent == null", Logging.Debug);
                     if (AgentInteraction.Agent != null && !AgentInteraction.Agent.IsValid) Logging.Log("Agent", "!AgentInteraction.Agent.IsValid", Logging.Debug);
                 }
                 else
                 {
-                    if (Cache.Instance.AgentId == null) Logging.Log("Agent", "Cache.Instance.AgentId == null", Logging.Debug);
                     if (Cache.Instance.Agent == null) Logging.Log("Agent", "Cache.Instance.Agent == null", Logging.Debug);
                 }
                 
@@ -1603,6 +1602,12 @@ namespace Questor.Behaviors
                 if (Logging.DebugCombatMissionBehavior) Logging.Log("CombatMissionBehavior", "public void ProcessState()", Logging.Debug);
                 if (!CMBEveryPulse()) return;
 
+                if (string.IsNullOrEmpty(Cache.Instance.CurrentAgent))
+                {
+                    if (Logging.DebugAgentInteractionReplyToAgent) Logging.Log("CMB.ProcessState", "if (string.IsNullOrEmpty(Cache.Instance.CurrentAgent)) return;", Logging.Debug);
+                    return;
+                }
+
                 switch (_States.CurrentCombatMissionBehaviorState)
                 {
                     case CombatMissionsBehaviorState.Idle:
@@ -1697,9 +1702,9 @@ namespace Questor.Behaviors
                         break;
 
                     case CombatMissionsBehaviorState.PrepareStorylineSwitchAgents:
-                        if (Cache.Instance.SwitchAgent() != null)
+                        if (!string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
                         {
-                            Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
+                            Cache.Instance.CurrentAgent = string.Empty;
                             Logging.Log("AgentInteraction", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
                             _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.PrepareStorylineGotoBase;    
                         }

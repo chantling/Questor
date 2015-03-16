@@ -126,9 +126,9 @@ namespace Questor.Modules.Actions
                     CloseConversation();
                 }
                 
-                if (Cache.Instance.SwitchAgent() != null)
+                if (!string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
                 {
-                    Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
+                    Cache.Instance.CurrentAgent = string.Empty;
                     Logging.Log("MyStandingsAreTooLowSwitchAgents", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
                     _States.CurrentAgentInteractionState = AgentInteractionState.ChangeAgent;
                     return true;
@@ -311,9 +311,9 @@ namespace Questor.Modules.Actions
                         }
                         CloseConversation();
 
-                        if (Cache.Instance.SwitchAgent() != null)
+                        if (!string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
                         {
-                            Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
+                            Cache.Instance.CurrentAgent = string.Empty;
                             Logging.Log("AgentInteraction.ReplyToAgent", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
                             ChangeAgentInteractionState(AgentInteractionState.ChangeAgent, true);    
                         }
@@ -820,9 +820,9 @@ namespace Questor.Modules.Actions
                         if (_currentAgent != null) _currentAgent.DeclineTimer = DateTime.UtcNow.AddSeconds(secondsToWait);
                         CloseConversation();
 
-                        if (Cache.Instance.SwitchAgent() != null)
+                        if (!string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
                         {
-                            Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
+                            Cache.Instance.CurrentAgent = string.Empty;
                             Logging.Log("AgentInteraction.DeclineMission", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
                             ChangeAgentInteractionState(AgentInteractionState.ChangeAgent, true);    
                         }

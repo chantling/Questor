@@ -54,11 +54,6 @@ namespace Questor.Modules.Caching
         private DirectAgent _agent;
 
         /// <summary>
-        ///   agentId cache
-        /// </summary>
-        private long? _agentId { get; set; }
-
-        /// <summary>
         ///   Current Storyline Mission Agent
         /// </summary>
         public long CurrentStorylineAgentId { get; set; }
@@ -683,7 +678,7 @@ namespace Questor.Modules.Caching
 
         public bool AllAgentsStillInDeclineCoolDown { get; set; }
 
-        public string _agentName { get; set; }
+        private string _currentAgent { get; set; }
 
         public bool Paused { get; set; }
 
@@ -718,26 +713,29 @@ namespace Questor.Modules.Caching
                 {
                     if (Settings.Instance.CharacterXMLExists)
                     {
-                        if (_agentName == "")
+                        if (string.IsNullOrEmpty(_currentAgent))
                         {
                             try
                             {
-                                if (SwitchAgent() != null)
+                                if (!string.IsNullOrEmpty(SwitchAgent()))
                                 {
-                                    _agentName = SwitchAgent();
-                                    Logging.Log("Cache.CurrentAgent", "[ " + _agentName + " ] AgentID [ " + AgentId + " ]", Logging.White);
+                                    _currentAgent = SwitchAgent();
+                                    Logging.Log("Cache.CurrentAgent", "[ " + _currentAgent + " ] AgentID [ " + Agent.AgentId + " ]", Logging.White);
                                 }
+
+                                return string.Empty;
                             }
                             catch (Exception ex)
                             {
                                 Logging.Log("Cache.AgentId", "Exception [" + ex + "]", Logging.Debug);
-                                return "";
+                                return string.Empty;
                             }
                         }
 
-                        return _agentName;
+                        return _currentAgent;
                     }
-                    return "";
+
+                    return string.Empty;
                 }
                 catch (Exception ex)
                 {
@@ -749,7 +747,7 @@ namespace Questor.Modules.Caching
             {
                 try
                 {
-                    _agentName = value;
+                    _currentAgent = value;
                 }
                 catch (Exception ex)
                 {
@@ -760,7 +758,7 @@ namespace Questor.Modules.Caching
         private static readonly Func<DirectAgent, DirectSession, bool> AgentInThisSolarSystemSelector = (a, s) => a.SolarSystemId == s.SolarSystemId;
         private static readonly Func<DirectAgent, DirectSession, bool> AgentInThisStationSelector = (a, s) => a.StationId == s.StationId;
 
-        private string SelectNearestAgent( bool requireValidDeclineTimer )
+        private string SelectNearestAgent(bool requireValidDeclineTimer )
         {
             string agentName = null;
 
@@ -768,6 +766,8 @@ namespace Questor.Modules.Caching
             {
                 DirectAgentMission mission = null;
 
+                if (!MissionSettings.ListOfAgents.Any()) return string.Empty;
+                
                 // first we try to find if we accepted a mission (not important) given by an agent in settings agents list
                 foreach (AgentsList potentialAgent in MissionSettings.ListOfAgents)
                 {
@@ -820,7 +820,7 @@ namespace Questor.Modules.Caching
                 Logging.Log("SelectNearestAgent", "Exception [" + ex + "]", Logging.Debug);
             }
 
-            return agentName;
+            return agentName ?? null;
         }
 
         private string SelectFirstAgent(bool returnFirstOneIfNoneFound = false)
@@ -848,31 +848,45 @@ namespace Questor.Modules.Caching
         {
             try
             {
-                string agentName = null;
+                string agentNameToSwitchTo = null;
 
                 if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.PrepareStorylineSwitchAgents)
                 {
                     //TODO: must be a better way to achieve this
-                    agentName = SelectFirstAgent();
-                    return agentName;
+                    if (!string.IsNullOrEmpty(SelectFirstAgent()))
+                    {
+                        return SelectFirstAgent();
+                    }
+
+                    return string.Empty;
                 }
                 
-                if (_agentName == "")
+                if (string.IsNullOrEmpty(_currentAgent))
                 {
                     // it means that this is first switch for Questor, so we'll check missions, then station or system for agents.
                     AllAgentsStillInDeclineCoolDown = false;
-                    agentName = SelectNearestAgent(true) ?? SelectNearestAgent(false);
-                    return agentName;
+                    if (!string.IsNullOrEmpty(SelectNearestAgent(true)))
+                    {
+                        agentNameToSwitchTo = SelectNearestAgent(true);
+                        return agentNameToSwitchTo;
+                    }
+
+                    if (!string.IsNullOrEmpty(SelectNearestAgent(false)))
+                    {
+                        agentNameToSwitchTo = SelectNearestAgent(false);
+                        return agentNameToSwitchTo;
+                    }
+
+                    return string.Empty;
                 }
                
                 // find agent by priority and with ok declineTimer 
-                AgentsList agent = MissionSettings.ListOfAgents.OrderBy(j => j.Priorit).FirstOrDefault(i => DateTime.UtcNow >= i.DeclineTimer);
+                AgentsList agentToUseByPriority = MissionSettings.ListOfAgents.OrderBy(j => j.Priorit).FirstOrDefault(i => DateTime.UtcNow >= i.DeclineTimer);
 
-                if (agent != null)
+                if (agentToUseByPriority != null)
                 {
-                    agentName = agent.Name;
                     AllAgentsStillInDeclineCoolDown = false; //this literally means we DO have agents available (at least one agents decline timer has expired and is clear to use)
-                    return agentName;
+                    return agentToUseByPriority.Name;
                 }
                 
                 // Why try to find an agent at this point ?
@@ -897,42 +911,6 @@ namespace Questor.Modules.Caching
             }
         }
 
-        public long? AgentId
-        {
-            get
-            {
-                try
-                {
-                    if (Settings.Instance.CharacterXMLExists)
-                    {
-                        try
-                        {
-                            if (_agent == null)
-                            {
-                                _agent = Cache.Instance.DirectEve.GetAgentByName(CurrentAgent);
-                            }
-
-                            _agentId = _agent.AgentId;
-
-                            return (long)_agentId;
-                        }
-                        catch (Exception ex)
-                        {
-                            Logging.Log("Cache.AgentId", "Is your Agent List defined properly? Unable to get agent details for the Agent Named [" + CurrentAgent + "][" + ex.Message + "]", Logging.Debug);
-                            return null;
-                        }
-                    }
-
-                    return null;
-                }
-                catch (Exception exception)
-                {
-                    Logging.Log("Cache.AgentId", "Exception [" + exception + "]", Logging.Debug);
-                    return null;
-                }
-            }
-        }
-
         public DirectAgent Agent
         {
             get
@@ -951,7 +929,6 @@ namespace Questor.Modules.Caching
 
                             if (_agent != null)
                             {
-                                _agentId = _agent.AgentId;
                                 //Logging.Log("Cache: CurrentAgent", "Processing Agent Info...", Logging.White);
                                 Cache.Instance.AgentStationName = Cache.Instance.DirectEve.GetLocationName(Cache.Instance._agent.StationId);
                                 Cache.Instance.AgentStationID = Cache.Instance._agent.StationId;
@@ -969,13 +946,6 @@ namespace Questor.Modules.Caching
                             Logging.Log("Cache.Agent", "Unable to process agent section of [" + Logging.CharacterSettingsPath + "] make sure you have a valid agent listed! Pausing so you can fix it. [" + ex.Message + "]", Logging.Debug);
                             Cache.Instance.Paused = true;
                         }
-
-                        if (_agentId != null)
-                        {
-                            return _agent ?? (_agent = Cache.Instance.DirectEve.GetAgentById(_agentId.Value));
-                        }
-
-                        Logging.Log("Cache.Agent", "if (_agentId == null)", Logging.Debug);
                     }
 
                     Logging.Log("Cache.Agent", "if (!Settings.Instance.CharacterXMLExists)", Logging.Debug);

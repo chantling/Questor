@@ -490,7 +490,7 @@ namespace Questor.Modules.Actions
                 }
 
                 Logging.Log("Arm.MoveDronesToDroneBay", "Dronebay details: Capacity [" + Drones.DroneBay.Capacity + "] UsedCapacity [" + Drones.DroneBay.UsedCapacity + "]", Logging.White);
-                if (Drones.DroneBay.Capacity == Drones.DroneBay.UsedCapacity)
+                if ((int)Drones.DroneBay.Capacity == (int)Drones.DroneBay.UsedCapacity)
                 {
                     if (Drones.DroneBay.Items.Any()
                         && Drones.DroneBay.Items.FirstOrDefault() != null
