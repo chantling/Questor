@@ -3,7 +3,7 @@ cls
 :: delims is a TAB followed by a space
 set debug=false
 ::Custom Path to innerspace if you have yours in another location
-::set InnerSpacePath=..\..\InnerSpace\
+::set InnerSpacePath=
 :: Path for 32bit OSs - likely Windows XP (but could be windows vista or windows 7, but not commonly)
 ::set InnerSpacePath=%ProgramFiles%\InnerSpace\InnerSpace.exe
 :: Path for 64bit OSs - likely windows Vista or Windows 7
@@ -55,6 +55,7 @@ if exist "%InnerSpacePath%" set innerspacedotnetdirectory=%InnerSpacePath%\.Net 
 @echo [finished] Innerspace Path is: [%InnerSpacePath%]
 @echo [finished] innerspacedotnetdirectory Path is: [%innerspacedotnetdirectory%]
 if "%debug%"=="true" pause && echo ------------------------------------------ && echo ------------------------------------------
+if exist ".\..\..\Questor\" set innerspacedotnetdirectory=.\..\..\Questor\
 if not exist "%Innerspacedotnetdirectory%" goto :error
 
 :dequote2
@@ -143,6 +144,7 @@ Echo      to the full path to your innerspace directory if needed.
 Echo.
 Echo if you want to debug this script you can set debug=true near the top of the script
 echo ------------------------------------------ && echo ------------------------------------------
+pause
 :done
 echo [done copying questor related files to: %innerspacedotnetdirectory%]
-
+pause
