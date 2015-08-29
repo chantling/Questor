@@ -129,7 +129,8 @@ namespace Questor
                 // Sleep until we're loggedInAndreadyToStartQuestorUI
                 while (LoginToEVE.useLoginOnFrameEvent)
                 {
-                    System.Threading.Thread.Sleep(50); //this runs while we wait to login
+                	Logging.Log("Startup", "while (LoginToEVE.useLoginOnFrameEvent)", Logging.White);
+                    System.Threading.Thread.Sleep(100); //this runs while we wait to login
                 }
                 
                 try
@@ -144,11 +145,11 @@ namespace Questor
                     Logging.Log("Startup", "DirectEVE.Dispose: Exception [" + ex + "]", Logging.White);
                 }
 
-                while (DateTime.UtcNow < LoginToEVE.DoneLoggingInToEVETimeStamp.AddSeconds(5)) //wait a few seconds
-                {
-                    Logging.Log("Startup", "Waiting a few seconds before launching Questor", Logging.White);
-                    System.Threading.Thread.Sleep(1000); //this runs while we wait for the LoginOnframe Event to unregister
-                }
+//                while (DateTime.UtcNow < LoginToEVE.DoneLoggingInToEVETimeStamp.AddSeconds(5)) //wait a few seconds
+//                {
+//                    Logging.Log("Startup", "Waiting a few seconds before launching Questor", Logging.White);
+//                    System.Threading.Thread.Sleep(1000); //this runs while we wait for the LoginOnframe Event to unregister
+//                }
 
                 // If the last parameter is false, then we only auto-login
                 if (LoginToEVE._loginOnly)
@@ -166,12 +167,12 @@ namespace Questor
                     Logging.Log("Startup", "Launching Questor", Logging.Teal);
                     _questor = new Questor();
 
-                    int intdelayQuestorUI = 0;
-                    while (intdelayQuestorUI < 200) //10sec = 200ms x 50
-                    {
-                        intdelayQuestorUI++;
-                        System.Threading.Thread.Sleep(50);
-                    }
+//                    int intdelayQuestorUI = 0;
+//                    while (intdelayQuestorUI < 200) //10sec = 200ms x 50
+//                    {
+//                        intdelayQuestorUI++;
+//                        System.Threading.Thread.Sleep(50);
+//                    }
 
                     Logging.Log("Startup", "Launching QuestorUI", Logging.Teal);
                     Application.Run(new QuestorUI());

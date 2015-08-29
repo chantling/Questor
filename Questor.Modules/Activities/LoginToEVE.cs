@@ -468,7 +468,7 @@ namespace Questor.Modules.Activities
             // If the session is ready, then we are done :)
             if (Cache.Instance.DirectEve.Session.IsReady)
             {
-                if (DateTime.UtcNow > Time.Instance.LoginStarted_DateTime.AddSeconds(50))
+                if (DateTime.UtcNow > Time.Instance.LoginStarted_DateTime.AddSeconds(1))
                 {
                     Logging.Log("Startup", "We have successfully logged in", Logging.White);
                     Time.Instance.LastSessionIsReady = DateTime.UtcNow;
