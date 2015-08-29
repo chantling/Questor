@@ -86,7 +86,7 @@ namespace Questor.Behaviors
 
             if (agent == null || !agent.IsValid)
             {
-                Logging.Log("Settings", "Unable to locate agent [" + Cache.Instance.CurrentAgent + "]", Logging.White);
+                Logging.Log("Settings", "Unable to locate agent 3 [" + Cache.Instance.CurrentAgent + "]", Logging.White);
                 ValidSettings = false;
             }
             else

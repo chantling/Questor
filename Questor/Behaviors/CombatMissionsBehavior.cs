@@ -99,6 +99,8 @@ namespace Questor.Behaviors
 
             if (AgentInteraction.Agent == null || !AgentInteraction.Agent.IsValid)
             {
+            	//Cache.Instance.Agent = Cache.Instance.DirectEve.GetAgentByName(Cache.Instance.CurrentAgent);
+            	
                 if (Cache.Instance.Agent != null)
                 {
                     AgentInteraction.AgentId = (long)Cache.Instance.Agent.AgentId;
@@ -110,7 +112,7 @@ namespace Questor.Behaviors
                     if (Cache.Instance.Agent == null) Logging.Log("Agent", "Cache.Instance.Agent == null", Logging.Debug);
                 }
                 
-                Logging.Log("Agent", "Unable to locate agent [" + Cache.Instance.CurrentAgent + "]", Logging.White);
+                Logging.Log("Agent", "Unable to locate agent 2  [" + Cache.Instance.CurrentAgent + "]", Logging.White);
                 ValidSettings = false;
                 return false;
             }

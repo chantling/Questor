@@ -143,7 +143,6 @@ Echo      to the full path to your innerspace directory if needed.
 Echo.
 Echo if you want to debug this script you can set debug=true near the top of the script
 echo ------------------------------------------ && echo ------------------------------------------
-pause
 :done
 echo [done copying questor related files to: %innerspacedotnetdirectory%]
-pause
+

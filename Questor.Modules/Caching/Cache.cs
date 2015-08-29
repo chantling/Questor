@@ -923,7 +923,14 @@ namespace Questor.Modules.Caching
                         {
                             if (_agent == null)
                             {
+                            	
+                            	Logging.Log("Cache.Agent","Trying to GetAgentByName", Logging.White);
                                 _agent = Cache.Instance.DirectEve.GetAgentByName(CurrentAgent);
+                                if(_agent == null) {
+                                	Logging.Log("Cache.Agent","_agent == null", Logging.White);
+                                } else {
+                                	return _agent;
+                                }
                                 return null;
                             }
 
