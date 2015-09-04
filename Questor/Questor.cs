@@ -520,7 +520,7 @@ namespace Questor
 				
 				if (_nextPulse > DateTime.UtcNow)
 				{
-					Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < _nextPulse)", Logging.White);
+					//Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < _nextPulse)", Logging.White);
 					return;
 				}
 				
@@ -806,7 +806,7 @@ namespace Questor
 						{
 							Logging.Log("Startup", "Login account [" + Logging.EVELoginUserName + "]", Logging.White);
 							Cache.Instance.DirectEve.Login.Login(Logging.EVELoginUserName, Logging.EVELoginPassword);
-							_nextPulse = GetDelay(5,7);
+							_nextPulse = GetDelay(10,12);
 							Logging.Log("Startup", "Waiting for Character Selection Screen", Logging.White);
 							return;
 						}
@@ -826,7 +826,7 @@ namespace Questor
 								Logging.Log("Startup", "Activating character [" + slot.CharName + "]", Logging.White);
 								LoginToEVE.NextSlotActivate = DateTime.UtcNow.AddSeconds(5);
 								slot.Activate();
-								_nextPulse = GetDelay(10,12);
+								_nextPulse = GetDelay(12,14);
 								return;
 							}
 
