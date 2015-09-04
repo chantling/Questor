@@ -1501,6 +1501,11 @@ namespace Questor.Modules.Combat
                 if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "[" + weaponNumber + "] We do not have any ammo left that can hit targets at that range!", Logging.Orange);
                 return false;
             }
+            
+            if(weapon.Charge == null) {
+            	if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "weapon.Charge == null", Logging.Orange);
+            	return false;
+            }
 
             // Do we have ANY ammo loaded? CurrentCharges would be 0 if we have no ammo at all.
             if ((long)weapon.CurrentCharges != 0 && weapon.Charge.TypeId == ammo.TypeId)

@@ -63,6 +63,7 @@ namespace Questor.Modules.Actions
                 {
                     if (_droneInvTypeItem == null)
                     {
+                    	if(Logging.DebugArm) Logging.Log("DroneInvTypeItem", " Drones.DroneTypeID: "  + Drones.DroneTypeID, Logging.Debug);
                         Cache.Instance.DirectEve.InvTypes.TryGetValue(Drones.DroneTypeID, out _droneInvTypeItem);
                     }
 
@@ -1153,14 +1154,19 @@ namespace Questor.Modules.Actions
                     return false;
                 }
 
-                if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior
-                    //_States.CurrentQuestorState == QuestorState.BackgroundBehavior 
-                   )
-                {
+                
+                if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior) {
                     Logging.Log(WeAreInThisStateForLogs(), "Skipping loading drones for this Questor Behavior", Logging.Orange);
                     ChangeArmState(ArmState.MoveBringItems);
                     return false;
                 }
+                
+                if (DroneInvTypeItem == null) {
+                	Logging.Log("Arm.MoveDrones", "(DroneInvTypeItem == null)", Logging.Orange);
+                	return false;
+                }
+                    
+				if (Logging.DebugArm) Logging.Log("Arm.MoveDrones", " DroneInvTypeItem.TypeName: " + DroneInvTypeItem.TypeName, Logging.Orange);
 
                 if (!MoveDronesToDroneBay(DroneInvTypeItem.TypeName, ArmState.MoveBringItems, ArmState.MoveDrones, false)) return false;
 
