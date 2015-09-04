@@ -222,21 +222,21 @@ namespace Questor.Behaviors
             {
                 if (Logging.DebugAutoStart || Logging.DebugIdle) Logging.Log("CombatMissionsBehavior", "DebugAutoStart: Autostart [" + Settings.Instance.AutoStart + "]", Logging.White);
 
-                // Don't start a new action an hour before downtime
-                if (DateTime.UtcNow.Hour == 10)
-                {
-                    if (Logging.DebugAutoStart || Logging.DebugIdle) Logging.Log("CombatMissionsBehavior", "DebugIdle: Don't start a new action an hour before downtime, DateTime.UtcNow.Hour [" + DateTime.UtcNow.Hour + "]", Logging.White);
-                    //QuestorUI.lblCurrentMissionInfo.Text = "less than 1 hour before downtime, waiting";
-                    return;
-                }
-
-                // Don't start a new action near downtime
-                if (DateTime.UtcNow.Hour == 11 && DateTime.UtcNow.Minute < 15)
-                {
-                    if (Logging.DebugAutoStart || Logging.DebugIdle) Logging.Log("CombatMissionsBehavior", "DebugIdle: Don't start a new action near downtime, DateTime.UtcNow.Hour [" + DateTime.UtcNow.Hour + "] DateTime.UtcNow.Minute [" + DateTime.UtcNow.Minute + "]", Logging.White);
-                    //QuestorUI.lblCurrentMissionInfo.Text = "less than 15min after downtime, waiting";
-                    return;
-                }
+//                // Don't start a new action an hour before downtime
+//                if (DateTime.UtcNow.Hour == 10)
+//                {
+//                    if (Logging.DebugAutoStart || Logging.DebugIdle) Logging.Log("CombatMissionsBehavior", "DebugIdle: Don't start a new action an hour before downtime, DateTime.UtcNow.Hour [" + DateTime.UtcNow.Hour + "]", Logging.White);
+//                    //QuestorUI.lblCurrentMissionInfo.Text = "less than 1 hour before downtime, waiting";
+//                    return;
+//                }
+//
+//                // Don't start a new action near downtime
+//                if (DateTime.UtcNow.Hour == 11 && DateTime.UtcNow.Minute < 15)
+//                {
+//                    if (Logging.DebugAutoStart || Logging.DebugIdle) Logging.Log("CombatMissionsBehavior", "DebugIdle: Don't start a new action near downtime, DateTime.UtcNow.Hour [" + DateTime.UtcNow.Hour + "] DateTime.UtcNow.Minute [" + DateTime.UtcNow.Minute + "]", Logging.White);
+//                    //QuestorUI.lblCurrentMissionInfo.Text = "less than 15min after downtime, waiting";
+//                    return;
+//                }
 
                 if (Settings.Instance.RandomDelay > 0 || Settings.Instance.MinimumDelay > 0)
                 {
