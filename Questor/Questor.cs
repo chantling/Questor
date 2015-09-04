@@ -49,6 +49,7 @@ namespace Questor
 		
 		private static DateTime _nextPulse = DateTime.MinValue;
 		private static DateTime _lastServerStatusCheckWasNotOK = DateTime.MinValue;
+		private static Random _random = new Random();
 
 
 		private readonly Stopwatch _watch;
@@ -243,6 +244,15 @@ namespace Questor
 			}
 
 			return true;
+		}
+		
+		protected static int GetRandom(int minValue, int maxValue)
+		{
+			return _random.Next(minValue, maxValue);
+		}
+		protected DateTime GetDelay(int minDelayInSeconds, int maxDelayInSeconds)
+		{
+			return DateTime.UtcNow.AddMilliseconds(GetRandom(minDelayInSeconds * 1000, maxDelayInSeconds * 1000));
 		}
 
 		public static bool TimeCheck()
@@ -446,7 +456,6 @@ namespace Questor
 				Cleanup.ProcessState();
 				if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "Statistics.ProcessState();", Logging.Debug);
 				Statistics.ProcessState();
-				if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "_innerspaceCommands.ProcessState();", Logging.Debug);
 				
 
 				// Done
@@ -503,19 +512,18 @@ namespace Questor
 		{
 			try
 			{
-				
-				if (Cache.Instance.InSpace) pulseDelay = Time.Instance.QuestorPulseInSpace_milliseconds;
-				if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
 
 				if (DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < pulseDelay)
 				{
 					return;
 				}
 				
-				if (DateTime.UtcNow < _nextPulse)
+				if (_nextPulse > DateTime.UtcNow)
 				{
+					Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < _nextPulse)", Logging.White);
 					return;
 				}
+				
 				
 				Time.Instance.LastFrame = DateTime.UtcNow;
 				_lastQuestorPulse = DateTime.UtcNow;
@@ -531,17 +539,17 @@ namespace Questor
 				
 				#region LOGIN
 				
-				if (Cache.Instance.DirectEve.Login.AtLogin || Cache.Instance.DirectEve.Login.AtCharacterSelection)
+				if (Cache.Instance.DirectEve.Login.AtLogin || Cache.Instance.DirectEve.Login.AtCharacterSelection || Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)
 				{
 					if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading) {
 						Logging.Log("Questor.ProcessState", "if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)", Logging.White);
-						_nextPulse.AddSeconds(5);
+						_nextPulse = GetDelay(2,4);
 						return;
 					}
 					
 					//Time.Instance.LastSessionIsReady = DateTime.UtcNow;
 
-					if (DateTime.UtcNow < _lastServerStatusCheckWasNotOK.AddSeconds(LoginToEVE.RandomNumber(10, 20)))
+					if (DateTime.UtcNow < _lastServerStatusCheckWasNotOK.AddSeconds(LoginToEVE.RandomNumber(4, 7)))
 					{
 						Logging.Log("LoginOnFrame", "lastServerStatusCheckWasNotOK = [" + _lastServerStatusCheckWasNotOK.ToShortTimeString() + "] waiting 10 to 20 seconds.", Logging.White);
 						return;
@@ -577,13 +585,13 @@ namespace Questor
 					if (LoginToEVE._humanInterventionRequired)
 					{
 						Logging.Log("Startup", "OnFrame: _humanInterventionRequired is true (this will spam every second or so)", Logging.Orange);
-						_nextPulse.AddMinutes(2);
+						_nextPulse = _nextPulse.AddMinutes(2);
 						return;
 					}
 
 					if (Logging.DebugOnframe) Logging.Log("LoginOnFrame", "before: if (Cache.Instance.DirectEve.Windows.Count != 0)", Logging.White);
 					
-									// We should not get any windows
+					// We should not get any windows
 					if (Cache.Instance.DirectEve.Windows.Count != 0)
 					{
 						foreach (DirectWindow window in Cache.Instance.DirectEve.Windows)
@@ -798,7 +806,7 @@ namespace Questor
 						{
 							Logging.Log("Startup", "Login account [" + Logging.EVELoginUserName + "]", Logging.White);
 							Cache.Instance.DirectEve.Login.Login(Logging.EVELoginUserName, Logging.EVELoginPassword);
-							_nextPulse.AddSeconds(10);
+							_nextPulse = GetDelay(5,7);
 							Logging.Log("Startup", "Waiting for Character Selection Screen", Logging.White);
 							return;
 						}
@@ -818,7 +826,7 @@ namespace Questor
 								Logging.Log("Startup", "Activating character [" + slot.CharName + "]", Logging.White);
 								LoginToEVE.NextSlotActivate = DateTime.UtcNow.AddSeconds(5);
 								slot.Activate();
-								_nextPulse.AddSeconds(20);
+								_nextPulse = GetDelay(10,12);
 								return;
 							}
 
@@ -831,7 +839,11 @@ namespace Questor
 				
 				#endregion
 				
+				if (Cache.Instance.InSpace) pulseDelay = Time.Instance.QuestorPulseInSpace_milliseconds;
+				if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
+				
 				Cache.Instance.InvalidateCache();
+				
 				
 				
 				
