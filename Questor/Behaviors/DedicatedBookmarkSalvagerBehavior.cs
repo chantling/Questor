@@ -228,19 +228,19 @@ namespace Questor.Behaviors
                     {
                         if (!Cache.Instance.UpdateMyWalletBalance()) return;
 
-                        // Don't start a new action an hour before downtime
-                        if (DateTime.UtcNow.Hour == 10)
-                        {
-                            if (Logging.DebugAutoStart) Logging.Log("DedicatedBookmarkSalvagerBehavior", "Autostart: if (DateTime.UtcNow.Hour == 10)", Logging.White);
-                            break;
-                        }
-
-                        // Don't start a new action near downtime
-                        if (DateTime.UtcNow.Hour == 11 && DateTime.UtcNow.Minute < 15)
-                        {
-                            if (Logging.DebugAutoStart) Logging.Log("DedicatedBookmarkSalvagerBehavior", "if (DateTime.UtcNow.Hour == 11 && DateTime.UtcNow.Minute < 15)", Logging.White);
-                            break;
-                        }
+//                        // Don't start a new action an hour before downtime
+//                        if (DateTime.UtcNow.Hour == 10)
+//                        {
+//                            if (Logging.DebugAutoStart) Logging.Log("DedicatedBookmarkSalvagerBehavior", "Autostart: if (DateTime.UtcNow.Hour == 10)", Logging.White);
+//                            break;
+//                        }
+//
+//                        // Don't start a new action near downtime
+//                        if (DateTime.UtcNow.Hour == 11 && DateTime.UtcNow.Minute < 15)
+//                        {
+//                            if (Logging.DebugAutoStart) Logging.Log("DedicatedBookmarkSalvagerBehavior", "if (DateTime.UtcNow.Hour == 11 && DateTime.UtcNow.Minute < 15)", Logging.White);
+//                            break;
+//                        }
 
                         //Logging.Log("DedicatedBookmarkSalvagerBehavior::: _nextBookmarksrefresh.subtract(DateTime.UtcNow).totalminutes [" +
                         //            Math.Round(DateTime.UtcNow.Subtract(_nextBookmarkRefreshCheck).TotalMinutes,0) + "]");
