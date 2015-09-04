@@ -81,7 +81,6 @@
     <Compile Include="Lookup\SkillPlan.cs" />
     <Compile Include="Lookup\TypeID.cs" />
     <Compile Include="Misc\Options.cs" />
-    <Compile Include="Misc\InnerspaceCommands.cs" />
     <Compile Include="States\BackgrounsBehaviorState.cs" />
     <Compile Include="States\CombatHelperBehaviorState.cs" />
     <Compile Include="States\DebugBehaviorState.cs" />

@@ -41,8 +41,6 @@ namespace Questor
 		private readonly DedicatedBookmarkSalvagerBehavior _dedicatedBookmarkSalvagerBehavior;
 		private readonly DebugHangarsBehavior _debugHangarsBehavior;
 		private readonly MiningBehavior _miningBehavior;
-
-		private readonly InnerspaceCommands _innerspaceCommands;
 		//private readonly Statistics _statistics;
 		//private readonly BackgroundBehavior _backgroundbehavior;
 		//private readonly Cleanup _cleanup;
@@ -71,7 +69,7 @@ namespace Questor
 			//_backgroundbehavior = new BackgroundBehavior();
 			//_cleanup = new Cleanup();
 			_watch = new Stopwatch();
-			_innerspaceCommands = new InnerspaceCommands();
+			
 			//_statistics = new Statistics();
 
 			Time.Instance.NextStartupAction = DateTime.UtcNow;
@@ -161,41 +159,7 @@ namespace Questor
 
 					if (Logging.UseInnerspace)
 					{
-						InnerspaceCommands.CreateLavishCommands();
 						
-						//enable windowtaskbar = on, so that minimized windows do not make us die in a fire.
-						Logging.Log("RunOnceAfterStartup", "Running Innerspace command: timedcommand 100 windowtaskbar on " + Settings.Instance.CharacterName, Logging.White);
-						LavishScript.ExecuteCommand("timedcommand 100 windowtaskbar on " + Settings.Instance.CharacterName);
-
-						if (Settings.Instance.EVEWindowXSize >= 100 && Settings.Instance.EVEWindowYSize >= 100)
-						{
-							Logging.Log("RunOnceAfterStartup", "Running Innerspace command: timedcommand 150 WindowCharacteristics -size " + Settings.Instance.EVEWindowXSize + "x" + Settings.Instance.EVEWindowYSize, Logging.White);
-							LavishScript.ExecuteCommand("timedcommand 150 WindowCharacteristics -size " + Settings.Instance.EVEWindowXSize + "x" + Settings.Instance.EVEWindowYSize);
-							Logging.Log("RunOnceAfterStartup", "Running Innerspace command: timedcommand 200 WindowCharacteristics -pos " + Settings.Instance.EVEWindowXPosition + "," + Settings.Instance.EVEWindowYPosition, Logging.White);
-							LavishScript.ExecuteCommand("timedcommand 200 WindowCharacteristics -pos " + Settings.Instance.EVEWindowXPosition + "," + Settings.Instance.EVEWindowYPosition);
-						}
-
-						if (Settings.Instance.MinimizeEveAfterStartingUp)
-						{
-							Logging.Log("RunOnceAfterStartup", "MinimizeEveAfterStartingUp is true: Minimizing EVE with: WindowCharacteristics -visibility minimize", Logging.White);
-							LavishScript.ExecuteCommand("WindowCharacteristics -visibility minimize");
-						}
-
-						if (Settings.Instance.LoginQuestorArbitraryOSCmd)
-						{
-							Logging.Log("RunOnceAfterStartup", "After Questor Login: executing LoginQuestorArbitraryOSCmd", Logging.White);
-							LavishScript.ExecuteCommand("Echo [${Time}] OSExecute " + Settings.Instance.LoginQuestorOSCmdContents.ToString(CultureInfo.InvariantCulture));
-							LavishScript.ExecuteCommand("OSExecute " + Settings.Instance.LoginQuestorOSCmdContents.ToString(CultureInfo.InvariantCulture));
-							Logging.Log("RunOnceAfterStartup", "Done: executing LoginQuestorArbitraryOSCmd", Logging.White);
-						}
-
-						if (Settings.Instance.LoginQuestorLavishScriptCmd)
-						{
-							Logging.Log("RunOnceAfterStartup", "After Questor Login: executing LoginQuestorLavishScriptCmd", Logging.White);
-							LavishScript.ExecuteCommand("Echo [${Time}] runscript " + Settings.Instance.LoginQuestorLavishScriptContents.ToString(CultureInfo.InvariantCulture));
-							LavishScript.ExecuteCommand("runscript " + Settings.Instance.LoginQuestorLavishScriptContents.ToString(CultureInfo.InvariantCulture));
-							Logging.Log("RunOnceAfterStartup", "Done: executing LoginQuestorLavishScriptCmd", Logging.White);
-						}
 					}
 				}
 				else
@@ -486,7 +450,7 @@ namespace Questor
 				if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "Statistics.ProcessState();", Logging.Debug);
 				Statistics.ProcessState();
 				if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "_innerspaceCommands.ProcessState();", Logging.Debug);
-				_innerspaceCommands.ProcessState();
+				
 
 				// Done
 				// Cleanup State: ProcessState
