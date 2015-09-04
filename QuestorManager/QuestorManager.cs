@@ -113,7 +113,7 @@ namespace QuestorManager
             {
                 try
                 {
-                    Cache.Instance.DirectEve.OnFrame += LoginToEVE.LoginOnFrame;
+                    //Cache.Instance.DirectEve.OnFrame += LoginToEVE.LoginOnFrame;
                 }
                 catch (Exception ex)
                 {
@@ -130,7 +130,7 @@ namespace QuestorManager
                 {
                     try
                     {
-                        Cache.Instance.DirectEve.OnFrame -= LoginToEVE.LoginOnFrame;
+                        //Cache.Instance.DirectEve.OnFrame -= LoginToEVE.LoginOnFrame;
                     }
                     catch (Exception ex)
                     {
