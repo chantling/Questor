@@ -1,6 +1,4 @@
-﻿
-using LavishScriptAPI;
-using Questor.Modules.BackgroundTasks;
+﻿using Questor.Modules.BackgroundTasks;
 using Questor.Modules.Caching;
 using Questor.Modules.Lookup;
 using Questor.Modules.States;
@@ -91,8 +89,6 @@ namespace Questor.Modules.Actions
 
 				case SkillTrainerState.GenerateInnerspaceProfile:
 					Logging.Log("SkillTrainer", "Generating Innerspace Profile for this toon: running [GenerateInnerspaceProfile.iss] from your innerspace scripts directory", Logging.Teal);
-                    if (Logging.UseInnerspace) LavishScript.ExecuteCommand("echo runscript GenerateInnerspaceProfile \"" + Settings.Instance.CharacterName + "\"");
-                    if (Logging.UseInnerspace) LavishScript.ExecuteCommand("runscript GenerateInnerspaceProfile \"" + Settings.Instance.CharacterName + "\"");
 					_State.CurrentSkillTrainerState = SkillTrainerState.Idle;
 					break;
 

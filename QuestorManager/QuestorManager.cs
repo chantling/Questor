@@ -76,26 +76,9 @@ namespace QuestorManager
         [STAThread]
         private static void Main(string[] args)
         {
-            //if (Logging.DebugPreLogin)
-            //{
-            //    int i = 0;
-            //    foreach (string arg in args)
-            //    {
-            //        Logging.Log("Startup", " *** Questor Parameters we have parsed [" + i + "] - [" + arg + "]", Logging.Debug);
-            //        i++;
-            //    }
-            //}
 
             ParseArgs(args);
-            LoginToEVE.OptionallyLoadPreLoginSettingsFromINI(args);
-
-            //
-            // Wait to login based on schedule info from schedules.xml
-            //
-            if (LoginToEVE._chantlingScheduler && !string.IsNullOrEmpty(Logging.MyCharacterName))
-            {
-                LoginToEVE.WaitToLoginUntilSchedulerSaysWeShould();
-            }
+            
 
             //
             // direct login, no schedules.xml

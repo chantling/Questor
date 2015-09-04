@@ -230,7 +230,7 @@ namespace Questor
 					{
 						Logging.Log("Questor.SkillQueueCheck", "Training Queue currently has room. [" + Math.Round(24 - Cache.Instance.DirectEve.Skills.SkillQueueLength.TotalHours, 2) + " hours free]", Logging.White);
 						//QuestorUI.lblCurrentMissionInfo.Text = "Training Queue currently has room. [" + Math.Round(24 - Cache.Instance.DirectEve.Skills.SkillQueueLength.TotalHours, 2) + " hours free]";
-						_States.LavishEvent_SkillQueueHasRoom();
+
 						_States.CurrentQuestorState = QuestorState.SkillTrainer;
 						return false;
 					}
@@ -1009,9 +1009,6 @@ namespace Questor
 
 					case QuestorState.DebugCloseQuestor:
 
-						//Logging.Log("ISBoxerCharacterSet: " + Settings.Instance.Lavish_ISBoxerCharacterSet);
-						//Logging.Log("Profile: " + Settings.Instance.Lavish_InnerspaceProfile);
-						//Logging.Log("Game: " + Settings.Instance.Lavish_Game);
 						Logging.Log("Questor", "CloseQuestorCMDUplinkInnerspaceProfile: " + Settings.Instance.CloseQuestorCMDUplinkInnerspaceProfile, Logging.White);
 						Logging.Log("Questor", "CloseQuestorCMDUplinkISboxerCharacterSet: " + Settings.Instance.CloseQuestorCMDUplinkIsboxerCharacterSet, Logging.White);
 						Logging.Log("Questor", "CloseQuestorArbitraryOSCmd" + Settings.Instance.CloseQuestorArbitraryOSCmd, Logging.White);
@@ -1043,18 +1040,7 @@ namespace Questor
 								Logging.Log("Questor", "Debug_Window.IsKillable: [" + window.IsKillable + "]", Logging.White);
 								Logging.Log("Questor", "Debug_Window.Html: [" + window.Html + "]", Logging.White);
 							}
-
-							//Logging.Log("Questor", "Debug_InventoryWindows", Logging.White);
-							//foreach (DirectWindow window in windows)
-							//{
-							//    if (window.Type.Contains("inventory"))
-							//    {
-							//        Logging.Log("Questor", "Debug_Window.Name: [" + window.Name + "]", Logging.White);
-							//        Logging.Log("Questor", "Debug_Window.Type: [" + window.Type + "]", Logging.White);
-							//        Logging.Log("Questor", "Debug_Window.Caption: [" + window.Caption + "]", Logging.White);
-							//        //Logging.Log("Questor", "Debug_Window.Type: [" + window. + "]", Logging.White);
-							//    }
-							//}
+							
 						}
 						else
 						{

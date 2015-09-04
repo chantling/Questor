@@ -7,7 +7,6 @@ namespace Questor.Modules.BackgroundTasks
     using System.Globalization;
     using System.Linq;
     using DirectEve;
-    using LavishScriptAPI;
     using global::Questor.Modules.Activities;
     using global::Questor.Modules.Caching;
     using global::Questor.Modules.Combat;
@@ -99,7 +98,7 @@ namespace Questor.Modules.BackgroundTasks
                         Logging.Log("Questor", "Logging off EVE: EVE and questor should restart on their own when the client comes back up", Logging.White);
                         if (Logging.UseInnerspace)
                         {
-                            LavishScript.ExecuteCommand("uplink echo Logging off EVE:  \\\"${Game}\\\" \\\"${Profile}\\\"");
+//                            LavishScript.ExecuteCommand("uplink echo Logging off EVE:  \\\"${Game}\\\" \\\"${Profile}\\\"");
                         }
                         Logging.Log("Questor", "you can change this option by setting the wallet and EveProcessMemoryCeiling options to use exit instead of logoff: see the settings.xml file", Logging.White);
                         Logging.Log("Questor", "Logging Off eve in 15 seconds.", Logging.White);
@@ -148,9 +147,9 @@ namespace Questor.Modules.BackgroundTasks
                             if (_closeQuestorCMDUplink)
                             {
                                 Logging.Log("Questor", "Starting a timer in the innerspace uplink to restart this innerspace profile session", Logging.White);
-                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] " + Settings.Instance.CharacterName + "'s Questor is starting a timedcommand to restart itself in a moment");
-                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " open \\\"${Game}\\\" \\\"${Profile}\\\"");
-                                LavishScript.ExecuteCommand("uplink exec timedcommand " + secRestart + " open \\\"${Game}\\\" \\\"${Profile}\\\"");
+//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] " + Settings.Instance.CharacterName + "'s Questor is starting a timedcommand to restart itself in a moment");
+//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " open \\\"${Game}\\\" \\\"${Profile}\\\"");
+//                                LavishScript.ExecuteCommand("uplink exec timedcommand " + secRestart + " open \\\"${Game}\\\" \\\"${Profile}\\\"");
                                 Logging.Log("Questor", "Done: quitting this session so the new innerspace session can take over", Logging.White);
                                 Logging.Log("Questor", "Exiting eve in 15 seconds.", Logging.White);
                                 _closeQuestorCMDUplink = false;
@@ -179,9 +178,9 @@ namespace Questor.Modules.BackgroundTasks
                             if (_closeQuestorCMDUplink)
                             {
                                 Logging.Log("Questor", "Starting a timer in the innerspace uplink to restart this isboxer character set", Logging.White);
-                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] " + Settings.Instance.CharacterName + "'s Questor is starting a timedcommand to restart itself in a moment");
-                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " runscript isboxer -launchslot \\\"${ISBoxerCharacterSet}\\\" \\\"${ISBoxerSlot}\\\"");
-                                LavishScript.ExecuteCommand("uplink timedcommand " + secRestart + " runscript isboxer -launchslot \\\"${ISBoxerCharacterSet}\\\" \\\"${ISBoxerSlot}\\\"");
+//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] " + Settings.Instance.CharacterName + "'s Questor is starting a timedcommand to restart itself in a moment");
+//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " runscript isboxer -launchslot \\\"${ISBoxerCharacterSet}\\\" \\\"${ISBoxerSlot}\\\"");
+//                                LavishScript.ExecuteCommand("uplink timedcommand " + secRestart + " runscript isboxer -launchslot \\\"${ISBoxerCharacterSet}\\\" \\\"${ISBoxerSlot}\\\"");
                                 Logging.Log("Questor", "Done: quitting this session so the new isboxer session can take over", Logging.White);
                                 Logging.Log("Questor", "Exiting eve.", Logging.White);
                                 _closeQuestorCMDUplink = false;
@@ -209,9 +208,9 @@ namespace Questor.Modules.BackgroundTasks
                             if (_closeQuestorCMDUplink)
                             {
                                 Logging.Log("Questor", "Starting a timer in the innerspace uplink to execute an arbitrary OS command", Logging.White);
-                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] " + Settings.Instance.CharacterName + "'s Questor is starting a timedcommand to restart itself in a moment");
-                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " OSExecute " + Settings.Instance.CloseQuestorOSCmdContents.ToString(CultureInfo.InvariantCulture));
-                                LavishScript.ExecuteCommand("uplink exec timedcommand " + secRestart + " OSExecute " + Settings.Instance.CloseQuestorOSCmdContents.ToString(CultureInfo.InvariantCulture));
+//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] " + Settings.Instance.CharacterName + "'s Questor is starting a timedcommand to restart itself in a moment");
+//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " OSExecute " + Settings.Instance.CloseQuestorOSCmdContents.ToString(CultureInfo.InvariantCulture));
+//                                LavishScript.ExecuteCommand("uplink exec timedcommand " + secRestart + " OSExecute " + Settings.Instance.CloseQuestorOSCmdContents.ToString(CultureInfo.InvariantCulture));
                                 Logging.Log("Questor", "Done: quitting this session", Logging.White);
                                 Logging.Log("Questor", "Exiting eve in 15 seconds.", Logging.White);
                                 _closeQuestorCMDUplink = false;
@@ -812,7 +811,7 @@ namespace Questor.Modules.BackgroundTasks
                             Logging.Log("Questor", "EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB", Logging.White);
                             string MemoryManagerCommandToRun = "dotnet m1 memmanager.exe " + Settings.Instance.MemoryManagerTrimThreshold;
                             Logging.Log("Cleanup.CleanupTasks", "EVEMemoryManager: running [ " + MemoryManagerCommandToRun + " ]", Logging.White);
-                            if (Logging.UseInnerspace) LavishScript.ExecuteCommand(MemoryManagerCommandToRun);
+//                            if (Logging.UseInnerspace) LavishScript.ExecuteCommand(MemoryManagerCommandToRun);
                             MemoryManagerHasBeenRunThisIteration = true;
                         }
 

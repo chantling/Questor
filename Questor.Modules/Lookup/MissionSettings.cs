@@ -8,8 +8,6 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
-using LavishScriptAPI;
-
 namespace Questor.Modules.Lookup
 {
     using System;
@@ -1094,7 +1092,7 @@ namespace Questor.Modules.Lookup
                     MissionSettings.MissionName = MissionSettings.Mission.Name;
                     if (Logging.UseInnerspace)
                     {
-                        LavishScript.ExecuteCommand("WindowText EVE - " + Settings.Instance.CharacterName + " - " + MissionSettings.MissionName);
+//                        LavishScript.ExecuteCommand("WindowText EVE - " + Settings.Instance.CharacterName + " - " + MissionSettings.MissionName);
                     }
                 }
             }
@@ -1102,7 +1100,7 @@ namespace Questor.Modules.Lookup
             {
                 if (Logging.UseInnerspace)
                 {
-                    LavishScript.ExecuteCommand("WindowText EVE - " + Settings.Instance.CharacterName);
+//                    LavishScript.ExecuteCommand("WindowText EVE - " + Settings.Instance.CharacterName);
                 }
             }
         }

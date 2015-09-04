@@ -60,7 +60,6 @@ namespace Questor
 			try
 			{
 				LoginToEVE._QuestorParamaters = p.Parse(args);
-				//Logging.Log(string.Format("questor: extra = {0}", string.Join(" ", extra.ToArray())));
 			}
 			catch (OptionException ex)
 			{
@@ -84,22 +83,6 @@ namespace Questor
 		{
 
 			ParseArgs(args);
-			if (LoginToEVE.OptionallyLoadPreLoginSettingsFromINI(args))
-			{
-				if (Logging.DebugBeforeLogin) Logging.Log("Startup:", "OptionallyLoadPreLoginSettingsFromINI was true", Logging.Debug);
-			}
-			else
-			{
-				Logging.Log("Startup:", "OptionallyLoadPreLoginSettingsFromINI was false!", Logging.Debug);
-			}
-			
-			//
-			// Wait to login based on schedule info from schedules.xml
-			//
-			if (LoginToEVE._chantlingScheduler && !string.IsNullOrEmpty(Logging.MyCharacterName))
-			{
-				LoginToEVE.WaitToLoginUntilSchedulerSaysWeShould();
-			}
 
 			//
 			// direct login, no schedules.xml
@@ -111,9 +94,7 @@ namespace Questor
 
 			if (!LoginToEVE.LoadDirectEVEInstance()) return;
 			
-			
 			Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;
-
 
 			if (LoginToEVE._loginOnly)
 			{
@@ -161,11 +142,6 @@ namespace Questor
 				AppDomain.Unload(AppDomain.CurrentDomain);
 			}
 			
-			//            else
-			//            {
-			//                Logging.Log("Startup", "DebugDisableAutoLogin is true (check characters prelogin settings ini), closing before doing anything useful!", Logging.Debug);
-			//                Cache.Instance.DirectEve.Dispose();
-			//            }
 		}
 	}
 }

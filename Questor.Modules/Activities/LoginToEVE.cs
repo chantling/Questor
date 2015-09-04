@@ -117,43 +117,6 @@ namespace Questor.Modules.Activities
         public static List<string> _QuestorParamaters;
         public static string PreLoginSettingsINI;
 
-        public static bool OptionallyLoadPreLoginSettingsFromINI(IList<string> args)
-        {
-            if (!string.IsNullOrEmpty(Logging.EVELoginUserName) &&
-                !string.IsNullOrEmpty(Logging.EVELoginPassword) &&
-                !string.IsNullOrEmpty(Logging.MyCharacterName))
-            {
-                Logging.Log("Startup", "EVELoginUserName, EVELoginPassword and MyCharacterName all specified at the command line, not loading settings from ini.", Logging.White);
-                return false;
-            }
-
-            //
-            // (optionally) Load EVELoginUserName, EVELoginPassword, MyCharacterName (and other settings) from an ini
-            //
-            if (args.Count() == 1 && args[0].ToLower().EndsWith(".ini"))
-            {
-                PreLoginSettingsINI = System.IO.Path.Combine(Logging.PathToCurrentDirectory, args[0]);
-            }
-            else if (args.Count() == 2 && args[1].ToLower().EndsWith(".ini"))
-            {
-                PreLoginSettingsINI = System.IO.Path.Combine(Logging.PathToCurrentDirectory, args[0] + " " + args[1]);
-            }
-            if (!string.IsNullOrEmpty(PreLoginSettingsINI) && File.Exists(PreLoginSettingsINI))
-            {
-                Logging.Log("Startup", "Found [" + PreLoginSettingsINI + "] loading Questor PreLogin Settings", Logging.White);
-                if (!PreLoginSettings(PreLoginSettingsINI))
-                {
-                    Logging.Log("Startup.PreLoginSettings", "Failed to load PreLogin settings from [" + PreLoginSettingsINI + "]", Logging.Debug);
-                    return false;    
-                }
-
-                Logging.Log("Startup", "Successfully loaded PreLogin Settings", Logging.White);
-                return true;
-            }
-
-            return false;
-        }
-
         public static bool LoadDirectEVEInstance()
         {
             #region Load DirectEVE

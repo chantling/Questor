@@ -50,10 +50,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DirectEve\DirectEve.dll</HintPath>
     </Reference>
-    <Reference Include="Lavish.InnerSpace, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9029a3ab4cbe108d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Innerspace\Lavish.InnerSpace.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -69,12 +65,11 @@
     <Compile Include="BackgroundTasks\NavigateOnGrid.cs" />
     <Compile Include="Caching\ItemCacheMarket.cs" />
     <Compile Include="Caching\EachWeaponsVolleyCache.cs" />
-    <Compile Include="EVEInteration\D3DDetour\D3D11.cs" />
-    <Compile Include="EVEInteration\D3DDetour\D3D9.cs" />
-    <Compile Include="EVEInteration\D3DDetour\D3DHook.cs" />
-    <Compile Include="EVEInteration\D3DDetour\Pulse.cs" />
-    <Compile Include="EVEInteration\StandAlone.cs" />
-    <Compile Include="EVEInteration\DirectAnomalies.cs" />
+    <Compile Include="EVEInteraction\D3DDetour\D3D11.cs" />
+    <Compile Include="EVEInteraction\D3DDetour\D3D9.cs" />
+    <Compile Include="EVEInteraction\D3DDetour\D3DHook.cs" />
+    <Compile Include="EVEInteraction\D3DDetour\Pulse.cs" />
+    <Compile Include="EVEInteraction\StandAlone.cs" />
     <Compile Include="Lookup\InvTypeMarket.cs" />
     <Compile Include="Lookup\MiningCrystals.cs" />
     <Compile Include="Lookup\OreType.cs" />

@@ -9,9 +9,6 @@
 // -------------------------------------------------------------------------------
 
 
-using LavishSettingsAPI;
-using Questor.Modules.EVEInteration;
-
 namespace Questor.Modules.Caching
 {
     using System;
@@ -2570,35 +2567,6 @@ namespace Questor.Modules.Caching
             Random random = new Random();
             return random.Next(min, max);
         }
-
-        internal List<DirectAnomalies> getAnomalies
-        {
-            get
-            {
-                List<DirectAnomalies> anomalies = new List<DirectAnomalies>();
-
-                var anomalies_list = DirectEve.GetLocalSvc("sensorSuite").Call("GetAllSites").ToList();
-                foreach (var anomaly in anomalies_list)
-                {
-                    try
-                    {
-                        string id = (string)anomaly.Attribute("id");
-                        string name = (string)anomaly.Attribute("dungeonName");
-                        float strength = (float)anomaly.Attribute("certainty");
-                        int attributeid = (int)anomaly.Attribute("strengthAttributeID");
-
-                        //if(strength == 1)
-                        anomalies.Add(new DirectAnomalies(id, name, attributeid, strength));
-                    }
-                    catch (Exception ex)
-                    {
-                        Logging.Log("Cache.getAnomalies", "Exception [" + ex + "]", Logging.Debug);
-                    }
-                }
-
-                return anomalies;
-            }
-        } 
 
         public bool DebugInventoryWindows(string module)
         {
