@@ -50,8 +50,6 @@ namespace Questor
 				{"u|user=", "the {USER} we are logging in as.", v => Logging.EVELoginUserName = v},
 				{"p|password=", "the user's {PASSWORD}.", v => Logging.EVELoginPassword = v},
 				{"c|character=", "the {CHARACTER} to use.", v => Logging.MyCharacterName = v},
-				{"l|loginOnly", "login only and exit.", v => LoginToEVE._loginOnly = v != null},
-				{"x|chantling|scheduler", "use scheduler (thank you chantling!)", v => LoginToEVE._chantlingScheduler = v != null},
 				{"n|loginNow", "Login using info in scheduler", v => LoginToEVE._loginNowIgnoreScheduler = v != null},
 				{"i|standalone", "Standalone instance, hook D3D w/o Innerspace!", v => LoginToEVE._standaloneInstance = v != null},
 				{"h|help", "show this message and exit", v => LoginToEVE._showHelp = v != null}
@@ -84,9 +82,6 @@ namespace Questor
 
 			ParseArgs(args);
 
-			//
-			// direct login, no schedules.xml
-			//
 			if (!string.IsNullOrEmpty(Logging.EVELoginUserName) && !string.IsNullOrEmpty(Logging.EVELoginPassword) && !string.IsNullOrEmpty(Logging.MyCharacterName))
 			{
 				LoginToEVE.ReadyToLoginToEVEAccount = true;
@@ -94,39 +89,19 @@ namespace Questor
 
 			if (!LoginToEVE.LoadDirectEVEInstance()) return;
 			
-			Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;
-
-			if (LoginToEVE._loginOnly)
-			{
-				Logging.Log("Startup", "_loginOnly: done and exiting", Logging.Teal);
-				return;
-			}
+			Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;			
 			
-			
-			//                }
-
-			//
-			// We should only get this far if run if we are already logged in...
-			// launch questor
-			//
 			try
 			{
 				Logging.Log("Startup", "Launching Questor", Logging.Teal);
 				_questor = new Questor();
-
-				//                    int intdelayQuestorUI = 0;
-				//                    while (intdelayQuestorUI < 200) //10sec = 200ms x 50
-				//                    {
-				//                        intdelayQuestorUI++;
-				//                        System.Threading.Thread.Sleep(50);
-				//                    }
 
 				Logging.Log("Startup", "Launching QuestorUI", Logging.Teal);
 				Application.Run(new QuestorUI());
 
 				while (!Cleanup.SignalToQuitQuestor)
 				{
-					System.Threading.Thread.Sleep(50); //this runs while questor is running.
+					System.Threading.Thread.Sleep(50); 
 				}
 
 				Logging.Log("Startup", "Exiting Questor", Logging.Teal);

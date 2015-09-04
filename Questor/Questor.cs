@@ -47,7 +47,7 @@ namespace Questor
 		private bool _runOnceAfterStartupalreadyProcessed;
 		private bool _runOnceInStationAfterStartupalreadyProcessed;
 		
-		private static DateTime _nextPulse;
+		private static DateTime _nextPulse = DateTime.MinValue;
 		private static DateTime _lastServerStatusCheckWasNotOK = DateTime.MinValue;
 
 
@@ -407,9 +407,7 @@ namespace Questor
 				// New frame, invalidate old cache
 				Cache.Instance.InvalidateCache();
 
-				Time.Instance.LastFrame = DateTime.UtcNow;
-
-				_lastQuestorPulse = DateTime.UtcNow;
+				
 
 				if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
 				{
@@ -500,13 +498,12 @@ namespace Questor
 			}
 		}
 
+		private int pulseDelay = 800;
 		private void EVEOnFrame(object sender, EventArgs e)
 		{
 			try
 			{
 				
-				
-				int pulseDelay = 400;
 				if (Cache.Instance.InSpace) pulseDelay = Time.Instance.QuestorPulseInSpace_milliseconds;
 				if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
 
@@ -515,7 +512,13 @@ namespace Questor
 					return;
 				}
 				
-				Cache.Instance.InvalidateCache();
+				if (DateTime.UtcNow < _nextPulse)
+				{
+					return;
+				}
+				
+				Time.Instance.LastFrame = DateTime.UtcNow;
+				_lastQuestorPulse = DateTime.UtcNow;
 				
 				if (Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
 				{
@@ -530,15 +533,13 @@ namespace Questor
 				
 				if (Cache.Instance.DirectEve.Login.AtLogin || Cache.Instance.DirectEve.Login.AtCharacterSelection)
 				{
-					if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading || Cache.Instance.DirectEve.Session.IsReady) {
+					if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading) {
+						Logging.Log("Questor.ProcessState", "if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)", Logging.White);
+						_nextPulse.AddSeconds(5);
 						return;
 					}
 					
-					Logging.Log("Questor.ProcessState", "if (Cache.Instance.DirectEve.Login.AtLogin || Cache.Instance.DirectEve.Login.AtCharacterSelection)", Logging.White);
-					
-					
-					Time.Instance.LastFrame = DateTime.UtcNow;
-					Time.Instance.LastSessionIsReady = DateTime.UtcNow;
+					//Time.Instance.LastSessionIsReady = DateTime.UtcNow;
 
 					if (DateTime.UtcNow < _lastServerStatusCheckWasNotOK.AddSeconds(LoginToEVE.RandomNumber(10, 20)))
 					{
@@ -559,7 +560,7 @@ namespace Questor
 
 					_nextPulse = DateTime.UtcNow.AddMilliseconds(Time.Instance.QuestorBeforeLoginPulseDelay_milliseconds);
 
-					if (DateTime.UtcNow < LoginToEVE.QuestorProgramLaunched.AddSeconds(1))
+					if (DateTime.UtcNow < LoginToEVE.QuestorProgramLaunched.AddSeconds(5))
 					{
 						//
 						// do not login for the first 7 seconds, wait...
@@ -582,191 +583,191 @@ namespace Questor
 
 					if (Logging.DebugOnframe) Logging.Log("LoginOnFrame", "before: if (Cache.Instance.DirectEve.Windows.Count != 0)", Logging.White);
 					
-//					// We should not get any windows
-//					if (Cache.Instance.DirectEve.Windows.Count != 0)
-//					{
-//						foreach (DirectWindow window in Cache.Instance.DirectEve.Windows)
-//						{
-//							if (string.IsNullOrEmpty(window.Html))
-//								continue;
-//							Logging.Log("Startup", "WindowTitles:" + window.Name + "::" + window.Html, Logging.White);
-//
-//							//
-//							// Close these windows and continue
-//							//
-//							if (window.Name == "telecom" && !Logging.DebugDoNotCloseTelcomWindows)
-//							{
-//								Logging.Log("Startup", "Closing telecom message...", Logging.Yellow);
-//								Logging.Log("Startup", "Content of telecom window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Yellow);
-//								window.Close();
-//								continue;
-//							}
-//
-//							// Modal windows must be closed
-//							// But lets only close known modal windows
-//							if (window.IsModal)
-//							{
-//								bool close = false;
-//								bool restart = false;
-//								bool needHumanIntervention = false;
-//								bool sayYes = false;
-//								bool sayOk = false;
-//								bool quit = false;
-//
-//								//bool update = false;
-//
-//								if (!string.IsNullOrEmpty(window.Html))
-//								{
-//									//errors that are repeatable and unavoidable even after a restart of eve/questor
-//									needHumanIntervention = window.Html.Contains("reason: Account subscription expired");
-//
-//									//update |= window.Html.Contains("The update has been downloaded");
-//
-//									// Server going down
-//									//Logging.Log("[Startup] (1) close is: " + close);
-//									close |= window.Html.ToLower().Contains("please make sure your characters are out of harms way");
-//									close |= window.Html.ToLower().Contains("accepting connections");
-//									close |= window.Html.ToLower().Contains("could not connect");
-//									close |= window.Html.ToLower().Contains("the connection to the server was closed");
-//									close |= window.Html.ToLower().Contains("server was closed");
-//									close |= window.Html.ToLower().Contains("make sure your characters are out of harm");
-//									close |= window.Html.ToLower().Contains("connection to server lost");
-//									close |= window.Html.ToLower().Contains("the socket was closed");
-//									close |= window.Html.ToLower().Contains("the specified proxy or server node");
-//									close |= window.Html.ToLower().Contains("starting up");
-//									close |= window.Html.ToLower().Contains("unable to connect to the selected server");
-//									close |= window.Html.ToLower().Contains("could not connect to the specified address");
-//									close |= window.Html.ToLower().Contains("connection timeout");
-//									close |= window.Html.ToLower().Contains("the cluster is not currently accepting connections");
-//									close |= window.Html.ToLower().Contains("your character is located within");
-//									close |= window.Html.ToLower().Contains("the transport has not yet been connected");
-//									close |= window.Html.ToLower().Contains("the user's connection has been usurped");
-//									close |= window.Html.ToLower().Contains("the EVE cluster has reached its maximum user limit");
-//									close |= window.Html.ToLower().Contains("the connection to the server was closed");
-//									close |= window.Html.ToLower().Contains("client is already connecting to the server");
-//
-//									//close |= window.Html.Contains("A client update is available and will now be installed");
-//									//
-//									// eventually it would be nice to hit ok on this one and let it update
-//									//
-//									close |= window.Html.ToLower().Contains("client update is available and will now be installed");
-//									close |= window.Html.ToLower().Contains("change your trial account to a paying account");
-//
-//									//
-//									// these windows require a restart of eve all together
-//									//
-//									restart |= window.Html.ToLower().Contains("the connection was closed");
-//									restart |= window.Html.ToLower().Contains("connection to server lost."); //INFORMATION
-//									restart |= window.Html.ToLower().Contains("local cache is corrupt");
-//									sayOk |= window.Html.ToLower().Contains("local session information is corrupt");
-//									restart |= window.Html.ToLower().Contains("The client's local session"); // information is corrupt");
-//									restart |= window.Html.ToLower().Contains("restart the client prior to logging in");
-//
-//									//
-//									// these windows require a quit of eve all together
-//									//
-//									quit |= window.Html.ToLower().Contains("the socket was closed");
-//
-//									//
-//									// Modal Dialogs the need "yes" pressed
-//									//
-//									//sayYes |= window.Html.Contains("There is a new build available. Would you like to download it now");
-//									//sayOk |= window.Html.Contains("The update has been downloaded. The client will now close and the update process begin");
-//									sayOk |= window.Html.Contains("The transport has not yet been connected, or authentication was not successful");
-//
-//									//Logging.Log("[Startup] (2) close is: " + close);
-//									//Logging.Log("[Startup] (1) window.Html is: " + window.Html);
-//								}
-//
-//								//if (update)
-//								//{
-//								//    int secRestart = (400 * 3) + Cache.Instance.RandomNumber(3, 18) * 100 + Cache.Instance.RandomNumber(1, 9) * 10;
-//								//    LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " OSExecute taskkill /IM launcher.exe");
-//								//}
-//
-//								if (sayYes)
-//								{
-//									Logging.Log("Startup", "Found a window that needs 'yes' chosen...", Logging.White);
-//									Logging.Log("Startup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.White);
-//									window.AnswerModal("Yes");
-//									continue;
-//								}
-//
-//								if (sayOk)
-//								{
-//									Logging.Log("Startup", "Found a window that needs 'ok' chosen...", Logging.White);
-//									Logging.Log("Startup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.White);
-//									window.AnswerModal("OK");
-//									if (window.Html.Contains("The update has been downloaded. The client will now close and the update process begin"))
-//									{
-//										//
-//										// schedule the closing of launcher.exe via a timedcommand (10 min?) in the uplink...
-//										//
-//									}
-//									continue;
-//								}
-//
-//								if (quit)
-//								{
-//									Logging.Log("Startup", "Restarting eve...", Logging.Red);
-//									Logging.Log("Startup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Red);
-//									window.AnswerModal("quit");
-//
-//									//_directEve.ExecuteCommand(DirectCmd.CmdQuitGame);
-//								}
-//
-//								if (restart)
-//								{
-//									Logging.Log("Startup", "Restarting eve...", Logging.Red);
-//									Logging.Log("Startup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Red);
-//									window.AnswerModal("restart");
-//									continue;
-//								}
-//
-//								if (close)
-//								{
-//									Logging.Log("Startup", "Closing modal window...", Logging.Yellow);
-//									Logging.Log("Startup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Yellow);
-//									window.Close();
-//									continue;
-//								}
-//
-//								if (needHumanIntervention)
-//								{
-//									Logging.Log("Startup", "ERROR! - Human Intervention is required in this case: halting all login attempts - ERROR!", Logging.Red);
-//									Logging.Log("Startup", "window.Name is: " + window.Name, Logging.Red);
-//									Logging.Log("Startup", "window.Html is: " + window.Html, Logging.Red);
-//									Logging.Log("Startup", "window.Caption is: " + window.Caption, Logging.Red);
-//									Logging.Log("Startup", "window.Type is: " + window.Type, Logging.Red);
-//									Logging.Log("Startup", "window.ID is: " + window.Id, Logging.Red);
-//									Logging.Log("Startup", "window.IsDialog is: " + window.IsDialog, Logging.Red);
-//									Logging.Log("Startup", "window.IsKillable is: " + window.IsKillable, Logging.Red);
-//									Logging.Log("Startup", "window.Viewmode is: " + window.ViewMode, Logging.Red);
-//									Logging.Log("Startup", "ERROR! - Human Intervention is required in this case: halting all login attempts - ERROR!", Logging.Red);
-//									LoginToEVE._humanInterventionRequired = true;
-//									return;
-//								}
-//							}
-//
-//							if (string.IsNullOrEmpty(window.Html))
-//								continue;
-//
-//							if (window.Name == "telecom")
-//								continue;
-//							Logging.Log("Startup", "We have an unexpected window, auto login halted.", Logging.Red);
-//							Logging.Log("Startup", "window.Name is: " + window.Name, Logging.Red);
-//							Logging.Log("Startup", "window.Html is: " + window.Html, Logging.Red);
-//							Logging.Log("Startup", "window.Caption is: " + window.Caption, Logging.Red);
-//							Logging.Log("Startup", "window.Type is: " + window.Type, Logging.Red);
-//							Logging.Log("Startup", "window.ID is: " + window.Id, Logging.Red);
-//							Logging.Log("Startup", "window.IsDialog is: " + window.IsDialog, Logging.Red);
-//							Logging.Log("Startup", "window.IsKillable is: " + window.IsKillable, Logging.Red);
-//							Logging.Log("Startup", "window.Viewmode is: " + window.ViewMode, Logging.Red);
-//							Logging.Log("Startup", "We have got an unexpected window, auto login halted.", Logging.Red);
-//							return;
-//						}
-//						return;
-//					}
+									// We should not get any windows
+					if (Cache.Instance.DirectEve.Windows.Count != 0)
+					{
+						foreach (DirectWindow window in Cache.Instance.DirectEve.Windows)
+						{
+							if (string.IsNullOrEmpty(window.Html))
+								continue;
+							Logging.Log("Startup", "WindowTitles:" + window.Name + "::" + window.Html, Logging.White);
+
+							//
+							// Close these windows and continue
+							//
+							if (window.Name == "telecom" && !Logging.DebugDoNotCloseTelcomWindows)
+							{
+								Logging.Log("Startup", "Closing telecom message...", Logging.Yellow);
+								Logging.Log("Startup", "Content of telecom window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Yellow);
+								window.Close();
+								continue;
+							}
+
+							// Modal windows must be closed
+							// But lets only close known modal windows
+							if (window.IsModal)
+							{
+								bool close = false;
+								bool restart = false;
+								bool needHumanIntervention = false;
+								bool sayYes = false;
+								bool sayOk = false;
+								bool quit = false;
+
+								//bool update = false;
+
+								if (!string.IsNullOrEmpty(window.Html))
+								{
+									//errors that are repeatable and unavoidable even after a restart of eve/questor
+									needHumanIntervention = window.Html.Contains("reason: Account subscription expired");
+
+									//update |= window.Html.Contains("The update has been downloaded");
+
+									// Server going down
+									//Logging.Log("[Startup] (1) close is: " + close);
+									close |= window.Html.ToLower().Contains("please make sure your characters are out of harms way");
+									close |= window.Html.ToLower().Contains("accepting connections");
+									close |= window.Html.ToLower().Contains("could not connect");
+									close |= window.Html.ToLower().Contains("the connection to the server was closed");
+									close |= window.Html.ToLower().Contains("server was closed");
+									close |= window.Html.ToLower().Contains("make sure your characters are out of harm");
+									close |= window.Html.ToLower().Contains("connection to server lost");
+									close |= window.Html.ToLower().Contains("the socket was closed");
+									close |= window.Html.ToLower().Contains("the specified proxy or server node");
+									close |= window.Html.ToLower().Contains("starting up");
+									close |= window.Html.ToLower().Contains("unable to connect to the selected server");
+									close |= window.Html.ToLower().Contains("could not connect to the specified address");
+									close |= window.Html.ToLower().Contains("connection timeout");
+									close |= window.Html.ToLower().Contains("the cluster is not currently accepting connections");
+									close |= window.Html.ToLower().Contains("your character is located within");
+									close |= window.Html.ToLower().Contains("the transport has not yet been connected");
+									close |= window.Html.ToLower().Contains("the user's connection has been usurped");
+									close |= window.Html.ToLower().Contains("the EVE cluster has reached its maximum user limit");
+									close |= window.Html.ToLower().Contains("the connection to the server was closed");
+									close |= window.Html.ToLower().Contains("client is already connecting to the server");
+
+									//close |= window.Html.Contains("A client update is available and will now be installed");
+									//
+									// eventually it would be nice to hit ok on this one and let it update
+									//
+									close |= window.Html.ToLower().Contains("client update is available and will now be installed");
+									close |= window.Html.ToLower().Contains("change your trial account to a paying account");
+
+									//
+									// these windows require a restart of eve all together
+									//
+									restart |= window.Html.ToLower().Contains("the connection was closed");
+									restart |= window.Html.ToLower().Contains("connection to server lost."); //INFORMATION
+									restart |= window.Html.ToLower().Contains("local cache is corrupt");
+									sayOk |= window.Html.ToLower().Contains("local session information is corrupt");
+									restart |= window.Html.ToLower().Contains("The client's local session"); // information is corrupt");
+									restart |= window.Html.ToLower().Contains("restart the client prior to logging in");
+
+									//
+									// these windows require a quit of eve all together
+									//
+									quit |= window.Html.ToLower().Contains("the socket was closed");
+
+									//
+									// Modal Dialogs the need "yes" pressed
+									//
+									//sayYes |= window.Html.Contains("There is a new build available. Would you like to download it now");
+									//sayOk |= window.Html.Contains("The update has been downloaded. The client will now close and the update process begin");
+									sayOk |= window.Html.Contains("The transport has not yet been connected, or authentication was not successful");
+
+									//Logging.Log("[Startup] (2) close is: " + close);
+									//Logging.Log("[Startup] (1) window.Html is: " + window.Html);
+								}
+
+								//if (update)
+								//{
+								//    int secRestart = (400 * 3) + Cache.Instance.RandomNumber(3, 18) * 100 + Cache.Instance.RandomNumber(1, 9) * 10;
+								//    LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " OSExecute taskkill /IM launcher.exe");
+								//}
+
+								if (sayYes)
+								{
+									Logging.Log("Startup", "Found a window that needs 'yes' chosen...", Logging.White);
+									Logging.Log("Startup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.White);
+									window.AnswerModal("Yes");
+									continue;
+								}
+
+								if (sayOk)
+								{
+									Logging.Log("Startup", "Found a window that needs 'ok' chosen...", Logging.White);
+									Logging.Log("Startup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.White);
+									window.AnswerModal("OK");
+									if (window.Html.Contains("The update has been downloaded. The client will now close and the update process begin"))
+									{
+										//
+										// schedule the closing of launcher.exe via a timedcommand (10 min?) in the uplink...
+										//
+									}
+									continue;
+								}
+
+								if (quit)
+								{
+									Logging.Log("Startup", "Restarting eve...", Logging.Red);
+									Logging.Log("Startup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Red);
+									window.AnswerModal("quit");
+
+									//_directEve.ExecuteCommand(DirectCmd.CmdQuitGame);
+								}
+
+								if (restart)
+								{
+									Logging.Log("Startup", "Restarting eve...", Logging.Red);
+									Logging.Log("Startup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Red);
+									window.AnswerModal("restart");
+									continue;
+								}
+
+								if (close)
+								{
+									Logging.Log("Startup", "Closing modal window...", Logging.Yellow);
+									Logging.Log("Startup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Yellow);
+									window.Close();
+									continue;
+								}
+
+								if (needHumanIntervention)
+								{
+									Logging.Log("Startup", "ERROR! - Human Intervention is required in this case: halting all login attempts - ERROR!", Logging.Red);
+									Logging.Log("Startup", "window.Name is: " + window.Name, Logging.Red);
+									Logging.Log("Startup", "window.Html is: " + window.Html, Logging.Red);
+									Logging.Log("Startup", "window.Caption is: " + window.Caption, Logging.Red);
+									Logging.Log("Startup", "window.Type is: " + window.Type, Logging.Red);
+									Logging.Log("Startup", "window.ID is: " + window.Id, Logging.Red);
+									Logging.Log("Startup", "window.IsDialog is: " + window.IsDialog, Logging.Red);
+									Logging.Log("Startup", "window.IsKillable is: " + window.IsKillable, Logging.Red);
+									Logging.Log("Startup", "window.Viewmode is: " + window.ViewMode, Logging.Red);
+									Logging.Log("Startup", "ERROR! - Human Intervention is required in this case: halting all login attempts - ERROR!", Logging.Red);
+									LoginToEVE._humanInterventionRequired = true;
+									return;
+								}
+							}
+
+							if (string.IsNullOrEmpty(window.Html))
+								continue;
+
+							if (window.Name == "telecom")
+								continue;
+							Logging.Log("Startup", "We have an unexpected window, auto login halted.", Logging.Red);
+							Logging.Log("Startup", "window.Name is: " + window.Name, Logging.Red);
+							Logging.Log("Startup", "window.Html is: " + window.Html, Logging.Red);
+							Logging.Log("Startup", "window.Caption is: " + window.Caption, Logging.Red);
+							Logging.Log("Startup", "window.Type is: " + window.Type, Logging.Red);
+							Logging.Log("Startup", "window.ID is: " + window.Id, Logging.Red);
+							Logging.Log("Startup", "window.IsDialog is: " + window.IsDialog, Logging.Red);
+							Logging.Log("Startup", "window.IsKillable is: " + window.IsKillable, Logging.Red);
+							Logging.Log("Startup", "window.Viewmode is: " + window.ViewMode, Logging.Red);
+							Logging.Log("Startup", "We have got an unexpected window, auto login halted.", Logging.Red);
+							return;
+						}
+						return;
+					}
 
 					if (Cache.Instance.DirectEve.Login.AtLogin && Cache.Instance.DirectEve.Login.ServerStatus != "Status: OK")
 					{
@@ -817,7 +818,7 @@ namespace Questor
 								Logging.Log("Startup", "Activating character [" + slot.CharName + "]", Logging.White);
 								LoginToEVE.NextSlotActivate = DateTime.UtcNow.AddSeconds(5);
 								slot.Activate();
-								_nextPulse.AddSeconds(15);
+								_nextPulse.AddSeconds(20);
 								return;
 							}
 
@@ -825,13 +826,12 @@ namespace Questor
 						}
 					}
 					
-					
-					
-					
 					return;
 				}
 				
 				#endregion
+				
+				Cache.Instance.InvalidateCache();
 				
 				
 				
@@ -850,10 +850,6 @@ namespace Questor
 						WalletCheck();
 					}
 				}
-				
-				
-				
-				
 
 				// We always check our defense state if we're in space, regardless of questor state
 				// We also always check panic
