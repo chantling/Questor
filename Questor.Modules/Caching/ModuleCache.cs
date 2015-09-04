@@ -485,12 +485,12 @@ namespace Questor.Modules.Caching
                     if (Logging.DebugDefense) Logging.Log("ModuleCache.Click", "if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(5))", Logging.Debug);
                     return false;
                 }
-
-                if (DateTime.UtcNow < Time.Instance.NextActivateModules)
-                {
-                    if (Logging.DebugDefense) Logging.Log("ModuleCache.Click", "if (DateTime.UtcNow < Time.Instance.NextActivateModules)", Logging.Debug);
-                    return false;
-                }
+//
+//                if (DateTime.UtcNow < Time.Instance.NextActivateModules)
+//                {
+//                    if (Logging.DebugDefense) Logging.Log("ModuleCache.Click", "if (DateTime.UtcNow < Time.Instance.NextActivateModules)", Logging.Debug);
+//                    return false;
+//                }
 
                 if (Time.Instance.LastClickedTimeStamp != null && Time.Instance.LastClickedTimeStamp.ContainsKey(ItemId))
                 {
@@ -536,7 +536,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Log("Click", "IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]", Logging.Red);
+                Logging.Log("Click", "ModuleCache.Click - Exception: [" + exception + "]", Logging.Red);
                 return false;
             }
         }

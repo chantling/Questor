@@ -119,6 +119,10 @@ namespace Questor.Modules.BackgroundTasks
             if (DateTime.UtcNow < Time.Instance.NextActivateModules) //if we just did something wait a fraction of a second
                 return;
 
+            //Time.Instance.NextActivateModules = DateTime.UtcNow.AddSeconds(1);
+            
+            
+            
             ModuleNumber = 0;
             foreach (ModuleCache ActivateOncePerSessionModulewScript in Cache.Instance.Modules.Where(i => i.GroupId == (int)Group.TrackingDisruptor ||
                                                                                                           i.GroupId == (int)Group.TrackingComputer ||
@@ -942,10 +946,14 @@ namespace Questor.Modules.BackgroundTasks
 
         public static void ProcessState()
         {
+        	
             // Only pulse state changes every x milliseconds
             if (DateTime.UtcNow.Subtract(_lastPulse).TotalMilliseconds < 350) //default: 350ms
                 return;
             _lastPulse = DateTime.UtcNow;
+            
+            
+            
 
             // Thank god stations are safe ! :)
             if (Cache.Instance.InStation)
@@ -958,6 +966,8 @@ namespace Questor.Modules.BackgroundTasks
                 _nextOverloadAttempt = DateTime.UtcNow;
                 return;
             }
+            
+            
 
             if (DateTime.UtcNow.AddSeconds(-2) > Time.Instance.LastInSpace)
             {

@@ -853,6 +853,7 @@ namespace Questor
 
 				// We always check our defense state if we're in space, regardless of questor state
 				// We also always check panic
+				
 				Defense.ProcessState();
 
 				if (Cache.Instance.Paused) //|| DateTime.UtcNow < _nextQuestorAction)
