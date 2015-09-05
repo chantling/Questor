@@ -388,7 +388,7 @@ namespace Questor.Modules.Actions
                     int moveItemQuantity = Math.Min(LootHangarItem.Stacksize, _itemsLeftToMoveQuantity);
                     moveItemQuantity = Math.Max(moveItemQuantity, 1);
                     _itemsLeftToMoveQuantity = _itemsLeftToMoveQuantity - moveItemQuantity;
-                    Logging.Log(WeAreInThisStateForLogs(), "Moving Item [" + LootHangarItem.TypeName + "] from Loothangar to CargoHold: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
+                    Logging.Log(WeAreInThisStateForLogs(), "Moving(1) Item [" + LootHangarItem.TypeName + "] from Loothangar to CargoHold: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
                     Cache.Instance.CurrentShipsCargo.Add(LootHangarItem, moveItemQuantity);
                     ItemsAreBeingMoved = true;
                     _lastArmAction = DateTime.UtcNow;
@@ -405,7 +405,7 @@ namespace Questor.Modules.Actions
                     int moveItemQuantity = Math.Min(ItemHangarItem.Stacksize, _itemsLeftToMoveQuantity);
                     moveItemQuantity = Math.Max(moveItemQuantity, 1);
                     _itemsLeftToMoveQuantity = _itemsLeftToMoveQuantity - moveItemQuantity;
-                    Logging.Log(WeAreInThisStateForLogs(), "Moving Item [" + ItemHangarItem.TypeName + "] from ItemHangar to CargoHold: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
+                    Logging.Log(WeAreInThisStateForLogs(), "Moving(2) Item [" + ItemHangarItem.TypeName + "] from ItemHangar to CargoHold: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
                     Cache.Instance.CurrentShipsCargo.Add(ItemHangarItem, moveItemQuantity);
                     ItemsAreBeingMoved = true;
                     _lastArmAction = DateTime.UtcNow;
@@ -422,7 +422,7 @@ namespace Questor.Modules.Actions
                     int moveItemQuantity = Math.Min(AmmoHangarItem.Stacksize, _itemsLeftToMoveQuantity);
                     moveItemQuantity = Math.Max(moveItemQuantity, 1);
                     _itemsLeftToMoveQuantity = _itemsLeftToMoveQuantity - moveItemQuantity;
-                    Logging.Log(WeAreInThisStateForLogs(), "Moving Item [" + AmmoHangarItem.TypeName + "] from AmmoHangar to CargoHold: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
+                    Logging.Log(WeAreInThisStateForLogs(), "Moving(3) Item [" + AmmoHangarItem.TypeName + "] from AmmoHangar to CargoHold: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
                     Cache.Instance.CurrentShipsCargo.Add(AmmoHangarItem, moveItemQuantity);
                     ItemsAreBeingMoved = true;
                     _lastArmAction = DateTime.UtcNow;
@@ -556,7 +556,7 @@ namespace Questor.Modules.Actions
                         int moveDroneQuantity = Math.Min(LootHangarItem.Stacksize, _itemsLeftToMoveQuantity);
                         moveDroneQuantity = Math.Max(moveDroneQuantity, 1);
                         _itemsLeftToMoveQuantity = _itemsLeftToMoveQuantity - moveDroneQuantity;
-                        Logging.Log("Arm.MoveDronesToDroneBay", "Moving Item [" + LootHangarItem.TypeName + "] from LootHangar to DroneBay: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
+                        Logging.Log("Arm.MoveDronesToDroneBay", "Moving(4) Item [" + LootHangarItem.TypeName + "] from LootHangar to DroneBay: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
                         Drones.DroneBay.Add(LootHangarItem, moveDroneQuantity);
                         ItemsAreBeingMoved = true;
                         _lastArmAction = DateTime.UtcNow;
@@ -573,7 +573,7 @@ namespace Questor.Modules.Actions
                         int moveDroneQuantity = Math.Min(ItemHangarItem.Stacksize, _itemsLeftToMoveQuantity);
                         moveDroneQuantity = Math.Max(moveDroneQuantity, 1);
                         _itemsLeftToMoveQuantity = _itemsLeftToMoveQuantity - moveDroneQuantity;
-                        Logging.Log("Arm.MoveDronesToDroneBay", "Moving Item [" + ItemHangarItem.TypeName + "] from ItemHangar to DroneBay: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
+                        Logging.Log("Arm.MoveDronesToDroneBay", "Moving Item(5) [" + ItemHangarItem.TypeName + "] from ItemHangar to DroneBay: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
                         Drones.DroneBay.Add(ItemHangarItem, moveDroneQuantity);
                         ItemsAreBeingMoved = true;
                         _lastArmAction = DateTime.UtcNow;
@@ -590,7 +590,7 @@ namespace Questor.Modules.Actions
                         int moveDroneQuantity = Math.Min(AmmoHangarItem.Stacksize, _itemsLeftToMoveQuantity);
                         moveDroneQuantity = Math.Max(moveDroneQuantity, 1);
                         _itemsLeftToMoveQuantity = _itemsLeftToMoveQuantity - moveDroneQuantity;
-                        Logging.Log("Arm.MoveDronesToDroneBay", "Moving Item [" + AmmoHangarItem.TypeName + "] from AmmoHangar to DroneBay: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
+                        Logging.Log("Arm.MoveDronesToDroneBay", "Moving(6) Item [" + AmmoHangarItem.TypeName + "] from AmmoHangar to DroneBay: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
                         Drones.DroneBay.Add(AmmoHangarItem, moveDroneQuantity);
                         ItemsAreBeingMoved = true;
                         _lastArmAction = DateTime.UtcNow;
@@ -1194,6 +1194,9 @@ namespace Questor.Modules.Actions
 
         private static bool MoveCapBoosters()
         {
+        	
+        	Logging.Log("Test", "Settings.Instance.NumberOfCapBoostersToLoad: " + Settings.Instance.NumberOfCapBoostersToLoad, Logging.White);
+        	
             if (Cache.Instance.ActiveShip.GroupId == (int)Group.Shuttle ||
                  Cache.Instance.ActiveShip.GroupId == (int)Group.Industrial ||
                  Cache.Instance.ActiveShip.GroupId == (int)Group.TransportShip ||
@@ -1219,8 +1222,12 @@ namespace Questor.Modules.Actions
             #region load cap boosters
             DirectInvType _CapBoosterInvTypeItem = null;
             Cache.Instance.DirectEve.InvTypes.TryGetValue(Settings.Instance.CapacitorInjectorScript, out _CapBoosterInvTypeItem);
+            
+            
+            
             if (ArmLoadCapBoosters && _CapBoosterInvTypeItem != null)
             {
+            	
                 if (!MoveItemsToCargo(_CapBoosterInvTypeItem.TypeName, Settings.Instance.NumberOfCapBoostersToLoad, ArmState.MoveCapBoosters, ArmState.MoveAmmo)) return false;
             }
 
@@ -1426,145 +1433,6 @@ namespace Questor.Modules.Actions
                 return false;
             }
         }
-        
-        private static bool MoveMiningCrystals()
-        {
-            if (DateTime.UtcNow < _lastArmAction.AddMilliseconds(2000))
-            {
-                if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "if (DateTime.UtcNow < Cache.Instance.NextArmAction)) return;", Logging.Teal);
-                return false;
-            }
-
-            if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), " start if (!Cache.Instance.CloseFittingManager(Arm)) return;", Logging.Teal);
-            if (!Cache.Instance.CloseFittingManager(WeAreInThisStateForLogs())) return false;
-            if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), " finish if (!Cache.Instance.CloseFittingManager(Arm)) return;", Logging.Teal);
-
-            //
-            // Check for locked items if we are already moving items
-            //
-            #region check for item locks
-
-            if (ItemsAreBeingMoved)
-            {
-                if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "if (ItemsAreBeingMoved)", Logging.Teal);
-
-                if (Cache.Instance.DirectEve.GetLockedItems().Count != 0)
-                {
-                    if (DateTime.UtcNow.Subtract(_lastArmAction).TotalSeconds > 45)
-                    {
-                        Logging.Log(WeAreInThisStateForLogs(), "Moving Items timed out, clearing item locks", Logging.Orange);
-                        Cache.Instance.DirectEve.UnlockItems();
-                        _lastArmAction = DateTime.UtcNow;
-                        ChangeArmState(ArmState.Begin);
-                        return false;
-                    }
-
-                    if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "Waiting for Locks to clear. GetLockedItems().Count [" + Cache.Instance.DirectEve.GetLockedItems().Count + "]", Logging.Teal);
-                    return false;
-                }
-                ItemsAreBeingMoved = false;
-                return false;
-            }
-            #endregion check for item locks
-
-            //
-            // load mining crystals
-            //
-            #region load mining crystals
-
-            //if (Cache.Instance.Modules.Count(i => i.IsTurret && i.MaxCharges == 0) > 0) //civilian guns of all types
-            //{
-            //    Logging.Log("Arm.MoveItems", "No ammo needed for civilian guns: done", Logging.White);
-            //    _States.CurrentArmState = ArmState.Cleanup;
-            //    return false;
-            //}
-
-            //
-            // make sure we actually have something in the list of AmmoToLoad before trying to load ammo.
-            //
-            MiningCrystals CurrentMiningCrystalsToLoad = CrystalsToLoad.FirstOrDefault();
-            if (CurrentMiningCrystalsToLoad == null)
-            {
-                //
-                // if we have no more ammo types to be loaded we have to be finished with arm.
-                //
-                Logging.Log(WeAreInThisStateForLogs(), "if (CurrentMiningCrystalsToLoad == null)", Logging.Debug);
-                ChangeArmState(ArmState.Cleanup);
-                return false;
-            }
-
-            try
-            {
-                AmmoHangarItems = null;
-                AmmoHangarItems = Cache.Instance.AmmoHangar.Items.Where(i => i.TypeId == CurrentMiningCrystalsToLoad.TypeId).OrderBy(i => i.IsSingleton).ThenBy(i => i.Quantity);
-                        
-                if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "Ammohangar has [" + AmmoHangarItems.Count() + "] items with the right typeID [" + CurrentMiningCrystalsToLoad.TypeId + "] for this ammoType. MoveAmmo will use AmmoHangar", Logging.Debug);
-                if (!AmmoHangarItems.Any())
-                {
-                    ItemHangarItem = null;
-                    ItemHangarItems = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == CurrentMiningCrystalsToLoad.TypeId).OrderBy(i => i.IsSingleton).ThenBy(i => i.Quantity);
-                    if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "Itemhangar has [" + ItemHangarItems.Count() + "] items with the right typeID [" + CurrentMiningCrystalsToLoad.TypeId + "] for this ammoType. MoveAmmo will use ItemHangar", Logging.Debug);
-                    if (!ItemHangarItems.Any())
-                    {
-                        Logging.Log(WeAreInThisStateForLogs(), "if (!ItemHangarItems.Any())", Logging.Debug);
-                        foreach (MiningCrystals _miningCrystal in CrystalsToLoad)
-                        {
-                            Logging.Log(WeAreInThisStateForLogs(), "Missing [" + _miningCrystal.Quantity + "] units of ammo: [ " + _miningCrystal.Description + " ] with TypeId [" + _miningCrystal.TypeId + "]", Logging.Orange);
-                        }
-
-                        ChangeArmState(ArmState.NotEnoughAmmo);
-                        return false;
-                    }
-                }
-
-                foreach (DirectItem item in AmmoHangarItems)
-                {
-                    int moveMiningCrystalsQuantity = Math.Min(item.Stacksize, CurrentMiningCrystalsToLoad.Quantity);
-                    moveMiningCrystalsQuantity = Math.Max(moveMiningCrystalsQuantity, 1);
-                    Logging.Log(WeAreInThisStateForLogs(), "Moving [" + moveMiningCrystalsQuantity + "] units of Mining Crystals  [" + item.TypeName + "] from [ AmmoHangar ] to CargoHold", Logging.White);
-                    //
-                    // move items to cargo
-                    //
-                    Cache.Instance.CurrentShipsCargo.Add(item, moveMiningCrystalsQuantity);
-                    //
-                    // subtract the moved items from the items that need to be moved
-                    //
-                    CurrentMiningCrystalsToLoad.Quantity -= moveMiningCrystalsQuantity;
-                    if (CurrentMiningCrystalsToLoad.Quantity == 0)
-                    {
-                        //
-                        // if we have moved all the ammo of this type that needs to be moved remove this type of ammo from the list of ammos that need to be moved
-                        // 
-                        CrystalsToLoad.Remove(CurrentMiningCrystalsToLoad);
-                        return false;
-                    }
-
-                    return false; //you can only move one set of items per frame.
-                }
-            }
-            catch (Exception exception)
-            {
-                Logging.Log(WeAreInThisStateForLogs(), "Error while processing Itemhangar Items exception was: [" + exception + "]", Logging.Debug);
-            }
-
-            if (CrystalsToLoad.Any()) //if we still have any ammo to load here then we must be missing ammo
-            {
-                foreach (MiningCrystals _miningCrystal in CrystalsToLoad)
-                {
-                    Logging.Log(WeAreInThisStateForLogs(), "Missing [" + _miningCrystal.Quantity + "] units of ammo: [ " + _miningCrystal.Description + " ] with TypeId [" + _miningCrystal.TypeId + "]", Logging.Orange);
-                }
-
-                ChangeArmState(ArmState.NotEnoughAmmo);
-                return false;
-            }
-
-            _lastArmAction = DateTime.UtcNow;
-            Logging.Log(WeAreInThisStateForLogs(), "Waiting for items", Logging.White);
-            //_States.CurrentArmState = ArmState.WaitForItems;
-            return false;
-
-            #endregion move ammo
-        }
 
         private static bool CleanupArmState()
         {
@@ -1639,10 +1507,6 @@ namespace Questor.Modules.Actions
                         if (!MoveAmmo()) return;
                         break;
 
-                    case ArmState.MoveMiningCrystals:
-                        if (!MoveMiningCrystals()) return;
-                        break;
-
                     case ArmState.StackAmmoHangar:
                         if (!StackAmmoHangarArmState()) return;
                         break;
@@ -1690,102 +1554,14 @@ namespace Questor.Modules.Actions
         /// 
         public static void ClearDataBetweenStates()
         {
-            try
-            {
-                //
-                // this list of variables is cleared every pulse.
-                //
                 _itemsLeftToMoveQuantity = 0;
-            }
-            catch (Exception exception)
-            {
-                Logging.Log("Arm.InvalidateCache", "Exception [" + exception + "]", Logging.Debug);
-            }
         }
 
-        ///
-        ///   Invalidate the cached items every pulse (called from cache.invalidatecache, which itself is called every frame in questor.cs)
-        /// 
         public static void InvalidateCache()
         {
-            try
-            {
-                //
-                // this list of variables is cleared every pulse.
-                //
                 cargoItems = null;
                 ItemHangarItem = null;
                 ItemHangarItems = null;
-            }
-            catch (Exception exception)
-            {
-                Logging.Log("Arm.InvalidateCache", "Exception [" + exception + "]", Logging.Debug);
-            }
         }
-
-        /*
-                private void WhatScriptsShouldILoad()
-                {
-                    TrackingComputerScriptsToLoad = 0;
-                    TrackingDisruptorScriptsToLoad = 0;
-                    TrackingLinkScriptsToLoad = 0;
-                    SensorBoosterScriptsToLoad = 0;
-                    SensorDampenerScriptsToLoad = 0;
-                    foreach (ModuleCache module in Cache.Instance.Modules)
-                    {
-                        if (module.GroupId == (int)Group.TrackingDisruptor ||
-                            module.GroupId == (int)Group.TrackingComputer ||
-                            module.GroupId == (int)Group.TrackingLink ||
-                            module.GroupId == (int)Group.SensorBooster ||
-                            module.GroupId == (int)Group.SensorDampener)
-                        {
-                            if (module.CurrentCharges == 0)
-                            {
-                                DirectItem scriptToLoad;
-                                if (module.GroupId == (int)Group.TrackingDisruptor)
-                                {
-                                    scriptToLoad = Cache.Instance.CheckCargoForItem(Settings.Instance.TrackingDisruptorScript, 1);
-                                    if (scriptToLoad !=null)
-                                    {
-                                        TrackingDisruptorScriptsToLoad++;
-                                    }
-                                }
-                                if (module.GroupId == (int)Group.TrackingComputer)
-                                {
-                                    scriptToLoad = Cache.Instance.CheckCargoForItem(Settings.Instance.TrackingComputerScript, 1);
-                                    if (scriptToLoad != null)
-                                    {
-                                        TrackingComputerScriptsToLoad++;
-                                    }
-                                }
-                                if (module.GroupId == (int)Group.TrackingLink)
-                                {
-                                    scriptToLoad = Cache.Instance.CheckCargoForItem(Settings.Instance.TrackingLinkScript, 1);
-                                    if (scriptToLoad != null)
-                                    {
-                                        TrackingLinkScriptsToLoad++;
-                                    }
-                                }
-                                if (module.GroupId == (int)Group.SensorBooster)
-                                {
-                                    scriptToLoad = Cache.Instance.CheckCargoForItem(Settings.Instance.SensorBoosterScript, 1);
-                                    if (scriptToLoad != null)
-                                    {
-                                        SensorBoosterScriptsToLoad++;
-                                    }
-                                }
-                                if (module.GroupId == (int)Group.SensorDampener)
-                                {
-                                    scriptToLoad = Cache.Instance.CheckCargoForItem(Settings.Instance.SensorDampenerScript, 1);
-                                    if (scriptToLoad != null)
-                                    {
-                                        SensorDampenerScriptsToLoad++;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-        */
     }
 }

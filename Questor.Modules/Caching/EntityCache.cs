@@ -5328,7 +5328,7 @@ namespace Questor.Modules.Caching
                             Time.Instance.LastInWarp = DateTime.UtcNow;
                             Time.Instance.NextWarpAction = DateTime.UtcNow.AddSeconds(Time.Instance.WarptoDelay_seconds);
                             Time.Instance.NextDockAction = DateTime.UtcNow.AddSeconds(Time.Instance.DockingDelay_seconds);
-                            _directEntity.WarpToAndDock();
+                            _directEntity.WarpTo();
                         }
                     }
                 }

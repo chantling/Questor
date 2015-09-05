@@ -335,7 +335,7 @@ namespace Questor.Modules.Lookup
                         FactionBlacklist.Add((string)faction);
                     }
 
-                    Logging.Log("Settings", "        Faction Blacklist now has [" + FactionBlacklist.Count + "] entries", Logging.White);
+                    Logging.Log("Settings", " Faction Blacklist now has [" + FactionBlacklist.Count + "] entries", Logging.White);
                 }
             }
             catch (Exception ex)

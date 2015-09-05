@@ -755,7 +755,7 @@ namespace Questor.Modules.BackgroundTasks
                                 int aggressiveEntities = Cache.Instance.EntitiesOnGrid.Count(e => e.IsAttacking && e.IsPlayer);
                                 if (aggressiveEntities == 0 && Cache.Instance.EntitiesOnGrid.Count(e => e.IsStation) == 1)
                                 {
-                                    Time.Instance.NextDockAction = DateTime.UtcNow.AddSeconds(15);
+                                    Time.Instance.NextDockAction = DateTime.UtcNow.AddSeconds(10);
                                     Logging.Log("Defense", "Repairing Armor outside station with no aggro (yet): delaying docking for [15]seconds", Logging.White);
                                 }
                             }

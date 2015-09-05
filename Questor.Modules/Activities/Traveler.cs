@@ -302,8 +302,9 @@ namespace Questor.Modules.Activities
             }
             
             if (Logging.DebugGotobase) if (Traveler.Destination != null) Logging.Log("CombatMissionsBehavior", "TravelToAgentsStation: Traveler.Destination.SolarSystemId [" + Traveler.Destination.SolarSystemId + "]", Logging.White);
-            Traveler.ProcessState();
             _processAtDestinationActions(module);
+            Traveler.ProcessState();
+            
             
             return;
         }
@@ -349,8 +350,9 @@ namespace Questor.Modules.Activities
             }
             
             if (Logging.DebugGotobase) if (Traveler.Destination != null) Logging.Log("CombatMissionsBehavior", "TravelToAgentsStation: Traveler.Destination.SolarSystemId [" + Traveler.Destination.SolarSystemId + "]", Logging.White);
-            Traveler.ProcessState();
             _processAtDestinationActions(module);
+            Traveler.ProcessState();
+            
             
             return;
         }

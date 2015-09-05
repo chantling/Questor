@@ -21,7 +21,6 @@ namespace Questor.Modules.States
         MoveOptionalBringItems,
         MoveCapBoosters,
         MoveAmmo,
-        MoveMiningCrystals,
         StackAmmoHangar,
         ActivateSalvageShip,
         ActivateTransportShip,

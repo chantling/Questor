@@ -33,7 +33,7 @@ namespace Questor.Modules.Lookup
         public int TargetsAreFullDelay_seconds = 5;                         // Delay used when we have determined that all our targeting slots are full
         public int DelayBetweenSalvagingSessions_minutes = 10;              //
         public int OrbitDelay_seconds = 15;                                 // This is the delay between orbit commands, units: seconds. Default is 15
-        public int DockingDelay_seconds = 17;                               // This is the delay between docking attempts, units: seconds. Default is 15
+        public int DockingDelay_seconds = 10;                               // This is the delay between docking attempts, units: seconds. Default is 15
         public int WarptoDelay_seconds = 10;                                // This is the delay between warpto commands, units: seconds. Default is 10
         public int WeaponDelay_milliseconds = 220;                          //
         public int NosDelay_milliseconds = 220;                             //

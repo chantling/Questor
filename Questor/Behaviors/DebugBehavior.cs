@@ -251,11 +251,14 @@ namespace Questor.Behaviors
                     }
                     else
                     {
-                        Traveler.ProcessState();
-
-                        //we also assume you are connected during a manual set of questor into travel mode (safe assumption considering someone is at the kb)
+                    	
+                    	                       //we also assume you are connected during a manual set of questor into travel mode (safe assumption considering someone is at the kb)
                         Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
                         Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+                        
+                        Traveler.ProcessState();
+
+ 
 
                         if (_States.CurrentTravelerState == TravelerState.AtDestination)
                         {
