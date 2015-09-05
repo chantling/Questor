@@ -87,26 +87,6 @@ namespace Questor.Modules.Actions
         private static IEnumerable<DirectItem> LootHangarItems;
         private static DirectItem LootHangarItem;
 
-        public static void LoadSpecificAmmoTypeForNonMissionSituations(DamageType _damageType)
-        {
-            try
-            {
-                MissionSettings.AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
-                MissionSettings.AmmoTypesToLoad.AddOrUpdate(Combat.Ammo.Where(a => a.DamageType == _damageType).Select(a => a.Clone()).FirstOrDefault(), DateTime.UtcNow);
-            }
-            catch (Exception ex)
-            {
-                Logging.Log("LoadSpecificAmmoTypeForNonMissionSituations", "Exception [" + ex + "]", Logging.Debug);
-                return;
-            }
-        }
-
-        private static void LoadSpecificMiningCrystals(IEnumerable<OreType> miningCrystals)
-        {
-            CrystalsToLoad = new List<MiningCrystals>();
-            CrystalsToLoad.AddRange(Combat.MiningCrystals.Where(a => miningCrystals.Contains(a.OreType)).Select(a => a.Clone()));
-        }
-
         public static void RefreshMissionItems(long agentId)
         {
             if (_States.CurrentQuestorState != QuestorState.CombatMissionsBehavior)
