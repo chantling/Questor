@@ -429,7 +429,7 @@ namespace Questor.Behaviors
 				else
 				{
 					Logging.Log("Arm", "Begin", Logging.White);
-					Arm.ChangeArmState(ArmState.Begin);
+					Arm.ChangeArm(ArmState.Begin);
 				}
 			}
 
@@ -441,7 +441,7 @@ namespace Questor.Behaviors
 				// we may be out of drones/ammo but disconnecting/reconnecting will not fix that so update the timestamp
 				if (!Cache.Instance.UpdateMyWalletBalance()) return;
 				Logging.Log("Arm", "Armstate.NotEnoughAmmo", Logging.Orange);
-				Arm.ChangeArmState(ArmState.Idle);
+				Arm.ChangeArm(ArmState.Idle);
 				ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.Error);
 				return;
 			}
@@ -452,7 +452,7 @@ namespace Questor.Behaviors
 				// we may be out of drones/ammo but disconnecting/reconnecting will not fix that so update the timestamp
 				if (!Cache.Instance.UpdateMyWalletBalance()) return;
 				Logging.Log("Arm", "Armstate.NotEnoughDrones", Logging.Orange);
-				Arm.ChangeArmState(ArmState.Idle);
+				Arm.ChangeArm(ArmState.Idle);
 				ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.Error);
 				return;
 			}
@@ -461,7 +461,7 @@ namespace Questor.Behaviors
 			{
 				//we know we are connected if we were able to arm the ship - update the lastknownGoodConnectedTime
 				if (!Cache.Instance.UpdateMyWalletBalance()) return;
-				Arm.ChangeArmState(ArmState.Idle);
+				Arm.ChangeArm(ArmState.Idle);
 				_States.CurrentDroneState = DroneState.WaitingForTargets;
 				_States.CurrentCombatMissionBehaviorState = Cache.Instance.CourierMission ? CombatMissionsBehaviorState.CourierMission : CombatMissionsBehaviorState.LocalWatch;
 				return;
