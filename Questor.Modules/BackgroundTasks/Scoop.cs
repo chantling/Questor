@@ -258,7 +258,7 @@ namespace Questor.Modules.BackgroundTasks
 
                         // Remove mission item from this list
                         worthLess.RemoveAll(wl => MissionSettings.MissionItems.Contains((wl.Name ?? string.Empty).ToLower()));
-                        worthLess.RemoveAll(wl => (wl.Name ?? string.Empty).ToLower() == MissionSettings.BringMissionItem.ToLower());
+                        worthLess.RemoveAll(wl => (wl.Name ?? string.Empty).ToLower() == MissionSettings.MoveMissionItems.ToLower());
 
                         // Nothing is worth less then the current item
                         if (!worthLess.Any())

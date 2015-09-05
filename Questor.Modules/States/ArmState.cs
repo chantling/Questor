@@ -17,19 +17,17 @@ namespace Questor.Modules.States
         ActivateCombatShip,
         RepairShop,
         MoveDrones,
-        MoveBringItems,
-        MoveOptionalBringItems,
+        MoveMissionItems,
+        MoveOptionalItems,
         MoveCapBoosters,
         MoveAmmo,
         StackAmmoHangar,
         ActivateSalvageShip,
         ActivateTransportShip,
-        ActivateMiningShip,
         LoadSavedFitting,
         Cleanup,
         Done,
         NotEnoughAmmo,
-        NotEnoughDrones,
-        ActivateNoobShip, 
+        NotEnoughDrones
     }
 }

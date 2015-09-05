@@ -230,10 +230,10 @@ namespace Questor.Modules.Lookup
         public static double? MissionOptimalRange = null;
         public static int? MissionActivateRepairModulesAtThisPerc { get; set; }
         public static int MissionWeaponGroupId { get; set; }
-        public static string BringMissionItem { get; set; }
-        public static int BringMissionItemQuantity { get; set; }
-        public static string BringOptionalMissionItem { get; set; }
-        public static int BringOptionalMissionItemQuantity { get; set; }
+        public static string MoveMissionItems { get; set; }
+        public static int MoveMissionItemsQuantity { get; set; }
+        public static string MoveOptionalMissionItems { get; set; }
+        public static int MoveOptionalMissionItemQuantity { get; set; }
         public static double MissionWarpAtDistanceRange { get; set; } //in km
 
         //

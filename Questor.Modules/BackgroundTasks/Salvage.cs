@@ -955,9 +955,9 @@ namespace Questor.Modules.BackgroundTasks
                                         {
                                             // Remove mission item from this list
                                             worthLess.RemoveAll(wl => MissionSettings.MissionItems.Contains((wl.Name ?? string.Empty).ToLower()));
-                                            if (!string.IsNullOrEmpty(MissionSettings.BringMissionItem))
+                                            if (!string.IsNullOrEmpty(MissionSettings.MoveMissionItems))
                                             {
-                                                worthLess.RemoveAll(wl => (wl.Name ?? string.Empty).ToLower() == MissionSettings.BringMissionItem.ToLower());
+                                                worthLess.RemoveAll(wl => (wl.Name ?? string.Empty).ToLower() == MissionSettings.MoveMissionItems.ToLower());
                                             }
 
                                             // Consider dropping ammo if it concerns the mission item!
