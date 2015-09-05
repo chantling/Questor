@@ -298,7 +298,9 @@ namespace Questor.Behaviors
 						//}
 						
 					}
-
+	
+					
+					Logging.Log("Arm", "XXXXXXXXXXXXXXXXXXXXXXX SHOULD NEVER HAPPEN!", Logging.White);
 					Arm.ProcessState();
 					
 					if (_States.CurrentArmState == ArmState.NotEnoughAmmo)

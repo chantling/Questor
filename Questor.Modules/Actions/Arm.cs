@@ -270,7 +270,7 @@ namespace Questor.Modules.Actions
 				//
 				if (hangarToCheckForItemsdWeAlreadyMoved != null && hangarToCheckForItemsdWeAlreadyMoved.Items.Any())
 				{
-					cargoItems = hangarToCheckForItemsdWeAlreadyMoved.Items.Where(i => (i.TypeName ?? string.Empty).ToLower() == itemToFind).ToList();
+					cargoItems = hangarToCheckForItemsdWeAlreadyMoved.Items.Where(i => (i.TypeName ?? string.Empty).ToLower().Equals(itemToFind.ToLower())).ToList();
 					WeHaveThisManyOfThoseItemsInCargo = cargoItems.Sum(i => i.Stacksize);
 					//do not return here
 				}
@@ -283,20 +283,20 @@ namespace Questor.Modules.Actions
 					if (Cache.Instance.ItemHangar == null) return false;
 					if (Cache.Instance.ItemHangar.Items.Any())
 					{
-						if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "We have [" + Cache.Instance.ItemHangar.Items.Count() + "] total items in ItemHangar", Logging.Debug);
+						//if (Logging.DebugArm) Logging.Log("Arm.LookForItem", "We have [" + Cache.Instance.ItemHangar.Items.Count() + "] total items in ItemHangar", Logging.Debug);
 						if (Cache.Instance.ItemHangar.Items.Any(i => (i.TypeName ?? string.Empty).ToLower() == itemToFind.ToLower()))
 						{
 							ItemHangarItems = Cache.Instance.ItemHangar.Items.Where(i => (i.TypeName ?? string.Empty).ToLower() == itemToFind.ToLower()).ToList();
 							ItemHangarItem = ItemHangarItems.FirstOrDefault();
 							WeHaveThisManyOfThoseItemsInItemHangar = ItemHangarItems.Sum(i => i.Stacksize);
-							if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "We have [" + WeHaveThisManyOfThoseItemsInItemHangar + "] [" + itemToFind + "] in ItemHangar", Logging.Debug);
+							if (Logging.DebugArm) Logging.Log("Arm.LookForItem", "We have [" + WeHaveThisManyOfThoseItemsInItemHangar + "] [" + itemToFind + "] in ItemHangar", Logging.Debug);
 							return true;
 						}
 						
 						if (Cache.Instance.ItemHangar.Items.Any(i => i.TypeId == Drones.DroneTypeID))
 						{
 							IEnumerable<DirectItem> _dronesInItemHangar = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == Drones.DroneTypeID).ToList();
-							Logging.Log(WeAreInThisStateForLogs(), "[" + itemToFind + "] not found by typeName in ItemHangar, but we DID find DroneTypeID [" + Drones.DroneTypeID + "]. We found [" + _dronesInItemHangar.Count() + "] of them in the Itemhangar", Logging.Debug);
+							Logging.Log("Arm.LookForItem", "[" + itemToFind + "] not found by typeName in ItemHangar, but we DID find DroneTypeID [" + Drones.DroneTypeID + "]. We found [" + _dronesInItemHangar.Count() + "] of them in the Itemhangar", Logging.Debug);
 							ItemHangarItem = _dronesInItemHangar.FirstOrDefault();
 							WeHaveThisManyOfThoseItemsInItemHangar = _dronesInItemHangar.Sum(i => i.Stacksize);
 							return true;
@@ -305,7 +305,7 @@ namespace Questor.Modules.Actions
 				}
 				catch (Exception ex)
 				{
-					if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "Exception [" + ex + "]", Logging.Debug);
+					if (Logging.DebugArm) Logging.Log("Arm.LookForItem", "Exception [" + ex + "]", Logging.Debug);
 				}
 
 				//
@@ -317,24 +317,24 @@ namespace Questor.Modules.Actions
 					{
 						if (Cache.Instance.AmmoHangar == null) return false;
 
-						if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "AmmoHangar is defined", Logging.Debug);
+						if (Logging.DebugArm) Logging.Log("Arm.LookForItem", "AmmoHangar is defined", Logging.Debug);
 						
 						if (Cache.Instance.AmmoHangar.Items.Any())
 						{
-							if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "We have [" + Cache.Instance.AmmoHangar.Items.Count() + "] total items in AmmoHangar", Logging.Debug);
+							if (Logging.DebugArm) Logging.Log("Arm.LookForItem", "We have [" + Cache.Instance.AmmoHangar.Items.Count() + "] total items in AmmoHangar", Logging.Debug);
 							if (Cache.Instance.AmmoHangar.Items.Any(i => (i.TypeName ?? string.Empty).ToLower() == itemToFind.ToLower()))
 							{
 								AmmoHangarItems = Cache.Instance.AmmoHangar.Items.Where(i => (i.TypeName ?? string.Empty).ToLower() == itemToFind.ToLower()).ToList();
 								AmmoHangarItem = AmmoHangarItems.FirstOrDefault();
 								WeHaveThisManyOfThoseItemsInAmmoHangar = AmmoHangarItems.Sum(i => i.Stacksize);
-								if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "We have [" + WeHaveThisManyOfThoseItemsInAmmoHangar + "] [" + itemToFind + "] in AmmoHangar", Logging.Debug);
+								if (Logging.DebugArm) Logging.Log("Arm.LookForItem", "We have [" + WeHaveThisManyOfThoseItemsInAmmoHangar + "] [" + itemToFind + "] in AmmoHangar", Logging.Debug);
 								return true;
 							}
 							
 							if (Cache.Instance.AmmoHangar.Items.Any(i => i.TypeId == Drones.DroneTypeID))
 							{
 								IEnumerable<DirectItem> _dronesInItemHangar = Cache.Instance.AmmoHangar.Items.Where(i => i.TypeId == Drones.DroneTypeID).ToList();
-								Logging.Log(WeAreInThisStateForLogs(), "[" + itemToFind + "] not found by typeName in ItemHangar, but we DID find DroneTypeID [" + Drones.DroneTypeID + "]. We found [" + _dronesInItemHangar.Count() + "] of them in the AmmoHangar", Logging.Debug);
+								Logging.Log("Arm.LookForItem", "[" + itemToFind + "] not found by typeName in ItemHangar, but we DID find DroneTypeID [" + Drones.DroneTypeID + "]. We found [" + _dronesInItemHangar.Count() + "] of them in the AmmoHangar", Logging.Debug);
 								AmmoHangarItem = _dronesInItemHangar.FirstOrDefault();
 								WeHaveThisManyOfThoseItemsInAmmoHangar = _dronesInItemHangar.Sum(i => i.Stacksize);
 								return true;
@@ -345,7 +345,7 @@ namespace Questor.Modules.Actions
 				}
 				catch (Exception ex)
 				{
-					if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "Exception [" + ex + "]", Logging.Debug);
+					if (Logging.DebugArm) Logging.Log("Arm.LookForItem", "Exception [" + ex + "]", Logging.Debug);
 				}
 
 				//
@@ -649,16 +649,19 @@ namespace Questor.Modules.Actions
 						break;
 				}
 				
-				Arm.ClearDataBetweenStates();
+				
+				
 				if (_States.CurrentArmState != state)
 				{
-					Logging.Log("Arm.ChangeArmState", "Changed Arm.Armstate to [" + state.ToString() + "]",Logging.White);
+					
+					
+					Arm.ClearDataBetweenStates();
 					_States.CurrentArmState = state;
 					if (wait)
 					{
 						_lastArmAction = DateTime.UtcNow;
 					}
-//					else 
+//					else
 //					{
 //					  Arm.ProcessState(); // why are we calling this here again? ://
 //					}
@@ -675,10 +678,12 @@ namespace Questor.Modules.Actions
 			
 		} // let's assume this work
 		
-		private static bool MoveItemsToCargo(string itemName,int quantity, ArmState nextState, ArmState fromState, bool _optional = false)
+		private static bool MoveItemsToCargo(string itemName,int quantity, ArmState nextState, ArmState fromState, bool moveToNextStateIfQuantityIsBelowAsk = false)
 		{
 			try
 			{
+				
+				
 
 				if (string.IsNullOrEmpty(itemName))
 				{
@@ -689,17 +694,18 @@ namespace Questor.Modules.Actions
 				if (ItemsAreBeingMoved)
 				{
 					if (!WaitForLockedItems(fromState)) return false;
-					return true;
+					return false;
 				}
 
 				if (!LookForItem(itemName, Cache.Instance.CurrentShipsCargo)) return false;
-
+				
+				
 				if (WeHaveThisManyOfThoseItemsInCargo + WeHaveThisManyOfThoseItemsInItemHangar + WeHaveThisManyOfThoseItemsInAmmoHangar + WeHaveThisManyOfThoseItemsInLootHangar < quantity)
 				{
-					if (_optional)
+					if (moveToNextStateIfQuantityIsBelowAsk)
 					{
 						ChangeArmState(nextState);
-						return true;
+						return false;
 					}
 
 					Logging.Log(WeAreInThisStateForLogs(), "ItemHangar has: [" + WeHaveThisManyOfThoseItemsInItemHangar + "] AmmoHangar has: [" + WeHaveThisManyOfThoseItemsInAmmoHangar + "] LootHangar has: [" + WeHaveThisManyOfThoseItemsInLootHangar + "] [" + itemName + "] we need [" + quantity + "] units)", Logging.Red);
@@ -708,25 +714,35 @@ namespace Questor.Modules.Actions
 					ChangeArmState(ArmState.NotEnoughAmmo);
 					return true;
 				}
-
-				//
-				// check the local cargo for items and subtract the items in the cargo from the quantity we still need to move to our cargohold
-				//
-				if (cargoItems.Any())
+				
+				_itemsLeftToMoveQuantity = quantity - WeHaveThisManyOfThoseItemsInCargo > 0 ? quantity - WeHaveThisManyOfThoseItemsInCargo : 0 ;
+				
+				//  here we check if we have enough free m3 in our ship hangar
+				
+				if(Cache.Instance.CurrentShipsCargo != null && ItemHangarItem != null)
 				{
-					_itemsLeftToMoveQuantity = quantity;
-					foreach (DirectItem moveItemInCargo in cargoItems)
-					{
-						_itemsLeftToMoveQuantity -= moveItemInCargo.Stacksize;
-						if (_itemsLeftToMoveQuantity <= 0)
-						{
-							ChangeArmState(nextState);
-							return true;
-						}
-
-						continue;
-					}
+					double freeCapacity = Cache.Instance.CurrentShipsCargo.Capacity - Cache.Instance.CurrentShipsCargo.UsedCapacity;
+					double freeCapacityReduced = freeCapacity * 0.7; // keep some free space for ammo
+					int amount = Convert.ToInt32(freeCapacityReduced % ItemHangarItem.Capacity);
+					_itemsLeftToMoveQuantity = Math.Min(amount,_itemsLeftToMoveQuantity);
+					
+					Logging.Log("Arm.MoveItemsToCargo", "freeCapacity [" + freeCapacity + "] freeCapacityReduced [" + freeCapacityReduced  + "] amount [" + amount + "] _itemsLeftToMoveQuantity [" + _itemsLeftToMoveQuantity + "]" , Logging.White);
 				}
+				else
+				{
+					Logging.Log("Arm.MoveItemsToCargo", "Cache.Instance.CurrentShipsCargo == null || ItemHangarItem != null", Logging.White);
+					ChangeArmState(nextState);
+					return false;
+				}
+				
+				if (_itemsLeftToMoveQuantity <= 0)
+				{
+					Logging.Log("Arm.MoveItemsToCargo", "if (_itemsLeftToMoveQuantity <= 0)", Logging.White);
+					ChangeArmState(nextState);
+					return false;
+				}
+				
+				Logging.Log("Arm.MoveItemsToCargo", "_itemsLeftToMoveQuantity: " + _itemsLeftToMoveQuantity, Logging.White);
 
 				if (LootHangarItem != null && !string.IsNullOrEmpty(LootHangarItem.TypeName.ToString(CultureInfo.InvariantCulture)))
 				{
@@ -739,7 +755,10 @@ namespace Questor.Modules.Actions
 					moveItemQuantity = Math.Max(moveItemQuantity, 1);
 					_itemsLeftToMoveQuantity = _itemsLeftToMoveQuantity - moveItemQuantity;
 					Logging.Log(WeAreInThisStateForLogs(), "Moving(1) Item [" + LootHangarItem.TypeName + "] from Loothangar to CargoHold: We have [" + _itemsLeftToMoveQuantity + "] more item(s) to move after this", Logging.White);
+					
+					
 					Cache.Instance.CurrentShipsCargo.Add(LootHangarItem, moveItemQuantity);
+					
 					ItemsAreBeingMoved = true;
 					_lastArmAction = DateTime.UtcNow;
 					return false;
@@ -1215,10 +1234,9 @@ namespace Questor.Modules.Actions
 		private static bool MoveCapBoosters() // --> ArmState.MoveAmmo
 		{
 			
-			Logging.Log("Arm.MoveItems", "Settings.Instance.NumberOfCapBoostersToLoad: " + Settings.Instance.NumberOfCapBoostersToLoad, Logging.White);
-			
 			if (Cache.Instance.ActiveShip.GivenName != Combat.CombatShipName)
 			{
+				Logging.Log("Arm.MoveCapBoosters","if (Cache.Instance.ActiveShip.GivenName != Combat.CombatShipName)",Logging.White);
 				ChangeArmState(ArmState.MoveAmmo);
 				return false;
 			}
@@ -1229,8 +1247,8 @@ namespace Questor.Modules.Actions
 			
 			if (ArmLoadCapBoosters && _CapBoosterInvTypeItem != null)
 			{
-				
-				if (!MoveItemsToCargo(_CapBoosterInvTypeItem.TypeName, Settings.Instance.NumberOfCapBoostersToLoad, ArmState.MoveCapBoosters, ArmState.MoveAmmo))
+				Logging.Log("Arm.MoveCapBoosters","Calling MoveItemsToCargo",Logging.White);
+				if (!MoveItemsToCargo(_CapBoosterInvTypeItem.TypeName, Settings.Instance.NumberOfCapBoostersToLoad, ArmState.MoveAmmo, ArmState.MoveCapBoosters))
 				{
 					return false;
 				}
@@ -1245,9 +1263,9 @@ namespace Questor.Modules.Actions
 			try
 			{
 
-				if (DateTime.UtcNow < _lastArmAction.AddMilliseconds(Cache.Instance.RandomNumber(2000, 3000)))
+				if (DateTime.UtcNow < _lastArmAction.AddMilliseconds(Cache.Instance.RandomNumber(1500, 2000)))
 				{
-					if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "if (DateTime.UtcNow < Cache.Instance.NextArmAction)) return;", Logging.Teal);
+					//if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "if (DateTime.UtcNow < Cache.Instance.NextArmAction)) return;", Logging.Teal);
 					return false;
 				}
 

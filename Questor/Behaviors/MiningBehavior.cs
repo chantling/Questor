@@ -205,7 +205,7 @@ namespace Questor.Behaviors
                         
                     }
 
-                    Arm.ProcessState();
+                    //Arm.ProcessState();
 
                     if (_States.CurrentArmState == ArmState.NotEnoughAmmo)
                     {
