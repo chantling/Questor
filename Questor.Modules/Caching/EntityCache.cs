@@ -5361,6 +5361,7 @@ namespace Questor.Modules.Caching
                                 Time.Instance.NextDockAction = DateTime.UtcNow.AddSeconds(Time.Instance.DockingDelay_seconds);
                                 Time.Instance.NextApproachAction = DateTime.UtcNow.AddSeconds(Time.Instance.DockingDelay_seconds);
                                 Time.Instance.LastSessionChange = DateTime.UtcNow;
+                                Time.Instance.LastDockAction = DateTime.UtcNow;
                                 Time.Instance.NextActivateModules = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerJumpedGateNextCommandDelay_seconds);
                             //}
 

@@ -158,6 +158,7 @@ namespace Questor.Modules.Lookup
         public DateTime NextBookmarkPocketAttempt { get; set; }
         public DateTime NextAlign { get; set; }
         public DateTime NextUndockAction { get; set; }
+        public DateTime LastDockAction { get; set; }
         public DateTime NextDockAction { get; set; }
         public DateTime NextJumpAction { get; set; }
         public DateTime NextWarpAction { get; set; }

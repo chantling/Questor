@@ -514,17 +514,26 @@ namespace Questor
 		private void EVEOnFrame(object sender, EventArgs e)
 		{
 			try
+				
 			{
+				
+				if (_nextPulse > DateTime.UtcNow)
+				{
+					return;
+				}
+				
+				if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(8)) { // temorarily fix
+					//Logging.Log("LoginOnFrame", "if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(8)", Logging.White);
+					_nextPulse = _nextPulse.AddSeconds(1);
+					return;
+				}
 
 				if (DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < pulseDelay)
 				{
 					return;
 				}
 				
-				if (_nextPulse > DateTime.UtcNow)
-				{
-					return;
-				}
+
 
 				
 				if(DateTime.UtcNow < _lastSessionNotReady) {
@@ -556,7 +565,7 @@ namespace Questor
 				if (Cache.Instance.DirectEve.Login.AtLogin || Cache.Instance.DirectEve.Login.AtCharacterSelection || Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)
 				{
 					if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading) {
-						Logging.Log("Questor.ProcessState", "if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)", Logging.White);
+						Logging.Log("LoginOnFrame", "if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)", Logging.White);
 						_nextPulse = GetNowAddDelay(2,4);
 						return;
 					}
