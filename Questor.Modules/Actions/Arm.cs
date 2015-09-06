@@ -31,6 +31,7 @@ namespace Questor.Modules.Actions
 	{
 		private static bool ItemsAreBeingMoved;
 		private static DateTime _lastArmAction;
+		private static DateTime _lastFitAction = DateTime.UtcNow;
 
 		
 		private static int _itemsLeftToMoveQuantity;
@@ -1152,6 +1153,7 @@ namespace Questor.Modules.Actions
 								//switch to the requested fitting for the current mission
 								fitting.Fit();
 								_lastArmAction = DateTime.UtcNow;
+								_lastFitAction = DateTime.UtcNow;
 								ItemsAreBeingMoved = true;
 								MissionSettings.CurrentFit = fitting.Name;
 								CustomFittingFound = true;
@@ -1195,7 +1197,7 @@ namespace Questor.Modules.Actions
 			try
 			{
 				
-				if (DateTime.UtcNow < _lastArmAction.AddMilliseconds(Cache.Instance.RandomNumber(3000, 4000)))
+				if (DateTime.UtcNow < _lastFitAction.AddMilliseconds(Cache.Instance.RandomNumber(3200, 4000)))
 				{
 					//if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "if (DateTime.UtcNow < Cache.Instance.NextArmAction)) return;", Logging.Teal);
 					return false;
