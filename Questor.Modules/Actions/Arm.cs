@@ -1194,6 +1194,13 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				if (DateTime.UtcNow < _lastArmAction.AddMilliseconds(Cache.Instance.RandomNumber(3000, 4000)))
+				{
+					//if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "if (DateTime.UtcNow < Cache.Instance.NextArmAction)) return;", Logging.Teal);
+					return false;
+				}
+				
 				if (!Drones.UseDrones)
 				{
 					//if (Logging.DebugArm) Logging.Log("Arm.MoveDrones", "UseDrones is [" + Drones.UseDrones + "] Changing ArmState to MoveBringItems",Logging.Debug);
