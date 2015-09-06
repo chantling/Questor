@@ -2477,13 +2477,9 @@ namespace Questor.Modules.Activities
 						_pocketActions.Add(new Actions.Action { State = ActionState.ClearPocket });
 						
 						//Add move to gate background task - we gotta add a switch to the settings config file
-						if(true) { 
 						Actions.Action backgroundAction = new Actions.Action { State = ActionState.MoveToBackground };
 						backgroundAction.AddParameter("target", "Acceleration Gate");
-						_pocketActions.Add(backgroundAction);
-						
-						}
-
+						_pocketActions.Insert(0,backgroundAction);
 
 						// Is there a gate?
 						if (Cache.Instance.AccelerationGates != null && Cache.Instance.AccelerationGates.Any())
