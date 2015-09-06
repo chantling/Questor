@@ -1286,7 +1286,7 @@ namespace Questor.Modules.Combat
 		private static bool ReloadNormalAmmo(ModuleCache weapon, EntityCache entity, int weaponNumber, bool force = false)
 		{
 			
-			Logging.Log("ReloadAll", "ReloadAll", Logging.White);
+			//Logging.Log("ReloadAll", "ReloadAll", Logging.White);
 			
 			if (Cache.Instance.Weapons.Any(i => i.TypeId == (int)TypeID.CivilianGatlingAutocannon
 			                               || i.TypeId == (int)TypeID.CivilianGatlingPulseLaser
@@ -1342,7 +1342,7 @@ namespace Questor.Modules.Combat
 					
 				} else {
 					
-					Logging.Log("Combat", "ReloadNormalAmmo: if !(Combat.Ammo.Any(a => a.DamageType == MissionSettings.CurrentDamageType))", Logging.Orange);
+					Logging.Log("Combat", "ReloadNormalAmmo: if Cache.Instance.CurrentShipsCargo == null", Logging.Orange);
 					_States.CurrentCombatState = CombatState.OutOfAmmo;
 					return false;
 				}

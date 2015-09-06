@@ -723,7 +723,7 @@ namespace Questor.Modules.Actions
 				{
 					double freeCapacity = Cache.Instance.CurrentShipsCargo.Capacity - Cache.Instance.CurrentShipsCargo.UsedCapacity;
 					double freeCapacityReduced = freeCapacity * 0.7; // keep some free space for ammo
-					int amount = Convert.ToInt32(freeCapacityReduced % ItemHangarItem.Capacity);
+					int amount = Convert.ToInt32(freeCapacityReduced / ItemHangarItem.Volume);
 					_itemsLeftToMoveQuantity = Math.Min(amount,_itemsLeftToMoveQuantity);
 					
 					Logging.Log("Arm.MoveItemsToCargo", "freeCapacity [" + freeCapacity + "] freeCapacityReduced [" + freeCapacityReduced  + "] amount [" + amount + "] _itemsLeftToMoveQuantity [" + _itemsLeftToMoveQuantity + "]" , Logging.White);
@@ -816,27 +816,27 @@ namespace Questor.Modules.Actions
 
 				if (string.IsNullOrEmpty(itemName))
 				{
-					if (Logging.DebugArm) Logging.Log("Arm.MoveDronesToDroneBay", "if (string.IsNullOrEmpty(MoveItemTypeName))", Logging.Debug);
+					Logging.Log("Arm.MoveDronesToDroneBay", "if (string.IsNullOrEmpty(MoveItemTypeName))", Logging.Debug);
 					ChangeArmState(nextState);
 					return false;
 				}
 
 				if (ItemsAreBeingMoved)
 				{
-					if (Logging.DebugArm) Logging.Log("Arm.MoveDronesToDroneBay", "if (ItemsAreBeingMoved)", Logging.Debug);
+					Logging.Log("Arm.MoveDronesToDroneBay", "if (ItemsAreBeingMoved)", Logging.Debug);
 					if (!WaitForLockedItems(fromState)) return false;
 					return false;
 				}
 
 				if (Cache.Instance.ItemHangar == null)
 				{
-					if (Logging.DebugArm) Logging.Log("Arm.MoveDronesToDroneBay", "if (Cache.Instance.ItemHangar == null)", Logging.Debug);
+					Logging.Log("Arm.MoveDronesToDroneBay", "if (Cache.Instance.ItemHangar == null)", Logging.Debug);
 					return false;
 				}
 
 				if (Drones.DroneBay == null)
 				{
-					if (Logging.DebugArm) Logging.Log("Arm.MoveDronesToDroneBay", "if (Drones.DroneBay == null)", Logging.Debug);
+					Logging.Log("Arm.MoveDronesToDroneBay", "if (Drones.DroneBay == null)", Logging.Debug);
 					return false;
 				}
 				
@@ -850,7 +850,7 @@ namespace Questor.Modules.Actions
 
 				if (!LookForItem(itemName, Drones.DroneBay))
 				{
-					if (Logging.DebugArm) Logging.Log("Arm.MoveDronesToDroneBay", "if (!LookForItem(MoveItemTypeName, Drones.DroneBay))", Logging.Debug);
+					Logging.Log("Arm.MoveDronesToDroneBay", "if (!LookForItem(MoveItemTypeName, Drones.DroneBay))", Logging.Debug);
 					return false;
 				}
 
@@ -869,7 +869,7 @@ namespace Questor.Modules.Actions
 					return false;
 				}
 
-				if (DroneInvTypeItem != null)
+				if (Drones.DroneBay != null && DroneInvTypeItem != null && DroneInvTypeItem.Volume != 0)
 				{
 					int neededDrones = (int)Math.Floor((Drones.DroneBay.Capacity - Drones.DroneBay.UsedCapacity) / DroneInvTypeItem.Volume);
 					_itemsLeftToMoveQuantity = neededDrones;
@@ -891,21 +891,48 @@ namespace Questor.Modules.Actions
 						ChangeArmState(ArmState.NotEnoughDrones);
 						return true;
 					}
-
-					if (cargoItems.Any())  // check the local cargo for items and subtract the items in the cargo from the quantity we still need to move to our cargohold
+					
+					//  here we check if we have enough free m3 in our drone hangar
+					
+					if(Drones.DroneBay != null && DroneInvTypeItem != null && DroneInvTypeItem.Volume != 0)
 					{
+						double freeCapacity = Drones.DroneBay.Capacity - Drones.DroneBay.UsedCapacity;
 						
-						foreach (DirectItem moveItemInCargo in cargoItems)
-						{
-							_itemsLeftToMoveQuantity -= moveItemInCargo.Stacksize;
-							if (_itemsLeftToMoveQuantity <= 0)
-							{
-								ChangeArmState(nextState);
-								return true;
-							}
+						Logging.Log("Arm.MoveDronesToDroneBay", "freeCapacity [" + freeCapacity + "] _itemsLeftToMoveQuantity [" + _itemsLeftToMoveQuantity + "]" + " DroneInvTypeItem.Volume [" + DroneInvTypeItem.Volume + "]" , Logging.White);
+						
+						int amount = Convert.ToInt32(freeCapacity / DroneInvTypeItem.Volume);
+						_itemsLeftToMoveQuantity = Math.Min(amount,_itemsLeftToMoveQuantity);
+						
+						Logging.Log("Arm.MoveDronesToDroneBay", "freeCapacity [" + freeCapacity + "] amount [" + amount + "] _itemsLeftToMoveQuantity [" + _itemsLeftToMoveQuantity + "]" , Logging.White);
+					}
+					else
+					{
+						Logging.Log("Arm.MoveDronesToDroneBay", "Drones.DroneBay || ItemHangarItem != null", Logging.White);
+						ChangeArmState(nextState);
+						return false;
+					}
 
-							continue;
-						}
+//					if (cargoItems.Any())  // check the local cargo for items and subtract the items in the cargo from the quantity we still need to move to our cargohold
+//					{
+//
+//						foreach (DirectItem moveItemInCargo in cargoItems)
+//						{
+//							_itemsLeftToMoveQuantity -= moveItemInCargo.Stacksize;
+//							if (_itemsLeftToMoveQuantity <= 0)
+//							{
+//								ChangeArmState(nextState);
+//								return true;
+//							}
+//
+//							continue;
+//						}
+//					}
+					
+					if (_itemsLeftToMoveQuantity <= 0)
+					{
+						Logging.Log("Arm.MoveDronesToDroneBay", "if (_itemsLeftToMoveQuantity <= 0)", Logging.White);
+						ChangeArmState(nextState);
+						return false;
 					}
 
 					if (LootHangarItem != null && !string.IsNullOrEmpty(LootHangarItem.TypeName.ToString(CultureInfo.InvariantCulture)))

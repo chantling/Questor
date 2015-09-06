@@ -1141,23 +1141,12 @@ namespace Questor.Modules.Actions
                                 {
                                     Logging.Log("AgentInteraction", "ERROR: Mission XML is available for [" + MissionSettings.MissionName + "] but we still did not complete the mission after 3 tries! - ERROR!", Logging.White);
                                     Settings.Instance.AutoStart = false;
-
-                                    //we purposely disable autostart so that when we quit eve and questor here it stays closed until manually restarted as this error is fatal (and repeating)
-                                    //Cache.Instance.CloseQuestorCMDLogoff = false;
-                                    //Cache.Instance.CloseQuestorCMDExitGame = true;
-                                    //Cleanup.ReasonToStopQuestor = "Could not complete the mission: [" + Cache.Instance.MissionName + "] after [" + Statistics.Instance.MissionCompletionErrors + "] attempts: objective not complete or missing mission completion item or ???";
-                                    //Cleanup.SessionState = "Exiting";
                                     _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;
                                 }
                                 else
                                 {
                                     Logging.Log("AgentInteraction", "ERROR: Mission XML is missing for [" + MissionSettings.MissionName + "] and we we unable to complete the mission after 3 tries! - ERROR!", Logging.White);
                                     Settings.Instance.AutoStart = false; //we purposely disable autostart so that when we quit eve and questor here it stays closed until manually restarted as this error is fatal (and repeating)
-
-                                    //Cache.Instance.CloseQuestorCMDLogoff = false;
-                                    //Cache.Instance.CloseQuestorCMDExitGame = true;
-                                    //Cleanup.ReasonToStopQuestor = "Could not complete the mission: [" + Cache.Instance.MissionName + "] after [" + Statistics.Instance.MissionCompletionErrors + "] attempts: objective not complete or missing mission completion item or ???";
-                                    //Cleanup.SessionState = "Exiting";
                                     _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;
                                 }
                             }
