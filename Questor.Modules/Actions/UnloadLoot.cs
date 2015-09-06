@@ -465,13 +465,8 @@ namespace Questor.Modules.Actions
 				_States.CurrentUnloadLootState = UnloadLootState.StackLootHangar;
 				return true;
 			}
-			
-			IEnumerable<DirectItem> lootToMove = null;
-			if(Drones.UseDrones) {
-				lootToMove = Cache.Instance.CurrentShipsCargo.Items.Where(s => s.TypeId != Drones.DroneTypeID).ToList();
-			} else {
-				lootToMove = Cache.Instance.CurrentShipsCargo.Items.Where(s => s.TypeId != Drones.DroneTypeID).ToList();
-			}
+	
+			IEnumerable<DirectItem>	lootToMove = Cache.Instance.CurrentShipsCargo.Items.ToList();
 
 			//IEnumerable<DirectItem> somelootToMove = lootToMove;
 			if (Logging.DebugUnloadLoot) Logging.Log(WeAreInThisStateForLogs(), "foreach (DirectItem item in lootToMove) (start)", Logging.White);

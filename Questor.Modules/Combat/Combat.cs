@@ -1313,19 +1313,6 @@ namespace Questor.Modules.Combat
 				// Check if we still have that ammo in our cargo
 				correctAmmoInCargo = correctAmmoToUse.Where(a => Cache.Instance.CurrentShipsCargo != null && Cache.Instance.CurrentShipsCargo.Items.Any(i => i.TypeId == a.TypeId && i.Quantity >= Combat.MinimumAmmoCharges)).ToList();
 
-				//check if mission specific ammo is defined
-				if (MissionSettings.AmmoTypesToLoad.Count() != 0)
-				{
-					//correctAmmoInCargo = MissionSettings.AmmoTypesToLoad.Where(a => a.DamageType == MissionSettings.CurrentDamageType).ToList();
-				}
-
-				// Check if we still have that ammo in our cargo
-				correctAmmoInCargo = correctAmmoInCargo.Where(a => Cache.Instance.CurrentShipsCargo != null && Cache.Instance.CurrentShipsCargo.Items.Any(i => i.TypeId == a.TypeId && i.Quantity >= Combat.MinimumAmmoCharges)).ToList();
-				if (MissionSettings.AmmoTypesToLoad.Count() != 0)
-				{
-					//correctAmmoInCargo = MissionSettings.AmmoTypesToLoad;
-				}
-
 				// We are out of ammo! :(
 				if (!correctAmmoInCargo.Any())
 				{
@@ -1339,16 +1326,8 @@ namespace Questor.Modules.Combat
 			}
 			else
 			{
-				// here we check what type we have in our hangar and use that instead ( IF IT IS IN SETTINGS! ), if we login in space, this will screw up if we don't.
+				// here we check what type we have in our hangar and use that instead ( IF IT EXISTS IN SETTINGS! ), if we login in space, this will screw up if we don't.
 				if(Cache.Instance.CurrentShipsCargo != null) {
-					
-					foreach(var s in Combat.Ammo) {
-						Logging.Log("A ",s.TypeId.ToString(),Logging.White);
-					}
-					
-					foreach(DirectItem s in Cache.Instance.CurrentShipsCargo.Items) {
-						Logging.Log("B ",s.TypeId.ToString() + " charges: " + s.Stacksize,Logging.White);
-					}
 					
 					var result = Combat.Ammo.ToList().Where(a => Cache.Instance.CurrentShipsCargo.Items.ToList().Any(c => c.TypeId == a.TypeId && c.Quantity >= Combat.MinimumAmmoCharges));
 					
@@ -1368,8 +1347,6 @@ namespace Questor.Modules.Combat
 					return false;
 				}
 			}
-			
-			
 
 			/******
             if (weapon.Charge != null)
@@ -1431,13 +1408,13 @@ namespace Questor.Modules.Combat
 				return false;
 			}
 			
-			if(weapon.Charge == null) { // means there is nothing loaded in that weapon, this is a problem
-				if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "weapon.Charge == null", Logging.Orange);
+			if(weapon == null) { // means there is nothing loaded in that weapon, this is a problem
+				if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "weapon == null", Logging.Orange);
 				return false;
 			}
 
 			// Do we have ANY ammo loaded? CurrentCharges would be 0 if we have no ammo at all.
-			if ((long)weapon.CurrentCharges >= Combat.MinimumAmmoCharges && weapon.Charge.TypeId == ammo.TypeId)
+			if (weapon.Charge != null && (long)weapon.CurrentCharges >= Combat.MinimumAmmoCharges && weapon.Charge.TypeId == ammo.TypeId)
 			{
 				//Force a reload even through we have some ammo loaded already?
 				if (!force)
