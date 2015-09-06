@@ -271,7 +271,7 @@ namespace Questor.Modules.Activities
             
             if (closest != null)
             {
-                if (closest.Distance <= (int)Distances.GateActivationRange)
+                if (closest.Distance <= (int)Distances.GateActivationRange + 150)
                 {
                     if (Logging.DebugActivateGate) Logging.Log("CombatMissionCtrl", "if (closest.Distance [" + closest.Distance + "] <= (int)Distances.GateActivationRange [" + (int)Distances.GateActivationRange + "])", Logging.Green);
 

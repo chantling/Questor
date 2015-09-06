@@ -1062,8 +1062,11 @@ namespace Questor.Modules.Actions
                 if (_States.CurrentAgentInteractionState != _AgentInteractionState)
                 {
                     _States.CurrentAgentInteractionState = _AgentInteractionState;
-                    if (WaitAMomentbeforeNextAction) _lastAgentAction = DateTime.UtcNow;
-                    else AgentInteraction.ProcessState();
+                    if (WaitAMomentbeforeNextAction) {
+                    	_lastAgentAction = DateTime.UtcNow;
+                    }
+                    
+                    // else AgentInteraction.ProcessState(); // why the fuck do we call this again :/
                 }
 
                 return true;
