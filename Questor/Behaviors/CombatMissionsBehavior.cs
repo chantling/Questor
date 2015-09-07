@@ -157,7 +157,7 @@ namespace Questor.Behaviors
 				if (_States.CurrentCombatMissionBehaviorState != _CMBStateToSet)
 				{
 					_States.CurrentCombatMissionBehaviorState = _CMBStateToSet;
-					ProcessState();
+					// ProcessState(); why are we calling this again here :/
 				}
 			}
 
