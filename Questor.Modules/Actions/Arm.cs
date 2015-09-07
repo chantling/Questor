@@ -1406,11 +1406,13 @@ namespace Questor.Modules.Actions
 								foreach (DirectItem item in AmmoItems)
 								{
 									itemnum++;
-									int moveAmmoQuantity = Math.Min(item.Stacksize, CurrentAmmoToLoad.Quantity);
-									moveAmmoQuantity = Math.Max(moveAmmoQuantity, 1);
+									int moveAmmoQuantity = Math.Min(item.Stacksize, CurrentAmmoToLoad.Quantity); // this shoulda work
+									
+									moveAmmoQuantity = Math.Max(moveAmmoQuantity, 1); // this should work also
+									
 									if (Logging.DebugArm) Logging.Log("Arm.MoveAmmo", "In Hangar we have: [" + itemnum + "] TypeName [" + item.TypeName + "] StackSize [" + item.Stacksize + "] - CurrentAmmoToLoad.Quantity [" + CurrentAmmoToLoad.Quantity + "] Actual moveAmmoQuantity [" + moveAmmoQuantity + "]", Logging.White);
 
-									if ((moveAmmoQuantity <= item.Stacksize) || moveAmmoQuantity == 1)
+									if ((moveAmmoQuantity <= item.Stacksize) && moveAmmoQuantity >= 1)
 									{
 										Logging.Log("Arm.MoveAmmo", "Moving [" + moveAmmoQuantity + "] units of Ammo  [" + item.TypeName + "] from [ AmmoHangar ] to CargoHold", Logging.White);
 										//
@@ -1423,7 +1425,13 @@ namespace Questor.Modules.Actions
 										//
 										// subtract the moved items from the items that need to be moved
 										//
+										
 										CurrentAmmoToLoad.Quantity -= moveAmmoQuantity;
+										
+										MissionSettings.AmmoTypesToLoad.Remove(CurrentAmmoToLoad);
+										MissionSettings.AmmoTypesToLoad.Add(CurrentAmmoToLoad, DateTime.UtcNow);
+										
+										
 										if (CurrentAmmoToLoad.Quantity == 0)
 										{
 											//

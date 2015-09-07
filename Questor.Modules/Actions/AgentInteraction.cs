@@ -812,7 +812,7 @@ namespace Questor.Modules.Actions
 						}
 					}
 
-					if (!Cache.Instance.AllAgentsStillInDeclineCoolDown)
+					if (!Cache.Instance.AllAgentsStillInDeclineCoolDown &&  MissionSettings.ListOfAgents.Count() > 1)
 					{
 						
 						//

@@ -105,7 +105,7 @@ namespace Questor
 //				Logging.Log("Questor", "dotnet questor questor -x -c \"MyEVECharacterName\"", Logging.Orange);
 //			}
 
-			Time.Instance.StartTime = LoginToEVE.StartTime;
+			Time.Instance.StartTime = DateTime.UtcNow;
 			Time.Instance.QuestorStarted_DateTime = DateTime.UtcNow;
 
 			// get the current process
@@ -532,9 +532,6 @@ namespace Questor
 				{
 					return;
 				}
-				
-
-
 				
 				if(DateTime.UtcNow < _lastSessionNotReady) {
 					_nextPulse = _nextPulse.AddSeconds(1);

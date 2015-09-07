@@ -63,7 +63,6 @@
     <Compile Include="Activities\LoginToEVE.cs" />
     <Compile Include="Alerts\Email.cs" />
     <Compile Include="BackgroundTasks\NavigateOnGrid.cs" />
-    <Compile Include="Caching\ItemCacheMarket.cs" />
     <Compile Include="Caching\EachWeaponsVolleyCache.cs" />
     <Compile Include="EVEInteraction\D3DDetour\D3D11.cs" />
     <Compile Include="EVEInteraction\D3DDetour\D3D9.cs" />
