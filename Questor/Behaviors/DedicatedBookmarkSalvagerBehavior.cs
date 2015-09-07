@@ -82,7 +82,8 @@ namespace Questor.Behaviors
 		public void ValidateDedicatedSalvageSettings()
 		{
 			ValidSettings = true;
-			DirectAgent agent = Cache.Instance.DirectEve.GetAgentByName(Cache.Instance.CurrentAgent);
+			
+			DirectAgent agent = Cache.Instance.Agent;
 
 			if (agent == null || !agent.IsValid)
 			{

@@ -714,13 +714,25 @@ namespace Questor.Modules.Caching
 						{
 							try
 							{
-								if (!string.IsNullOrEmpty(SwitchAgent()))
+								if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1 && (!string.IsNullOrEmpty(SwitchAgent())))
 								{
 									_currentAgent = SwitchAgent();
-									Logging.Log("Cache.CurrentAgent", "[ " + _currentAgent + " ] AgentID [ " + Agent.AgentId + " ]", Logging.White);
+									
+								} else
+								{
+									
+									if(MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1) {
+										
+										_currentAgent = SelectFirstAgent(true);
+										
+									} else
+									{
+										Logging.Log("Cache.CurrentAgent", "MissionSettings.ListOfAgents == null || MissionSettings.ListOfAgents.Count() < 1", Logging.White);
+									}
 								}
-
-								return string.Empty;
+								
+								Logging.Log("Cache.CurrentAgent", "[ " + _currentAgent + " ] AgentID [ " + Agent.AgentId + " ]", Logging.White);
+								
 							}
 							catch (Exception ex)
 							{
@@ -920,29 +932,24 @@ namespace Questor.Modules.Caching
 						{
 							if (_agent == null)
 							{
-								
 								Logging.Log("Cache.Agent","Trying to GetAgentByName", Logging.White);
 								_agent = Cache.Instance.DirectEve.GetAgentByName(CurrentAgent);
-								if(_agent == null) {
-									Logging.Log("Cache.Agent","_agent == null", Logging.White);
-								} else {
-									return _agent;
-								}
-								return null;
 							}
 
 							if (_agent != null)
 							{
-								//Logging.Log("Cache: CurrentAgent", "Processing Agent Info...", Logging.White);
+								Logging.Log("Cache: CurrentAgent", "Processing Agent Info...", Logging.White);
 								Cache.Instance.AgentStationName = Cache.Instance.DirectEve.GetLocationName(Cache.Instance._agent.StationId);
 								Cache.Instance.AgentStationID = Cache.Instance._agent.StationId;
-								//Cache.Instance.AgentSolarSystemName = Cache.Instance.DirectEve.GetLocationName(Cache.Instance._agent.SolarSystemId);
+
 								Cache.Instance.AgentSolarSystemID = Cache.Instance._agent.SolarSystemId;
-								//Logging.Log("Cache: CurrentAgent", "AgentStationName [" + Cache.Instance.AgentStationName + "]", Logging.White);
-								//Logging.Log("Cache: CurrentAgent", "AgentStationID [" + Cache.Instance.AgentStationID + "]", Logging.White);
-								//Logging.Log("Cache: CurrentAgent", "AgentSolarSystemName [" + Cache.Instance.AgentSolarSystemName + "]", Logging.White);
-								//Logging.Log("Cache: CurrentAgent", "AgentSolarSystemID [" + Cache.Instance.AgentSolarSystemID + "]", Logging.White);
+								Logging.Log("Cache: CurrentAgent", "AgentStationName [" + Cache.Instance.AgentStationName + "]", Logging.White);
+								Logging.Log("Cache: CurrentAgent", "AgentStationID [" + Cache.Instance.AgentStationID + "]", Logging.White);
+								Logging.Log("Cache: CurrentAgent", "AgentSolarSystemID [" + Cache.Instance.AgentSolarSystemID + "]", Logging.White);
+								
 								return _agent;
+							} else {
+								Logging.Log("Cache.Agent","_agent == null", Logging.White);
 							}
 						}
 						catch (Exception ex)

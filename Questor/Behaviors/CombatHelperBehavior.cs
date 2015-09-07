@@ -103,16 +103,16 @@ namespace Questor.Behaviors
 				ValidSettings = false;
 			}
 
-			DirectAgent agent = Cache.Instance.DirectEve.GetAgentByName(Cache.Instance.CurrentAgent);
+			//DirectAgent agent = Cache.Instance.DirectEve.GetAgentByName(Cache.Instance.CurrentAgent);
 
-			if (agent == null || !agent.IsValid)
+			if (Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid)
 			{
 				Logging.Log("Settings", "Unable to locate agent 1 [" + Cache.Instance.CurrentAgent + "]", Logging.White);
 				ValidSettings = false;
 			}
 			else
 			{
-				AgentID = agent.AgentId;
+				AgentID = Cache.Instance.Agent.AgentId;
 			}
 		}
 

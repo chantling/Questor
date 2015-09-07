@@ -99,22 +99,27 @@ namespace Questor.Behaviors
 
 			if (AgentInteraction.Agent == null || !AgentInteraction.Agent.IsValid)
 			{
-				//Cache.Instance.Agent = Cache.Instance.DirectEve.GetAgentByName(Cache.Instance.CurrentAgent);
 				
 				if (Cache.Instance.Agent != null)
 				{
+					Logging.Log("Agent", "if (Cache.Instance.Agent != null) - AgentInteraction.AgentId = (long)Cache.Instance.Agent.AgentId", Logging.White);
+					
 					AgentInteraction.AgentId = (long)Cache.Instance.Agent.AgentId;
-					if (AgentInteraction.Agent == null) Logging.Log("Agent", "AgentInteraction.Agent == null", Logging.Debug);
-					if (AgentInteraction.Agent != null && !AgentInteraction.Agent.IsValid) Logging.Log("Agent", "!AgentInteraction.Agent.IsValid", Logging.Debug);
+					
+					if(AgentInteraction.Agent == null || !AgentInteraction.Agent.IsValid) {
+						
+						Logging.Log("Agent", "AgentInteraction.Agent == null || !AgentInteraction.Agent.IsValid", Logging.White);
+						ValidSettings = false;
+						return false;
+					}
 				}
 				else
 				{
-					if (Cache.Instance.Agent == null) Logging.Log("Agent", "Cache.Instance.Agent == null", Logging.Debug);
+					Logging.Log("Agent", "Cache.Instance.Agent == null", Logging.White);
+					Logging.Log("Agent", "Unable to locate agent 2  [" + Cache.Instance.CurrentAgent + "]", Logging.White);
+					ValidSettings = false;
+					return false;
 				}
-				
-				Logging.Log("Agent", "Unable to locate agent 2  [" + Cache.Instance.CurrentAgent + "]", Logging.White);
-				ValidSettings = false;
-				return false;
 			}
 			
 			return true;
@@ -804,9 +809,9 @@ namespace Questor.Behaviors
 						int lastSolarSystemInRoute = destination.LastOrDefault();
 						
 						
-							Logging.Log("CombatMissionsBehavior.Traveler", "Destination: [" + lastSolarSystemInRoute + "]", Logging.White);
-							Traveler.Destination = new SolarSystemDestination(destination.LastOrDefault());
-							return;
+						Logging.Log("CombatMissionsBehavior.Traveler", "Destination: [" + lastSolarSystemInRoute + "]", Logging.White);
+						Traveler.Destination = new SolarSystemDestination(destination.LastOrDefault());
+						return;
 						
 					}
 
@@ -1711,7 +1716,7 @@ namespace Questor.Behaviors
 						break;
 
 					case CombatMissionsBehaviorState.PrepareStorylineSwitchAgents:
-						if (!string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
+						if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() > 1 && !string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
 						{
 							Cache.Instance.CurrentAgent = string.Empty;
 							Logging.Log("AgentInteraction", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
