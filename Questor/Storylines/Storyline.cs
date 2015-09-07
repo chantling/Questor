@@ -312,7 +312,7 @@
             }
         }
 
-        private DirectAgentMission StorylineMission
+        public DirectAgentMission StorylineMission
         {
             get
             {
@@ -641,6 +641,10 @@
             // Do we have a registered storyline?
             return StorylineMission != null;
         }
+        
+//        public DirectAgentMission StorylineMission() {
+//        	return StorylineMission;
+//        }
 
         public IStoryline StorylineHandler
         {

@@ -832,7 +832,7 @@ namespace Questor.Modules.Caching
 			return agentName ?? null;
 		}
 
-		private string SelectFirstAgent(bool returnFirstOneIfNoneFound = false)
+		public string SelectFirstAgent(bool returnFirstOneIfNoneFound = false)
 		{
 			try
 			{
@@ -859,16 +859,17 @@ namespace Questor.Modules.Caching
 			{
 				string agentNameToSwitchTo = null;
 
-				if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.PrepareStorylineSwitchAgents)
-				{
-					//TODO: must be a better way to achieve this
-					if (!string.IsNullOrEmpty(SelectFirstAgent()))
-					{
-						return SelectFirstAgent();
-					}
-
-					return string.Empty;
-				}
+//				if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.PrepareStorylineSwitchAgents)
+//				{
+//					//TODO: must be a better way to achieve this
+//					
+//					var storyLineMissions = Cache.Instance.DirectEve.AgentMissions.Where(m => m.Important);
+//					if(storyLineMissions.Any()) {
+//						
+//					} 
+//
+//					return string.Empty;
+//				}
 				
 				if (string.IsNullOrEmpty(_currentAgent))
 				{

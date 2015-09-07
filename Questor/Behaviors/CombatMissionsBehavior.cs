@@ -1717,16 +1717,26 @@ namespace Questor.Behaviors
 
 					case CombatMissionsBehaviorState.PrepareStorylineSwitchAgents:
 						
-						if(MissionSettings.ListOfAgents != null) {
-							Logging.Log("AgentInteraction", "ListOfAgents.Count [" +  MissionSettings.ListOfAgents.Count + "]", Logging.Yellow);
+
+						DirectAgent agent = null;
+						if(_storyline.StorylineMission != null) {
+							if(_storyline.StorylineMission.AgentId != 0) {
+								agent = Cache.Instance.DirectEve.GetAgentById(_storyline.StorylineMission.AgentId);
+							}
 						}
 						
-						if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() > 1 && !string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
+						if(agent != null)
 						{
-							Cache.Instance.CurrentAgent = string.Empty;
-							Logging.Log("AgentInteraction", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
+							Cache.Instance.CurrentAgent = agent.Name;
+							Cache.Instance.CurrentStorylineAgentId = agent.AgentId;
+							Logging.Log("CombatMissionsBehaviorState.PrepareStorylineSwitchAgents", "new agent is " + Cache.Instance.CurrentAgent, Logging.White);
 							_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.PrepareStorylineGotoBase;
+						} else {
+							
+							Logging.Log("CombatMissionsBehaviorState.PrepareStorylineSwitchAgents", "Storyline agent  error.", Logging.White);
+							_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;
 						}
+						
 						
 						break;
 
@@ -1739,6 +1749,18 @@ namespace Questor.Behaviors
 						if (_States.CurrentStorylineState == StorylineState.Done)
 						{
 							Logging.Log("CombatMissionsBehavior.Storyline", "We have completed the storyline, returning to base", Logging.White);
+							
+							Cache.Instance.CurrentAgent = Cache.Instance.SelectFirstAgent();
+							DirectAgent a = Cache.Instance.Agent;
+							
+							if(a != null) {
+								AgentInteraction.AgentId = a.AgentId;
+							} else {
+								Logging.Log("CombatMissionsBehaviorState.PrepareStorylineSwitchAgents", "Storyline agent  error: agent == null", Logging.White);
+								_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;
+							}
+							
+							
 							_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.StorylineReturnToBase;
 							break;
 						}
