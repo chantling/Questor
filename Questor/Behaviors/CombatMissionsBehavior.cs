@@ -41,7 +41,7 @@ namespace Questor.Behaviors
 		private double _lastX;
 		private double _lastY;
 		private double _lastZ;
-		private bool _firstStart = true;
+		private static bool _firstStart = true;
 		public bool PanicStateReset; //false;
 
 		private bool ValidSettings { get; set; }

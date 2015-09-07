@@ -1125,7 +1125,7 @@ namespace Questor.Modules.Lookup
 
             try
             {
-                bool reloadSettings = true;
+                bool reloadSettings = false;
                 if (File.Exists(Logging.CharacterSettingsPath))
                 {
                     reloadSettings = _lastModifiedDateOfMySettingsFile != File.GetLastWriteTime(Logging.CharacterSettingsPath);
