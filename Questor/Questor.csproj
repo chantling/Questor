@@ -89,7 +89,6 @@
     <Compile Include="Behaviors\DebugBehavior.cs" />
     <Compile Include="Behaviors\DebugHangarsBehavior.cs" />
     <Compile Include="Behaviors\DedicatedBookmarkSalvagerBehavior.cs" />
-    <Compile Include="Behaviors\MiningBehavior.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Questor.cs" />
     <Compile Include="QuestorUI.cs">
