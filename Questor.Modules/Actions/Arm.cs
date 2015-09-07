@@ -1073,18 +1073,14 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
-				//Arm.NeedRepair = true;
+				Arm.NeedRepair = true;  // enable repair by default
+				
 				if (Panic.UseStationRepair && Arm.NeedRepair)
 				{
 					if (!Cache.Instance.RepairItems(WeAreInThisStateForLogs())) return false; //attempt to use repair facilities if avail in station
 				}
-
-				if (_States.CurrentSwitchShipState == SwitchShipState.ActivateCombatShip)
-				{
-					ChangeArmState(ArmState.Done, true);
-					_States.CurrentSwitchShipState = SwitchShipState.Done;
-					return true;
-				}
+				
+				Arm.NeedRepair = false;
 
 				ChangeArmState(ArmState.LoadSavedFitting, true);
 				return true;

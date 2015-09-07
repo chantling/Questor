@@ -1716,6 +1716,11 @@ namespace Questor.Behaviors
 						break;
 
 					case CombatMissionsBehaviorState.PrepareStorylineSwitchAgents:
+						
+						if(MissionSettings.ListOfAgents != null) {
+							Logging.Log("AgentInteraction", "ListOfAgents.Count [" +  MissionSettings.ListOfAgents.Count + "]", Logging.Yellow);
+						}
+						
 						if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() > 1 && !string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
 						{
 							Cache.Instance.CurrentAgent = string.Empty;

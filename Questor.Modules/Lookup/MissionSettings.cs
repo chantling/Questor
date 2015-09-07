@@ -117,6 +117,8 @@ namespace Questor.Modules.Lookup
         }
 
         public static List<AgentsList> ListOfAgents { get; set; }
+        
+		
 
         private static List<MissionFitting> _listOfMissionFittings;
         public static List<MissionFitting> ListOfMissionFittings

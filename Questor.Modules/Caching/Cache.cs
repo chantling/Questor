@@ -4981,17 +4981,15 @@ namespace Questor.Modules.Caching
 						}
 
 						Logging.Log(module, "Repairing Items: repairWindow.AvgDamage: " + repairWindow.AvgDamage(), Logging.White);
-						if (repairWindow.AvgDamage() == "Avg: 0.0 % Damaged")
+						if (repairWindow.AvgDamage() == "Avg: 0,0 % Damaged")
 						{
 							Logging.Log(module, "Repairing Items: Zero Damage: skipping repair.", Logging.White);
 							repairWindow.Close();
 							Statistics.LogWindowActionToWindowLog("RepairWindow", "Closing RepairWindow");
-							Arm.NeedRepair = false;
 							return true;
 						}
 
 						repairWindow.RepairAll();
-						Arm.NeedRepair = false;
 						Time.Instance.NextRepairItemsAction = DateTime.UtcNow.AddSeconds(Settings.Instance.RandomNumber(2, 4));
 						return false;
 					}

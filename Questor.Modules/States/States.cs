@@ -63,7 +63,7 @@ namespace Questor.Modules.States
 
         public static SellState CurrentSellState { get; set; }
 
-        public static SwitchShipState CurrentSwitchShipState { get; set; }
+         // public static SwitchShipState CurrentSwitchShipState { get; set; }
 
         public static UnloadLootState CurrentUnloadLootState { get; set; }
 
