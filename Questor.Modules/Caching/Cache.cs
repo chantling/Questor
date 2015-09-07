@@ -2406,12 +2406,7 @@ namespace Questor.Modules.Caching
 				return;
 			}
 		}
-
-		//public void CreateBookmarkofWreck(IEnumerable<EntityCache> containers, string label)
-		//{
-		//    DirectEve.BookmarkEntity(Cache.Instance.Containers.FirstOrDefault, "a", "a", null);
-		//}
-
+		
 		public Func<EntityCache, int> OrderByLowestHealth()
 		{
 			try
@@ -2424,12 +2419,6 @@ namespace Questor.Modules.Caching
 				return null;
 			}
 		}
-
-		//public List <long> BookMarkToDestination(DirectBookmark bookmark)
-		//{
-		//    Directdestination = new MissionBookmarkDestination(Cache.Instance.GetMissionBookmark(Cache.Instance.AgentId, "Encounter"));
-		//    return List<long> destination;
-		//}
 
 		public DirectItem CheckCargoForItem(int typeIdToFind, int quantityToFind)
 		{

@@ -1428,7 +1428,7 @@ namespace Questor.Modules.Actions
 										MissionSettings.AmmoTypesToLoad.Add(CurrentAmmoToLoad, DateTime.UtcNow);
 										
 										
-										if (CurrentAmmoToLoad.Quantity == 0)
+										if (CurrentAmmoToLoad.Quantity <= 0)
 										{
 											//
 											// if we have moved all the ammo of this type that needs to be moved remove this type of ammo from the list of ammos that need to be moved
