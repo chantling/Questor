@@ -709,13 +709,18 @@ namespace Questor.Modules.Lookup
 						AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
 						foreach (XElement ammo in ammoTypes.Elements("ammoType"))
 						{
-							Logging.Log("LoadSpecificAmmo", "Adding [" + new Ammo(ammo).Name + "] to the list of ammo to load: from: ammoTypes", Logging.White);
-							AmmoTypesToLoad.AddOrUpdate(new Ammo(ammo), DateTime.UtcNow);
-							MissionSettings.MissionDamageType = (DamageType)Enum.Parse(typeof(DamageType), (string)ammo, true);
+//							Logging.Log("LoadSpecificAmmo", "Adding [" + new Ammo(ammo).Name + "] to the list of ammo to load: from: ammoTypes", Logging.White);
+//							AmmoTypesToLoad.AddOrUpdate(new Ammo(ammo), DateTime.UtcNow);
+//							MissionSettings.MissionDamageType = (DamageType)Enum.Parse(typeof(DamageType), (string)ammo, true);
+//							MissionSettings.loadedAmmo = true;
+							
+							Ammo am = new Ammo(ammo);
+							Logging.Log("LoadSpecificAmmo", "Adding [" + am.Name + "] Quantity: [" + am.Quantity  +"] to the list of ammo to load: from: missionammo", Logging.White);
+							AmmoTypesToLoad.AddOrUpdate(am, DateTime.UtcNow);
+							MissionSettings.MissionDamageType = (DamageType) Enum.Parse(typeof (DamageType), (string)ammo, true);
 							MissionSettings.loadedAmmo = true;
+							
 						}
-
-						//Cache.Instance.DamageType
 					}
 
 					ammoTypes = missionXml.Root.Element("missionammo");
@@ -725,13 +730,12 @@ namespace Questor.Modules.Lookup
 						AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
 						foreach (XElement ammo in ammoTypes.Elements("ammo"))
 						{
-							Logging.Log("LoadSpecificAmmo", "Adding [" + new Ammo(ammo).Name + "] to the list of ammo to load: from: missionammo", Logging.White);
-							AmmoTypesToLoad.AddOrUpdate(new Ammo(ammo), DateTime.UtcNow);
+							Ammo am = new Ammo(ammo);
+							Logging.Log("LoadSpecificAmmo", "Adding [" + am.Name + "] Quantity: [" + am.Quantity  +"] to the list of ammo to load: from: missionammo", Logging.White);
+							AmmoTypesToLoad.AddOrUpdate(am, DateTime.UtcNow);
 							MissionSettings.MissionDamageType = (DamageType) Enum.Parse(typeof (DamageType), (string)ammo, true);
 							MissionSettings.loadedAmmo = true;
 						}
-
-						//Cache.Instance.DamageType
 					}
 
 					MissionWeaponGroupId = (int?)missionXml.Root.Element("weaponGroupId") ?? 0;
@@ -744,19 +748,20 @@ namespace Questor.Modules.Lookup
 					DamageTypesForThisMission = new Dictionary<DamageType, DateTime>();
 
 					//missionXml.XPathSelectElements("//damagetype").Select(e => (DamageType)Enum.Parse(typeof(DamageType), (string)e, true)).ToList();
-
 					//DamageTypesForThisMission = new List<DamageType>();
+					
+					
 					DamageTypesInMissionXML = missionXml.XPathSelectElements("//damagetype").Select(e => (DamageType)Enum.Parse(typeof(DamageType), (string)e, true)).ToList();
 					foreach (DamageType damageTypeElement in DamageTypesInMissionXML)
 					{
 						DamageTypesForThisMission.AddOrUpdate(damageTypeElement, DateTime.UtcNow);
 						DamageType damageTypeElementCopy = damageTypeElement;
-						foreach (Ammo _ammoType in Combat.Ammo.Where(i => i.DamageType == damageTypeElementCopy))
+						foreach (Ammo _ammoType in Combat.Ammo.Where(i => i.DamageType == damageTypeElementCopy).Select(a => a.Clone()))
 						{
-							Logging.Log("AgentInteraction", "Mission XML for [" + MissionName + "] specified to load [" + damageTypeElementCopy + "] Damagetype. Adding [" + _ammoType.Name + "][" + _ammoType.TypeId +"] to the list of ammoToLoad", Logging.White);
+							Logging.Log("AgentInteraction", "Mission XML for [" + MissionName + "] specified to load [" + damageTypeElementCopy + "] Damagetype. Adding [" + _ammoType.Name + "] Quantity [" + _ammoType.Quantity +"] to the list of ammoToLoad", Logging.White);
 							AmmoTypesToLoad.AddOrUpdate((_ammoType), DateTime.UtcNow);
 							MissionSettings.MissionDamageType = _ammoType.DamageType;
-							loadedAmmo = true;
+							MissionSettings.loadedAmmo = true;
 						}
 					}
 
@@ -808,13 +813,13 @@ namespace Questor.Modules.Lookup
 				                               || i.TypeId == (int)TypeID.CivilianGatlingRailgun
 				                               || i.TypeId == (int)TypeID.CivilianLightElectronBlaster))
 				{
-					Logging.Log("LoadSpecificAmmo", "No ammo needed for civilian guns: no ammo added to MissionAmmo to load", Logging.White);
+					Logging.Log("LoadCorrectFactionOrMissionAmmo", "No ammo needed for civilian guns: no ammo added to MissionAmmo to load", Logging.White);
 					return;
 				}
 
 				if (!MissionSettings.loadedAmmo)
 				{
-					Logging.Log("LoadSpecificAmmo", "Clearing existing list of Ammo To load", Logging.White);
+					Logging.Log("LoadCorrectFactionOrMissionAmmo", "Clearing existing list of Ammo To load", Logging.White);
 					MissionSettings.AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
 				}
 				
@@ -824,11 +829,11 @@ namespace Questor.Modules.Lookup
 					{
 						foreach (KeyValuePair<DamageType, DateTime> missionDamageType in DamageTypesForThisMission)
 						{
-							Logging.Log("LoadSpecificAmmo.mission", "DamageType [" + missionDamageType + "] is one of the damagetypes we should load", Logging.White);
+							Logging.Log("LoadCorrectFactionOrMissionAmmo", "DamageType [" + missionDamageType + "] is one of the damagetypes we should load", Logging.White);
 							KeyValuePair<DamageType, DateTime> damageTypeToSearchFor = missionDamageType;
 							foreach (Ammo specificAmmoType in Combat.Ammo.Where(a => a.DamageType == damageTypeToSearchFor.Key).Select(a => a.Clone()))
 							{
-								Logging.Log("LoadSpecificAmmo.mission", "Adding [" + specificAmmoType + "] to the list of AmmoTypes to load. It is defined as [" + missionDamageType + "] Quantity [" + specificAmmoType.Quantity + "]", Logging.White);
+								Logging.Log("LoadCorrectFactionOrMissionAmmo", "Adding [" + specificAmmoType + "] to the list of AmmoTypes to load. It is defined as [" + missionDamageType + "] Quantity [" + specificAmmoType.Quantity + "]", Logging.White);
 								MissionSettings.AmmoTypesToLoad.Clear();
 								MissionSettings.AmmoTypesToLoad.AddOrUpdate(specificAmmoType, DateTime.UtcNow);
 								MissionSettings.loadedAmmo = true;
@@ -841,7 +846,7 @@ namespace Questor.Modules.Lookup
 				{
 					if (Combat.Ammo.Any(a => a.DamageType == MissionSettings.FactionDamageType))
 					{
-						Logging.Log("LoadSpecificAmmo.faction", "DamageType [" + FactionDamageType + "] is one of the damagetypes we should load", Logging.White);
+						Logging.Log("LoadCorrectFactionOrMissionAmmo", "DamageType [" + FactionDamageType + "] is one of the damagetypes we should load", Logging.White);
 						foreach (Ammo specificAmmoType in Combat.Ammo.Where(a => a.DamageType == FactionDamageType).Select(a => a.Clone()))
 						{
 							// the reason why ammo == 0 needs to be found :X
@@ -849,7 +854,7 @@ namespace Questor.Modules.Lookup
 								
 							}
 							
-							Logging.Log("LoadSpecificAmmo.faction", "Adding [" + specificAmmoType + "] to the list of AmmoTypes to load. It is defined as [" + FactionDamageType + "]", Logging.White);
+							Logging.Log("LoadCorrectFactionOrMissionAmmo", "Adding [" + specificAmmoType + "] to the list of AmmoTypes to load. It is defined as [" + FactionDamageType + "]", Logging.White);
 							MissionSettings.AmmoTypesToLoad.AddOrUpdate(specificAmmoType, DateTime.UtcNow);
 							MissionSettings.loadedAmmo = true;
 						}

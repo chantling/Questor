@@ -3434,6 +3434,10 @@ namespace Questor.Modules.Combat
 						break;
 
 					case CombatState.OutOfAmmo:
+						
+						if (Logging.DebugKillTargets) Logging.Log("CombatState.OutOfAmmo", "Out of ammo. Pausing questor.", Logging.Debug);
+						Cache.Instance.Paused = true;
+						
 						break;
 
 					case CombatState.Idle:
