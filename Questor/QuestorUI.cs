@@ -247,7 +247,7 @@ namespace Questor
 
                         if (Settings.Instance.UserDefinedLavishScriptScript1Description != string.Empty)
                         {
-                            lblUserDefinedScript1.Text = Settings.Instance.UserDefinedLavishScriptScript1Description;    
+                            lblUserDefinedScript1.Text = Settings.Instance.UserDefinedLavishScriptScript1Description;
                         }
 
                         if (Settings.Instance.UserDefinedLavishScriptScript2Description != string.Empty)
@@ -279,16 +279,16 @@ namespace Questor
                         //if (Combat.MaxRange > 0)
                         //{
                         //    MaxRangeData.Text = Combat.MaxRange.ToString(CultureInfo.InvariantCulture);
-                             //causes problems / crashes
+                        //causes problems / crashes
                         //}
                         //WeaponRangeData.Text = Cache.Instance.WeaponRange.ToString(CultureInfo.InvariantCulture); //causes problems / crashes
                         //ActiveDronesData.Text = Cache.Instance.ActiveDrones.Count().ToString();                   //causes problems / crashes
                         //if (!Cache.Instance.InWarp && DateTime.UtcNow > _nextWreckUpdate)                            //this was causing exceptions we cant check inWarp from the UI?
                         //{
                         //    _nextWreckUpdate = DateTime.UtcNow.AddSeconds(10);
-                            //WrecksData.Text = Cache.Instance.Wrecks.Count().ToString(CultureInfo.InvariantCulture);
-                            //UnlootedContainersData.Text = Cache.Instance.UnlootedContainers.Count().ToString(CultureInfo.InvariantCulture); 
-                            //ApproachingData.Text = Cache.Instance.IsApproaching.ToString(CultureInfo.InvariantCulture);
+                        //WrecksData.Text = Cache.Instance.Wrecks.Count().ToString(CultureInfo.InvariantCulture);
+                        //UnlootedContainersData.Text = Cache.Instance.UnlootedContainers.Count().ToString(CultureInfo.InvariantCulture); 
+                        //ApproachingData.Text = Cache.Instance.IsApproaching.ToString(CultureInfo.InvariantCulture);
                         //}
                         //DamagedDronesData.Text = Cache.Instance.DamagedDrones.Count().ToString(CultureInfo.InvariantCulture);
                         //PriorityTargetsData.Text = Cache.Instance.PriorityTargets.Count().ToString(CultureInfo.InvariantCulture);
@@ -384,7 +384,7 @@ namespace Questor
             {
                 Logging.Log("QuestorUI", "Exception [" + ex + "]", Logging.Debug);
             }
-            
+
         }
 
         private void PopulateBehaviorStateComboBox()
@@ -475,7 +475,7 @@ namespace Questor
                         {
                             txtExtConsole.Text = "";
                         }
-                        
+
                         txtExtConsole.AppendText(Logging.ExtConsole);
                         _lastLogLine = Logging.ExtConsole;
                         Logging.ExtConsole = null;
@@ -521,10 +521,10 @@ namespace Questor
                 if ((string)QuestorStateComboBox.SelectedItem != _States.CurrentQuestorState.ToString() && !QuestorStateComboBox.DroppedDown)
                 {
                     QuestorStateComboBox.SelectedItem = _States.CurrentQuestorState.ToString();
-                    
+
                     if (_States.CurrentQuestorState == QuestorState.Idle)
                     {
-//                        _States.LavishEvent_QuestorIdle();
+                        //                        _States.LavishEvent_QuestorIdle();
                     }
                 }
 
@@ -533,7 +533,7 @@ namespace Questor
                     if ((string)BehaviorComboBox.SelectedItem != _States.CurrentCombatMissionBehaviorState.ToString() && !BehaviorComboBox.DroppedDown)
                     {
                         BehaviorComboBox.SelectedItem = _States.CurrentCombatMissionBehaviorState.ToString();
-//                        _States.LavishEvent_QuestorCombatMissionsBehaviorState();
+                        //                        _States.LavishEvent_QuestorCombatMissionsBehaviorState();
                     }
                 }
 
@@ -550,7 +550,7 @@ namespace Questor
                     if ((string)BehaviorComboBox.SelectedItem != _States.CurrentDedicatedBookmarkSalvagerBehaviorState.ToString() && !BehaviorComboBox.DroppedDown)
                     {
                         BehaviorComboBox.SelectedItem = _States.CurrentDedicatedBookmarkSalvagerBehaviorState.ToString();
-//                        _States.LavishEvent_QuestorDedicatedBookmarkSalvagerBehaviorState();
+                        //                        _States.LavishEvent_QuestorDedicatedBookmarkSalvagerBehaviorState();
                     }
                 }
 
@@ -593,7 +593,7 @@ namespace Questor
                 //        MissionSettings.ManualDamageType = null;
                 //    }
                 //}
-                
+
 
                 //
                 // Middle group
@@ -601,19 +601,19 @@ namespace Questor
                 if ((string)PanicStateComboBox.SelectedItem != _States.CurrentPanicState.ToString() && !PanicStateComboBox.DroppedDown)
                 {
                     PanicStateComboBox.SelectedItem = _States.CurrentPanicState.ToString();
-//                    _States.LavishEvent_QuestorPanicState();
+                    //                    _States.LavishEvent_QuestorPanicState();
                 }
 
                 if ((string)CombatStateComboBox.SelectedItem != _States.CurrentCombatState.ToString() && !CombatStateComboBox.DroppedDown)
                 {
                     CombatStateComboBox.SelectedItem = _States.CurrentCombatState.ToString();
-//                    _States.LavishEvent_QuestorCombatState();
+                    //                    _States.LavishEvent_QuestorCombatState();
                 }
 
                 if ((string)DronesStateComboBox.SelectedItem != _States.CurrentDroneState.ToString() && !DronesStateComboBox.DroppedDown)
                 {
                     DronesStateComboBox.SelectedItem = _States.CurrentDroneState.ToString();
-//                    _States.LavishEvent_QuestorDronesState();
+                    //                    _States.LavishEvent_QuestorDronesState();
                 }
 
                 if ((string)CleanupStateComboBox.SelectedItem != _States.CurrentCleanupState.ToString() && !CleanupStateComboBox.DroppedDown)
@@ -663,25 +663,25 @@ namespace Questor
                 if ((string)AgentInteractionStateComboBox.SelectedItem != _States.CurrentAgentInteractionState.ToString() && !AgentInteractionStateComboBox.DroppedDown)
                 {
                     AgentInteractionStateComboBox.SelectedItem = _States.CurrentAgentInteractionState.ToString();
-                
+
                 }
-                
+
                 if (AutoStartCheckBox.Checked != Settings.Instance.AutoStart)
                 {
                     AutoStartCheckBox.Checked = Settings.Instance.AutoStart;
-                   
+
                 }
 
                 if (PauseCheckBox.Checked != Cache.Instance.Paused)
                 {
                     PauseCheckBox.Checked = Cache.Instance.Paused;
-                    
+
                 }
 
                 if (Disable3DCheckBox.Checked != Settings.Instance.Disable3D)
                 {
                     Disable3DCheckBox.Checked = Settings.Instance.Disable3D;
-                    
+
                 }
 
                 if (Settings.Instance.WindowXPosition.HasValue)
@@ -887,41 +887,24 @@ namespace Questor
 
         private void DamageTypeComboBoxSelectedIndexChanged(object sender, EventArgs e)
         {
-            //if (DamageTypeComboBox.Text != null && !string.IsNullOrEmpty(DamageTypeComboBox.Text))
-            //{
-                //if (DamageTypeComboBox.Text.ToLower() == "Auto".ToLower())
-                //{
-                //    MissionSettings.ManualDamageType = null;
-                //    return;
-                //}
-
-                //MissionSettings.ManualDamageType = (DamageType)Enum.Parse(typeof(DamageType), DamageTypeComboBox.Text);
-                //return;    
-            //}
-
             return;
         }
 
         private void PauseCheckBoxCheckedChanged(object sender, EventArgs e)
         {
             Cache.Instance.Paused = PauseCheckBox.Checked;
-//            _States.LavishEvent_QuestorPausedState();
         }
 
         private void Disable3DCheckBoxCheckedChanged(object sender, EventArgs e)
         {
             Settings.Instance.Disable3D = Disable3DCheckBox.Checked;
-//            _States.LavishEvent_QuestorDisable3DState();
         }
 
         private void TxtComandKeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
             {
-                if (Logging.UseInnerspace)
-                {
-//                    LavishScript.ExecuteCommand(txtComand.Text);
-                }
+               
             }
         }
 
@@ -976,7 +959,6 @@ namespace Questor
             _States.CurrentQuestorState = (QuestorState)Enum.Parse(typeof(QuestorState), QuestorStateComboBox.Text);
             PopulateBehaviorStateComboBox();
             PopulateMissionLists();
-//            _States.LavishEvent_QuestorState();
 
             // If you are at the controls enough to change states... assume that panic needs to do nothing
             //_questor.panicstatereset = true; //this cannot be reset when the index changes, as that happens during natural state changes, this needs to be a mouse event
@@ -988,13 +970,13 @@ namespace Questor
             if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)
             {
                 _States.CurrentCombatMissionBehaviorState = (CombatMissionsBehaviorState)Enum.Parse(typeof(CombatMissionsBehaviorState), BehaviorComboBox.Text);
-//                _States.LavishEvent_QuestorCombatMissionsBehaviorState();
+                //                _States.LavishEvent_QuestorCombatMissionsBehaviorState();
             }
 
             if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
             {
                 _States.CurrentDedicatedBookmarkSalvagerBehaviorState = (DedicatedBookmarkSalvagerBehaviorState)Enum.Parse(typeof(DedicatedBookmarkSalvagerBehaviorState), BehaviorComboBox.Text);
-//                _States.LavishEvent_QuestorDedicatedBookmarkSalvagerBehaviorState();
+                //                _States.LavishEvent_QuestorDedicatedBookmarkSalvagerBehaviorState();
             }
 
             if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior)
@@ -1062,19 +1044,19 @@ namespace Questor
 
             // If you are at the controls enough to change states... assume that panic needs to do nothing
             //_questor.panicstatereset = true; //this cannot be reset when the index changes, as that happens during natural state changes, this needs to be a mouse event
-//            _States.LavishEvent_QuestorPanicState();
+            //            _States.LavishEvent_QuestorPanicState();
         }
 
         private void CombatStateComboBoxSelectedIndexChanged(object sender, EventArgs e)
         {
             _States.CurrentCombatState = (CombatState)Enum.Parse(typeof(CombatState), CombatStateComboBox.Text);
-//            _States.LavishEvent_QuestorCombatState();
+            //            _States.LavishEvent_QuestorCombatState();
         }
 
         private void DronesStateComboBoxSelectedIndexChanged(object sender, EventArgs e)
         {
             _States.CurrentDroneState = (DroneState)Enum.Parse(typeof(DroneState), DronesStateComboBox.Text);
-//            _States.LavishEvent_QuestorDronesState();
+            //            _States.LavishEvent_QuestorDronesState();
         }
 
         private void CleanupStateComboBoxSelectedIndexChanged(object sender, EventArgs e)
@@ -1159,18 +1141,8 @@ namespace Questor
             string questorManagerPath = Path.Combine(Settings.Instance.Path, "QuestorManager.exe");
             if (File.Exists(questorManagerPath))
             {
-                if (Logging.UseInnerspace)
-                {
-                    Logging.Log("QuestorUI", "Launching [ dotnet QuestorManager QuestorManager ]", Logging.White);
-//                    LavishScript.ExecuteCommand("dotnet QuestorManager QuestorManager");
-                    Cleanup.ReasonToStopQuestor = "Stating QuestorManager: closing questor";
-                    Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
-                }
-                else
-                {
                     Logging.Log("QuestorUI", "Launching [ dotnet QuestorManager QuestorManager ] - fix me",
                                 Logging.White);
-                }
             }
             else
             {
@@ -1196,7 +1168,6 @@ namespace Questor
             Cache.Instance.ExitWhenIdle = ExitWhenIdleCheckBox.Checked;
             AutoStartCheckBox.Checked = false;
             Settings.Instance.AutoStart = false;
-//            _States.LavishEvent_QuestorExitWhenIdleState();
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -1443,15 +1414,15 @@ namespace Questor
         private void btnSendTestEmail_Click(object sender, EventArgs e)
         {
             Logging.Log("QuestorUI", "This Button Sends a test email to the configured email address", Logging.Debug);
-            Email.SendEmail("Someone Pushed the Test Email Button","This is Just a Test Email from Questor");
+            Email.SendEmail("Someone Pushed the Test Email Button", "This is Just a Test Email from Questor");
         }
 
         private void bttnResizeEVEWindow_Click(object sender, EventArgs e)
         {
             Logging.Log("QuestorUI", "Running Innerspace command: timedcommand 150 WindowCharacteristics -size " + 1280 + "x" + 960, Logging.White);
-//            if (Logging.UseInnerspace) LavishScript.ExecuteCommand("timedcommand 150 WindowCharacteristics -size " + 1280 + "x" + 960);
+            //            if (Logging.UseInnerspace) LavishScript.ExecuteCommand("timedcommand 150 WindowCharacteristics -size " + 1280 + "x" + 960);
             Logging.Log("QuestorUI", "Running Innerspace command: timedcommand 200 WindowCharacteristics -pos " + 0 + "," + 0, Logging.White);
-//            if (Logging.UseInnerspace) LavishScript.ExecuteCommand("timedcommand 200 WindowCharacteristics -pos " + 0 + "," + 0);
+            //            if (Logging.UseInnerspace) LavishScript.ExecuteCommand("timedcommand 200 WindowCharacteristics -pos " + 0 + "," + 0);
         }
 
         private void bttnLogEntitiesOnGrid_Click(object sender, EventArgs e)
@@ -1511,7 +1482,7 @@ namespace Questor
             if (Settings.Instance.UserDefinedLavishScriptScript1 != string.Empty)
             {
                 Logging.Log("QuestorUI", "Running User Defined LavishScript Script #1 [" + Settings.Instance.UserDefinedLavishScriptScript1 + "]", Logging.Debug);
-//                if (Logging.UseInnerspace) LavishScript.ExecuteCommand("runscript " + Settings.Instance.UserDefinedLavishScriptScript1);    
+                //                if (Logging.UseInnerspace) LavishScript.ExecuteCommand("runscript " + Settings.Instance.UserDefinedLavishScriptScript1);    
             }
             else
             {
@@ -1524,7 +1495,7 @@ namespace Questor
             if (Settings.Instance.UserDefinedLavishScriptScript2 != string.Empty)
             {
                 Logging.Log("QuestorUI", "Running User Defined LavishScript Script #1 [" + Settings.Instance.UserDefinedLavishScriptScript2 + "]", Logging.Debug);
-//                if (Logging.UseInnerspace) LavishScript.ExecuteCommand("runscript " + Settings.Instance.UserDefinedLavishScriptScript2);
+                //                if (Logging.UseInnerspace) LavishScript.ExecuteCommand("runscript " + Settings.Instance.UserDefinedLavishScriptScript2);
             }
             else
             {
@@ -1537,7 +1508,7 @@ namespace Questor
             if (Settings.Instance.UserDefinedLavishScriptScript3 != string.Empty)
             {
                 Logging.Log("QuestorUI", "Running User Defined LavishScript Script #1 [" + Settings.Instance.UserDefinedLavishScriptScript3 + "]", Logging.Debug);
-//                if (Logging.UseInnerspace) LavishScript.ExecuteCommand("runscript " + Settings.Instance.UserDefinedLavishScriptScript3);
+                //                if (Logging.UseInnerspace) LavishScript.ExecuteCommand("runscript " + Settings.Instance.UserDefinedLavishScriptScript3);
             }
             else
             {
@@ -1550,7 +1521,7 @@ namespace Questor
             if (Settings.Instance.UserDefinedLavishScriptScript4 != string.Empty)
             {
                 Logging.Log("QuestorUI", "Running User Defined LavishScript Script #1 [" + Settings.Instance.UserDefinedLavishScriptScript4 + "]", Logging.Debug);
-//                if (Logging.UseInnerspace) LavishScript.ExecuteCommand("runscript " + Settings.Instance.UserDefinedLavishScriptScript4);
+                //                if (Logging.UseInnerspace) LavishScript.ExecuteCommand("runscript " + Settings.Instance.UserDefinedLavishScriptScript4);
             }
             else
             {

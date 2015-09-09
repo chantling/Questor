@@ -1045,11 +1045,11 @@ namespace Questor.Modules.Caching
 						if (!_weapons.Any())
 						{
 							int moduleNumber = 0;
-							Logging.Log("Cache.Weapons", "WeaponGroupID is defined as [" + Combat.WeaponGroupId + "] in your characters settings XML", Logging.Debug);
+							//Logging.Log("Cache.Weapons", "WeaponGroupID is defined as [" + Combat.WeaponGroupId + "] in your characters settings XML", Logging.Debug);
 							foreach (ModuleCache _module in Cache.Instance.Modules)
 							{
 								moduleNumber++;
-								Logging.Log("Cache.Weapons", "[" + moduleNumber + "][" + _module.TypeName + "] typeID [" + _module.TypeId + "] groupID [" + _module.GroupId + "]", Logging.White);
+								//Logging.Log("Cache.Weapons", "[" + moduleNumber + "][" + _module.TypeName + "] typeID [" + _module.TypeId + "] groupID [" + _module.GroupId + "]", Logging.White);
 							}
 						}
 						else

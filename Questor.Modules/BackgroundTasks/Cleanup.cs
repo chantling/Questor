@@ -71,21 +71,7 @@ namespace Questor.Modules.BackgroundTasks
 			{
 				Cache.Instance.CloseQuestorCMDExitGame = true;
 			}
-
-			//if (_traveler.State == TravelerState.Idle)
-			//{
-			//    Logging.Log(
-			//        "QuestorState.CloseQuestor: Entered Traveler - making sure we will be docked at Home Station");
-			//}
-			//AvoidBumpingThings();
-			//TravelToAgentsStation();
-
-			//if (_traveler.State == TravelerState.AtDestination ||
-			//    DateTime.UtcNow.Subtract(Time.EnteredCloseQuestor_DateTime).TotalSeconds >
-			//   Settings.Instance.SecondstoWaitAfterExitingCloseQuestorBeforeExitingEVE)
-			//{
-			//Logging.Log("QuestorState.CloseQuestor: At Station: Docked");
-			// Write to Session log
+			
 			if (!Statistics.WriteSessionLogClosing()) return false;
 
 			if ((Settings.Instance.AutoStart && Settings.Instance.CloseQuestorAllowRestart) || restart)
@@ -95,11 +81,6 @@ namespace Questor.Modules.BackgroundTasks
 				{
 					if (CloseQuestorFlag)
 					{
-						Logging.Log("Questor", "Logging off EVE: EVE and questor should restart on their own when the client comes back up", Logging.White);
-						if (Logging.UseInnerspace)
-						{
-							//                            LavishScript.ExecuteCommand("uplink echo Logging off EVE:  \\\"${Game}\\\" \\\"${Profile}\\\"");
-						}
 						Logging.Log("Questor", "you can change this option by setting the wallet and EveProcessMemoryCeiling options to use exit instead of logoff: see the settings.xml file", Logging.White);
 						Logging.Log("Questor", "Logging Off eve in 15 seconds.", Logging.White);
 						CloseQuestorFlag = false;
@@ -123,166 +104,28 @@ namespace Questor.Modules.BackgroundTasks
 
 				if (Cache.Instance.CloseQuestorCMDExitGame)
 				{
-					if (Logging.UseInnerspace)
+					Logging.Log("Questor", "CloseQuestor: We are configured to NOT use innerspace. useInnerspace = false", Logging.White);
+					Logging.Log("Questor", "CloseQuestor: Currently the questor will exit (and not restart itself) in this configuration, this likely needs additional work to make questor reentrant so we can use a scheduled task?!", Logging.White);
+					if (_closeQuestorCMDUplink)
 					{
-						//Logging.Log("Questor: We are in station: Exit option has been configured.");
-						if (((Settings.Instance.CloseQuestorArbitraryOSCmd) && (Settings.Instance.CloseQuestorCMDUplinkIsboxerCharacterSet)) ||
-						    (Settings.Instance.CloseQuestorArbitraryOSCmd) && (Settings.Instance.CloseQuestorCMDUplinkInnerspaceProfile))
-						{
-							Logging.Log("Questor", "You can't combine CloseQuestorArbitraryOSCmd with either of the other two options, fix your settings", Logging.White);
-							return false;
-						}
-
-						if ((Settings.Instance.CloseQuestorCMDUplinkIsboxerCharacterSet) && (Settings.Instance.CloseQuestorCMDUplinkInnerspaceProfile))
-						{
-							Logging.Log("Questor", "You cant use both the CloseQuestorCMDUplinkIsboxerProfile and the CloseQuestorCMDUplinkIsboxerProfile setting, choose one", Logging.White);
-							return false;
-						}
-
-						if (Settings.Instance.CloseQuestorCMDUplinkInnerspaceProfile)
-
-							//if configured as true we will use the innerspace profile to restart this session
-						{
-							//Logging.Log("Questor: We are in station: CloseQuestorCMDUplinkInnerspaceProfile is ["+ CloseQuestorCMDUplinkInnerspaceProfile.tostring() +"]");
-							if (_closeQuestorCMDUplink)
-							{
-								Logging.Log("Questor", "Starting a timer in the innerspace uplink to restart this innerspace profile session", Logging.White);
-								//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] " + Settings.Instance.CharacterName + "'s Questor is starting a timedcommand to restart itself in a moment");
-								//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " open \\\"${Game}\\\" \\\"${Profile}\\\"");
-								//                                LavishScript.ExecuteCommand("uplink exec timedcommand " + secRestart + " open \\\"${Game}\\\" \\\"${Profile}\\\"");
-								Logging.Log("Questor", "Done: quitting this session so the new innerspace session can take over", Logging.White);
-								Logging.Log("Questor", "Exiting eve in 15 seconds.", Logging.White);
-								_closeQuestorCMDUplink = false;
-								CloseQuestorDelay = DateTime.UtcNow.AddSeconds(Time.Instance.CloseQuestorDelayBeforeExit_seconds);
-							}
-
-							if (!_closeQuestor10SecWarningDone)
-							{
-								_closeQuestor10SecWarningDone = true;
-								Logging.Log("Questor", "Exiting eve in [" + Time.Instance.CloseQuestorDelayBeforeExit_seconds + "] seconds", Logging.White);
-								return false;
-							}
-
-							if (DateTime.UtcNow > CloseQuestorDelay)
-							{
-								Logging.Log("Questor", "Exiting eve now.", Logging.White);
-								BeginClosingQuestor();
-								return false;
-							}
-							return false;
-						}
-
-						if (Settings.Instance.CloseQuestorCMDUplinkIsboxerCharacterSet) //if configured as true we will use isboxer to restart this session
-						{
-							//Logging.Log("Questor: We are in station: CloseQuestorCMDUplinkIsboxerProfile is ["+ CloseQuestorCMDUplinkIsboxerProfile.tostring() +"]");
-							if (_closeQuestorCMDUplink)
-							{
-								Logging.Log("Questor", "Starting a timer in the innerspace uplink to restart this isboxer character set", Logging.White);
-								//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] " + Settings.Instance.CharacterName + "'s Questor is starting a timedcommand to restart itself in a moment");
-								//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " runscript isboxer -launchslot \\\"${ISBoxerCharacterSet}\\\" \\\"${ISBoxerSlot}\\\"");
-								//                                LavishScript.ExecuteCommand("uplink timedcommand " + secRestart + " runscript isboxer -launchslot \\\"${ISBoxerCharacterSet}\\\" \\\"${ISBoxerSlot}\\\"");
-								Logging.Log("Questor", "Done: quitting this session so the new isboxer session can take over", Logging.White);
-								Logging.Log("Questor", "Exiting eve.", Logging.White);
-								_closeQuestorCMDUplink = false;
-								CloseQuestorDelay = DateTime.UtcNow.AddSeconds(Time.Instance.CloseQuestorDelayBeforeExit_seconds);
-							}
-
-							if (!_closeQuestor10SecWarningDone)
-							{
-								_closeQuestor10SecWarningDone = true;
-								Logging.Log("Questor", "Exiting eve in [" + Time.Instance.CloseQuestorDelayBeforeExit_seconds + "] seconds", Logging.White);
-								return false;
-							}
-
-							if (DateTime.UtcNow > CloseQuestorDelay)
-							{
-								Logging.Log("Questor", "Exiting eve now.", Logging.White);
-								BeginClosingQuestor();
-								return false;
-							}
-							return false;
-						}
-
-						if (Settings.Instance.CloseQuestorArbitraryOSCmd) // will execute an arbitrary OS command through the IS Uplink
-						{
-							if (_closeQuestorCMDUplink)
-							{
-								Logging.Log("Questor", "Starting a timer in the innerspace uplink to execute an arbitrary OS command", Logging.White);
-								//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] " + Settings.Instance.CharacterName + "'s Questor is starting a timedcommand to restart itself in a moment");
-								//                                LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " OSExecute " + Settings.Instance.CloseQuestorOSCmdContents.ToString(CultureInfo.InvariantCulture));
-								//                                LavishScript.ExecuteCommand("uplink exec timedcommand " + secRestart + " OSExecute " + Settings.Instance.CloseQuestorOSCmdContents.ToString(CultureInfo.InvariantCulture));
-								Logging.Log("Questor", "Done: quitting this session", Logging.White);
-								Logging.Log("Questor", "Exiting eve in 15 seconds.", Logging.White);
-								_closeQuestorCMDUplink = false;
-								CloseQuestorDelay = DateTime.UtcNow.AddSeconds(Time.Instance.CloseQuestorDelayBeforeExit_seconds);
-							}
-
-							if (!_closeQuestor10SecWarningDone)
-							{
-								_closeQuestor10SecWarningDone = true;
-								Logging.Log("Questor", "Exiting eve in [" + Time.Instance.CloseQuestorDelayBeforeExit_seconds + "] seconds", Logging.White);
-								return false;
-							}
-
-							if (DateTime.UtcNow > CloseQuestorDelay)
-							{
-								Logging.Log("Questor", "Exiting eve now.", Logging.White);
-								BeginClosingQuestor();
-								return false;
-							}
-
-							return false;
-						}
-
-						if (!Settings.Instance.CloseQuestorCMDUplinkInnerspaceProfile && !Settings.Instance.CloseQuestorCMDUplinkIsboxerCharacterSet && !Settings.Instance.CloseQuestorArbitraryOSCmd)
-						{
-							Logging.Log("Questor", "CloseQuestorArbitraryOSCmd, CloseQuestorCMDUplinkInnerspaceProfile and CloseQuestorCMDUplinkIsboxerProfile all false", Logging.White);
-							if (_closeQuestorCMDUplink)
-							{
-								_closeQuestorCMDUplink = false;
-								CloseQuestorDelay = DateTime.UtcNow.AddSeconds(Time.Instance.CloseQuestorDelayBeforeExit_seconds);
-							}
-
-							if (!_closeQuestor10SecWarningDone)
-							{
-								_closeQuestor10SecWarningDone = true;
-								Logging.Log("Questor", "Exiting eve in [" + Time.Instance.CloseQuestorDelayBeforeExit_seconds + "] seconds", Logging.White);
-								return false;
-							}
-
-							if (DateTime.UtcNow > CloseQuestorDelay)
-							{
-								Logging.Log("Questor", "Exiting eve now.", Logging.White);
-								BeginClosingQuestor();
-								return false;
-							}
-							return false;
-						}
+						_closeQuestorCMDUplink = false;
+						CloseQuestorDelay = DateTime.UtcNow.AddSeconds(Time.Instance.CloseQuestorDelayBeforeExit_seconds);
 					}
-					else
+
+					if (!_closeQuestor10SecWarningDone)
 					{
-						Logging.Log("Questor", "CloseQuestor: We are configured to NOT use innerspace. useInnerspace = false", Logging.White);
-						Logging.Log("Questor", "CloseQuestor: Currently the questor will exit (and not restart itself) in this configuration, this likely needs additional work to make questor reentrant so we can use a scheduled task?!", Logging.White);
-						if (_closeQuestorCMDUplink)
-						{
-							_closeQuestorCMDUplink = false;
-							CloseQuestorDelay = DateTime.UtcNow.AddSeconds(Time.Instance.CloseQuestorDelayBeforeExit_seconds);
-						}
-
-						if (!_closeQuestor10SecWarningDone)
-						{
-							_closeQuestor10SecWarningDone = true;
-							Logging.Log("Questor", "Exiting eve in [" + Time.Instance.CloseQuestorDelayBeforeExit_seconds + "] seconds", Logging.White);
-							return false;
-						}
-
-						if (DateTime.UtcNow > CloseQuestorDelay)
-						{
-							Logging.Log("Questor", "Exiting eve now.", Logging.White);
-							BeginClosingQuestor();
-							return false;
-						}
+						_closeQuestor10SecWarningDone = true;
+						Logging.Log("Questor", "Exiting eve in [" + Time.Instance.CloseQuestorDelayBeforeExit_seconds + "] seconds", Logging.White);
+						return false;
 					}
+
+					if (DateTime.UtcNow > CloseQuestorDelay)
+					{
+						Logging.Log("Questor", "Exiting eve now.", Logging.White);
+						BeginClosingQuestor();
+						return false;
+					}
+					
 				}
 			}
 			if (_closeQuestorCMDUplink)

@@ -42,7 +42,7 @@
             this.Disable3DCheckBox = new System.Windows.Forms.CheckBox();
             this.chkShowDetails = new System.Windows.Forms.CheckBox();
             this.lblMissionName = new System.Windows.Forms.Label();
-            lblCurrentMissionInfo = new System.Windows.Forms.Label();
+            this.lblCurrentMissionInfo = new System.Windows.Forms.Label();
             this.lblPocketAction = new System.Windows.Forms.Label();
             this.lblCurrentPocketAction = new System.Windows.Forms.Label();
             this.buttonQuestorStatistics = new System.Windows.Forms.Button();
@@ -59,6 +59,8 @@
             this.label25 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.tabMiscInfo = new System.Windows.Forms.TabPage();
+            this.useDronesData = new System.Windows.Forms.Label();
+            this.label275 = new System.Windows.Forms.Label();
             this.DataCurrentDroneTarget = new System.Windows.Forms.Label();
             this.DataCurrentCombatTarget = new System.Windows.Forms.Label();
             this.lblCurrentDroneTarget = new System.Windows.Forms.Label();
@@ -578,8 +580,6 @@
             this.bttnUserDefinedScript3 = new System.Windows.Forms.Button();
             this.bttnUserDefinedScript2 = new System.Windows.Forms.Button();
             this.bttnUserDefinedScript1 = new System.Windows.Forms.Button();
-            this.label275 = new System.Windows.Forms.Label();
-            this.useDronesData = new System.Windows.Forms.Label();
             this.tabMiscInfo.SuspendLayout();
             this.tabTimeStamps.SuspendLayout();
             this.tabMissions.SuspendLayout();
@@ -695,13 +695,13 @@
             // 
             // lblCurrentMissionInfo
             // 
-            lblCurrentMissionInfo.Location = new System.Drawing.Point(3, 55);
-            lblCurrentMissionInfo.MaximumSize = new System.Drawing.Size(250, 13);
-            lblCurrentMissionInfo.MinimumSize = new System.Drawing.Size(275, 13);
-            lblCurrentMissionInfo.Name = "lblCurrentMissionInfo";
-            lblCurrentMissionInfo.Size = new System.Drawing.Size(275, 13);
-            lblCurrentMissionInfo.TabIndex = 93;
-            lblCurrentMissionInfo.Text = "[ No Mission Selected Yet ]";
+            this.lblCurrentMissionInfo.Location = new System.Drawing.Point(3, 55);
+            this.lblCurrentMissionInfo.MaximumSize = new System.Drawing.Size(250, 13);
+            this.lblCurrentMissionInfo.MinimumSize = new System.Drawing.Size(275, 13);
+            this.lblCurrentMissionInfo.Name = "lblCurrentMissionInfo";
+            this.lblCurrentMissionInfo.Size = new System.Drawing.Size(275, 13);
+            this.lblCurrentMissionInfo.TabIndex = 93;
+            this.lblCurrentMissionInfo.Text = "[ No Mission Selected Yet ]";
             // 
             // lblPocketAction
             // 
@@ -895,6 +895,24 @@
             this.tabMiscInfo.TabIndex = 7;
             this.tabMiscInfo.Text = "MiscInfo";
             this.tabMiscInfo.UseVisualStyleBackColor = true;
+            // 
+            // useDronesData
+            // 
+            this.useDronesData.AutoSize = true;
+            this.useDronesData.Location = new System.Drawing.Point(132, 222);
+            this.useDronesData.Name = "useDronesData";
+            this.useDronesData.Size = new System.Drawing.Size(24, 13);
+            this.useDronesData.TabIndex = 234;
+            this.useDronesData.Text = "n/a";
+            // 
+            // label275
+            // 
+            this.label275.AutoSize = true;
+            this.label275.Location = new System.Drawing.Point(64, 222);
+            this.label275.Name = "label275";
+            this.label275.Size = new System.Drawing.Size(58, 13);
+            this.label275.TabIndex = 233;
+            this.label275.Text = "useDrones";
             // 
             // DataCurrentDroneTarget
             // 
@@ -1987,7 +2005,7 @@
             this.greylistedmissionsdeclinedlbl.AutoSize = true;
             this.greylistedmissionsdeclinedlbl.Location = new System.Drawing.Point(467, 112);
             this.greylistedmissionsdeclinedlbl.Name = "greylistedmissionsdeclinedlbl";
-            this.greylistedmissionsdeclinedlbl.Size = new System.Drawing.Size(108, 13);
+            this.greylistedmissionsdeclinedlbl.Size = new System.Drawing.Size(112, 13);
             this.greylistedmissionsdeclinedlbl.TabIndex = 13;
             this.greylistedmissionsdeclinedlbl.Text = "GreyListed # Declined";
             // 
@@ -1995,7 +2013,7 @@
             // 
             this.LastBlacklistedMissionDeclinedData.AutoSize = true;
             this.LastBlacklistedMissionDeclinedData.Location = new System.Drawing.Point(582, 184);
-            this.LastBlacklistedMissionDeclinedData.Name = "LastBlackListedMissionDeclinedData";
+            this.LastBlacklistedMissionDeclinedData.Name = "LastBlacklistedMissionDeclinedData";
             this.LastBlacklistedMissionDeclinedData.Size = new System.Drawing.Size(24, 13);
             this.LastBlacklistedMissionDeclinedData.TabIndex = 12;
             this.LastBlacklistedMissionDeclinedData.Text = "n/a";
@@ -2004,7 +2022,7 @@
             // 
             this.LastGreylistedMissionDeclinedData.AutoSize = true;
             this.LastGreylistedMissionDeclinedData.Location = new System.Drawing.Point(581, 125);
-            this.LastGreylistedMissionDeclinedData.Name = "LastGreyListedMissionDeclinedData";
+            this.LastGreylistedMissionDeclinedData.Name = "LastGreylistedMissionDeclinedData";
             this.LastGreylistedMissionDeclinedData.Size = new System.Drawing.Size(24, 13);
             this.LastGreylistedMissionDeclinedData.TabIndex = 11;
             this.LastGreylistedMissionDeclinedData.Text = "n/a";
@@ -2013,8 +2031,8 @@
             // 
             this.LastBlacklistedMissionDeclinedlbl.AutoSize = true;
             this.LastBlacklistedMissionDeclinedlbl.Location = new System.Drawing.Point(462, 184);
-            this.LastBlacklistedMissionDeclinedlbl.Name = "LastBlackListedMissionDeclinedlbl";
-            this.LastBlacklistedMissionDeclinedlbl.Size = new System.Drawing.Size(114, 13);
+            this.LastBlacklistedMissionDeclinedlbl.Name = "LastBlacklistedMissionDeclinedlbl";
+            this.LastBlacklistedMissionDeclinedlbl.Size = new System.Drawing.Size(118, 13);
             this.LastBlacklistedMissionDeclinedlbl.TabIndex = 10;
             this.LastBlacklistedMissionDeclinedlbl.Text = "Last BlackList Declined";
             // 
@@ -2022,8 +2040,8 @@
             // 
             this.LastGreylistedMissionDeclinedlbl.AutoSize = true;
             this.LastGreylistedMissionDeclinedlbl.Location = new System.Drawing.Point(466, 125);
-            this.LastGreylistedMissionDeclinedlbl.Name = "LastGreyListedMissionDeclinedlbl";
-            this.LastGreylistedMissionDeclinedlbl.Size = new System.Drawing.Size(109, 13);
+            this.LastGreylistedMissionDeclinedlbl.Name = "LastGreylistedMissionDeclinedlbl";
+            this.LastGreylistedMissionDeclinedlbl.Size = new System.Drawing.Size(113, 13);
             this.LastGreylistedMissionDeclinedlbl.TabIndex = 9;
             this.LastGreylistedMissionDeclinedlbl.Text = "Last GreyList Declined";
             // 
@@ -6143,30 +6161,12 @@
             this.bttnUserDefinedScript1.UseVisualStyleBackColor = true;
             this.bttnUserDefinedScript1.Click += new System.EventHandler(this.bttnUserDefinedScript1_Click);
             // 
-            // label275
-            // 
-            this.label275.AutoSize = true;
-            this.label275.Location = new System.Drawing.Point(64, 222);
-            this.label275.Name = "label275";
-            this.label275.Size = new System.Drawing.Size(58, 13);
-            this.label275.TabIndex = 233;
-            this.label275.Text = "useDrones";
-            // 
-            // useDronesData
-            // 
-            this.useDronesData.AutoSize = true;
-            this.useDronesData.Location = new System.Drawing.Point(132, 222);
-            this.useDronesData.Name = "useDronesData";
-            this.useDronesData.Size = new System.Drawing.Size(24, 13);
-            this.useDronesData.TabIndex = 234;
-            this.useDronesData.Text = "n/a";
-            // 
             // QuestorUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ClientSize = new System.Drawing.Size(360, 97);
+            this.ClientSize = new System.Drawing.Size(713, 412);
             this.Controls.Add(this.label26);
             this.Controls.Add(this.label25);
             this.Controls.Add(this.buttonQuestormanager);
@@ -6183,7 +6183,7 @@
             this.Controls.Add(this.QuestorStateComboBox);
             this.Controls.Add(this.QuestorStatelbl);
             this.Controls.Add(this.lblPocketAction);
-            this.Controls.Add(lblCurrentMissionInfo);
+            this.Controls.Add(this.lblCurrentMissionInfo);
             this.Controls.Add(this.lblMissionName);
             this.Controls.Add(this.chkShowDetails);
             this.Controls.Add(this.Disable3DCheckBox);
@@ -6256,7 +6256,6 @@
         //private System.Windows.Forms.CheckBox Anomaly_chk;
         private System.Windows.Forms.CheckBox chkShowDetails;
         private System.Windows.Forms.Label lblMissionName;
-        public static System.Windows.Forms.Label lblCurrentMissionInfo;
         private System.Windows.Forms.Label lblPocketAction;
         private System.Windows.Forms.Label lblCurrentPocketAction;
         private System.Windows.Forms.Button buttonQuestorStatistics;
@@ -6794,6 +6793,7 @@
         private System.Windows.Forms.Label DataCurrentCombatTarget;
         private System.Windows.Forms.Label useDronesData;
         private System.Windows.Forms.Label label275;
+        public System.Windows.Forms.Label lblCurrentMissionInfo;
     }
 }
 
