@@ -78,7 +78,6 @@ namespace QuestorManager
         {
 
             ParseArgs(args);
-            
 
             //
             // direct login, no schedules.xml

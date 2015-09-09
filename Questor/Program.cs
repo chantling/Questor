@@ -79,7 +79,6 @@ namespace Questor
 		
 		public static void Main(string[] args)
 		{
-
 			ParseArgs(args);
 
 			if (!string.IsNullOrEmpty(Logging.EVELoginUserName) && !string.IsNullOrEmpty(Logging.EVELoginPassword) && !string.IsNullOrEmpty(Logging.MyCharacterName))
