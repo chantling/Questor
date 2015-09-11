@@ -22,8 +22,8 @@ namespace Questor.Modules.BackgroundTasks
 		private static bool MemoryManagerHasBeenRunThisIteration;
 		private static DateTime CloseQuestorDelay { get; set; }
 
-		private static bool _closeQuestor10SecWarningDone;
-		private static bool _closeQuestorCMDUplink = true;
+//		private static bool _closeQuestor10SecWarningDone;
+//		private static bool _closeQuestorCMDUplink = true;
 		public static bool CloseQuestorFlag = true;
 		private static bool FoundDuelInvitation;
 		private static DateTime FoundDuelInvitationTime = DateTime.UtcNow.AddDays(-1);
@@ -45,16 +45,6 @@ namespace Questor.Modules.BackgroundTasks
 			Logging.Log("Questor", "started calling DirectEve.Dispose()", Logging.White);
 			Cache.Instance.DirectEve.Dispose(); //could this hang?
 			Logging.Log("Questor", "finished calling DirectEve.Dispose()", Logging.White);
-			//
-			// if Cleanup.SessionState is "Quitting!!" then we know for certain we are scheduling a restart, NOT just exiting questor (and possibly trying to restart it)
-			//
-//			if (Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
-//			{
-				Process.GetCurrentProcess().Kill();
-				Environment.Exit(0);
-				Environment.FailFast("exit");
-//			}
-			
 			Cleanup.SignalToQuitQuestor = true;
 		}
 
@@ -150,9 +140,15 @@ namespace Questor.Modules.BackgroundTasks
 //				return false;
 //			}
 			
+			Logging.Log("Questor", "Closing with: Process.GetCurrentProcess().Kill()", Logging.White);
+			
 			DirecteveDispose();
 			
-			Logging.Log("Questor", "Closing with: Process.GetCurrentProcess().Kill()", Logging.White);
+			Process.GetCurrentProcess().Kill();
+			Environment.Exit(0);
+			Environment.FailFast("exit");
+			
+			
 			
 			return false;
 		}
