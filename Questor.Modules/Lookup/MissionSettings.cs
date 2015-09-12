@@ -375,7 +375,7 @@ namespace Questor.Modules.Lookup
 					return _fittingToLoad;
 				}
 
-				_fittingToLoad = FactionFittingNameForThisMissionsFaction;
+				_fittingToLoad = MissionFittingNameForThisMissionName;
 				return _fittingToLoad;
 			}
 
