@@ -661,7 +661,6 @@ namespace Questor.Behaviors
 					ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.Statistics);
 					return;
 				}
-				
 				Logging.Log("CurrentCombatMissionBehavior.CompleteMission", "Skipping statistics: We have not yet completed a mission", Logging.Teal);
 				ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.UnloadLoot);
 				return;

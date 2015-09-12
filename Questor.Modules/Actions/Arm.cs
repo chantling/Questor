@@ -81,6 +81,7 @@ namespace Questor.Modules.Actions
 		private static DirectItem AmmoHangarItem;
 		private static IEnumerable<DirectItem> LootHangarItems;
 		private static DirectItem LootHangarItem;
+		private static DateTime LastRepairDateTime { get; set; }
 		
 		public static void ClearDataBetweenStates()
 		{
@@ -1082,7 +1083,9 @@ namespace Questor.Modules.Actions
 				
 				Arm.NeedRepair = false;
 
+				LastRepairDateTime = DateTime.UtcNow;
 				ChangeArmState(ArmState.LoadSavedFitting, true);
+				
 				return true;
 			}
 			catch (Exception ex)
@@ -1096,6 +1099,13 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				if(LastRepairDateTime.AddSeconds(20) < DateTime.UtcNow) {
+					Logging.Log(WeAreInThisStateForLogs(), "FAILED selecting Fitting. Moving next state.", Logging.White);
+					ChangeArmState(ArmState.MoveDrones, true);
+					return true;
+				}
+				
 				
 				DirectAgent agent = Cache.Instance.Agent;
 				
