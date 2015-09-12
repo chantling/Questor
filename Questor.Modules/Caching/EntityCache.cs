@@ -5094,6 +5094,7 @@ namespace Questor.Modules.Caching
                         }
 
                         _directEntity.Approach();
+                        Time.Instance.LastApproachAction = DateTime.UtcNow;
                         Time.Instance.NextApproachAction = DateTime.UtcNow.AddSeconds(Time.Instance.ApproachDelay_seconds);
                         Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(Time.Instance.ApproachDelay_seconds);
                         Cache.Instance.Approaching = this;

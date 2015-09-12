@@ -613,19 +613,9 @@ namespace Questor.Modules.Activities
 				DistanceToClear = (int)Distances.OnGridWithMe;
 			}
 
-			//
-			// the important bit is here... Adds target to the PrimaryWeapon or Drone Priority Target Lists so that they get killed (we basically wait for combat.cs to do that before proceeding)
-			//
-			//if (Settings.Instance.TargetSelectionMethod == "isdp")
-			//{
 			if (Combat.GetBestPrimaryWeaponTarget(DistanceToClear, false, "combat", Combat.combatTargets.Where(t => t.IsTargetedBy).ToList()))
 				_clearPocketTimeout = null;
-			//}
-			//else //use new target selection method
-			//{
-			//    if (Cache.Instance.__GetBestWeaponTargets(DistanceToClear, Combat.combatTargets.Where(t => t.IsTargetedBy)).Any())
-			//        _clearPocketTimeout = null;
-			//}
+
 
 			// Do we have a timeout?  No, set it to now + 5 seconds
 			if (!_clearPocketTimeout.HasValue)
@@ -710,6 +700,12 @@ namespace Questor.Modules.Activities
 		{
 			if (DateTime.UtcNow < _nextCombatMissionCtrlAction)
 				return;
+			
+			if(DateTime.UtcNow < Time.Instance.LastApproachAction.AddSeconds(20)) {
+				return;
+			}
+			
+			Logging.Log("CombatMissionCtrl.MoveToBackground", "MoveToBackground was called.", Logging.Debug);
 
 			//we cant move in bastion mode, do not try
 			List<ModuleCache> bastionModules = Cache.Instance.Modules.Where(m => m.GroupId == (int)Group.Bastion && m.IsOnline).ToList();
@@ -2482,15 +2478,24 @@ namespace Questor.Modules.Activities
 						backgroundAction.AddParameter("optional", "true");
 						_pocketActions.Insert(0,backgroundAction);
 
+						//var ent = Cache.Instance.AccelerationGates;
+						
 						// Is there a gate?
-						if (Cache.Instance.AccelerationGates != null && Cache.Instance.AccelerationGates.Any())
-						{
+						//if (ent != null && ent.Any())
+						//{
+							//Logging.Log("CombatMissionCtrl", "We found an acceleration gate!", Logging.Orange);
 							// Activate it (Activate action also moves to the gate)
+							
 							_pocketActions.Add(new Actions.Action { State = ActionState.Activate });
 							_pocketActions[_pocketActions.Count - 1].AddParameter("target", "Acceleration Gate");
-						}
-						else // No, were done
-							_pocketActions.Add(new Actions.Action { State = ActionState.Done });
+							_pocketActions[_pocketActions.Count - 1].AddParameter("optional", "true");
+							
+//						}
+						//else { // No, were done
+							
+						//	Logging.Log("CombatMissionCtrl", "We didn't found an acceleration gate!", Logging.Orange);
+					//		_pocketActions.Add(new Actions.Action { State = ActionState.Done });
+						//}
 					} else {
 						
 						//Add move to gate background task - we gotta add a switch to the settings config file
