@@ -701,11 +701,11 @@ namespace Questor.Modules.Activities
 			if (DateTime.UtcNow < _nextCombatMissionCtrlAction)
 				return;
 			
-			if(DateTime.UtcNow < Time.Instance.LastApproachAction.AddSeconds(20)) {
-				Nextaction();
-				return;
-			}
-			
+//			if(DateTime.UtcNow < Time.Instance.LastApproachAction.AddSeconds(20)) {
+//				Nextaction();
+//				return;
+//			}
+//
 			Logging.Log("CombatMissionCtrl.MoveToBackground", "MoveToBackground was called.", Logging.Debug);
 
 			//we cant move in bastion mode, do not try
@@ -2461,6 +2461,11 @@ namespace Questor.Modules.Activities
 					//
 					// LogStatistics();
 					//
+					
+					if(Settings.Instance.DisableAutoBackgroundLootAction) {
+						Logging.Log("-", "Settings.Instance.DisableAutoBackgroundLootAction ==  true", Logging.White);
+					}
+					
 					if (_pocketActions.Count == 0)
 					{
 						// No Pocket action, load default actions
@@ -2484,23 +2489,28 @@ namespace Questor.Modules.Activities
 						// Is there a gate?
 						//if (ent != null && ent.Any())
 						//{
-							//Logging.Log("CombatMissionCtrl", "We found an acceleration gate!", Logging.Orange);
-							// Activate it (Activate action also moves to the gate)
-							
+						//Logging.Log("CombatMissionCtrl", "We found an acceleration gate!", Logging.Orange);
+						// Activate it (Activate action also moves to the gate)
+						
+						
+						
+						
+						if(!Settings.Instance.DisableAutoBackgroundLootAction) {
 							_pocketActions.Add(new Actions.Action { State = ActionState.Activate });
 							_pocketActions[_pocketActions.Count - 1].AddParameter("target", "Acceleration Gate");
 							_pocketActions[_pocketActions.Count - 1].AddParameter("optional", "true");
-							
+						}
+						
 //						}
 						//else { // No, were done
-							
+						
 						//	Logging.Log("CombatMissionCtrl", "We didn't found an acceleration gate!", Logging.Orange);
-					//		_pocketActions.Add(new Actions.Action { State = ActionState.Done });
+						//		_pocketActions.Add(new Actions.Action { State = ActionState.Done });
 						//}
 					} else {
 						
 						//Add move to gate background task - we gotta add a switch to the settings config file
-						if(!_pocketActions.Any( a => a.State == ActionState.MoveToBackground)) {
+						if(!Settings.Instance.DisableAutoBackgroundLootAction && !_pocketActions.Any( a => a.State == ActionState.MoveToBackground)) {
 							Actions.Action backgroundAction = new Actions.Action { State = ActionState.MoveToBackground };
 							backgroundAction.AddParameter("target", "Acceleration Gate");
 							backgroundAction.AddParameter("optional", "true");

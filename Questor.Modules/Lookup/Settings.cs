@@ -162,6 +162,7 @@ namespace Questor.Modules.Lookup
         public string AmmoHangarTabName { get; set; }
         public string BookmarkHangar { get; set; }
         public string LootContainerName { get; set; }
+        public bool DisableAutoBackgroundLootAction { get; set; }
 
         public string HighTierLootContainer { get; set; }
 
@@ -405,6 +406,7 @@ namespace Questor.Modules.Lookup
                 Logging.DebugWatchForActiveWars = (bool?)CharacterSettingsXml.Element("debugWatchForActiveWars") ?? (bool?)CommonSettingsXml.Element("debugWatchForActiveWars") ?? false;
                 DetailedCurrentTargetHealthLogging = (bool?)CharacterSettingsXml.Element("detailedCurrentTargetHealthLogging") ?? (bool?)CommonSettingsXml.Element("detailedCurrentTargetHealthLogging") ?? true;
                 DefendWhileTraveling = (bool?)CharacterSettingsXml.Element("defendWhileTraveling") ?? (bool?)CommonSettingsXml.Element("defendWhileTraveling") ?? true;
+                DisableAutoBackgroundLootAction = (bool?)CharacterSettingsXml.Element("disableAutoBackgroundLootAction") ?? (bool?)CommonSettingsXml.Element("disableAutoBackgroundLootAction") ?? false;
                 //Logging.UseInnerspace = (bool?)CharacterSettingsXml.Element("useInnerspace") ?? (bool?)CommonSettingsXml.Element("useInnerspace") ?? true;
                 //setEveClientDestinationWhenTraveling = (bool?)CharacterSettingsXml.Element("setEveClientDestinationWhenTraveling") ?? (bool?)CommonSettingsXml.Element("setEveClientDestinationWhenTraveling") ?? false;
                 TargetSelectionMethod = (string)CharacterSettingsXml.Element("targetSelectionMethod") ?? (string)CommonSettingsXml.Element("targetSelectionMethod") ?? "isdp"; //other choice is "old"
