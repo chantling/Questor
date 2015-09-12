@@ -2462,8 +2462,8 @@ namespace Questor.Modules.Activities
 					// LogStatistics();
 					//
 					
-					if(Settings.Instance.DisableAutoBackgroundLootAction) {
-						Logging.Log("-", "Settings.Instance.DisableAutoBackgroundLootAction ==  true", Logging.White);
+					if(Settings.Instance.DisableAutoBackgroundMoveToGate) {
+						Logging.Log("-", "Settings.Instance.DisableAutoBackgroundMoveToGate ==  true", Logging.White);
 					}
 					
 					if (_pocketActions.Count == 0)
@@ -2495,7 +2495,7 @@ namespace Questor.Modules.Activities
 						
 						
 						
-						if(!Settings.Instance.DisableAutoBackgroundLootAction) {
+						if(!Settings.Instance.DisableAutoBackgroundMoveToGate) {
 							_pocketActions.Add(new Actions.Action { State = ActionState.Activate });
 							_pocketActions[_pocketActions.Count - 1].AddParameter("target", "Acceleration Gate");
 							_pocketActions[_pocketActions.Count - 1].AddParameter("optional", "true");
@@ -2510,7 +2510,7 @@ namespace Questor.Modules.Activities
 					} else {
 						
 						//Add move to gate background task - we gotta add a switch to the settings config file
-						if(!Settings.Instance.DisableAutoBackgroundLootAction && !_pocketActions.Any( a => a.State == ActionState.MoveToBackground)) {
+						if(!Settings.Instance.DisableAutoBackgroundMoveToGate && !_pocketActions.Any( a => a.State == ActionState.MoveToBackground)) {
 							Actions.Action backgroundAction = new Actions.Action { State = ActionState.MoveToBackground };
 							backgroundAction.AddParameter("target", "Acceleration Gate");
 							backgroundAction.AddParameter("optional", "true");
