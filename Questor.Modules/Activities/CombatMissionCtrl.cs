@@ -702,6 +702,7 @@ namespace Questor.Modules.Activities
 				return;
 			
 			if(DateTime.UtcNow < Time.Instance.LastApproachAction.AddSeconds(20)) {
+				Nextaction();
 				return;
 			}
 			
