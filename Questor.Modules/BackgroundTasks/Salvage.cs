@@ -799,7 +799,7 @@ namespace Questor.Modules.BackgroundTasks
 					if (Logging.DebugLootWrecks) Logging.Log("Salvage.LootWrecks", "if (!Cache.Instance.CurrentShipsCargo.Items.Any()) - really? 0 items in cargo?", Logging.Teal);
 				}
 				
-				Logging.Log("Salvage.LootWrecks","FreeCargoCapacity [" + freeCargoCapacity + "]", Logging.White);
+				if (Logging.DebugLootWrecks) Logging.Log("Salvage.LootWrecks","FreeCargoCapacity [" + freeCargoCapacity + "]", Logging.White);
 
 				foreach (EntityCache containerEntity in Cache.Instance.Containers.Where(e => e.Distance <= (int)Distances.SafeScoopRange).OrderByDescending(i => i.IsLootTarget))
 				{
