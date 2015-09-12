@@ -83,6 +83,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SubModules\BuyLPI\BuyLPI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Behaviors\CombatHelperBehavior.cs" />
     <Compile Include="Behaviors\CombatMissionsBehavior.cs" />
@@ -91,15 +92,15 @@
     <Compile Include="Behaviors\DedicatedBookmarkSalvagerBehavior.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Questor.cs" />
-    <Compile Include="QuestorManager\Actions\BuyLPI.cs" />
-    <Compile Include="QuestorManager\Actions\ValueDump.cs" />
-    <Compile Include="QuestorManager\ListItems.cs" />
-    <Compile Include="QuestorManager\ListViewColumnSorter.cs" />
-    <Compile Include="QuestorManager\QuestormanagerState.cs" />
-    <Compile Include="QuestorManager\QuestorManagerUI.cs">
+    <Compile Include="SubModules\QuestorManager\Actions\BuyLPI.cs" />
+    <Compile Include="SubModules\QuestorManager\Actions\ValueDump.cs" />
+    <Compile Include="SubModules\QuestorManager\ListItems.cs" />
+    <Compile Include="SubModules\QuestorManager\ListViewColumnSorter.cs" />
+    <Compile Include="SubModules\QuestorManager\QuestormanagerState.cs" />
+    <Compile Include="SubModules\QuestorManager\QuestorManagerUI.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="QuestorManager\QuestorManagerUI.Designer.cs">
+    <Compile Include="SubModules\QuestorManager\QuestorManagerUI.Designer.cs">
       <DependentUpon>QuestorManagerUI.cs</DependentUpon>
     </Compile>
     <Compile Include="QuestorUI.cs">
@@ -117,6 +118,14 @@
     <Compile Include="Storylines\Storyline.cs" />
     <Compile Include="Storylines\TransactionDataDelivery.cs" />
     <Compile Include="Storylines\TransactionDataDeliveryState.cs" />
+    <Compile Include="SubModules\ValueDump\ListViewColumnSorter.cs" />
+    <Compile Include="SubModules\ValueDump\ValueDump.cs" />
+    <Compile Include="SubModules\ValueDump\ValueDumpUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubModules\ValueDump\ValueDumpUI.Designer.cs">
+      <DependentUpon>ValueDumpUI.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -127,12 +136,16 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="QuestorManager\QuestorManagerUI.resx">
+    <EmbeddedResource Include="SubModules\QuestorManager\QuestorManagerUI.resx">
       <DependentUpon>QuestorManagerUI.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="QuestorUI.resx">
       <DependentUpon>QuestorUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubModules\ValueDump\ValueDumpUI.resx">
+      <DependentUpon>ValueDumpUI.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
@@ -167,6 +180,11 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SubModules\BuyLPI" />
+    <Folder Include="SubModules" />
+    <Folder Include="SubModules\ValueDump" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

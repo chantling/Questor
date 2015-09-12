@@ -33,30 +33,6 @@ set csproj=.\%nameofproject%\%nameofproject%.csproj
 "%msbuild4%" "%csproj%" /p:configuration="%releasetype%" /target:Clean;Build
 Echo Done building [ %nameofproject% ] - see above for any errors - 2 of 5 builds
 %pause%
-::
-:: Build Project valuedump
-::
-set nameofproject=valuedump
-set csproj=.\%nameofproject%\%nameofproject%.csproj
-"%msbuild4%" "%csproj%" /p:configuration="%releasetype%" /target:Clean;Build
-Echo Done building [ %nameofproject% ] - see above for any errors - 3 of 5 builds
-%pause%
-::
-:: Build Project: QuestorManager
-::
-set nameofproject=QuestorManager
-set csproj=.\%nameofproject%\%nameofproject%.csproj
-"%msbuild4%" "%csproj%" /p:configuration="%releasetype%" /target:Clean;Build
-Echo Done building [ %nameofproject% ] - see above for any errors - 4 of 5 builds
-%pause%
-::
-:: Build Project: BUYLPI
-::
-set nameofproject=BUYLPI
-set csproj=.\%nameofproject%\%nameofproject%.csproj
-"%msbuild4%" "%csproj%" /p:configuration="%releasetype%" /target:Clean;Build
-Echo Done building [ %nameofproject% ] - see above for any errors - 5 of 5 builds
-%pause%
 
 if not exist output mkdir output >>nul 2>>nul
 :: Echo deleting old build from the output directory
