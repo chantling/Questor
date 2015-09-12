@@ -60,20 +60,6 @@ namespace Questor.Modules.Activities
             }
         }
 
-        public static bool _standaloneInstance
-        {
-            get
-            {
-                return !Logging.UseInnerspace;
-            }
-            set
-            {
-                //Logging.Log("Startup", "Setting: UseInnerspace = [" + !value + "]", Logging.White);
-                Logging.UseInnerspace = !value;
-            }
-
-        }
-
         public static bool _loadAdaptEVE;
         private static bool? _readyToLoginEVEAccount;
 

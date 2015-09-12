@@ -112,7 +112,7 @@ namespace Questor.Modules.Combat
 		//public static int MaximumLowValueTargets { get; set; }
 		public static int MinimumAmmoCharges { get; set; }
 		public static List<Ammo> Ammo { get; set; }
-		public static List<MiningCrystals> MiningCrystals { get; private set; }
+		
 		public static int MinimumTargetValueToConsiderTargetAHighValueTarget { get; set; }
 		public static int MaximumTargetValueToConsiderTargetALowValueTarget { get; set; }
 		public static bool SelectAmmoToUseBasedOnShipSize { get; set; }

@@ -68,8 +68,6 @@
     <Compile Include="EVEInteraction\D3DDetour\D3DHook.cs" />
     <Compile Include="EVEInteraction\D3DDetour\Pulse.cs" />
     <Compile Include="EVEInteraction\StandAlone.cs" />
-    <Compile Include="Lookup\InvTypeMarket.cs" />
-    <Compile Include="Lookup\MiningCrystals.cs" />
     <Compile Include="Lookup\OreType.cs" />
     <Compile Include="Lookup\SkillPlan.cs" />
     <Compile Include="Lookup\TypeID.cs" />

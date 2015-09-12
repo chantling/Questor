@@ -177,11 +177,6 @@ namespace Questor.Modules.Logging
 			//
 			if (Logging.ConsoleLogPath != null && Logging.ConsoleLogFile != null)
 			{
-				if (Logging.InnerspaceGeneratedConsoleLog && Logging.UseInnerspace)
-				{
-//					InnerSpace.Echo(string.Format("{0:HH:mm:ss} {1}", DateTimeForLogs, "log " + Logging.ConsoleLogFile + "-innerspace-generated.log"));
-//					LavishScript.ExecuteCommand("log " + Logging.ConsoleLogFile + "-innerspace-generated.log");
-				}
 
 				if (!string.IsNullOrEmpty(Logging.ConsoleLogFile))
 				{
@@ -192,12 +187,8 @@ namespace Questor.Modules.Logging
 						return true;
 					}
 					
-//					if (Logging.UseInnerspace) InnerSpace.Echo(string.Format("{0:HH:mm:ss} {1}", DateTimeForLogs, "Logging: Unable to find (or create): " + Logging.ConsoleLogPath));
-				}
 
-				//
-				// manually echo an error here?
-				//
+				}
 				return false;
 			}
 

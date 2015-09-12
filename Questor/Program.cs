@@ -51,7 +51,6 @@ namespace Questor
 				{"p|password=", "the user's {PASSWORD}.", v => Logging.EVELoginPassword = v},
 				{"c|character=", "the {CHARACTER} to use.", v => Logging.MyCharacterName = v},
 				{"n|loginNow", "Login using info in scheduler", v => LoginToEVE._loginNowIgnoreScheduler = v != null},
-				{"i|standalone", "Standalone instance, hook D3D w/o Innerspace!", v => LoginToEVE._standaloneInstance = v != null},
 				{"h|help", "show this message and exit", v => LoginToEVE._showHelp = v != null}
 			};
 

@@ -44,7 +44,6 @@ namespace QuestorManager
                 {"l|loginOnly", "login only and exit.", v => LoginToEVE._loginOnly = v != null},
                 {"x|chantling|scheduler", "use scheduler (thank you chantling!)", v => LoginToEVE._chantlingScheduler = v != null},
                 {"n|loginNow", "Login using info in scheduler", v => LoginToEVE._loginNowIgnoreScheduler = v != null},
-                {"i|standalone", "Standalone instance, hook D3D w/o Innerspace!", v => LoginToEVE._standaloneInstance = v != null},
                 {"h|help", "show this message and exit", v => LoginToEVE._showHelp = v != null}
         	};
 

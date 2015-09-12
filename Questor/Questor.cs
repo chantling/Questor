@@ -156,11 +156,6 @@ namespace Questor
 
 					MissionSettings.UpdateMissionName();
 					Logging.MaintainConsoleLogs();
-
-					if (Logging.UseInnerspace)
-					{
-						
-					}
 				}
 				else
 				{
