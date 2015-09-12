@@ -939,14 +939,14 @@ namespace Questor.Modules.Caching
 
 							if (_agent != null)
 							{
-								Logging.Log("Cache: CurrentAgent", "Processing Agent Info...", Logging.White);
+//								Logging.Log("Cache: CurrentAgent", "Processing Agent Info...", Logging.White);
 								Cache.Instance.AgentStationName = Cache.Instance.DirectEve.GetLocationName(Cache.Instance._agent.StationId);
 								Cache.Instance.AgentStationID = Cache.Instance._agent.StationId;
 
 								Cache.Instance.AgentSolarSystemID = Cache.Instance._agent.SolarSystemId;
-								Logging.Log("Cache: CurrentAgent", "AgentStationName [" + Cache.Instance.AgentStationName + "]", Logging.White);
-								Logging.Log("Cache: CurrentAgent", "AgentStationID [" + Cache.Instance.AgentStationID + "]", Logging.White);
-								Logging.Log("Cache: CurrentAgent", "AgentSolarSystemID [" + Cache.Instance.AgentSolarSystemID + "]", Logging.White);
+//								Logging.Log("Cache: CurrentAgent", "AgentStationName [" + Cache.Instance.AgentStationName + "]", Logging.White);
+//								Logging.Log("Cache: CurrentAgent", "AgentStationID [" + Cache.Instance.AgentStationID + "]", Logging.White);
+//								Logging.Log("Cache: CurrentAgent", "AgentSolarSystemID [" + Cache.Instance.AgentSolarSystemID + "]", Logging.White);
 								
 								return _agent;
 							} else {

@@ -1073,7 +1073,7 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
-				Arm.NeedRepair = true;  // enable repair by default
+//				Arm.NeedRepair = true;  // enable repair by default
 				
 				if (Panic.UseStationRepair && Arm.NeedRepair)
 				{
@@ -1096,6 +1096,19 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				DirectAgent agent = Cache.Instance.Agent;
+				
+				if(agent == null) {
+					ChangeArmState(ArmState.MoveDrones, true);
+					return true;
+				}
+				
+				if(Cache.Instance.GetAgentMission(agent.AgentId,false).State != (int)MissionState.Accepted) {
+					ChangeArmState(ArmState.MoveDrones, true);
+					return true;
+				}
+				
 				if (Settings.Instance.UseFittingManager && MissionSettings.Mission != null)
 				{
 					//If we are already loading a fitting...
@@ -1164,6 +1177,7 @@ namespace Questor.Modules.Actions
 						//this should provide backwards compatibility without trying to fit always
 						if (!CustomFittingFound)
 						{
+							
 							if (UseMissionShip)
 							{
 								Logging.Log(WeAreInThisStateForLogs(), "Could not find fitting for this ship typeid.  Using current fitting.", Logging.Orange);
