@@ -32,6 +32,8 @@ namespace Questor
 		
 		private static DateTime _lastServerStatusCheckWasNotOK = DateTime.MinValue;
 		
+		public static QuestorUI questorUI { get; set; }
+		
 		private static void ParseArgs(IEnumerable<string> args)
 		{
 			if (!string.IsNullOrEmpty(Logging.EVELoginUserName) &&
@@ -87,19 +89,23 @@ namespace Questor
 
 			if (!LoginToEVE.LoadDirectEVEInstance()) return;
 			
-			Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;			
+			Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;
 			
 			try
 			{
+				
+				questorUI = new QuestorUI();
+				
 				Logging.Log("Startup", "Launching Questor", Logging.Teal);
 				_questor = new Questor();
-
+				
+				
 				Logging.Log("Startup", "Launching QuestorUI", Logging.Teal);
-				Application.Run(new QuestorUI());
+				Application.Run(questorUI);
 
 				while (!Cleanup.SignalToQuitQuestor)
 				{
-					System.Threading.Thread.Sleep(50); 
+					System.Threading.Thread.Sleep(50);
 				}
 
 				Logging.Log("Startup", "Exiting Questor", Logging.Teal);

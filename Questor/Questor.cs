@@ -18,6 +18,7 @@ namespace Questor
 	using System.Globalization;
 	using System.Linq;
 	using DirectEve;
+	using System.Windows.Forms;
 	using global::Questor.Behaviors;
 	using global::Questor.Modules.Actions;
 	using global::Questor.Modules.Caching;
@@ -52,11 +53,11 @@ namespace Questor
 		private static DateTime _lastSessionNotReady = DateTime.MinValue;
 		private static Random _random = new Random();
 
-
 		private readonly Stopwatch _watch;
 
 		public Questor()
 		{
+			
 			//Logging.tryToLogToFile = true;
 			_lastQuestorPulse = DateTime.UtcNow;
 
@@ -88,21 +89,6 @@ namespace Questor
 				Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
 				return;
 			}
-
-//			if (LoginToEVE.StartTime.AddMinutes(10) < LoginToEVE.StopTime)
-//			{
-//				Time.Instance.StopTime = LoginToEVE.StopTime;
-//				Logging.Log("Questor", "Schedule: setup correctly: stoptime is [" + Time.Instance.StopTime.ToShortTimeString() + "]", Logging.Orange);
-//			}
-//			else
-//			{
-//				Time.Instance.StopTime = DateTime.Now.AddHours(Time.Instance.QuestorScheduleNotUsed_Hours);
-//				Logging.Log("Questor", "Schedule: NOT setup correctly: stoptime  set to [" + Time.Instance.QuestorScheduleNotUsed_Hours + "] hours from now at [" + Time.Instance.StopTime.ToShortTimeString() + "]", Logging.Orange);
-//				Logging.Log("Questor", "You can correct this by editing schedules.xml to have an entry for this toon", Logging.Orange);
-//				Logging.Log("Questor", "Ex: <char user=\"" + Settings.Instance.CharacterName + "\" pw=\"MyPasswordForEVEHere\" name=\"MyLoginNameForEVEHere\" start=\"06:45\" stop=\"08:10\" start2=\"09:05\" stop2=\"14:20\"/>", Logging.Orange);
-//				Logging.Log("Questor", "make sure each toon has its own innerspace profile and specify the following startup program line:", Logging.Orange);
-//				Logging.Log("Questor", "dotnet questor questor -x -c \"MyEVECharacterName\"", Logging.Orange);
-//			}
 
 			Time.Instance.StartTime = DateTime.UtcNow;
 			Time.Instance.QuestorStarted_DateTime = DateTime.UtcNow;
@@ -516,6 +502,12 @@ namespace Questor
 					return;
 				}
 				
+				
+				if(!BeforeLogin.questorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questor")) {
+					_nextPulse = DateTime.UtcNow.AddSeconds(2);
+					return;
+				}
+				
 				if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(8)) { // temorarily fix
 					//Logging.Log("LoginOnFrame", "if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(8)", Logging.White);
 					_nextPulse = _nextPulse.AddSeconds(1);
@@ -857,8 +849,6 @@ namespace Questor
 				if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
 				
 				Cache.Instance.InvalidateCache();
-				
-				
 				
 				
 				if (!OnframeProcessEveryPulse()) return;
