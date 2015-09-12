@@ -61,7 +61,6 @@
     <Compile Include="Actions\Market.cs" />
     <Compile Include="Actions\SkillTrainer.cs" />
     <Compile Include="Activities\LoginToEVE.cs" />
-    <Compile Include="Alerts\Email.cs" />
     <Compile Include="BackgroundTasks\NavigateOnGrid.cs" />
     <Compile Include="Caching\EachWeaponsVolleyCache.cs" />
     <Compile Include="EVEInteraction\D3DDetour\D3D11.cs" />
@@ -82,17 +81,12 @@
     <Compile Include="States\DedicatedBookmarkSalvagerBehaviorState.cs" />
     <Compile Include="States\DirectionalScannerBehaviorState.cs" />
     <Compile Include="States\DropState.cs" />
-    <Compile Include="Alerts\Audio.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Caching\ItemCache.cs" />
     <Compile Include="Lookup\MissionSettings.cs" />
     <Compile Include="Actions\Action.cs" />
     <Compile Include="States\CombatMissionsBehaviorState.cs" />
-    <Compile Include="States\InnerspaceCommandsState.cs" />
     <Compile Include="States\ManageFleetState.cs" />
     <Compile Include="States\MasterState.cs" />
-    <Compile Include="States\MiningState.cs" />
     <Compile Include="States\MissionActionState.cs" />
     <Compile Include="Actions\Buy.cs" />
     <Compile Include="Actions\Drop.cs" />
@@ -168,11 +162,6 @@
     <Compile Include="Lookup\Time.cs" />
     <Compile Include="Actions\UnloadLoot.cs" />
     <Compile Include="States\UnloadLootState.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Alerts\Audio.resx">
-      <DependentUpon>Audio.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

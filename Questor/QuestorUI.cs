@@ -10,7 +10,6 @@ namespace Questor
     using System.IO;
     using global::Questor.Modules.Activities;
     using global::Questor.Modules.Actions;
-    using global::Questor.Modules.Alerts;
     using global::Questor.Modules.Caching;
     using global::Questor.Modules.Combat;
     using global::Questor.Modules.Logging;
@@ -425,11 +424,7 @@ namespace Questor
                     }
                     if (_States.CurrentQuestorState == QuestorState.Mining)
                     {
-                        BehaviorComboBox.Items.Clear();
-                        foreach (string text in Enum.GetNames(typeof(MiningState)))
-                        {
-                            BehaviorComboBox.Items.Add(text);
-                        }
+                        
                     }
                     if (_States.CurrentQuestorState == QuestorState.DirectionalScannerBehavior)
                     {
@@ -537,14 +532,7 @@ namespace Questor
                     }
                 }
 
-                if (_States.CurrentQuestorState == QuestorState.Mining)
-                {
-                    if ((string)BehaviorComboBox.SelectedItem != _States.CurrentMiningState.ToString() && !BehaviorComboBox.DroppedDown)
-                    {
-                        BehaviorComboBox.SelectedItem = _States.CurrentMiningState.ToString();
-                    }
-                }
-
+                
                 if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
                 {
                     if ((string)BehaviorComboBox.SelectedItem != _States.CurrentDedicatedBookmarkSalvagerBehaviorState.ToString() && !BehaviorComboBox.DroppedDown)
@@ -1001,15 +989,6 @@ namespace Questor
                 _States.CurrentDebugHangarBehaviorState = (DebugHangarsBehaviorState)Enum.Parse(typeof(DebugHangarsBehaviorState), BehaviorComboBox.Text);
             }
 
-            if (_States.CurrentQuestorState == QuestorState.Mining)
-            {
-                _States.CurrentMiningState = (MiningState)Enum.Parse(typeof(MiningState), BehaviorComboBox.Text);
-            }
-            //if (_States.CurrentQuestorState == QuestorState.BackgroundBehavior)
-            //{
-            //    _States.CurrentBackgroundBehaviorState = (BackgroundBehaviorState)Enum.Parse(typeof(BackgroundBehaviorState), BehaviorComboBox.Text);
-            //    //_States.LavishEvent_QuestorCombatMissionsBehaviorState();
-            //}
 
             try
             {
@@ -1414,7 +1393,7 @@ namespace Questor
         private void btnSendTestEmail_Click(object sender, EventArgs e)
         {
             Logging.Log("QuestorUI", "This Button Sends a test email to the configured email address", Logging.Debug);
-            Email.SendEmail("Someone Pushed the Test Email Button", "This is Just a Test Email from Questor");
+//            Email.SendEmail("Someone Pushed the Test Email Button", "This is Just a Test Email from Questor");
         }
 
         private void bttnResizeEVEWindow_Click(object sender, EventArgs e)

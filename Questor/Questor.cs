@@ -996,12 +996,6 @@ namespace Questor
 								_States.CurrentQuestorState = QuestorState.DedicatedBookmarkSalvagerBehavior;
 								break;
 
-							case "mining":
-								Logging.Log("Questor", "Start Mining Behavior", Logging.White);
-								_States.CurrentQuestorState = QuestorState.Mining;
-								_States.CurrentMiningState = MiningState.Start;
-								break;
-
 							case "combat helper":
 							case "combat_helper":
 							case "combathelper":

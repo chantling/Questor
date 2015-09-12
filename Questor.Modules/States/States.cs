@@ -24,8 +24,6 @@ namespace Questor.Modules.States
 
         public static CombatState CurrentCombatState { get; set; }
 
-        public static MiningState CurrentMiningState { get; set; }
-
         public static TravelerState CurrentTravelerState { get; set; }
 
         public static CombatMissionsBehaviorState CurrentCombatMissionBehaviorState { get; set; }
@@ -83,6 +81,6 @@ namespace Questor.Modules.States
 
         public static BackgroundBehaviorState CurrentBackgroundBehaviorState { get; set; }
 
-        public static InnerspaceCommandsState CurrentInnerspaceCommandsState { get; set; }
+        
     }
 }
