@@ -1527,8 +1527,13 @@ namespace Questor
 		
 		void TabControlMainSelectedIndexChanged(object sender, EventArgs e)
 		{
-			Cache.Instance.Paused = true;
+			//Cache.Instance.Paused = true;
 			
 		}
+        
+        void TabControlMainTabIndexChanged(object sender, EventArgs e)
+        {
+          Cache.Instance.Paused = true;	
+        }
 	}
 }

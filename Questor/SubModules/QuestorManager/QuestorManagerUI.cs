@@ -143,13 +143,15 @@ namespace QuestorManager
 					return;
 				}
 				
-				Cache.Instance.Paused = false;
+				
 				
 				if(!QuestorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questormanager")) {
 					
 					_nextPulse = DateTime.UtcNow.AddSeconds(2);
 					return;
 				}
+				
+				Cache.Instance.Paused = false;
 				
 				if(_lastSessionChange.AddSeconds(8) > DateTime.UtcNow) {
 					return;
