@@ -1114,10 +1114,23 @@ namespace Questor.Modules.Actions
 					return true;
 				}
 				
-				if(Cache.Instance.GetAgentMission(agent.AgentId,false).State != (int)MissionState.Accepted) {
+				
+				try {
+					
+					if(Cache.Instance.GetAgentMission(agent.AgentId,false).State != (int)MissionState.Accepted)
+					{
+						ChangeArmState(ArmState.MoveDrones, true);
+						return true;
+					}
+					
+					
+				} catch (Exception) {
+					
 					ChangeArmState(ArmState.MoveDrones, true);
 					return true;
+					
 				}
+				
 				
 				if (Settings.Instance.UseFittingManager && MissionSettings.Mission != null)
 				{
