@@ -73,6 +73,8 @@ namespace QuestorManager
 		private DateTime _lastAction;
 		private Questor.QuestorUI QuestorUI { get; set; }
 		private static DateTime _nextPulse = DateTime.MinValue;
+		private static DateTime _lastSessionReady = DateTime.MinValue;
+		private static DateTime _lastSessionChange = DateTime.MinValue;
 
 		private string _selectHangar = "Local Hangar";
 
@@ -137,9 +139,17 @@ namespace QuestorManager
 					return;
 				}
 				
+				if(_paused) {
+					return;
+				}
+				
 				if(!QuestorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questormanager")) {
 					
 					_nextPulse = DateTime.UtcNow.AddSeconds(2);
+					return;
+				}
+				
+				if(_lastSessionChange.AddSeconds(8) > DateTime.UtcNow) {
 					return;
 				}
 				
@@ -159,28 +169,24 @@ namespace QuestorManager
 					return;
 				}
 
-				if (Cache.Instance.DirectEve.Session.IsReady)
-				{
-					//Logging.Log("Qm.OnFrame","Session is ready.",Logging.White);
-					Time.Instance.LastSessionIsReady = DateTime.UtcNow;
+				_lastSessionReady = DateTime.UtcNow;
+
+				if(!Cache.Instance.DirectEve.Session.IsInSpace && !Cache.Instance.DirectEve.Session.IsInStation) {
+					_lastSessionChange = DateTime.UtcNow;
 				}
 
-				// We are not in space or station, don't do shit yet!
-				if (!Cache.Instance.InSpace && !Cache.Instance.InStation)
-				{
-					Logging.Log("Qm.OnFrame","if (!Cache.Instance.InSpace && !Cache.Instance.InStation)",Logging.White);
-					Time.Instance.NextInSpaceorInStation = DateTime.UtcNow.AddSeconds(12);
-					Time.Instance.LastSessionChange = DateTime.UtcNow;
-					return;
-				}
-
-				if (DateTime.UtcNow < Time.Instance.NextInSpaceorInStation) return;
+//				// We are not in space or station, don't do shit yet!
+//				if (!Cache.Instance.InSpace && !Cache.Instance.InStation)
+//				{
+//					Logging.Log("Qm.OnFrame","if (!Cache.Instance.InSpace && !Cache.Instance.InStation)",Logging.White);
+//					Time.Instance.NextInSpaceorInStation = DateTime.UtcNow.AddSeconds(12);
+//					Time.Instance.LastSessionChange = DateTime.UtcNow;
+//					return;
+//				}
 
 				// New frame, invalidate old cache
 				Cache.Instance.InvalidateCache();
 				
-				
-
 				// Update settings (settings only load if character name changed)
 				if (!Settings.Instance.DefaultSettingsLoaded)
 				{
@@ -203,39 +209,12 @@ namespace QuestorManager
 					Time.Instance.LastUpdateOfSessionRunningTime = DateTime.UtcNow;
 				}
 
-				// We always check our defense state if we're in space, regardless of questor state
-				// We also always check panic
 				Defense.ProcessState();
-
-				if (Cache.Instance.Paused)
-				{
-					Logging.Log("Qm.OnFrame","if (Cache.Instance.Paused)",Logging.White);
-					Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-					Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
-					Cache.Instance.GotoBaseNow = false;
-					Cleanup.SessionState = string.Empty;
-					return;
-				}
-
-				if (Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
-				{
-					if (_States.CurrentQuestorState != QuestorState.CloseQuestor)
-					{
-						_States.CurrentQuestorState = QuestorState.CloseQuestor;
-						Cleanup.BeginClosingQuestor();
-					}
-				}
-
-				// Start _cleanup.ProcessState
-				// Description: Closes Windows, and eventually other things considered 'cleanup' useful to more than just Questor(Missions) but also Anomalies, Mining, etc
-				//
 				Cleanup.ProcessState();
 
-				// Done
-				// Cleanup State: ProcessState
-
-				// When in warp there's nothing we can do, so ignore everything
-				if (Cache.Instance.InSpace && Cache.Instance.InWarp) return;
+				if (Cache.Instance.InSpace && Cache.Instance.InWarp) {
+					return;
+				}
 
 				InitializeTraveler();
 
