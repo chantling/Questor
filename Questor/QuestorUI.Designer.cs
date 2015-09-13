@@ -849,6 +849,7 @@
         	this.tabControlMain.SelectedIndex = 0;
         	this.tabControlMain.Size = new System.Drawing.Size(799, 460);
         	this.tabControlMain.TabIndex = 127;
+        	this.tabControlMain.SelectedIndexChanged += new System.EventHandler(this.TabControlMainSelectedIndexChanged);
         	// 
         	// tabPage3
         	// 

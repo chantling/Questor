@@ -1524,5 +1524,11 @@ namespace Questor
 				Logging.Log("QuestorUI", "User Defined LavishScript Script #4 is not defined in your characters settings xml: doing nothing", Logging.Debug);
 			}
 		}
+		
+		void TabControlMainSelectedIndexChanged(object sender, EventArgs e)
+		{
+			Cache.Instance.Paused = true;
+			
+		}
 	}
 }

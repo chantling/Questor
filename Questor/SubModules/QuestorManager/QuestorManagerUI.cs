@@ -143,6 +143,8 @@ namespace QuestorManager
 					return;
 				}
 				
+				Cache.Instance.Paused = false;
+				
 				if(!QuestorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questormanager")) {
 					
 					_nextPulse = DateTime.UtcNow.AddSeconds(2);
@@ -204,7 +206,7 @@ namespace QuestorManager
 					Cache.Instance.DirectEve.Rendering3D = !Settings.Instance.Disable3D;
 				}
 
-				Defense.ProcessState();
+//				Defense.ProcessState();
 				Cleanup.ProcessState();
 				
 
