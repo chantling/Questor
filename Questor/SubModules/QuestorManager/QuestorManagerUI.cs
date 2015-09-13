@@ -209,8 +209,8 @@ namespace QuestorManager
 					Time.Instance.LastUpdateOfSessionRunningTime = DateTime.UtcNow;
 				}
 
-				Defense.ProcessState();
-				Cleanup.ProcessState();
+//				Defense.ProcessState();
+//				Cleanup.ProcessState();
 
 				if (Cache.Instance.InSpace && Cache.Instance.InWarp) {
 					return;
