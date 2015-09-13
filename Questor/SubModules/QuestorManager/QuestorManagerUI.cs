@@ -169,6 +169,7 @@ namespace QuestorManager
 					return;
 				}
 
+				Time.Instance.LastSessionIsReady = DateTime.UtcNow;
 				_lastSessionReady = DateTime.UtcNow;
 
 				if(!Cache.Instance.DirectEve.Session.IsInSpace && !Cache.Instance.DirectEve.Session.IsInStation) {
@@ -203,14 +204,9 @@ namespace QuestorManager
 					Cache.Instance.DirectEve.Rendering3D = !Settings.Instance.Disable3D;
 				}
 
-				if (DateTime.UtcNow.Subtract(Time.Instance.LastUpdateOfSessionRunningTime).TotalSeconds < Time.Instance.SessionRunningTimeUpdate_seconds)
-				{
-					Statistics.SessionRunningTime = (int)DateTime.UtcNow.Subtract(Time.Instance.QuestorStarted_DateTime).TotalMinutes;
-					Time.Instance.LastUpdateOfSessionRunningTime = DateTime.UtcNow;
-				}
-
-//				Defense.ProcessState();
-//				Cleanup.ProcessState();
+				Defense.ProcessState();
+				Cleanup.ProcessState();
+				
 
 				if (Cache.Instance.InSpace && Cache.Instance.InWarp) {
 					return;
@@ -226,13 +222,6 @@ namespace QuestorManager
 				if (_requiredCom)
 				{
 					Required();
-				}
-
-				//Text = "Questor Manager [" + Cache.Instance.DirectEve.Me.Name + "]";
-
-				if (_paused)
-				{
-					return;
 				}
 
 				switch (State)
