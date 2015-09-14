@@ -92,6 +92,7 @@
     <Compile Include="Behaviors\DedicatedBookmarkSalvagerBehavior.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Questor.cs" />
+    <Compile Include="SubModules\Deb\Debug.cs" />
     <Compile Include="SubModules\QuestorManager\Actions\BuyLPI.cs" />
     <Compile Include="SubModules\QuestorManager\Actions\ValueDump.cs" />
     <Compile Include="SubModules\QuestorManager\ListItems.cs" />
@@ -184,6 +185,8 @@
   <ItemGroup>
     <Folder Include="SubModules\BuyLPI" />
     <Folder Include="SubModules" />
+    <Folder Include="SubModules\Deb" />
+    <Folder Include="SubModules\QuestorManager\Debugging" />
     <Folder Include="SubModules\ValueDump" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

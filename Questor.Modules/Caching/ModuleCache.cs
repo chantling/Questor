@@ -544,6 +544,8 @@ namespace Questor.Modules.Caching
         private int ActivateCountThisFrame = 0;
 
         public EachWeaponsVolleyCache SnapshotOfVolleyData;
+        
+        
         public bool Activate(EntityCache target)
         {
             try
@@ -561,8 +563,8 @@ namespace Questor.Modules.Caching
                 // is no ammo that close (we assume this will eliminate some exceptions 
                 // we were seeing trying to shoot things that were dead/dieing
                 //
-                try
-                {
+//                try
+//                {
 //                    if (Cache.Instance.ChargeEntities.Any(e => e.FollowId == target.Id && e.DistanceFromEntity(target) < e.Velocity))
 //                    {
 //                        IEnumerable<EntityCache> AmmoNeartarget = Cache.Instance.ChargeEntities.Where(e => e.FollowId == target.Id && e.DistanceFromEntity(target) < e.Velocity).ToList();
@@ -588,11 +590,11 @@ namespace Questor.Modules.Caching
 //                        if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "AmmoNeartarget is null)", Logging.Debug);
 //                        //return false; if we cant log it correctly just shoot something
 //                    }
-                }
-                catch (Exception ex)
-                {
-                    Logging.Log("ModuleCache.Activate","Exception [" + ex + "]",Logging.Debug);
-                }
+//                }
+//                catch (Exception ex)
+//                {
+//                    Logging.Log("ModuleCache.Activate","Exception [" + ex + "]",Logging.Debug);
+//                }
                 
 
                 ActivateCountThisFrame++;

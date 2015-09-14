@@ -124,6 +124,9 @@ namespace Questor
 				Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
 			}
 
+			
+			//new SubModules.Debug();
+			
 			Logging.Log("Questor", "Questor.", Logging.White);
 		}
 

@@ -3266,7 +3266,7 @@ namespace Questor.Modules.Combat
 					icount = 0;
 				}
 				
-				Cache.Instance.InvalidateCache(); // temporarily
+				//Cache.Instance.InvalidateCache(); // temporarily
 				
 
 				if ((_States.CurrentCombatState != CombatState.Idle ||

@@ -102,6 +102,7 @@ namespace Questor
 				
 				Logging.Log("Startup", "Launching QuestorUI", Logging.Teal);
 				Application.Run(questorUI);
+				
 
 				while (!Cleanup.SignalToQuitQuestor)
 				{
