@@ -108,7 +108,6 @@
     <Compile Include="Actions\Arm.cs" />
     <Compile Include="States\ArmState.cs" />
     <Compile Include="Caching\Cache.cs" />
-    <Compile Include="Lookup\CharSchedule.cs" />
     <Compile Include="States\CleanupState.cs" />
     <Compile Include="BackgroundTasks\Cleanup.cs" />
     <Compile Include="Logging\Logging.cs" />

@@ -18,7 +18,7 @@ namespace Questor.Modules.Activities
     {
         public static bool loggedInAndreadyToStartQuestorUI;
         public static bool useLoginOnFrameEvent;
-        public static List<CharSchedule> CharSchedules { get; private set; }
+        
         public static DateTime QuestorProgramLaunched = DateTime.UtcNow;
         
         public static DateTime QuestorSchedulerReadyToLogin = DateTime.UtcNow;

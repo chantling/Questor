@@ -1954,7 +1954,7 @@ namespace Questor.Modules.Combat
 				}
 
 				int weaponsActivatedThisTick = 0;
-				int weaponsToActivateThisTick = Cache.Instance.RandomNumber(4, 6);
+				int weaponsToActivateThisTick = Cache.Instance.RandomNumber(3, 5);
 
 				// Activate the weapons (it not yet activated)))
 				_weaponNumber = 0;
@@ -3265,6 +3265,9 @@ namespace Questor.Modules.Combat
 				{
 					icount = 0;
 				}
+				
+				Cache.Instance.InvalidateCache(); // temporarily
+				
 
 				if ((_States.CurrentCombatState != CombatState.Idle ||
 				     _States.CurrentCombatState != CombatState.OutOfAmmo) &&
@@ -3390,6 +3393,7 @@ namespace Questor.Modules.Combat
 
 							if (killTarget.IsReadyToShoot)
 							{
+								
 								icount++;
 								if (Logging.DebugKillTargets) Logging.Log("Combat.KillTargets", "[" + icount + "] Activating Bastion", Logging.Debug);
 								ActivateBastion(false); //by default this will deactivate bastion when needed, but NOT activate it, activation needs activate = true
