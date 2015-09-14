@@ -2478,11 +2478,13 @@ namespace Questor.Modules.Activities
 						// Clear the Pocket
 						_pocketActions.Add(new Actions.Action { State = ActionState.ClearPocket });
 						
+						
+						_pocketActions.Add(new Actions.Action { State = ActionState.Activate });
+						_pocketActions[_pocketActions.Count - 1].AddParameter("target", "Acceleration Gate");
+						_pocketActions[_pocketActions.Count - 1].AddParameter("optional", "true");
+						
 						//Add move to gate background task - we gotta add a switch to the settings config file
-						Actions.Action backgroundAction = new Actions.Action { State = ActionState.MoveToBackground };
-						backgroundAction.AddParameter("target", "Acceleration Gate");
-						backgroundAction.AddParameter("optional", "true");
-						_pocketActions.Insert(0,backgroundAction);
+
 
 						//var ent = Cache.Instance.AccelerationGates;
 						
@@ -2493,12 +2495,13 @@ namespace Questor.Modules.Activities
 						// Activate it (Activate action also moves to the gate)
 						
 						
-						
-						
 						if(!Settings.Instance.DisableAutoBackgroundMoveToGate) {
-							_pocketActions.Add(new Actions.Action { State = ActionState.Activate });
-							_pocketActions[_pocketActions.Count - 1].AddParameter("target", "Acceleration Gate");
-							_pocketActions[_pocketActions.Count - 1].AddParameter("optional", "true");
+							
+							Actions.Action backgroundAction = new Actions.Action { State = ActionState.MoveToBackground };
+							backgroundAction.AddParameter("target", "Acceleration Gate");
+							backgroundAction.AddParameter("optional", "true");
+							_pocketActions.Insert(0,backgroundAction);
+
 						}
 						
 //						}
@@ -2510,7 +2513,7 @@ namespace Questor.Modules.Activities
 					} else {
 						
 						//Add move to gate background task - we gotta add a switch to the settings config file
-						if(!Settings.Instance.DisableAutoBackgroundMoveToGate && !_pocketActions.Any( a => a.State == ActionState.MoveToBackground)) {
+						if((!Settings.Instance.DisableAutoBackgroundMoveToGate) && !_pocketActions.Any( a => a.State == ActionState.MoveToBackground)) {
 							Actions.Action backgroundAction = new Actions.Action { State = ActionState.MoveToBackground };
 							backgroundAction.AddParameter("target", "Acceleration Gate");
 							backgroundAction.AddParameter("optional", "true");

@@ -1954,7 +1954,7 @@ namespace Questor.Modules.Combat
 				}
 
 				int weaponsActivatedThisTick = 0;
-				int weaponsToActivateThisTick = Cache.Instance.RandomNumber(1, 4);
+				int weaponsToActivateThisTick = Cache.Instance.RandomNumber(4, 6);
 
 				// Activate the weapons (it not yet activated)))
 				_weaponNumber = 0;
@@ -3435,8 +3435,12 @@ namespace Questor.Modules.Combat
 
 					case CombatState.OutOfAmmo:
 						
-						Logging.Log("CombatState.OutOfAmmo", "Out of ammo. Pausing questor.", Logging.Debug);
-						Cache.Instance.Paused = true;
+						
+						if(Cache.Instance.InStation) {
+							
+							Logging.Log("CombatState.OutOfAmmo", "Out of ammo. Pausing questor if in station.", Logging.Debug);
+							Cache.Instance.Paused = true;
+						}
 						
 						break;
 

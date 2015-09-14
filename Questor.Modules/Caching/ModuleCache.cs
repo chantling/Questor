@@ -563,31 +563,31 @@ namespace Questor.Modules.Caching
                 //
                 try
                 {
-                    if (Cache.Instance.ChargeEntities.Any(e => e.FollowId == target.Id && e.DistanceFromEntity(target) < e.Velocity))
-                    {
-                        IEnumerable<EntityCache> AmmoNeartarget = Cache.Instance.ChargeEntities.Where(e => e.FollowId == target.Id && e.DistanceFromEntity(target) < e.Velocity).ToList();
-                        if (AmmoNeartarget.Any())
-                        {
-                            EntityCache ClosestAmmoToTarget = AmmoNeartarget.OrderByDescending(i => i.Distance).FirstOrDefault();
-                            if (ClosestAmmoToTarget != null)
-                            {
-                                double? AmmosDistanceFromTarget = ClosestAmmoToTarget.DistanceFromEntity(target);
-                                if (AmmosDistanceFromTarget != null)
-                                {
-                                    if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "Not Shooting Yet: Waiting on [" + ClosestAmmoToTarget.Name + "] that is [" + Math.Round((double)AmmosDistanceFromTarget / 1000, 0) + "k] from [" + target.Name + "][" + Math.Round(target.Distance /1000, 0) + "k][" + TargetId + "]", Logging.Debug);
-                                    return false;
-                                }
-
-                                if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "AmmosDistanceFromTarget is null", Logging.Debug);
-                            }
-
-                            if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "ClosestAmmoToTarget is null", Logging.Debug);
-                            //return false; if we cant log it correctly just shoot something
-                        }
-
-                        if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "AmmoNeartarget is null)", Logging.Debug);
-                        //return false; if we cant log it correctly just shoot something
-                    }
+//                    if (Cache.Instance.ChargeEntities.Any(e => e.FollowId == target.Id && e.DistanceFromEntity(target) < e.Velocity))
+//                    {
+//                        IEnumerable<EntityCache> AmmoNeartarget = Cache.Instance.ChargeEntities.Where(e => e.FollowId == target.Id && e.DistanceFromEntity(target) < e.Velocity).ToList();
+//                        if (AmmoNeartarget.Any())
+//                        {
+//                            EntityCache ClosestAmmoToTarget = AmmoNeartarget.OrderByDescending(i => i.Distance).FirstOrDefault();
+//                            if (ClosestAmmoToTarget != null)
+//                            {
+//                                double? AmmosDistanceFromTarget = ClosestAmmoToTarget.DistanceFromEntity(target);
+//                                if (AmmosDistanceFromTarget != null)
+//                                {
+//                                    if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "Not Shooting Yet: Waiting on [" + ClosestAmmoToTarget.Name + "] that is [" + Math.Round((double)AmmosDistanceFromTarget / 1000, 0) + "k] from [" + target.Name + "][" + Math.Round(target.Distance /1000, 0) + "k][" + TargetId + "]", Logging.Debug);
+//                                    return false;
+//                                }
+//
+//                                if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "AmmosDistanceFromTarget is null", Logging.Debug);
+//                            }
+//
+//                            if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "ClosestAmmoToTarget is null", Logging.Debug);
+//                            //return false; if we cant log it correctly just shoot something
+//                        }
+//
+//                        if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "AmmoNeartarget is null)", Logging.Debug);
+//                        //return false; if we cant log it correctly just shoot something
+//                    }
                 }
                 catch (Exception ex)
                 {

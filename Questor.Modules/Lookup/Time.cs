@@ -35,7 +35,7 @@ namespace Questor.Modules.Lookup
         public int OrbitDelay_seconds = 15;                                 // This is the delay between orbit commands, units: seconds. Default is 15
         public int DockingDelay_seconds = 10;                               // This is the delay between docking attempts, units: seconds. Default is 15
         public int WarptoDelay_seconds = 10;                                // This is the delay between warpto commands, units: seconds. Default is 10
-        public int WeaponDelay_milliseconds = 220;                          //
+        public int WeaponDelay_milliseconds = 100;                          //
         public int NosDelay_milliseconds = 220;                             //
         public int WebDelay_milliseconds = 220;                             //
         public int RemoteRepairerDelay_milliseconds = 220;                  //
