@@ -1030,9 +1030,7 @@ namespace Questor.Modules.BackgroundTasks
 			
 			EntityCache station = Cache.Instance.Stations.OrderBy(s => s.Distance).FirstOrDefault();
 			
-			if(station != null && station.Distance < 1000000) {
-				
-				
+			if(station != null && station.Distance < 1000000 && Cache.Instance.Modules.Any()) {
 				
 				int amountOfModulesToDeactivateThisPulse = Cache.Instance.RandomNumber(2,4);
 				int modulesDeactivatedThisPulse = 0;
