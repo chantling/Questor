@@ -4703,7 +4703,7 @@ namespace Questor.Modules.Caching
 					return null;
 				}
 			}
-			private set
+			set
 			{
 				_fittingManagerWindow = value;
 			}

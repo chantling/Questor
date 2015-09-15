@@ -1520,25 +1520,36 @@ namespace Questor.Modules.Actions
 		private static bool StackAmmoHangar() // --> ArmState.Done
 		{
 			if (!Cache.Instance.StackAmmoHangar(WeAreInThisStateForLogs())) return false;
+			Cleanup();
 			ChangeArmState(ArmState.Done);
 			return true;
 		} // --> ArmState.Done
 		
 		private static bool Cleanup() // not used atm
 		{
-			if (Drones.UseDrones && (Cache.Instance.ActiveShip.GroupId != (int)Group.Shuttle && Cache.Instance.ActiveShip.GroupId != (int)Group.Industrial && Cache.Instance.ActiveShip.GroupId != (int)Group.TransportShip))
-			{
-				// Close the drone bay, its not required in space.
-				if (!Drones.CloseDroneBayWindow(WeAreInThisStateForLogs())) return false;
-			}
+//			if (Drones.UseDrones && (Cache.Instance.ActiveShip.GroupId != (int)Group.Shuttle && Cache.Instance.ActiveShip.GroupId != (int)Group.Industrial && Cache.Instance.ActiveShip.GroupId != (int)Group.TransportShip))
+//			{
+//				// Close the drone bay, its not required in space.
+//				if (!Drones.CloseDroneBayWindow(WeAreInThisStateForLogs())) return false;
+//			}
 
-			if (Settings.Instance.UseFittingManager)
+//			if (Settings.Instance.UseFittingManager)
+//			{
+//				if (!Cache.Instance.CloseFittingManager(WeAreInThisStateForLogs())) return false;
+//			}
+			
+			if (Cache.Instance.Windows.OfType<DirectFittingManagerWindow>().FirstOrDefault() != null)
 			{
-				if (!Cache.Instance.CloseFittingManager(WeAreInThisStateForLogs())) return false;
+				
+				Cache.Instance.FittingManagerWindow.Close();
+				Statistics.LogWindowActionToWindowLog("FittingManager", "Closing FittingManager");
+				Cache.Instance.FittingManagerWindow = null;
+				return true;
 			}
+			
 
 			//if (!Cleanup.CloseInventoryWindows()) return false;
-			_States.CurrentArmState = ArmState.Done;
+//			_States.CurrentArmState = ArmState.Done;
 			return false;
 		} // not used atm
 	}
