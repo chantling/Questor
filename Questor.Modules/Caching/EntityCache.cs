@@ -5319,7 +5319,7 @@ namespace Questor.Modules.Caching
 							Time.Instance.LastInWarp = DateTime.UtcNow;
 							Time.Instance.NextWarpAction = DateTime.UtcNow.AddSeconds(Time.Instance.WarptoDelay_seconds);
 							Time.Instance.NextDockAction = DateTime.UtcNow.AddSeconds(Time.Instance.DockingDelay_seconds);
-							_directEntity.WarpTo();
+							_directEntity.WarpToAndDock();
 						}
 					}
 				}
@@ -5347,6 +5347,12 @@ namespace Questor.Modules.Caching
 						{
 							//if (Distance < (int) Distances.DockingRange)
 							//{
+							
+							if(Cache.Instance.Modules.Any(m => m.IsOnline && m.IsActive && !m.IsDeactivating))  {
+								Time.Instance.NextDockAction = DateTime.UtcNow.AddMilliseconds(Cache.Instance.RandomNumber(500,800));
+								return false;
+							}
+							
 							_directEntity.Dock();
 							Time.Instance.WehaveMoved = DateTime.UtcNow;
 							Time.Instance.NextDockAction = DateTime.UtcNow.AddSeconds(Time.Instance.DockingDelay_seconds);
