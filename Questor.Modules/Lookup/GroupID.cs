@@ -41,6 +41,7 @@ namespace Questor.Modules.Lookup
         SensorDampener = 208,
         TrackingComputer = 213,
         TrackingDisruptor = 291,
+        MissuleGuidanceComputer = 1396,
 
         TrackingScript = 907,
         WarpDisruptionScript = 908,

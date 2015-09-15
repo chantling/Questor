@@ -420,6 +420,7 @@ namespace Questor.Modules.BackgroundTasks
 			                                                                                  i.GroupId == (int)Group.ArmorHardeners ||
 			                                                                                  i.GroupId == (int)Group.SensorBooster ||
 			                                                                                  i.GroupId == (int)Group.TrackingComputer ||
+			                                                                                  i.GroupId == (int)Group.MissuleGuidanceComputer ||
 			                                                                                  i.GroupId == (int)Group.ECCM))
 			{
 				if (!ActivateOncePerSessionModule.IsActivatable)
@@ -1043,7 +1044,7 @@ namespace Questor.Modules.BackgroundTasks
 						return;
 					}
 					
-					if(!debugOutputLogged) 
+					if(!debugOutputLogged)
 					{
 						Logging.Log("Defense", "We're next to a station. Deactivating modules.", Logging.White);
 						debugOutputLogged = true;
