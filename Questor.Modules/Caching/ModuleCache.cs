@@ -647,7 +647,10 @@ namespace Questor.Modules.Caching
                 
                 //DateTime.UtcNow > i.ThisVolleyCacheCreated.AddSeconds(10)))
                 
-                _module.Activate(target.Id);
+                if(!_module.Activate(target.Id)) {
+                	return false;
+                }
+                
                 SnapshotOfVolleyData = new EachWeaponsVolleyCache(_module, target);
                 if (IsMissileLauncher || IsTurret)
                 {
