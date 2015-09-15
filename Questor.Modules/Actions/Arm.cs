@@ -1550,7 +1550,7 @@ namespace Questor.Modules.Actions
 			
 
 			//if (!Cleanup.CloseInventoryWindows()) return false;
-//			_States.CurrentArmState = ArmState.Done;
+			_States.CurrentArmState = ArmState.Done;
 			return false;
 		} // not used atm
 	}
