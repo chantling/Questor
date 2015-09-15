@@ -160,6 +160,10 @@ namespace Questor.Modules.Combat
 		public static int LongRangeDroneRecallShieldPct { get; set; }
 		public static int LongRangeDroneRecallArmorPct { get; set; }
 		public static int LongRangeDroneRecallCapacitorPct { get; set; }
+		
+		private static DateTime LastDroneFightCmd = DateTime.MinValue;
+		private static DateTime LastDroneTargetSwapped = DateTime.MinValue;
+		
 		private static bool _dronesKillHighValueTargets;
 		public static bool DronesKillHighValueTargets
 		{
@@ -567,6 +571,21 @@ namespace Questor.Modules.Combat
 			//
 			// if currentTarget set to something (not null) and it is actually an entity...
 			//
+			
+			
+			if(currentDroneTarget != null) {
+				
+				
+				if (Logging.DebugGetBestDroneTarget) Logging.Log(callingroutine + " GetBestDroneTarget: currentDroneTarget", "Checking Low Health", Logging.Teal);
+				if (currentDroneTarget.IsEntityIShouldKeepShootingWithDrones)
+				{
+					if (Logging.DebugGetBestDroneTarget) Logging.Log(callingroutine + " GetBestDroneTarget:", "currentDroneTarget [" + currentDroneTarget.Name + "][" + Math.Round(currentDroneTarget.Distance / 1000, 2) + "k][" + currentDroneTarget.MaskedId + " GroupID [" + currentDroneTarget.GroupId + "]] has less than 80% shields, keep killing this target", Logging.Debug);
+					Drones.PreferredDroneTarget = currentDroneTarget;
+					Time.Instance.LastPreferredDroneTargetDateTime = DateTime.UtcNow;
+					return true;
+				}
+			}
+			
 			if (currentDroneTarget != null && currentDroneTarget.IsReadyToShoot && currentDroneTarget.IsLowValueTarget)
 			{
 				if (Logging.DebugGetBestDroneTarget) Logging.Log(callingroutine + " GetBestDroneTarget: currentDroneTarget", "We have a currentTarget [" + currentDroneTarget.Name + "][" + currentDroneTarget.MaskedId + "][" + Math.Round(currentDroneTarget.Distance / 1000, 2) + "k], testing conditions", Logging.Teal);
@@ -895,35 +914,35 @@ namespace Questor.Modules.Combat
 					GetBestDroneTarget(MaxDroneRange, !Drones.DronesKillHighValueTargets, "Drones");
 				}
 
-				EntityCache DroneToShoot = PreferredDroneTarget;
+				EntityCache droneTarget = PreferredDroneTarget;
 
-				if (DroneToShoot == null)
+				if (droneTarget == null)
 				{
 					if (Logging.DebugDrones) Logging.Log("Drones.EngageTarget", "PreferredDroneTarget is null, picking a target using a simple rule set...", Logging.Debug);
 					if (Cache.Instance.Targets.Any(i => !i.IsContainer && !i.IsBadIdea && i.Distance < MaxDroneRange))
 					{
-						DroneToShoot = Cache.Instance.Targets.Where(i => !i.IsContainer && !i.IsBadIdea && i.Distance < MaxDroneRange).OrderByDescending(i => i.IsWarpScramblingMe).ThenByDescending(i => i.IsFrigate).ThenBy(i => i.Distance).FirstOrDefault();
-						if (DroneToShoot == null)
+						droneTarget = Cache.Instance.Targets.Where(i => !i.IsContainer && !i.IsBadIdea && i.Distance < MaxDroneRange).OrderByDescending(i => i.IsWarpScramblingMe).ThenByDescending(i => i.IsFrigate).ThenBy(i => i.Distance).FirstOrDefault();
+						if (droneTarget == null)
 						{
 							Logging.Log("EngageTarget", "DroneToShoot is Null, this is bad.", Logging.Debug);
 						}
 					}
 				}
 
-				if (DroneToShoot != null)
+				if (droneTarget != null)
 				{
-					if (DroneToShoot.IsReadyToShoot && DroneToShoot.Distance < MaxDroneRange)
+					if (droneTarget.IsReadyToShoot && droneTarget.Distance < MaxDroneRange)
 					{
 						if (Logging.DebugDrones) Logging.Log("Drones.EngageTarget", "if (DroneToShoot != null && DroneToShoot.IsReadyToShoot && DroneToShoot.Distance < Cache.Instance.MaxDroneRange)", Logging.Debug);
 
 						// Nothing to engage yet, probably re-targeting
-						if (!DroneToShoot.IsTarget)
+						if (!droneTarget.IsTarget)
 						{
 							if (Logging.DebugDrones) Logging.Log("Drones.EngageTarget", "if (!DroneToShoot.IsTarget)", Logging.Debug);
 							return;
 						}
 
-						if (DroneToShoot.IsBadIdea) //&& !DroneToShoot.IsAttacking)
+						if (droneTarget.IsBadIdea) //&& !DroneToShoot.IsAttacking)
 						{
 							if (Logging.DebugDrones) Logging.Log("Drones.EngageTarget", "if (DroneToShoot.IsBadIdea && !DroneToShoot.IsAttacking) return;", Logging.Debug);
 							return;
@@ -932,9 +951,9 @@ namespace Questor.Modules.Combat
 						// Is our current target still the same and are all the drones shooting the PreferredDroneTarget?
 						if (LastTargetIDDronesEngaged != null)
 						{
-							if (LastTargetIDDronesEngaged == DroneToShoot.Id && Drones.ActiveDrones.All(i => i.FollowId == PreferredDroneTargetID && (i.Mode == 1 || i.Mode == 6 || i.Mode == 10)))
+							if (LastTargetIDDronesEngaged == droneTarget.Id && Drones.ActiveDrones.All(i => i.FollowId == PreferredDroneTargetID && (i.Mode == 1 || i.Mode == 6 || i.Mode == 10)))
 							{
-								if (Logging.DebugDrones) Logging.Log("Drones.EngageTarget", "if (LastDroneTargetID [" + LastTargetIDDronesEngaged + "] == DroneToShoot.Id [" + DroneToShoot.Id + "] && Cache.Instance.ActiveDrones.Any(i => i.FollowId != Cache.Instance.PreferredDroneTargetID) [" + Drones.ActiveDrones.Any(i => i.FollowId != PreferredDroneTargetID) + "])", Logging.Debug);
+								if (Logging.DebugDrones) Logging.Log("Drones.EngageTarget", "if (LastDroneTargetID [" + LastTargetIDDronesEngaged + "] == DroneToShoot.Id [" + droneTarget.Id + "] && Cache.Instance.ActiveDrones.Any(i => i.FollowId != Cache.Instance.PreferredDroneTargetID) [" + Drones.ActiveDrones.Any(i => i.FollowId != PreferredDroneTargetID) + "])", Logging.Debug);
 								return;
 							}
 						}
@@ -944,24 +963,30 @@ namespace Questor.Modules.Combat
 						// Is the last target our current active target?
 						//
 						
-						if(!Cache.Instance.DirectEve.IsTargetBeingRemoved(DroneToShoot.Id) && Cache.Instance.DirectEve.IsTargetStillValid(DroneToShoot.Id)) {
+						if(!Cache.Instance.DirectEve.IsTargetBeingRemoved(droneTarget.Id) && Cache.Instance.DirectEve.IsTargetStillValid(droneTarget.Id)) {
 							
-							if (DroneToShoot.IsActiveTarget)
+							if (droneTarget.IsActiveTarget)
 							{
 								// Engage target
-								Logging.Log("Drones", "Engaging [ " + Drones.ActiveDrones.Count() + " ] drones on [" + DroneToShoot.Name + "][ID: " + DroneToShoot.MaskedId + "]" + Math.Round(DroneToShoot.Distance / 1000, 0) + "k away]", Logging.Magenta);
-								Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdDronesEngage);
-								//_lastEngageCommand = DateTime.UtcNow;
-								// Save target id (so we do not constantly switch)
-								LastTargetIDDronesEngaged = DroneToShoot.Id;
+								
+								if(LastTargetIDDronesEngaged == null ||LastTargetIDDronesEngaged != droneTarget.Id || LastDroneFightCmd.AddMinutes(5) < DateTime.UtcNow) {
+									if(LastDroneFightCmd.AddSeconds(10) < DateTime.UtcNow && Cache.Instance.DirectEve.GetLastModuleBlocked.AddSeconds(5) < DateTime.UtcNow) {
+										Logging.Log("Drones", "Engaging [ " + Drones.ActiveDrones.Count() + " ] drones on [" + droneTarget.Name + "][ID: " + droneTarget.MaskedId + "]" + Math.Round(droneTarget.Distance / 1000, 0) + "k away]", Logging.Magenta);
+										Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdDronesEngage);
+										// Save target id (so we do not constantly switch)
+										LastDroneFightCmd = DateTime.UtcNow;
+										LastTargetIDDronesEngaged = droneTarget.Id;
+									}
+								}
+								
 							}
 							
 							else // Make the target active
 							{
 								if (DateTime.UtcNow > Time.Instance.NextMakeActiveTargetAction)
 								{
-									DroneToShoot.MakeActiveTarget();
-									Logging.Log("Drones", "[" + DroneToShoot.Name + "][ID: " + DroneToShoot.MaskedId + "]IsActiveTarget[" + DroneToShoot.IsActiveTarget + "][" + Math.Round(DroneToShoot.Distance / 1000, 0) + "k away] has been made the ActiveTarget (needed for drones)", Logging.Magenta);
+									droneTarget.MakeActiveTarget();
+									Logging.Log("Drones", "[" + droneTarget.Name + "][ID: " + droneTarget.MaskedId + "]IsActiveTarget[" + droneTarget.IsActiveTarget + "][" + Math.Round(droneTarget.Distance / 1000, 0) + "k away] has been made the ActiveTarget (needed for drones)", Logging.Magenta);
 									Time.Instance.NextMakeActiveTargetAction = DateTime.UtcNow.AddSeconds(5 + Cache.Instance.RandomNumber(0, 3));
 								}
 							}
@@ -1340,7 +1365,7 @@ namespace Questor.Modules.Combat
 			if (_nextDroneAction > DateTime.UtcNow || Logging.DebugDisableDrones) return false;
 
 			if (Logging.DebugDrones) Logging.Log("Drones.ProcessState", "Entering Drones.ProcessState", Logging.Debug);
-			_nextDroneAction = DateTime.UtcNow.AddMilliseconds(800);
+			_nextDroneAction = DateTime.UtcNow.AddMilliseconds(1200);
 
 			if (Cache.Instance.InStation ||                 // There is really no combat in stations (yet)
 			    !Cache.Instance.InSpace ||                  // if we are not in space yet, wait...
@@ -1390,9 +1415,13 @@ namespace Questor.Modules.Combat
 				_States.CurrentDroneState = DroneState.Idle;
 				return false;
 			}
-
+			
 			return true;
+			
 		}
+		
+
+		
 		private static bool IdleDroneState()
 		{
 			//

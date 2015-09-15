@@ -26,7 +26,7 @@ namespace Questor.Modules.Lookup
         DecloakRange = 1500,
         JumpRange = 2450,
         SafeToCloakDistance = 2300,
-        DockingRange = 1900,
+        DockingRange = 10,
         MissionWarpLimit = 150000000, // Mission bookmarks have a 1.000.000 distance warp-to limit (changed it to 150.000.000 as there are some bugged missions around)
         PanicDistanceToConsiderSafelyWarpedOff = 500000,
         WeCanWarpToStarFromHere = 500000000,
