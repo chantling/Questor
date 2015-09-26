@@ -26,6 +26,7 @@ namespace Questor.Modules.Activities
 		public static DateTime NextSlotActivate = DateTime.UtcNow;
 		public static bool _loginOnly;
 		public static bool _showHelp;
+		public static bool UseDx9 { get; set; }
 
 		private static bool __chantlingScheduler;
 

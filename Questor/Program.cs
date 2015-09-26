@@ -53,13 +53,15 @@ namespace Questor
 				{"p|password=", "the user's {PASSWORD}.", v => Logging.EVELoginPassword = v},
 				{"c|character=", "the {CHARACTER} to use.", v => Logging.MyCharacterName = v},
 				{"n|loginNow", "Login using info in scheduler", v => LoginToEVE._loginNowIgnoreScheduler = v != null},
-				{"d|directx9", "Use direct x9", v => Cache.Instance.D3DVersion = v != null ? D3DDetour.D3DVersion.Direct3D9 : D3DDetour.D3DVersion.Direct3D11},
+				{"d|directx9", "Use direct x9", v => LoginToEVE.UseDx9 = v != null },
 				{"h|help", "show this message and exit", v => LoginToEVE._showHelp = v != null}
 			};
 
 			try
 			{
 				LoginToEVE._QuestorParamaters = p.Parse(args);
+				Cache.D3DVersion = LoginToEVE.UseDx9 ? D3DDetour.D3DVersion.Direct3D9 : D3DDetour.D3DVersion.Direct3D11;
+				
 			}
 			catch (OptionException ex)
 			{
@@ -82,15 +84,19 @@ namespace Questor
 		public static void Main(string[] args)
 		{
 			ParseArgs(args);
+			
+			Logging.Log("Startup", "Args:", Logging.Teal);
+			foreach(string s in args) {
+				Logging.Log("Startup ", s, Logging.Teal);
+			}
 
 			if (!string.IsNullOrEmpty(Logging.EVELoginUserName) && !string.IsNullOrEmpty(Logging.EVELoginPassword) && !string.IsNullOrEmpty(Logging.MyCharacterName))
 			{
 				LoginToEVE.ReadyToLoginToEVEAccount = true;
 			}
-
 			
-			Logging.Log("Startup", "Loading DirectEve with " + Cache.Instance.D3DVersion, Logging.Teal);
-			if (!LoginToEVE.LoadDirectEVEInstance(Cache.Instance.D3DVersion)) return;
+			Logging.Log("Startup", "Loading DirectEve with " + Cache.D3DVersion, Logging.Teal);
+			if (!LoginToEVE.LoadDirectEVEInstance(Cache.D3DVersion)) return;
 			
 			Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;
 			

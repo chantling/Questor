@@ -348,7 +348,7 @@ namespace Questor.Modules.Caching
 		
 		public long AmmoHangarID = -99;
 		public long LootHangarID = -99;
-		public D3DDetour.D3DVersion D3DVersion { get; set; }
+		public static D3DDetour.D3DVersion D3DVersion { get; set; }
 		
 		/// <summary>
 		///   Returns the mission for a specific agent
