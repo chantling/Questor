@@ -11,28 +11,24 @@
 		
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
 		public static extern IntPtr GetModuleHandle(string lpModuleName);
+		
+		private D3DVersion version { get; set; }
 
 		public void RegisterFrameHook(EventHandler<EventArgs> frameHook)
 		{
 			
-			
-			IntPtr d3D9Loaded = IntPtr.Zero;
-			IntPtr d3D11Loaded = IntPtr.Zero;
-
-			d3D9Loaded = GetModuleHandle("d3d9.dll");
-			d3D11Loaded = GetModuleHandle("d3d11.dll");
-
-			if (d3D11Loaded != IntPtr.Zero)
-			{
-				Pulse.Initialize(D3DVersion.Direct3D11);
-			}
-			else
-			{
-				Pulse.Initialize(D3DVersion.Direct3D9);
-			}
+			Pulse.Initialize(version);
 			
 			_frameHook = frameHook;
 			D3DHook.OnFrame += _frameHook;
+		}
+		
+		private StandaloneFramework() {
+			
+		}
+		
+		public StandaloneFramework(D3DVersion version) {
+			this.version = version;	
 		}
 
 		public void RegisterLogger(EventHandler<EventArgs> logger)

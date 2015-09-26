@@ -57,7 +57,7 @@ namespace ValueDump
                     if (_standaloneInstance)
                     {
                         Logging.Log("Startup", "Starting Instance of DirectEVE using StandaloneFramework", Logging.Debug);
-                        Cache.Instance.DirectEve = new DirectEve(new StandaloneFramework());
+                        Cache.Instance.DirectEve = new DirectEve(new StandaloneFramework(Cache.Instance.D3DVersion));
                     }
                     else
                     {

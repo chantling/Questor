@@ -53,6 +53,7 @@ namespace Questor
 				{"p|password=", "the user's {PASSWORD}.", v => Logging.EVELoginPassword = v},
 				{"c|character=", "the {CHARACTER} to use.", v => Logging.MyCharacterName = v},
 				{"n|loginNow", "Login using info in scheduler", v => LoginToEVE._loginNowIgnoreScheduler = v != null},
+				{"d|directx9", "Use direct x9", v => Cache.Instance.D3DVersion = v != null ? D3DDetour.D3DVersion.Direct3D9 : D3DDetour.D3DVersion.Direct3D11},
 				{"h|help", "show this message and exit", v => LoginToEVE._showHelp = v != null}
 			};
 
@@ -87,7 +88,9 @@ namespace Questor
 				LoginToEVE.ReadyToLoginToEVEAccount = true;
 			}
 
-			if (!LoginToEVE.LoadDirectEVEInstance()) return;
+			
+			Logging.Log("Startup", "Loading DirectEve with " + Cache.Instance.D3DVersion, Logging.Teal);
+			if (!LoginToEVE.LoadDirectEVEInstance(Cache.Instance.D3DVersion)) return;
 			
 			Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;
 			
