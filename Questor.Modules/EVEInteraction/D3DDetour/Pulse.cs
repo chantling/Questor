@@ -1,4 +1,6 @@
-﻿
+﻿using Questor.Modules.Logging;
+
+
 namespace D3DDetour
 {
     public static class Pulse
@@ -21,8 +23,10 @@ namespace D3DDetour
 #endif
             }
 
-           // if (Hook == null)
-           //     throw new Exception("Hook = null!");
+            if (Hook == null) {
+            	Logging.Log("D3DDetour","Hook==null",Logging.White);
+            }
+                
 
             Hook.Initialize();
         }
