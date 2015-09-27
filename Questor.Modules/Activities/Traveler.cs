@@ -155,6 +155,7 @@ namespace Questor.Modules.Activities
                     if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(25)) //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
                     {
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
+                        Time.Instance.LastDockAction = DateTime.UtcNow;
                         Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerExitStationAmIInSpaceYet_seconds);
                     }
                 }

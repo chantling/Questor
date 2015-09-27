@@ -42,12 +42,13 @@ namespace Questor.Modules.Actions
                     return;
                 }
 
-                if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(45)) //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
+                if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(25)) //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
                 {
                     if (DateTime.UtcNow > Time.Instance.NextUndockAction)
                     {
                         Logging.Log("TravelerDestination.SolarSystemDestination", "Exiting station", Logging.White);
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
+                        Time.Instance.LastDockAction = DateTime.UtcNow;
                         Time.Instance.LastSessionChange = DateTime.UtcNow;
                         _undockAttempts++;
                         Time.Instance.NextUndockAction = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerExitStationAmIInSpaceYet_seconds + Cache.Instance.RandomNumber(0, 20));

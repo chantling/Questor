@@ -77,6 +77,7 @@ namespace Questor.Modules.Actions
                     {
                         Logging.Log("QuestorManager.StationDestination", "We're docked in the wrong station, undocking", Logging.White);
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
+                        Time.Instance.LastDockAction = DateTime.UtcNow;
                         Time.Instance.NextUndockAction = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerExitStationAmIInSpaceYet_seconds);
                         return false;
                     }

@@ -38,6 +38,7 @@ namespace Questor.Modules.Actions
                     {
                         Logging.Log("QuestorManager.SolarSystemDestination", "Exiting station", Logging.White);
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
+                        Time.Instance.LastDockAction = DateTime.UtcNow;
                         _nextAction = DateTime.UtcNow.AddSeconds(30);
                     }
                 }

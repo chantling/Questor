@@ -89,6 +89,7 @@ namespace Questor.Modules.Actions
                     Logging.Log("QuestorManager.BookmarkDestination", "We're docked in the wrong station, undocking", Logging.White);
 
                     Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
+                    Time.Instance.LastDockAction = DateTime.UtcNow;
                     nextAction = DateTime.UtcNow.AddSeconds(30);
                     return false;
                 }
@@ -115,6 +116,7 @@ namespace Questor.Modules.Actions
                     {
                         Logging.Log("QuestorManager.BookmarkDestination", "We're docked but our destination is in space, undocking", Logging.White);
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
+                        Time.Instance.LastDockAction = DateTime.UtcNow;
                         nextAction = DateTime.UtcNow.AddSeconds(30);
                     }
                 }

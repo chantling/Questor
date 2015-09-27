@@ -511,7 +511,7 @@ namespace Questor
 					return;
 				}
 				
-				if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(8)) { // temorarily fix
+				if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(9)) { // temorarily fix
 					//Logging.Log("LoginOnFrame", "if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(8)", Logging.White);
 					_nextPulse = _nextPulse.AddSeconds(1);
 					return;
