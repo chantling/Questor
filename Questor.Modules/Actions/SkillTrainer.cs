@@ -87,11 +87,6 @@ namespace Questor.Modules.Actions
 					Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
 					break;
 
-				case SkillTrainerState.GenerateInnerspaceProfile:
-					Logging.Log("SkillTrainer", "Generating Innerspace Profile for this toon: running [GenerateInnerspaceProfile.iss] from your innerspace scripts directory", Logging.Teal);
-					_State.CurrentSkillTrainerState = SkillTrainerState.Idle;
-					break;
-
 				case SkillTrainerState.Error:
 					Logging.Log("SkillTrainer", "Note: SkillTrainer just entered the Error State. There is likely a missing skill plan or broken contents of the skillplan!", Logging.Teal);
 					_States.CurrentSkillTrainerState = SkillTrainerState.Done;

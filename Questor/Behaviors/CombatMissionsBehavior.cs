@@ -1270,6 +1270,8 @@ namespace Questor.Behaviors
 			_lastX = Cache.Instance.ActiveShip.Entity.X;
 			_lastY = Cache.Instance.ActiveShip.Entity.Y;
 			_lastZ = Cache.Instance.ActiveShip.Entity.Z;
+			
+			
 
 			EntityCache closest = Cache.Instance.AccelerationGates.OrderBy(t => t.Distance).FirstOrDefault();
 			if (closest != null && closest.Distance < (int)Distances.DecloakRange)

@@ -1058,6 +1058,7 @@ namespace Questor.Modules.Actions
 				if (SwitchShipsOnly)
 				{
 					ChangeArmState(ArmState.Done, true);
+					SwitchShipsOnly = false;
 					return true;
 				}
 				

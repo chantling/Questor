@@ -16,16 +16,6 @@ namespace Questor.Modules.States
 
     public static class _State
     {
-
-        //public static void LavishEvent_QuestorPausedState()
-        //{
-        //    if (Logging.UseInnerspace)
-        //    {
-        //        uint QuestorPausedStateEvent = LavishScript.Events.RegisterEvent("QuestorPausedState");
-        //        LavishScript.Events.ExecuteEvent(QuestorPausedStateEvent, Cache.Instance.Paused.ToString());
-        //    }
-        //}
-
         public static SkillTrainerState CurrentSkillTrainerState { get; set; }
     }
 
@@ -40,7 +30,6 @@ namespace Questor.Modules.States
         CheckTrainingQueue,
         Error,
         CloseQuestor,
-        GenerateInnerspaceProfile,
         BuyingSkill,
     }
 }
