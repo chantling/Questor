@@ -1465,7 +1465,7 @@ namespace Questor.Modules.Caching
 			{
 				try
 				{
-					if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(8))
+					if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(7))
 					{
 						return false;
 					}
@@ -1520,7 +1520,7 @@ namespace Questor.Modules.Caching
 			{
 				try
 				{
-					if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(8))
+					if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(7))
 					{
 						return false;
 					}

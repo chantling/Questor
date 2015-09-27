@@ -43,11 +43,11 @@ namespace Questor.Storylines
 				
 				
 				// this SHOULD allow usage of shuttles again for this storyline, atm commented out due the fact i have no time for testing
-//					if(ships.Any( s => s.GroupId == (int)Group.Shuttle)) {
-//						ships.FirstOrDefault( s => s.GroupId == (int)Group.Shuttle).ActivateShip();
-//						_nextAction = DateTime.UtcNow.AddSeconds(Modules.Lookup.Time.Instance.SwitchShipsDelay_seconds);
-//						return StorylineState.Arm;
-//					}
+				if(ships.Any( s => s.GroupId == (int)Group.Shuttle)) {
+					ships.FirstOrDefault( s => s.GroupId == (int)Group.Shuttle).ActivateShip();
+					_nextAction = DateTime.UtcNow.AddSeconds(Modules.Lookup.Time.Instance.SwitchShipsDelay_seconds);
+					return StorylineState.Arm;
+				}
 				
 				foreach (DirectItem ship in ships.Where(ship => ship.GivenName != null && ship.GivenName.ToLower() == Settings.Instance.TransportShipName.ToLower()))
 				{

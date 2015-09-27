@@ -530,7 +530,7 @@ namespace Questor
 			
 				
 				if(!Cache.Instance.DirectEve.Session.IsReady && !Cache.Instance.DirectEve.Login.AtLogin && !Cache.Instance.DirectEve.Login.AtCharacterSelection) {
-					_lastSessionNotReady = GetNowAddDelay(8,10);
+					_lastSessionNotReady = GetNowAddDelay(7,8);
 				}
 				
 				Time.Instance.LastFrame = DateTime.UtcNow;

@@ -92,9 +92,9 @@ namespace Questor.Modules.Activities
                 return;
             }
 
-            if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(10))
+            if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(7))
             {
-                if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem: We just session changed less than 10 sec go, wait.", Logging.Teal);
+                if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem: We just session changed less than 7 sec go, wait.", Logging.Teal);
                 return;
             }
 
@@ -152,7 +152,7 @@ namespace Questor.Modules.Activities
             {
                 if (Cache.Instance.InStation)
                 {
-                    if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(45)) //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
+                    if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(25)) //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
                     {
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
                         Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerExitStationAmIInSpaceYet_seconds);
