@@ -350,6 +350,15 @@ namespace Questor.Modules.Caching
 		public long LootHangarID = -99;
 		public static D3DDetour.D3DVersion D3DVersion { get; set; }
 		
+		
+		public static Random _random = new Random();
+		
+		public static int GetRandom(int minValue, int maxValue)
+		{
+			return _random.Next(minValue, maxValue);
+		}
+		
+		
 		/// <summary>
 		///   Returns the mission for a specific agent
 		/// </summary>
@@ -863,11 +872,11 @@ namespace Questor.Modules.Caching
 //				if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.PrepareStorylineSwitchAgents)
 //				{
 //					//TODO: must be a better way to achieve this
-//					
+//
 //					var storyLineMissions = Cache.Instance.DirectEve.AgentMissions.Where(m => m.Important);
 //					if(storyLineMissions.Any()) {
-//						
-//					} 
+//
+//					}
 //
 //					return string.Empty;
 //				}

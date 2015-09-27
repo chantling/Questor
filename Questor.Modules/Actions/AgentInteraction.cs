@@ -170,7 +170,7 @@ namespace Questor.Modules.Actions
 							_agentStandingsCheckFlag = true;
 						}
 						
-						_lastAgentAction = DateTime.UtcNow.AddSeconds(5);
+						_lastAgentAction = DateTime.UtcNow;
 						Logging.Log("AgentInteraction.StandingsCheck", " Agent [" + Cache.Instance.DirectEve.GetAgentById(AgentId).Name + "] Standings show as [" + Cache.Instance.StandingUsedToAccessAgent + " and must not yet be available. retrying for [" + Math.Round((double)_agentStandingsCheckTimeOut.Subtract(DateTime.UtcNow).TotalSeconds, 0) + " sec]", Logging.Yellow);
 						return;
 					}
@@ -229,7 +229,7 @@ namespace Questor.Modules.Actions
 
 				if (!OpenAgentWindow(module)) return;
 
-				if (DateTime.UtcNow < _lastAgentActionStateChange.AddSeconds(4)) return; //enforce a 4 sec wait after each state change
+				if (DateTime.UtcNow < _lastAgentActionStateChange.AddMilliseconds(Cache.Instance.RandomNumber(800,1200))) return; //enforce a 4 sec wait after each state change
 
 				if (Purpose == AgentInteractionPurpose.AmmoCheck)
 				{
@@ -256,7 +256,7 @@ namespace Questor.Modules.Actions
 			{
 				if (!OpenAgentWindow(module)) return;
 
-				if (DateTime.UtcNow < _lastAgentActionStateChange.AddSeconds(4)) return; //enforce a 4 sec wait after each state change
+				if (DateTime.UtcNow < _lastAgentActionStateChange.AddMilliseconds(Cache.Instance.RandomNumber(800,1200))) return; //enforce a 4 sec wait after each state change
 
 				if (Agent.Window.AgentResponses == null || !Agent.Window.AgentResponses.Any())
 				{
@@ -405,7 +405,7 @@ namespace Questor.Modules.Actions
 				}
 				else if (view != null)
 				{
-					if (DateTime.UtcNow < _lastAgentAction.AddMilliseconds(Cache.Instance.RandomNumber(2000, 4000)))
+					if (DateTime.UtcNow < _lastAgentAction.AddMilliseconds(Cache.Instance.RandomNumber(1500,2000))) // was 2000,4000
 					{
 						return;
 					}
@@ -673,7 +673,7 @@ namespace Questor.Modules.Actions
 			{
 				if (!OpenAgentWindow(module)) return;
 
-				if (DateTime.UtcNow < _lastAgentActionStateChange.AddSeconds(4)) return; //enforce a 4 sec wait after each state change
+				if (DateTime.UtcNow < _lastAgentActionStateChange.AddMilliseconds(Cache.Instance.RandomNumber(800,1200))) return; // was 4000
 
 				List<DirectAgentResponse> responses = Agent.Window.AgentResponses;
 				if (responses == null || responses.Count == 0)
@@ -683,7 +683,7 @@ namespace Questor.Modules.Actions
 				if (accept == null)
 					return;
 
-				if (DateTime.UtcNow < _lastAgentAction.AddSeconds(1)) return;
+				if (DateTime.UtcNow < _lastAgentAction.AddMilliseconds(Cache.Instance.RandomNumber(500,700))) return; // was 1000
 
 				if (AgentInteraction.Agent.LoyaltyPoints == -1 && Agent.Level > 1)
 				{
@@ -716,7 +716,7 @@ namespace Questor.Modules.Actions
 			{
 				if (!OpenAgentWindow(module)) return;
 
-				if (DateTime.UtcNow < _lastAgentActionStateChange.AddSeconds(4)) return; //enforce a 4 sec wait after each state change
+				if (DateTime.UtcNow < _lastAgentActionStateChange.AddMilliseconds(Cache.Instance.RandomNumber(800,1200))) return; //enforce a 4 sec wait after each state change
 
 				List<DirectAgentResponse> responses = Agent.Window.AgentResponses;
 				if (responses == null || responses.Count == 0)
@@ -936,7 +936,7 @@ namespace Questor.Modules.Actions
 
 					if (agentWindow != null && agentWindow.IsReady)
 					{
-						if (DateTime.UtcNow < _lastAgentAction.AddSeconds(2))
+						if (DateTime.UtcNow < _lastAgentAction.AddMilliseconds(Cache.Instance.RandomNumber(1000,1500))) // was 1500,2000
 						{
 							//Logging.Log("AgentInteraction.CloseConversation", "will continue in [" + Math.Round(_nextAgentAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "]sec", Logging.Yellow);
 							return;
@@ -959,14 +959,14 @@ namespace Questor.Modules.Actions
 		public static bool OpenAgentWindow(string module)
 		{
 			int _delayInSeconds = 0;
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
+			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(10) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
 			{
 				return false;
 			}
 
 			if (AgentInteraction.Agent.Window == null)
 			{
-				if (DateTime.UtcNow < _lastAgentAction.AddSeconds(3))
+				if (DateTime.UtcNow < _lastAgentAction.AddMilliseconds(Cache.GetRandom(1500,1700))) // was 3000 ms
 				{
 					if (Logging.DebugAgentInteractionReplyToAgent) Logging.Log(module, "if (DateTime.UtcNow < _lastAgentAction.AddSeconds(3))", Logging.Yellow);
 					return false;
