@@ -1042,6 +1042,9 @@ namespace Questor.Modules.Actions
 				//
 				// if _ArmStateToSet matches also do this stuff...
 				//
+				
+				Logging.Log("ChangeAgentInteractionState", "New state [" + _AgentInteractionState.ToString() + "]", Logging.White);
+				
 				switch (_AgentInteractionState)
 				{
 					case AgentInteractionState.Done:

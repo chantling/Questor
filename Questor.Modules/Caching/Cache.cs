@@ -336,7 +336,7 @@ namespace Questor.Modules.Caching
 
 		public bool ExitWhenIdle;
 		public bool StopBot;
-		public bool LootAlreadyUnloaded;
+		public static bool LootAlreadyUnloaded;
 		public bool RouteIsAllHighSecBool;
 
 		public double Wealth { get; set; }

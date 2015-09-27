@@ -426,7 +426,7 @@ namespace Questor.Behaviors
 
 					if (_States.CurrentUnloadLootState == UnloadLootState.Done)
 					{
-						Cache.Instance.LootAlreadyUnloaded = true;
+						Cache.LootAlreadyUnloaded = true;
 						_States.CurrentUnloadLootState = UnloadLootState.Idle;
 						MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentID, false);
 						if (_States.CurrentCombatState == CombatState.OutOfAmmo) // on mission

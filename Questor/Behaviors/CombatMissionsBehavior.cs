@@ -129,6 +129,10 @@ namespace Questor.Behaviors
 		{
 			try
 			{
+				
+				
+				Logging.Log("ChangeCombatMissionBehaviorState", "New state [" + _CMBStateToSet.ToString() + "]", Logging.White);
+				
 				//
 				// if _ArmStateToSet matches also do this stuff...
 				//
@@ -294,11 +298,6 @@ namespace Questor.Behaviors
 			// cargo hold that is undesirable and causes
 			// problems loading the correct ammo on occasion
 			//
-			if (Cache.Instance.LootAlreadyUnloaded == false)
-			{
-				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
-				return;
-			}
 
 			Cleanup.CheckEVEStatus();
 			_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Start;
@@ -308,6 +307,13 @@ namespace Questor.Behaviors
 		private void StartCMBState()
 		{
 			if (!WeShouldBeInSpaceORInStationAndOutOfSessionChange()) return;
+			
+			
+			if (Cache.LootAlreadyUnloaded == false)
+			{
+				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Switch;
+				return;
+			}
 
 			if (Cache.Instance.InSpace)
 			{
@@ -330,7 +336,7 @@ namespace Questor.Behaviors
 
 				//if you are in wrong station and is not first agent
 				_firstStart = false;
-				ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.Switch);
+//				ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.Switch);
 				return;
 			}
 
@@ -863,6 +869,7 @@ namespace Questor.Behaviors
 				if (!WeShouldBeInSpaceORInStationAndOutOfSessionChange()) return; //either in space or in station is fine, but we should not continue until we are not in a session change
 				Statistics.MissionLoggingCompleted = false;
 				Drones.IsMissionPocketDone = false;
+				Cache.LootAlreadyUnloaded = false;
 
 				MissionBookmarkDestination missionDestination = Traveler.Destination as MissionBookmarkDestination;
 
@@ -931,7 +938,7 @@ namespace Questor.Behaviors
 
 				if (_States.CurrentUnloadLootState == UnloadLootState.Done)
 				{
-					Cache.Instance.LootAlreadyUnloaded = true;
+					Cache.LootAlreadyUnloaded = true;
 					_States.CurrentUnloadLootState = UnloadLootState.Idle;
 					MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentInteraction.AgentId, true);
 

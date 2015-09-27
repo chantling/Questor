@@ -354,7 +354,7 @@ namespace Questor.Behaviors
 
 					if (_States.CurrentUnloadLootState == UnloadLootState.Done)
 					{
-						Cache.Instance.LootAlreadyUnloaded = true;
+						Cache.LootAlreadyUnloaded = true;
 						_States.CurrentUnloadLootState = UnloadLootState.Idle;
 						_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.CheckBookmarkAge;
 					}
