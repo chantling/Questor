@@ -45,15 +45,13 @@ namespace Questor.Storylines
 				// this SHOULD allow usage of shuttles again for this storyline, atm commented out due the fact i have no time for testing
 				if(ships.Any( s => s.GroupId == (int)Group.Shuttle)) {
 					ships.FirstOrDefault( s => s.GroupId == (int)Group.Shuttle).ActivateShip();
+					Logging.Log("MaterialsForWarPreparation", "Found a shuttle - Making Shuttle active", Logging.White);
 					_nextAction = DateTime.UtcNow.AddSeconds(Modules.Lookup.Time.Instance.SwitchShipsDelay_seconds);
-					return StorylineState.Arm;
+					return StorylineState.GotoAgent;
 				}
 				
 				foreach (DirectItem ship in ships.Where(ship => ship.GivenName != null && ship.GivenName.ToLower() == Settings.Instance.TransportShipName.ToLower()))
 				{
-					
-
-					
 					Logging.Log("MaterialsForWarPreparation", "Making [" + ship.GivenName + "] active", Logging.White);
 					ship.ActivateShip();
 					_nextAction = DateTime.UtcNow.AddSeconds(Modules.Lookup.Time.Instance.SwitchShipsDelay_seconds);

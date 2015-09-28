@@ -393,6 +393,7 @@ namespace Questor.Modules.Caching
                 {
                     if (!InLimboState)
                     {
+                    	
                         _module.ChangeAmmo(charge);
                         Logging.Log("ChangeAmmo", "Changing [" + weaponNumber + "][" + _module.TypeName + "] with [" + charge.TypeName + "][" + Math.Round(Range / 1000, 0) + "] so we can hit [" + entityName + "][" + Math.Round(entityDistance / 1000, 0) + "k]", Logging.Teal);
                         Time.Instance.LastChangedAmmoTimeStamp[ItemId] = DateTime.UtcNow;
