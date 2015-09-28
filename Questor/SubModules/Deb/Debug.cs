@@ -62,12 +62,16 @@ namespace SubModules
 				return;
 			}
 			
-			foreach(DirectEntity ent in Cache.Instance.DirectEve.Entities.Where(en => en.CategoryId != (int)CategoryID.Charge)) {
-				
-				if(Cache.Instance.DirectEve.GetTargets().ContainsKey(ent.Id)) {
-					Logging.Log("DebugOnFrame", "Ent [" + ent.Name + "]" +  " Id [" + ent.Id + "]" + " Is still targeted." , Logging.White);
-				}
+			if(Cache.Instance.Weapons.FirstOrDefault() != null) {
+				Cache.Instance.Weapons.FirstOrDefault().UnloadToCargo();
 			}
+			
+//			foreach(DirectEntity ent in Cache.Instance.DirectEve.Entities.Where(en => en.CategoryId != (int)CategoryID.Charge)) {
+//				
+//				if(Cache.Instance.DirectEve.GetTargets().ContainsKey(ent.Id)) {
+//					Logging.Log("DebugOnFrame", "Ent [" + ent.Name + "]" +  " Id [" + ent.Id + "]" + " Is still targeted." , Logging.White);
+//				}
+//			}
 			
 			
 		}

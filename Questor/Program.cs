@@ -103,6 +103,8 @@ namespace Questor
 			try
 			{
 				
+				//new SubModules.Debug();
+				
 				questorUI = new QuestorUI();
 				
 				Logging.Log("Startup", "Launching Questor", Logging.Teal);
