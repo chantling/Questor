@@ -1585,6 +1585,7 @@ namespace Questor.Modules.Combat
 			if (DateTime.UtcNow.Subtract(_lastRecallCommand).TotalSeconds > Time.Instance.RecallDronesDelayBetweenRetries + Cache.Instance.RandomNumber(0, 2))
 			{
 				Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdDronesReturnToBay);
+				LastTargetIDDronesEngaged = null; 
 				_lastRecallCommand = DateTime.UtcNow;
 				return true;
 			}
