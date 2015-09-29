@@ -197,6 +197,7 @@ namespace QuestorManager
 				{
 					Settings.Instance.LoadSettings();
 				}
+				
 				if (Cache.Instance.DirectEve.Me.Name != null) {
 					
 					Logging.MyCharacterName = Cache.Instance.DirectEve.Me.Name;
