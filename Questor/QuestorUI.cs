@@ -777,7 +777,6 @@ namespace Questor
 				{
 					buttonOpenCharacterXML.Enabled = false;
 					buttonOpenSchedulesXML.Enabled = false;
-					buttonQuestormanager.Enabled = false;
 					buttonOpenCommonSettingsXML.Enabled = false;
 					buttonQuestorStatistics.Enabled = false;
 				}
@@ -841,12 +840,12 @@ namespace Questor
 					//
 					if (Settings.Instance.QuestorManagerExists)
 					{
-						buttonQuestormanager.Enabled = true;
+						
 						Settings.Instance.QuestorManagerExists = true;
 					}
 					else
 					{
-						buttonQuestormanager.Enabled = false;
+						
 						Settings.Instance.QuestorManagerExists = false;
 					}
 				}

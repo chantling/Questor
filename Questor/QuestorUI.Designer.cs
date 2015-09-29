@@ -54,7 +54,6 @@
         	this.QuestorStatelbl = new System.Windows.Forms.Label();
         	this.buttonOpenSchedulesXML = new System.Windows.Forms.Button();
         	this.buttonOpenCharacterXML = new System.Windows.Forms.Button();
-        	this.buttonQuestormanager = new System.Windows.Forms.Button();
         	this.label25 = new System.Windows.Forms.Label();
         	this.label26 = new System.Windows.Forms.Label();
         	this.tabControlMain = new System.Windows.Forms.TabControl();
@@ -812,16 +811,6 @@
         	this.buttonOpenCharacterXML.UseVisualStyleBackColor = true;
         	this.buttonOpenCharacterXML.Click += new System.EventHandler(this.ButtonOpenCharacterXMLClick);
         	// 
-        	// buttonQuestormanager
-        	// 
-        	this.buttonQuestormanager.Location = new System.Drawing.Point(406, 105);
-        	this.buttonQuestormanager.Name = "buttonQuestormanager";
-        	this.buttonQuestormanager.Size = new System.Drawing.Size(154, 23);
-        	this.buttonQuestormanager.TabIndex = 124;
-        	this.buttonQuestormanager.Text = "QuestorManager";
-        	this.buttonQuestormanager.UseVisualStyleBackColor = true;
-        	this.buttonQuestormanager.Click += new System.EventHandler(this.ButtonQuestormanagerClick);
-        	// 
         	// label25
         	// 
         	this.label25.Location = new System.Drawing.Point(47, 31);
@@ -859,7 +848,6 @@
         	this.tabPage3.Controls.Add(this.AutoStartCheckBox);
         	this.tabPage3.Controls.Add(this.label25);
         	this.tabPage3.Controls.Add(this.DamageTypeComboBox);
-        	this.tabPage3.Controls.Add(this.buttonQuestormanager);
         	this.tabPage3.Controls.Add(this.lblDamageType);
         	this.tabPage3.Controls.Add(this.buttonOpenSchedulesXML);
         	this.tabPage3.Controls.Add(this.PauseCheckBox);
@@ -6290,7 +6278,6 @@
         private System.Windows.Forms.Label QuestorStatelbl;
         private System.Windows.Forms.Button buttonOpenSchedulesXML;
         private System.Windows.Forms.Button buttonOpenCharacterXML;
-        private System.Windows.Forms.Button buttonQuestormanager;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label26;
         public System.Windows.Forms.Label lblCurrentMissionInfo;
