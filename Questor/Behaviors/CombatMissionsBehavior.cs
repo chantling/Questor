@@ -55,6 +55,7 @@ namespace Questor.Behaviors
 			_courierMissionCtrl = new CourierMissionCtrl();
 			_combatMissionCtrl = new CombatMissionCtrl();
 			_storyline = new Storyline();
+			Cache.storyline = _storyline;
 			
 			//
 			// this is combat mission specific and needs to be generalized

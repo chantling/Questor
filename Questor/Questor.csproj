@@ -110,15 +110,6 @@
     <Compile Include="QuestorUI.Designer.cs">
       <DependentUpon>QuestorUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Storylines\GenericCombatStoryline.cs" />
-    <Compile Include="Storylines\GenericCombatStorylineState.cs" />
-    <Compile Include="Storylines\GenericCourierStoryline.cs" />
-    <Compile Include="Storylines\GenericCourierStorylineState.cs" />
-    <Compile Include="Storylines\IStoryline.cs" />
-    <Compile Include="Storylines\MaterialsForWarPreparation.cs" />
-    <Compile Include="Storylines\Storyline.cs" />
-    <Compile Include="Storylines\TransactionDataDelivery.cs" />
-    <Compile Include="Storylines\TransactionDataDeliveryState.cs" />
     <Compile Include="SubModules\ValueDump\ListViewColumnSorter.cs" />
     <Compile Include="SubModules\ValueDump\ValueDump.cs" />
     <Compile Include="SubModules\ValueDump\ValueDumpUI.cs">

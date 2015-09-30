@@ -811,6 +811,12 @@ namespace Questor.Modules.Activities
 			{
 				stopWhenAggressed = false;
 			}
+			
+			bool orderDescending;
+			if (!bool.TryParse(action.GetParameterValue("OrderDescending"), out orderDescending))
+			{
+				orderDescending = false;
+			}
 
 			List<EntityCache> targets = new List<EntityCache>();
 			if (Cache.Instance.EntitiesOnGrid != null && Cache.Instance.EntitiesOnGrid.Any())
@@ -829,7 +835,13 @@ namespace Questor.Modules.Activities
 				return;
 			}
 
-			EntityCache closest = targets.OrderBy(t => t.Distance).FirstOrDefault();
+			EntityCache moveToTarget = targets.OrderBy(t => t.Distance).FirstOrDefault();
+			
+			if(orderDescending) {
+				
+				Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], " moveTo: orderDescending == true", Logging.Teal);
+				targets.OrderByDescending(t => t.Distance).FirstOrDefault();
+			}
 
 			//if (Settings.Instance.TargetSelectionMethod == "isdp")
 			//{
@@ -840,7 +852,7 @@ namespace Questor.Modules.Activities
 			//    Cache.Instance.__GetBestWeaponTargets(Combat.MaxRange);
 			//}
 
-			if (closest != null)
+			if (moveToTarget != null)
 			{
 				if (stopWhenTargeted)
 				{
@@ -851,7 +863,8 @@ namespace Questor.Modules.Activities
 							if (Cache.Instance.MyShipEntity.Velocity != 0 && DateTime.UtcNow > Time.Instance.NextApproachAction)
 							{
 								NavigateOnGrid.StopMyShip();
-								Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Stop ship, we have been targeted and are [" + DistanceToApproach + "] from [ID: " + closest.Name + "][" + Math.Round(closest.Distance / 1000, 0) + "k away]", Logging.Teal);
+								Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Stop ship, we have been targeted and are [" + DistanceToApproach + "] from [ID: " + moveToTarget.Name + "][" + Math.Round(moveToTarget.Distance / 1000, 0) + "k away]", Logging.Teal);
+								Nextaction();
 							}
 						}
 					}
@@ -866,15 +879,16 @@ namespace Questor.Modules.Activities
 							if (Cache.Instance.MyShipEntity.Velocity != 0 && DateTime.UtcNow > Time.Instance.NextApproachAction)
 							{
 								NavigateOnGrid.StopMyShip();
-								Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Stop ship, we have been targeted and are [" + DistanceToApproach + "] from [ID: " + closest.Name + "][" + Math.Round(closest.Distance / 1000, 0) + "k away]", Logging.Teal);
+								Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Stop ship, we have been targeted and are [" + DistanceToApproach + "] from [ID: " + moveToTarget.Name + "][" + Math.Round(moveToTarget.Distance / 1000, 0) + "k away]", Logging.Teal);
+								Nextaction();
 							}
 						}
 					}
 				}
 
-				if (closest.Distance < DistanceToApproach) // if we are inside the range that we are supposed to approach assume we are done
+				if (moveToTarget.Distance < DistanceToApproach) // if we are inside the range that we are supposed to approach assume we are done
 				{
-					Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "We are [" + Math.Round(closest.Distance, 0) + "] from a [" + target + "] we do not need to go any further", Logging.Teal);
+					Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "We are [" + Math.Round(moveToTarget.Distance, 0) + "] from a [" + target + "] we do not need to go any further", Logging.Teal);
 					Nextaction();
 
 					if (Cache.Instance.Approaching != null)
@@ -882,7 +896,7 @@ namespace Questor.Modules.Activities
 						if (Cache.Instance.MyShipEntity.Velocity != 0 && DateTime.UtcNow > Time.Instance.NextApproachAction)
 						{
 							NavigateOnGrid.StopMyShip();
-							Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Stop ship, we have been targeted and are [" + DistanceToApproach + "] from [ID: " + closest.Name + "][" + Math.Round(closest.Distance / 1000, 0) + "k away]", Logging.Teal);
+							Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Stop ship, we have been targeted and are [" + DistanceToApproach + "] from [ID: " + moveToTarget.Name + "][" + Math.Round(moveToTarget.Distance / 1000, 0) + "k away]", Logging.Teal);
 						}
 					}
 
@@ -895,7 +909,7 @@ namespace Questor.Modules.Activities
 					return;
 				}
 
-				if (closest.Distance < (int)Distances.WarptoDistance) // if we are inside warpto range you need to approach (you cant warp from here)
+				if (moveToTarget.Distance < (int)Distances.WarptoDistance) // if we are inside warpto range you need to approach (you cant warp from here)
 				{
 					if (Logging.DebugMoveTo) Logging.Log("CombatMissionCtrl.MoveTo", "if (closest.Distance < (int)Distances.WarptoDistance)] -  NextApproachAction [" + Time.Instance.NextApproachAction + "]", Logging.Teal);
 
@@ -903,11 +917,11 @@ namespace Questor.Modules.Activities
 
 					if (Logging.DebugMoveTo) if (Cache.Instance.Approaching == null) Logging.Log("CombatMissionCtrl.MoveTo", "if (Cache.Instance.Approaching == null)", Logging.Teal);
 					if (Logging.DebugMoveTo) if (Cache.Instance.Approaching != null) Logging.Log("CombatMissionCtrl.MoveTo", "Cache.Instance.Approaching.Id [" + Cache.Instance.Approaching.Id + "]", Logging.Teal);
-					if (Cache.Instance.Approaching == null || Cache.Instance.Approaching.Id != closest.Id || Cache.Instance.MyShipEntity.Velocity < 50)
+					if (Cache.Instance.Approaching == null || Cache.Instance.Approaching.Id != moveToTarget.Id || Cache.Instance.MyShipEntity.Velocity < 50)
 					{
-						if (closest.Approach())
+						if (moveToTarget.Approach())
 						{
-							Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Approaching target [" + closest.Name + "][" + closest.MaskedId + "][" + Math.Round(closest.Distance / 1000, 0) + "k away]", Logging.Teal);
+							Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Approaching target [" + moveToTarget.Name + "][" + moveToTarget.MaskedId + "][" + Math.Round(moveToTarget.Distance / 1000, 0) + "k away]", Logging.Teal);
 							_nextCombatMissionCtrlAction = DateTime.UtcNow.AddSeconds(5);
 							return;
 						}
@@ -919,9 +933,9 @@ namespace Questor.Modules.Activities
 				}
 
 				// Probably never happens
-				if (closest.AlignTo())
+				if (moveToTarget.AlignTo())
 				{
-					Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Aligning to target [" + closest.Name + "][" + closest.MaskedId + "][" + Math.Round(closest.Distance / 1000, 0) + "k away]", Logging.Teal);
+					Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "Aligning to target [" + moveToTarget.Name + "][" + moveToTarget.MaskedId + "][" + Math.Round(moveToTarget.Distance / 1000, 0) + "k away]", Logging.Teal);
 					_nextCombatMissionCtrlAction = DateTime.UtcNow.AddSeconds(5);
 					return;
 				}
@@ -2461,10 +2475,10 @@ namespace Questor.Modules.Activities
 					//
 					// LogStatistics();
 					//
-					
-					if(Settings.Instance.DisableAutoBackgroundMoveToGate) {
-						Logging.Log("-", "Settings.Instance.DisableAutoBackgroundMoveToGate ==  true", Logging.White);
-					}
+//					
+//					if(Settings.Instance.DisableAutoBackgroundMoveToGate) {
+//						Logging.Log("-", "Settings.Instance.DisableAutoBackgroundMoveToGate ==  true", Logging.White);
+//					}
 					
 					if (_pocketActions.Count == 0)
 					{
@@ -2495,7 +2509,7 @@ namespace Questor.Modules.Activities
 						// Activate it (Activate action also moves to the gate)
 						
 						
-						if(!Settings.Instance.DisableAutoBackgroundMoveToGate) {
+						if(!NavigateOnGrid.SpeedTank) {
 							
 							Actions.Action backgroundAction = new Actions.Action { State = ActionState.MoveToBackground };
 							backgroundAction.AddParameter("target", "Acceleration Gate");
@@ -2513,7 +2527,7 @@ namespace Questor.Modules.Activities
 					} else {
 						
 						//Add move to gate background task - we gotta add a switch to the settings config file
-						if((!Settings.Instance.DisableAutoBackgroundMoveToGate) && !_pocketActions.Any( a => a.State == ActionState.MoveToBackground)) {
+						if((!NavigateOnGrid.SpeedTank) && !_pocketActions.Any( a => a.State == ActionState.MoveToBackground)) {
 							Actions.Action backgroundAction = new Actions.Action { State = ActionState.MoveToBackground };
 							backgroundAction.AddParameter("target", "Acceleration Gate");
 							backgroundAction.AddParameter("optional", "true");

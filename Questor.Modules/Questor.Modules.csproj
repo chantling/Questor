@@ -159,8 +159,19 @@
     <Compile Include="Lookup\Time.cs" />
     <Compile Include="Actions\UnloadLoot.cs" />
     <Compile Include="States\UnloadLootState.cs" />
+    <Compile Include="Storylines\GenericCombatStoryline.cs" />
+    <Compile Include="Storylines\GenericCombatStorylineState.cs" />
+    <Compile Include="Storylines\GenericCourierStoryline.cs" />
+    <Compile Include="Storylines\GenericCourierStorylineState.cs" />
+    <Compile Include="Storylines\IStoryline.cs" />
+    <Compile Include="Storylines\MaterialsForWarPreparation.cs" />
+    <Compile Include="Storylines\Storyline.cs" />
+    <Compile Include="Storylines\TransactionDataDelivery.cs" />
+    <Compile Include="Storylines\TransactionDataDeliveryState.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Storylines" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "$(TargetDir)$(ProjectName).exe" copy /Y "$(TargetDir)$(ProjectName).exe" "$(ProjectDir)..\output\$(ProjectName).exe"

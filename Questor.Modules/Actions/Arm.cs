@@ -1369,7 +1369,7 @@ namespace Questor.Modules.Actions
 				Ammo CurrentAmmoToLoad = MissionSettings.AmmoTypesToLoad.FirstOrDefault().Key; // make sure we actually have something in the list of AmmoToLoad before trying to load ammo.
 				if (CurrentAmmoToLoad == null)
 				{
-					if (Logging.DebugArm) Logging.Log("Arm.MoveAmmo", "We have no more ammo types to be loaded. We have to be finished with arm.", Logging.Debug);
+					Logging.Log("Arm.MoveAmmo", "We have no more ammo types to be loaded. We have to be finished with arm.", Logging.White);
 					ChangeArmState(ArmState.StackAmmoHangar);
 					return false;
 				}
@@ -1378,20 +1378,38 @@ namespace Questor.Modules.Actions
 				{
 					AmmoHangarItems = null;
 					IEnumerable<DirectItem> AmmoItems = null;
-					if (Cache.Instance.AmmoHangar != null && Cache.Instance.AmmoHangar.Items.Any())
+					if (Cache.Instance.AmmoHangar != null && Cache.Instance.AmmoHangar.Items != null)
 					{
+						Logging.Log("Arm.MoveAmmo", "if (Cache.Instance.AmmoHangar != null && Cache.Instance.AmmoHangar.Items != null)", Logging.White);
 						AmmoHangarItems = Cache.Instance.AmmoHangar.Items.Where(i => i.TypeId == CurrentAmmoToLoad.TypeId).OrderBy(i => !i.IsSingleton).ThenByDescending(i => i.Quantity).ToList();
 						AmmoItems = AmmoHangarItems.ToList();
 					}
-
+					
+					if(AmmoHangarItems == null) {
+						_lastArmAction = DateTime.UtcNow;
+						Logging.Log("Arm.MoveAmmo", "if(AmmoHangarItems == null)", Logging.White);
+						return false;
+					}
+					
 					if (Logging.DebugArm) Logging.Log("Arm.MoveAmmo", "Ammohangar has [" + AmmoHangarItems.Count() + "] items with the right typeID [" + CurrentAmmoToLoad.TypeId + "] for this ammoType. MoveAmmo will use AmmoHangar", Logging.Debug);
 					if (!AmmoHangarItems.Any())
 					{
+						
+						if(Cache.storyline != null && Cache.Instance.CurrentShipsCargo != null  && Cache.Instance.CurrentShipsCargo.Items != null  && Cache.Instance.CurrentShipsCargo.Items.Any( i  => i.TypeId == CurrentAmmoToLoad.TypeId)) {
+							
+							Logging.Log("Arm.MoveAmmo","We don't have enough ammo, but since we are on a storyline we ignore that.",Logging.White);
+							
+							MissionSettings.AmmoTypesToLoad.Remove(CurrentAmmoToLoad);
+							return false;
+						} 
+						
 						ItemHangarRetries++;
 						if (ItemHangarRetries < 10) //just retry... after 10 tries try to use the itemhangar instead of ammohangar
 						{
 							return false;
 						}
+						
+
 
 						foreach (KeyValuePair<Ammo, DateTime> ammo in MissionSettings.AmmoTypesToLoad)
 						{
