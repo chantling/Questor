@@ -1,13 +1,18 @@
-﻿using System;
+﻿//extern alias Ut;
+
+using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EasyHook;
+//using Ut::Utility;
+
 
 namespace D3DDetour
 {
 	
 	public class D3D9 : D3DHook
 	{
+		
 		[DllImport("d3d9.dll")]
 		static extern IntPtr Direct3DCreate9(uint uint_0);
 		

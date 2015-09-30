@@ -10,7 +10,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Questor</RootNamespace>
     <AssemblyName>Questor</AssemblyName>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -40,6 +41,7 @@
     <WarningLevel>4</WarningLevel>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -53,7 +55,6 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <OutputPath>..\bin\Debug\</OutputPath>
   </PropertyGroup>
@@ -68,7 +69,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DirectEve, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -82,6 +82,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Utility">
+      <HintPath>..\DirectEve\Utility.dll</HintPath>
+      <Aliases>Ut</Aliases>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
