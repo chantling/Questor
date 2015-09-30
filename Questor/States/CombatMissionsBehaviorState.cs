@@ -17,7 +17,6 @@
         ExecuteMission,
         DelayedGotoBase,
         GotoBase,
-        CourierMission,
         CompleteMission,
         Statistics,
         UnloadLoot,

@@ -27,7 +27,7 @@ namespace Questor.Behaviors
 {
 	public class CombatMissionsBehavior
 	{
-		private readonly CourierMissionCtrl _courierMissionCtrl;
+		
 		
 		private DateTime _lastPulse;
 		private DateTime _lastSalvageTrip = DateTime.MinValue;
@@ -52,7 +52,7 @@ namespace Questor.Behaviors
 		{
 			_lastPulse = DateTime.MinValue;
 			_random = new Random();
-			_courierMissionCtrl = new CourierMissionCtrl();
+			
 			_combatMissionCtrl = new CombatMissionCtrl();
 			_storyline = new Storyline();
 			Cache.storyline = _storyline;
@@ -475,7 +475,7 @@ namespace Questor.Behaviors
 				if (!Cache.Instance.UpdateMyWalletBalance()) return;
 				Arm.ChangeArmState(ArmState.Idle);
 				_States.CurrentDroneState = DroneState.WaitingForTargets;
-				_States.CurrentCombatMissionBehaviorState = Cache.Instance.CourierMission ? CombatMissionsBehaviorState.CourierMission : CombatMissionsBehaviorState.LocalWatch;
+				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.LocalWatch;
 				return;
 			}
 
@@ -1777,21 +1777,6 @@ namespace Questor.Behaviors
 
 					case CombatMissionsBehaviorState.StorylineReturnToBase:
 						StorylineReturnToBaseCMBState();
-						break;
-
-					case CombatMissionsBehaviorState.CourierMission:
-
-						if (_States.CurrentCourierMissionCtrlState == CourierMissionCtrlState.Idle)
-							_States.CurrentCourierMissionCtrlState = CourierMissionCtrlState.GotoPickupLocation;
-
-						_courierMissionCtrl.ProcessState();
-
-						if (_States.CurrentCourierMissionCtrlState == CourierMissionCtrlState.Done)
-						{
-							_States.CurrentCourierMissionCtrlState = CourierMissionCtrlState.Idle;
-							Cache.Instance.CourierMission = false;
-							_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
-						}
 						break;
 
 					case CombatMissionsBehaviorState.Traveler:
