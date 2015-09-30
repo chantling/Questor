@@ -8,6 +8,7 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
+extern alias Ut;
 
 namespace Questor.Modules.Caching
 {
@@ -26,7 +27,9 @@ namespace Questor.Modules.Caching
 	using global::Questor.Modules.Logging;
 	using DirectEve;
 	using global::Questor.Storylines;
-	
+	using Ut::EVE;
+	using Ut;
+	using Ut::WCF;
 	
 	public class Cache
 	{
@@ -48,6 +51,35 @@ namespace Questor.Modules.Caching
 				return _instance;
 			}
 		}
+		
+//		public static WCF.WCFClient.Instance.GetPipeProxy
+		
+		private DateTime LastEveAccountPoll = DateTime.MinValue;
+		private EveAccount _EveAccount = null;
+		public EveAccount EveAccount
+		{
+			get  {
+				
+				if(_EveAccount == null || LastEveAccountPoll.AddSeconds(1) < DateTime.UtcNow) {
+					LastEveAccountPoll = DateTime.UtcNow;
+					_EveAccount = WCFClient.Instance.GetPipeProxy.GetEveAccount(this.CharName);
+					
+				}
+				
+				return _EveAccount;
+
+			}
+		}
+		
+		public string CharName { get; set; }
+		public string PipeName { get; set; }
+		
+		public WCFClient WcfClient {
+			get {
+				return WCFClient.Instance;
+			}
+		}
+	
 
 		/// <summary>
 		///   _agent cache //cleared in InvalidateCache

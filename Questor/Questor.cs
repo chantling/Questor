@@ -25,7 +25,7 @@ namespace Questor
 	using global::Questor.Modules.Combat;
 	using global::Questor.Modules.Logging;
 	using global::Questor.Modules.Lookup;
-	using global::Questor.Modules.Misc;
+	
 	using global::Questor.Modules.States;
 	using global::Questor.Modules.BackgroundTasks;
 
