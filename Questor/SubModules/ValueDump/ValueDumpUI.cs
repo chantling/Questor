@@ -8,7 +8,7 @@
 //  </copyright>
 //-------------------------------------------------------------------------------
 
-using Questor.Modules.BackgroundTasks;
+using global::Questor.Modules.BackgroundTasks;
 
 namespace ValueDump
 {
@@ -16,11 +16,11 @@ namespace ValueDump
     using System.Linq;
     using System.Windows.Forms;
     using DirectEve;
-    using Questor.Modules.Actions;
-    using Questor.Modules.Caching;
-    using Questor.Modules.Lookup;
-    using Questor.Modules.Logging;
-    using Questor.Modules.States;
+    using global::Questor.Modules.Actions;
+    using global::Questor.Modules.Caching;
+    using global::Questor.Modules.Lookup;
+    using global::Questor.Modules.Logging;
+    using global::Questor.Modules.States;
 
     public partial class ValueDumpUI : Form
     {

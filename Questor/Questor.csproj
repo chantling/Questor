@@ -38,6 +38,8 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -52,7 +54,7 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <OutputPath>..\bin\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
@@ -83,13 +85,124 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SubModules\BuyLPI\BuyLPI.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Actions\Action.cs" />
+    <Compile Include="Actions\AgentInteraction.cs" />
+    <Compile Include="Actions\Arm.cs" />
+    <Compile Include="Actions\BookmarkDestination.cs" />
+    <Compile Include="Actions\Buy.cs" />
+    <Compile Include="Actions\DebugModule.cs" />
+    <Compile Include="Actions\Drop.cs" />
+    <Compile Include="Actions\Fitting.cs" />
+    <Compile Include="Actions\Grab.cs" />
+    <Compile Include="Actions\Market.cs" />
+    <Compile Include="Actions\MissionBookmarkDestination.cs" />
+    <Compile Include="Actions\ScanInteraction.cs" />
+    <Compile Include="Actions\Sell.cs" />
+    <Compile Include="Actions\SkillTrainer.cs" />
+    <Compile Include="Actions\SolarSystemDestination.cs" />
+    <Compile Include="Actions\StationDestination.cs" />
+    <Compile Include="Actions\TravelerDestination.cs" />
+    <Compile Include="Actions\UnloadLoot.cs" />
+    <Compile Include="Activities\CombatMissionCtrl.cs" />
+    <Compile Include="Activities\CourierMissionCtrl.cs" />
+    <Compile Include="Activities\LoginToEVE.cs" />
+    <Compile Include="Activities\Traveler.cs" />
+    <Compile Include="BackgroundTasks\Cleanup.cs" />
+    <Compile Include="BackgroundTasks\Defense.cs" />
+    <Compile Include="BackgroundTasks\LocalWatch.cs" />
+    <Compile Include="BackgroundTasks\NavigateOnGrid.cs" />
+    <Compile Include="BackgroundTasks\Panic.cs" />
+    <Compile Include="BackgroundTasks\Salvage.cs" />
+    <Compile Include="BackgroundTasks\Scoop.cs" />
     <Compile Include="Behaviors\CombatHelperBehavior.cs" />
     <Compile Include="Behaviors\CombatMissionsBehavior.cs" />
     <Compile Include="Behaviors\DebugBehavior.cs" />
     <Compile Include="Behaviors\DebugHangarsBehavior.cs" />
     <Compile Include="Behaviors\DedicatedBookmarkSalvagerBehavior.cs" />
+    <Compile Include="Caching\Cache.cs" />
+    <Compile Include="Caching\EachWeaponsVolleyCache.cs" />
+    <Compile Include="Caching\EntityCache.cs" />
+    <Compile Include="Caching\ItemCache.cs" />
+    <Compile Include="Caching\ModuleCache.cs" />
+    <Compile Include="Combat\Combat.cs" />
+    <Compile Include="Combat\Drones.cs" />
+    <Compile Include="EVEInteraction\D3DDetour\D3D11.cs" />
+    <Compile Include="EVEInteraction\D3DDetour\D3D9.cs" />
+    <Compile Include="EVEInteraction\D3DDetour\D3DHook.cs" />
+    <Compile Include="EVEInteraction\D3DDetour\Pulse.cs" />
+    <Compile Include="EVEInteraction\StandAlone.cs" />
+    <Compile Include="Logging\Logging.cs" />
+    <Compile Include="Logging\Statistics.cs" />
+    <Compile Include="Lookup\AgentInteractionPurpose.cs" />
+    <Compile Include="Lookup\Ammo.cs" />
+    <Compile Include="Lookup\CategoryID.cs" />
+    <Compile Include="Lookup\DamageType.cs" />
+    <Compile Include="Lookup\Distances.cs" />
+    <Compile Include="Lookup\GroupID.cs" />
+    <Compile Include="Lookup\InvType.cs" />
+    <Compile Include="Lookup\MissionSettings.cs" />
+    <Compile Include="Lookup\OreType.cs" />
+    <Compile Include="Lookup\Priority.cs" />
+    <Compile Include="Lookup\PriorityTarget.cs" />
+    <Compile Include="Lookup\SelectAgent.cs" />
+    <Compile Include="Lookup\Settings.cs" />
+    <Compile Include="Lookup\ShipTargetValue.cs" />
+    <Compile Include="Lookup\SkillPlan.cs" />
+    <Compile Include="Lookup\Time.cs" />
+    <Compile Include="Lookup\TypeID.cs" />
+    <Compile Include="Misc\Options.cs" />
+    <Compile Include="States\AgentInteractionState.cs" />
+    <Compile Include="States\AnomalyControllerState.cs" />
+    <Compile Include="States\ArmState.cs" />
+    <Compile Include="States\BackgrounsBehaviorState.cs" />
+    <Compile Include="States\BuyLPIState.cs" />
+    <Compile Include="States\BuyState.cs" />
+    <Compile Include="States\CleanupState.cs" />
+    <Compile Include="States\CombatHelperBehaviorState.cs" />
+    <Compile Include="States\CombatMissionCtrlState.cs" />
+    <Compile Include="States\CombatMissionsBehaviorState.cs" />
+    <Compile Include="States\CombatState.cs" />
+    <Compile Include="States\CourierMissionCtrlState.cs" />
+    <Compile Include="States\DebugBehaviorState.cs" />
+    <Compile Include="States\DebugHangarsBehaviorState.cs" />
+    <Compile Include="States\DebugModuleState.cs" />
+    <Compile Include="States\DebugQuestorState.cs" />
+    <Compile Include="States\DedicatedBookmarkSalvagerBehaviorState.cs" />
+    <Compile Include="States\DirectionalScannerBehaviorState.cs" />
+    <Compile Include="States\DroneState.cs" />
+    <Compile Include="States\DropState.cs" />
+    <Compile Include="States\GrabState.cs" />
+    <Compile Include="States\LocalWatchState.cs" />
+    <Compile Include="States\ManageFleetState.cs" />
+    <Compile Include="States\MasterState.cs" />
+    <Compile Include="States\MissionActionState.cs" />
+    <Compile Include="States\MissionState.cs" />
+    <Compile Include="States\PanicState.cs" />
+    <Compile Include="States\QuestorState.cs" />
+    <Compile Include="States\SalvageState.cs" />
+    <Compile Include="States\ScanInteractionState.cs" />
+    <Compile Include="States\ScoopState.cs" />
+    <Compile Include="States\SellState.cs" />
+    <Compile Include="States\SkillTrainerState.cs" />
+    <Compile Include="States\SlaveState.cs" />
+    <Compile Include="States\States.cs" />
+    <Compile Include="States\StatisticsState.cs" />
+    <Compile Include="States\StorylineState.cs" />
+    <Compile Include="States\SwitchShipState.cs" />
+    <Compile Include="States\TravelerState.cs" />
+    <Compile Include="States\UnloadLootState.cs" />
+    <Compile Include="States\ValueDumpState.cs" />
+    <Compile Include="Storylines\GenericCombatStoryline.cs" />
+    <Compile Include="Storylines\GenericCombatStorylineState.cs" />
+    <Compile Include="Storylines\GenericCourierStoryline.cs" />
+    <Compile Include="Storylines\GenericCourierStorylineState.cs" />
+    <Compile Include="Storylines\IStoryline.cs" />
+    <Compile Include="Storylines\MaterialsForWarPreparation.cs" />
+    <Compile Include="Storylines\Storyline.cs" />
+    <Compile Include="Storylines\TransactionDataDelivery.cs" />
+    <Compile Include="Storylines\TransactionDataDeliveryState.cs" />
+    <Compile Include="SubModules\BuyLPI\BuyLPI.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Questor.cs" />
     <Compile Include="SubModules\Deb\Debug.cs" />
@@ -151,12 +264,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Questor.Modules\Questor.Modules.csproj">
-      <Project>{0C0BE1A3-BA5B-41A1-B578-F20777D02304}</Project>
-      <Name>Questor.Modules</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -174,6 +281,19 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Actions" />
+    <Folder Include="Activities" />
+    <Folder Include="BackgroundTasks" />
+    <Folder Include="Behaviors" />
+    <Folder Include="Caching" />
+    <Folder Include="Combat" />
+    <Folder Include="EVEInteraction" />
+    <Folder Include="EVEInteraction\D3DDetour" />
+    <Folder Include="Logging" />
+    <Folder Include="Lookup" />
+    <Folder Include="Misc" />
+    <Folder Include="States" />
+    <Folder Include="Storylines" />
     <Folder Include="SubModules\BuyLPI" />
     <Folder Include="SubModules" />
     <Folder Include="SubModules\Deb" />

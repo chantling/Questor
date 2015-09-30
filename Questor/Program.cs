@@ -1,5 +1,5 @@
 ﻿
-using Questor.Modules.Lookup;
+using global::Questor.Modules.Lookup;
 
 namespace Questor
 {

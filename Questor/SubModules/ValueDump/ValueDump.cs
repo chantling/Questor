@@ -1,7 +1,7 @@
 ﻿//using System;
 //using System.Windows.Forms;
-//using Questor.Modules.Logging;
-//using Questor.Modules.Misc;
+//using global::Questor.Modules.Logging;
+//using global::Questor.Modules.Misc;
 //
 //namespace ValueDump
 //{

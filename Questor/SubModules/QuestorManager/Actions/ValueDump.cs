@@ -11,9 +11,9 @@
 namespace QuestorManager.Actions
 {
     using System;
-    using Questor.Modules.Logging;
-    using Questor.Modules.Actions;
-    using Questor.Modules.States;
+    using global::Questor.Modules.Logging;
+    using global::Questor.Modules.Actions;
+    using global::Questor.Modules.States;
 
     public class ValueDump
     {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using DirectEve;
-using Questor.Modules.Caching;
-using Questor.Modules.Logging;
-using Questor.Modules.States;
+using global::Questor.Modules.Caching;
+using global::Questor.Modules.Logging;
+using global::Questor.Modules.States;
 
 namespace QuestorManager.Actions
 {

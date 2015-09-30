@@ -8,7 +8,7 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
-using Questor.Modules.Activities;
+using global::Questor.Modules.Activities;
 
 namespace Questor
 {

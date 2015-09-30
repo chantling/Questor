@@ -15,10 +15,10 @@
 //    using System.Threading;
 //    using DirectEve;
 //    using System.Globalization;
-//    using Questor.Modules.Logging;
-//    using Questor.Modules.Lookup;
-//    using Questor.Modules.Caching;
-//    using Questor.Modules.BackgroundTasks;
+//    using global::Questor.Modules.Logging;
+//    using global::Questor.Modules.Lookup;
+//    using global::Questor.Modules.Caching;
+//    using global::Questor.Modules.BackgroundTasks;
 //
 //    internal class BuyLPI
 //    {

@@ -18,14 +18,6 @@ set msbuild4=%systemroot%\Microsoft.Net\FrameWork\v4.0.30319\msbuild.exe
 del ".\bin\debug\*.*" /Q
 del ".\bin\release\*.*" /Q
 ::
-:: Build Project: Questor.Modules
-::
-set nameofproject=Questor.Modules
-set csproj=.\%nameofproject%\%nameofproject%.csproj
-"%msbuild4%" "%csproj%" /p:configuration="%releasetype%" /target:Clean;Build
-Echo Done building [ %nameofproject% ] - see above for any errors - 1 of 5 builds
-%pause%
-::
 :: Build Project: Questor
 ::
 set nameofproject=Questor

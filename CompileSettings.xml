@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Settings>
-   <!-- Innerspace directory location. If you installed it correctly, you can leave it blank, compiler will try to fetch it automatically through registry-->
-   <innerspaceLocation></innerspaceLocation>
-	<!--You can set .NET Programs\TestQuestor if you like to copy to test location for example Default is .NET Programs -->
-   <copyToLocation>.NET Programs</copyToLocation>
-	<!-- If you want to speed up compile, not to wait to answer copy question.-->
-   <unnattendedCopy>False</unnattendedCopy>
-</Settings>
