@@ -151,7 +151,6 @@
     <Compile Include="Lookup\TypeID.cs" />
     <Compile Include="Misc\Options.cs" />
     <Compile Include="States\AgentInteractionState.cs" />
-    <Compile Include="States\AnomalyControllerState.cs" />
     <Compile Include="States\ArmState.cs" />
     <Compile Include="States\BackgrounsBehaviorState.cs" />
     <Compile Include="States\BuyLPIState.cs" />
