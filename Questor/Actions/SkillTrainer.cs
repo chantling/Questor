@@ -9,7 +9,6 @@ namespace Questor.Modules.Actions
 	//using System.Collections.Generic;
 	//using System.Windows.Forms;
 	using global::Questor.Modules.Logging;
-	using global::Questor.Modules.Logging;
 	
 	public static class SkillTrainerClass
 	{

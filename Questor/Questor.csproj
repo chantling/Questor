@@ -120,7 +120,6 @@
     <Compile Include="Behaviors\DebugHangarsBehavior.cs" />
     <Compile Include="Behaviors\DedicatedBookmarkSalvagerBehavior.cs" />
     <Compile Include="Caching\Cache.cs" />
-    <Compile Include="Caching\EachWeaponsVolleyCache.cs" />
     <Compile Include="Caching\EntityCache.cs" />
     <Compile Include="Caching\ItemCache.cs" />
     <Compile Include="Caching\ModuleCache.cs" />

@@ -188,49 +188,7 @@ namespace Questor.Modules.Caching
 		public HashSet<long> ListofWebbingEntities = new HashSet<long>();
 		public HashSet<long> ListofContainersToLoot = new HashSet<long>();
 		public HashSet<string> ListofMissionCompletionItemsToLoot = new HashSet<string>();
-		public List<EachWeaponsVolleyCache> ListofEachWeaponsVolleyData = new List<EachWeaponsVolleyCache>();
 		public long VolleyCount;
-		
-		/*
-        public void IterateInvTypes(string module)
-        {
-            string path = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            if (path != null)
-            {
-                string invtypesXmlFile = System.IO.Path.Combine(path, "InvTypes.xml");
-                InvTypesById = new Dictionary<int, InvType>();
-
-                if (!File.Exists(invtypesXmlFile))
-                {
-                    Logging.Log(module, "IterateInvTypes - unable to find [" + invtypesXmlFile + "]", Logging.White);
-                    return;
-                }
-
-                try
-                {
-                    Logging.Log(module, "IterateInvTypes - Loading [" + invtypesXmlFile + "]", Logging.White);
-                    InvTypes = XDocument.Load(invtypesXmlFile);
-                    if (InvTypes.Root != null)
-                    {
-                        foreach (XElement element in InvTypes.Root.Elements("invtype"))
-                        {
-                            InvTypesById.Add((int)element.Attribute("id"), new InvType(element));
-                        }
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Logging.Log(module, "IterateInvTypes - Exception: [" + exception + "]", Logging.Red);
-                }
-                
-            }
-            elsef
-            {
-                Logging.Log(module, "IterateInvTypes - unable to find [" + System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "]", Logging.White);
-            }
-        }
-		 * */
 		
 		public void IterateShipTargetValues(string module)
 		{
@@ -2542,8 +2500,7 @@ namespace Questor.Modules.Caching
 					ListofWebbingEntities.Clear();
 					ListofContainersToLoot.Clear();
 					ListofMissionCompletionItemsToLoot.Clear();
-					Statistics.IndividualVolleyDataStatistics(Cache.Instance.ListofEachWeaponsVolleyData);
-					ListofEachWeaponsVolleyData.Clear();
+					
 					ListOfUndockBookmarks = null;
 
 					//MyMissileProjectionSkillLevel = SkillPlan.MissileProjectionSkillLevel();

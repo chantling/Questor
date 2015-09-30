@@ -63,11 +63,6 @@ namespace Questor.Modules.Caching
 			get { return _module.AssembleShip(); }
 		}
 
-		//public double Attributes
-		//{
-		//    get { return _module.Attributes; }
-		//}
-
 		public double AveragePrice
 		{
 			get { return _module.AveragePrice(); }
@@ -282,11 +277,6 @@ namespace Questor.Modules.Caching
 				return -1;
 			}
 		}
-
-		//public IEnumerable<DirectItem> MatchingAmmo
-		//{
-		//    get { return _module.MatchingAmmo; }
-		//}
 
 		public DirectItem Charge
 		{
@@ -503,12 +493,6 @@ namespace Questor.Modules.Caching
 					if (Logging.DebugDefense) Logging.Log("ModuleCache.Click", "if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(5))", Logging.Debug);
 					return false;
 				}
-//
-				//                if (DateTime.UtcNow < Time.Instance.NextActivateModules)
-				//                {
-				//                    if (Logging.DebugDefense) Logging.Log("ModuleCache.Click", "if (DateTime.UtcNow < Time.Instance.NextActivateModules)", Logging.Debug);
-				//                    return false;
-				//                }
 
 				if (Time.Instance.LastClickedTimeStamp != null && Time.Instance.LastClickedTimeStamp.ContainsKey(ItemId))
 				{
@@ -561,7 +545,7 @@ namespace Questor.Modules.Caching
 
 		private int ActivateCountThisFrame = 0;
 
-		public EachWeaponsVolleyCache SnapshotOfVolleyData;
+		
 		
 		
 		public bool Activate(EntityCache target)
@@ -573,47 +557,6 @@ namespace Questor.Modules.Caching
 
 				if (!DisableAutoReload)
 					return false;
-
-				//
-				// if their are ANY changes in space (NOT JUST OUR OWN!, but ANY)
-				// that are headed to the same target we want to shoot and are going
-				// to likely hit in the next 1 sec do not shoot yet, wait until their
-				// is no ammo that close (we assume this will eliminate some exceptions
-				// we were seeing trying to shoot things that were dead/dieing
-				//
-				//                try
-				//                {
-				//                    if (Cache.Instance.ChargeEntities.Any(e => e.FollowId == target.Id && e.DistanceFromEntity(target) < e.Velocity))
-				//                    {
-				//                        IEnumerable<EntityCache> AmmoNeartarget = Cache.Instance.ChargeEntities.Where(e => e.FollowId == target.Id && e.DistanceFromEntity(target) < e.Velocity).ToList();
-				//                        if (AmmoNeartarget.Any())
-				//                        {
-				//                            EntityCache ClosestAmmoToTarget = AmmoNeartarget.OrderByDescending(i => i.Distance).FirstOrDefault();
-				//                            if (ClosestAmmoToTarget != null)
-				//                            {
-				//                                double? AmmosDistanceFromTarget = ClosestAmmoToTarget.DistanceFromEntity(target);
-				//                                if (AmmosDistanceFromTarget != null)
-				//                                {
-				//                                    if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "Not Shooting Yet: Waiting on [" + ClosestAmmoToTarget.Name + "] that is [" + Math.Round((double)AmmosDistanceFromTarget / 1000, 0) + "k] from [" + target.Name + "][" + Math.Round(target.Distance /1000, 0) + "k][" + TargetId + "]", Logging.Debug);
-				//                                    return false;
-				//                                }
-//
-				//                                if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "AmmosDistanceFromTarget is null", Logging.Debug);
-				//                            }
-//
-				//                            if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "ClosestAmmoToTarget is null", Logging.Debug);
-				//                            //return false; if we cant log it correctly just shoot something
-				//                        }
-//
-				//                        if (Logging.DebugActivateWeapons) Logging.Log("ModuleCache.Activate", "AmmoNeartarget is null)", Logging.Debug);
-				//                        //return false; if we cant log it correctly just shoot something
-				//                    }
-				//                }
-				//                catch (Exception ex)
-				//                {
-				//                    Logging.Log("ModuleCache.Activate","Exception [" + ex + "]",Logging.Debug);
-				//                }
-				
 
 				ActivateCountThisFrame++;
 
@@ -646,34 +589,11 @@ namespace Questor.Modules.Caching
 					Logging.Log("Activate", "Target [" + target.Name + "][" + Math.Round(target.Distance / 1000, 2) + "]IsEwarImmune[" + target.IsEwarImmune + "] is EWar Immune and Module [" + _module.TypeName + "] isEwarModule [" + IsEwarModule + "]", Logging.Debug);
 					return false;
 				}
-
-				if (IsMissileLauncher && Settings.Instance.AvoidShootingTargetsWithMissilesIfweKNowTheyAreAboutToBeHitWithAPreviousVolley)
-				{
-					//TRUE Max Missile Range
-					//
-					//r = Range
-					//v = Velocity of missile
-					//f = Flight time of missile
-					//m = Mass of missile
-					//a = Agility of missile
-
-					//Quote:
-					//r = v*(f-(10^6/(m*a)
-					//
-					
-				}
-				
-				//DateTime.UtcNow > i.ThisVolleyCacheCreated.AddSeconds(10)))
 				
 				if(!_module.Activate(target.Id)) {
 					return false;
 				}
 				
-				SnapshotOfVolleyData = new EachWeaponsVolleyCache(_module, target);
-				if (IsMissileLauncher || IsTurret)
-				{
-					Cache.Instance.ListofEachWeaponsVolleyData.Add(SnapshotOfVolleyData);
-				}
 				
 				Time.Instance.LastActivatedTimeStamp[ItemId] = DateTime.UtcNow;
 				Cache.Instance.LastModuleTargetIDs[ItemId] = target.Id;
