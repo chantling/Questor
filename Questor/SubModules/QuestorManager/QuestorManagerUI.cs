@@ -209,7 +209,7 @@ namespace QuestorManager
 					Cache.Instance.DirectEve.Rendering3D = !Settings.Instance.Disable3D;
 				}
 
-//				Defense.ProcessState();
+				Defense.ProcessState();
 				Cleanup.ProcessState();
 				
 
