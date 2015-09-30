@@ -74,7 +74,7 @@ namespace Questor.Modules.Caching
 		public string CharName { get; set; }
 		public string PipeName { get; set; }
 		
-		public WCFClient WcfClient {
+		public WCFClient WCFClient {
 			get {
 				return WCFClient.Instance;
 			}

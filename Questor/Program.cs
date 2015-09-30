@@ -46,8 +46,8 @@ namespace Questor
 			Cache.Instance.CharName = args[0];
 			Cache.Instance.PipeName = args[1];
 			
-			Cache.Instance.WcfClient.pipeName = Cache.Instance.PipeName;
-            Cache.Instance.WcfClient.GetPipeProxy.Ping();
+			Cache.Instance.WCFClient.pipeName = Cache.Instance.PipeName;
+            Cache.Instance.WCFClient.GetPipeProxy.Ping();
 
             if (Cache.Instance.EveAccount == null)
             {
