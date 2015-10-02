@@ -719,19 +719,21 @@ namespace Questor.Modules.Caching
 							try
 							{
 								
-								if(storyline != null && storyline.HasStoryline()) {
-									var agentId = storyline.StorylineMission.AgentId;
+
+                                // TODO: to use this, Unload & Arm needs to be modified to NOT arm/unload/load on the storyline agent station
+								//if(storyline != null && storyline.HasStoryline()) {
+								//	var agentId = storyline.StorylineMission.AgentId;
 									
-									if(agentId > 0) {
-										var agent = Cache.Instance.DirectEve.GetAgentById(agentId);
-										if(agent != null) {
-											Logging.Log("CurrentAgent","We got an open storyline mission, going to that agent.", Logging.White);
-											_currentAgent = agent.Name;
-											return agent.Name;
-										}
-									}
+								//	if(agentId > 0) {
+								//		var agent = Cache.Instance.DirectEve.GetAgentById(agentId);
+								//		if(agent != null) {
+								//			Logging.Log("CurrentAgent","We got an open storyline mission, going to that agent.", Logging.White);
+								//			_currentAgent = agent.Name;
+								//			return agent.Name;
+								//		}
+								//	}
 									
-								}
+								//}
 								
 								if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1 && (!string.IsNullOrEmpty(SwitchAgent())))
 								{

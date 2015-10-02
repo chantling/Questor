@@ -827,12 +827,7 @@ namespace Questor.Modules.Lookup
 					{
 						Logging.Log("LoadCorrectFactionOrMissionAmmo", "DamageType [" + FactionDamageType + "] is one of the damagetypes we should load", Logging.White);
 						foreach (Ammo specificAmmoType in Combat.Ammo.Where(a => a.DamageType == FactionDamageType).Select(a => a.Clone()))
-						{
-							// the reason why ammo == 0 needs to be found :X
-							if(specificAmmoType.Quantity == 0) {
-								
-							}
-							
+						{	
 							Logging.Log("LoadCorrectFactionOrMissionAmmo", "Adding [" + specificAmmoType + "] to the list of AmmoTypes to load. It is defined as [" + FactionDamageType + "]", Logging.White);
 							MissionSettings.AmmoTypesToLoad.AddOrUpdate(specificAmmoType, DateTime.UtcNow);
 							MissionSettings.loadedAmmo = true;
