@@ -313,7 +313,7 @@
         }
 
 
-        private static DateTime LastOfferRemove = DateTime.MaxValue;
+        private static DateTime LastOfferRemove = DateTime.MinValue;
 
         public DirectAgentMission StorylineMission
         {
@@ -355,7 +355,7 @@
                             var mission = missionsQuestorCantDo.FirstOrDefault();
                             if (mission != null)
                             {
-                                Logging.Log("Storyline", "Removing storyline mission offer[" + mission.Name + "] to make room for new storylines.", Logging.White);
+                                Logging.Log("Storyline", "Removing storyline mission offer [" + mission.Name + "] to make room for new storylines.", Logging.White);
                                 mission.RemoveOffer();
                             }
                         }
@@ -368,7 +368,7 @@
                 }
                 catch (Exception exception)
                 {
-                    Logging.Log("Storyline.StorylineMission", "IterateShipTargetValues - Exception: [" + exception + "]", Logging.Debug);
+                    Logging.Log("Storyline.StorylineMission", "StorylineMission - Exception: [" + exception + "]", Logging.Debug);
                     return null;
                 }
             }
