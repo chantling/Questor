@@ -319,8 +319,8 @@
                 try
                 {
                     IEnumerable<DirectAgentMission> missionsInJournal = Cache.Instance.DirectEve.AgentMissions.ToList();
-                    if (Cache.Instance.CurrentStorylineAgentId != 0)
-                        return missionsInJournal.FirstOrDefault(m => m.AgentId == Cache.Instance.CurrentStorylineAgentId);
+                    //if (Cache.Instance.CurrentStorylineAgentId != 0)
+                    //    return missionsInJournal.FirstOrDefault(m => m.AgentId == Cache.Instance.CurrentStorylineAgentId);
 
                     missionsInJournal = missionsInJournal.Where(m => !Cache.Instance.AgentBlacklist.Contains(m.AgentId)).ToList();
                     Logging.Log("Storyline", "Currently have  [" + missionsInJournal.Count() + "] missions available", Logging.Yellow);
@@ -329,18 +329,18 @@
                         int i = 1;
                         foreach (DirectAgentMission _mission in missionsInJournal)
                         {
-                            Logging.Log("Storyline", "[" + i + "] Named      [" + Logging.FilterPath(_mission.Name) + ".xml]", Logging.Yellow);
-                            Logging.Log("Storyline", "[" + i + "] AgentID    [" + _mission.AgentId + "]", Logging.Yellow);
-                            Logging.Log("Storyline", "[" + i + "] Important? [" + _mission.Important + "]", Logging.Yellow);
-                            Logging.Log("Storyline", "[" + i + "] State      [" + _mission.State + "]", Logging.Yellow);
-                            Logging.Log("Storyline", "[" + i + "] Type       [" + _mission.Type + "]", Logging.Yellow);
+                            //Logging.Log("Storyline", "[" + i + "] Named      [" + Logging.FilterPath(_mission.Name) + ".xml]", Logging.Yellow);
+                            //Logging.Log("Storyline", "[" + i + "] AgentID    [" + _mission.AgentId + "]", Logging.Yellow);
+                            //Logging.Log("Storyline", "[" + i + "] Important? [" + _mission.Important + "]", Logging.Yellow);
+                            //Logging.Log("Storyline", "[" + i + "] State      [" + _mission.State + "]", Logging.Yellow);
+                            //Logging.Log("Storyline", "[" + i + "] Type       [" + _mission.Type + "]", Logging.Yellow);
                             i++;
                         }
                     }
                     missionsInJournal = missionsInJournal.Where(m => m.Type.Contains("Storyline")).ToList();
-                    Logging.Log("Storyline", "Currently have  [" + missionsInJournal.Count() + "] storyline missions available", Logging.Yellow);
+                    //Logging.Log("Storyline", "Currently have  [" + missionsInJournal.Count() + "] storyline missions available", Logging.Yellow);
                     missionsInJournal = missionsInJournal.Where(m => _storylines.ContainsKey(Logging.FilterPath(m.Name).ToLower())).ToList();
-                    Logging.Log("Storyline", "Currently have  [" + missionsInJournal.Count() + "] storyline missions questor knows how to do", Logging.Yellow);
+                    //Logging.Log("Storyline", "Currently have  [" + missionsInJournal.Count() + "] storyline missions questor knows how to do", Logging.Yellow);
                     missionsInJournal = missionsInJournal.Where(m => MissionSettings.MissionBlacklist.All(b => b.ToLower() != Logging.FilterPath(m.Name).ToLower())).ToList();
                     Logging.Log("Storyline", "Currently have  [" + missionsInJournal.Count() + "] storyline missions questor knows how to do and are not blacklisted", Logging.Yellow);
                     missionsInJournal.ToList();

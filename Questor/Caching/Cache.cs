@@ -2482,10 +2482,12 @@ namespace Questor.Modules.Caching
 							{
 								if (solarSystemInRoute.Security < 0.45)
 								{
-									//Bad bad bad
-									Cache.Instance.RouteIsAllHighSecBool = false;
+                                    //Bad bad bad
+                                    Instance.RouteIsAllHighSecBool = false;
 									return true;
 								}
+
+                                continue;
 							}
 
 							Logging.Log("CheckifRouteIsAllHighSec", "Jump number [" + _system + "of" + currentPath.Count() + "] in the route came back as null, we could not get the system name or sec level", Logging.Debug);
@@ -3542,70 +3544,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 		
-		public DirectContainer CorpBookmarkHangar { get; set; }
-
-		//
-		// why do we still have this in here? depreciated in favor of using the corporate bookmark system
-		//
-		public bool OpenCorpBookmarkHangar(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-			{
-				return false;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenCorpBookmarkHangarAction)
-			{
-				return false;
-			}
-
-			if (Cache.Instance.InStation)
-			{
-				Cache.Instance.CorpBookmarkHangar = !string.IsNullOrEmpty(Settings.Instance.BookmarkHangar)
-					? Cache.Instance.DirectEve.GetCorporationHangar(Settings.Instance.BookmarkHangar)
-					: null;
-
-				// Is the corpHangar open?
-				if (Cache.Instance.CorpBookmarkHangar != null)
-				{
-					if (Cache.Instance.CorpBookmarkHangar.Window == null)
-					{
-						// No, command it to open
-						//Cache.Instance.DirectEve.OpenCorporationHangar();
-						Time.Instance.NextOpenCorpBookmarkHangarAction = DateTime.UtcNow.AddSeconds(2 + Cache.Instance.RandomNumber(1, 3));
-						Logging.Log(module, "Opening Corporate Bookmark Hangar: waiting [" + Math.Round(Time.Instance.NextOpenCorpBookmarkHangarAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]", Logging.White);
-						return false;
-					}
-
-					if (!Cache.Instance.CorpBookmarkHangar.Window.IsReady)
-					{
-						return false;
-					}
-
-					if (Cache.Instance.CorpBookmarkHangar.Window.IsReady)
-					{
-						if (Cache.Instance.CorpBookmarkHangar.Window.IsPrimary())
-						{
-							Cache.Instance.CorpBookmarkHangar.Window.OpenAsSecondary();
-							return false;
-						}
-
-						return true;
-					}
-				}
-				if (Cache.Instance.CorpBookmarkHangar == null)
-				{
-					if (!string.IsNullOrEmpty(Settings.Instance.BookmarkHangar))
-					{
-						Logging.Log(module, "Opening Corporate Bookmark Hangar: failed! No Corporate Hangar in this station! lag?", Logging.Orange);
-					}
-
-					return false;
-				}
-			}
-
-			return false;
-		}
 
 		public bool CloseCorpHangar(string module, string window)
 		{
