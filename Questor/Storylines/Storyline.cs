@@ -312,6 +312,9 @@
             }
         }
 
+
+        private static DateTime LastOfferRemove = DateTime.MaxValue;
+
         public DirectAgentMission StorylineMission
         {
             get
@@ -342,6 +345,22 @@
                     missionsInJournal = missionsInJournal.Where(m => _storylines.ContainsKey(Logging.FilterPath(m.Name).ToLower())).ToList();
                     //Logging.Log("Storyline", "Currently have  [" + missionsInJournal.Count() + "] storyline missions questor knows how to do", Logging.Yellow);
                     missionsInJournal = missionsInJournal.Where(m => MissionSettings.MissionBlacklist.All(b => b.ToLower() != Logging.FilterPath(m.Name).ToLower())).ToList();
+
+                    if (LastOfferRemove.AddMinutes(10) < DateTime.UtcNow)
+                    {
+                        LastOfferRemove = DateTime.UtcNow;
+                        var missionsQuestorCantDo = missionsInJournal.Except(missionsInJournal.Where(m => m.Type.Contains("Storyline") && m.State == (int)MissionState.Offered).ToList());
+                        //if(missionsquestorcantdo.any())
+                        {
+                            var mission = missionsQuestorCantDo.FirstOrDefault();
+                            if (mission != null)
+                            {
+                                Logging.Log("Storyline", "Removing storyline mission offer[" + mission.Name + "] to make room for new storylines.", Logging.White);
+                                mission.RemoveOffer();
+                            }
+                        }
+                    }
+
                     Logging.Log("Storyline", "Currently have  [" + missionsInJournal.Count() + "] storyline missions questor knows how to do and are not blacklisted", Logging.Yellow);
                     missionsInJournal.ToList();
                     //missions = missions.Where(m => !Settings.Instance.MissionGreylist.Any(b => b.ToLower() == Logging.FilterPath(m.Name).ToLower()));
@@ -475,8 +494,8 @@
             // Do we have anything here we want to bring home, like implants or ?
             //if (to.Items.Any(i => i.GroupId == (int)Group.MiscSpecialMissionItems || i.GroupId == (int)Group.Livestock))
 
-            if (!Cache.Instance.ItemHangar.Items.Any(i => (i.GroupId >= 738 
-                                                       && i.GroupId <= 750) 
+            if (!Cache.Instance.ItemHangar.Items.Any(i => (i.GroupId >= 738
+                                                       && i.GroupId <= 750)
                                                        || i.GroupId == (int)Group.MiscSpecialMissionItems
                                                        || i.GroupId == (int)Group.Livestock))
             {
@@ -641,10 +660,10 @@
             // Do we have a registered storyline?
             return StorylineMission != null;
         }
-        
-//        public DirectAgentMission StorylineMission() {
-//        	return StorylineMission;
-//        }
+
+        //        public DirectAgentMission StorylineMission() {
+        //        	return StorylineMission;
+        //        }
 
         public IStoryline StorylineHandler
         {
