@@ -349,10 +349,17 @@
                     if (LastOfferRemove.AddMinutes(10) < DateTime.UtcNow)
                     {
                         LastOfferRemove = DateTime.UtcNow;
-                        var missionsQuestorCantDo = missionsInJournal.Except(missionsInJournal.Where(m => m.Type.Contains("Storyline") && m.State == (int)MissionState.Offered).ToList());
-                        //if(missionsquestorcantdo.any())
+                        var offeredStorylines = Cache.Instance.DirectEve.AgentMissions.Where(m => !Cache.Instance.AgentBlacklist.Contains(m.AgentId)).Where(m => m.Type.Contains("Storyline") && m.State == (int)MissionState.Offered).ToList();
+                        var notCompatibleStoryline = offeredStorylines.Except(missionsInJournal);
+
+                        //foreach (var m in notCompatibleStoryline)
+                        //{
+                        //    Console.WriteLine(m.Name + " state: " + m.State.ToString());
+                        //}
+
+                        if (offeredStorylines.Any())
                         {
-                            var mission = missionsQuestorCantDo.FirstOrDefault();
+                            var mission = offeredStorylines.FirstOrDefault();
                             if (mission != null)
                             {
                                 Logging.Log("Storyline", "Removing storyline mission offer [" + mission.Name + "] to make room for new storylines.", Logging.White);
