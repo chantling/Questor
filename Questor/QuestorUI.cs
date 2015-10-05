@@ -93,8 +93,8 @@ namespace Questor
 					QuestorStateComboBox.Items.Add(text);
 
 
-				if (Settings.Instance.CharacterMode != null)
-				{
+//				if (Settings.Instance.CharacterMode != null) {
+				
 					//if (Logging.DebugUI) Logging.Log("SkillTrainerUI", "PopulateStateComboBoxes", Logging.White);
 					//SkillTrainerStateComboBox.Items.Clear();
 					//foreach (string text in Enum.GetNames(typeof(SkillTrainerState)))
@@ -192,7 +192,7 @@ namespace Questor
 					{
 						AgentInteractionStateComboBox.Items.Add(text);
 					}
-				}
+//				}
 			}
 			catch (Exception ex)
 			{
@@ -408,8 +408,8 @@ namespace Questor
 			try
 			{
 				if (Logging.DebugUI) Logging.Log("QuestorUI", "PopulateBehaviorStateComboBox", Logging.White);
-				if (Settings.Instance.CharacterMode != null)
-				{
+//				if (Settings.Instance.CharacterMode != null)
+//				{
 					//
 					// populate combo boxes with the various states that are possible
 					//
@@ -467,7 +467,7 @@ namespace Questor
 					//        BehaviorComboBox.Items.Add(text);
 					//    }
 					//}
-				}
+//				}
 			}
 			catch (Exception ex)
 			{
