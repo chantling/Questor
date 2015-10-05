@@ -416,8 +416,6 @@ namespace Questor.Behaviors
 				return;
 			}
 			
-			
-			
 			if (_States.CurrentArmState == ArmState.Idle)
 			{
 				Logging.Log("Switch", "Begin", Logging.White);

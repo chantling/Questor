@@ -19,6 +19,7 @@ namespace Questor
 	using System.Linq;
 	using DirectEve;
 	using System.Windows.Forms;
+	using System.Windows.Threading;
 	using global::Questor.Behaviors;
 	using global::Questor.Modules.Actions;
 	using global::Questor.Modules.Caching;
@@ -401,8 +402,6 @@ namespace Questor
 				// New frame, invalidate old cache
 				Cache.Instance.InvalidateCache();
 
-				
-
 				if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
 				{
 					if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))", Logging.Debug);
@@ -504,7 +503,6 @@ namespace Questor
 				{
 					return;
 				}
-				
 				
 				if(!BeforeLogin.questorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questor")) {
 					_nextPulse = DateTime.UtcNow.AddSeconds(2);
