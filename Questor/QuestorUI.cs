@@ -742,7 +742,7 @@ namespace Questor
 								if (lblCurrentMissionInfo.Text != newlblCurrentMissionInfotext)
 								{
 									lblCurrentMissionInfo.Text = newlblCurrentMissionInfotext;
-									buttonOpenMissionXML.Enabled = true;
+									
 								}
 							}
 							else
@@ -751,7 +751,7 @@ namespace Questor
 								if (lblCurrentMissionInfo.Text != newlblCurrentMissionInfotext)
 								{
 									lblCurrentMissionInfo.Text = newlblCurrentMissionInfotext;
-									buttonOpenMissionXML.Enabled = false;
+									
 								}
 							}
 						}
@@ -759,37 +759,25 @@ namespace Questor
 					else if (String.IsNullOrEmpty(MissionSettings.MissionName))
 					{
 						lblCurrentMissionInfo.Text = Resources.QuestorfrmMain_UpdateUiTick_No_Mission_Selected_Yet;
-						buttonOpenMissionXML.Enabled = false;
+						
 					}
-					else
-					{
-						//lblCurrentMissionInfo.Text = "No Mission XML exists for this mission";
-						buttonOpenMissionXML.Enabled = false;
-					}
-				}
-				else
-				{
-					buttonOpenMissionXML.Enabled = false;
 				}
 
 
 				if (Settings.Instance.DefaultSettingsLoaded)
 				{
-					buttonOpenCharacterXML.Enabled = false;
-					buttonOpenSchedulesXML.Enabled = false;
-					buttonOpenCommonSettingsXML.Enabled = false;
-					buttonQuestorStatistics.Enabled = false;
+					
 				}
 				else
 				{
 					if (Settings.Instance.CharacterXMLExists)
 					{
-						buttonOpenCharacterXML.Enabled = true;
+						
 						Settings.Instance.CharacterXMLExists = true;
 					}
 					else
 					{
-						buttonOpenCharacterXML.Enabled = false;
+						
 						Settings.Instance.CharacterXMLExists = false;
 					}
 
@@ -798,12 +786,12 @@ namespace Questor
 					//
 					if (Settings.Instance.SchedulesXMLExists)
 					{
-						buttonOpenCharacterXML.Enabled = true;
+						
 						Settings.Instance.SchedulesXMLExists = true;
 					}
 					else
 					{
-						buttonOpenSchedulesXML.Enabled = false;
+						
 						Settings.Instance.SchedulesXMLExists = false;
 					}
 
@@ -812,12 +800,12 @@ namespace Questor
 					//
 					if (Settings.Instance.QuestorStatisticsExists)
 					{
-						buttonQuestorStatistics.Enabled = true;
+						
 						Settings.Instance.QuestorStatisticsExists = true;
 					}
 					else
 					{
-						buttonQuestorStatistics.Enabled = false;
+						
 						Settings.Instance.QuestorStatisticsExists = false;
 					}
 
@@ -826,12 +814,12 @@ namespace Questor
 					//
 					if (Settings.Instance.QuestorSettingsExists)
 					{
-						buttonOpenCommonSettingsXML.Enabled = true;
+						
 						Settings.Instance.QuestorSettingsExists = true;
 					}
 					else
 					{
-						buttonOpenCommonSettingsXML.Enabled = false;
+						
 						Settings.Instance.QuestorSettingsExists = false;
 					}
 

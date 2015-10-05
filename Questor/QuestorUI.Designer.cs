@@ -44,16 +44,11 @@
         	this.lblCurrentMissionInfo = new System.Windows.Forms.Label();
         	this.lblPocketAction = new System.Windows.Forms.Label();
         	this.lblCurrentPocketAction = new System.Windows.Forms.Label();
-        	this.buttonQuestorStatistics = new System.Windows.Forms.Button();
-        	this.buttonOpenCommonSettingsXML = new System.Windows.Forms.Button();
-        	this.buttonOpenMissionXML = new System.Windows.Forms.Button();
         	this.buttonOpenLogDirectory = new System.Windows.Forms.Button();
         	this.BehaviorComboBox = new System.Windows.Forms.ComboBox();
         	this.label2 = new System.Windows.Forms.Label();
         	this.QuestorStateComboBox = new System.Windows.Forms.ComboBox();
         	this.QuestorStatelbl = new System.Windows.Forms.Label();
-        	this.buttonOpenSchedulesXML = new System.Windows.Forms.Button();
-        	this.buttonOpenCharacterXML = new System.Windows.Forms.Button();
         	this.label25 = new System.Windows.Forms.Label();
         	this.label26 = new System.Windows.Forms.Label();
         	this.tabControlMain = new System.Windows.Forms.TabControl();
@@ -712,36 +707,6 @@
         	this.lblCurrentPocketAction.Size = new System.Drawing.Size(180, 15);
         	this.lblCurrentPocketAction.TabIndex = 95;
         	// 
-        	// buttonQuestorStatistics
-        	// 
-        	this.buttonQuestorStatistics.Location = new System.Drawing.Point(566, 20);
-        	this.buttonQuestorStatistics.Name = "buttonQuestorStatistics";
-        	this.buttonQuestorStatistics.Size = new System.Drawing.Size(156, 23);
-        	this.buttonQuestorStatistics.TabIndex = 108;
-        	this.buttonQuestorStatistics.Text = "QuestorStatistics";
-        	this.buttonQuestorStatistics.UseVisualStyleBackColor = true;
-        	this.buttonQuestorStatistics.Click += new System.EventHandler(this.ButtonQuestorStatisticsClick);
-        	// 
-        	// buttonOpenCommonSettingsXML
-        	// 
-        	this.buttonOpenCommonSettingsXML.Location = new System.Drawing.Point(566, 47);
-        	this.buttonOpenCommonSettingsXML.Name = "buttonOpenCommonSettingsXML";
-        	this.buttonOpenCommonSettingsXML.Size = new System.Drawing.Size(156, 23);
-        	this.buttonOpenCommonSettingsXML.TabIndex = 110;
-        	this.buttonOpenCommonSettingsXML.Text = "Open Common Settings XML";
-        	this.buttonOpenCommonSettingsXML.UseVisualStyleBackColor = true;
-        	this.buttonOpenCommonSettingsXML.Click += new System.EventHandler(this.ButtonOpenCommonSettingsXMLClick);
-        	// 
-        	// buttonOpenMissionXML
-        	// 
-        	this.buttonOpenMissionXML.Location = new System.Drawing.Point(406, 76);
-        	this.buttonOpenMissionXML.Name = "buttonOpenMissionXML";
-        	this.buttonOpenMissionXML.Size = new System.Drawing.Size(154, 23);
-        	this.buttonOpenMissionXML.TabIndex = 118;
-        	this.buttonOpenMissionXML.Text = "Open Current Mission XML";
-        	this.buttonOpenMissionXML.UseVisualStyleBackColor = true;
-        	this.buttonOpenMissionXML.Click += new System.EventHandler(this.ButtonOpenMissionXmlClick);
-        	// 
         	// buttonOpenLogDirectory
         	// 
         	this.buttonOpenLogDirectory.Location = new System.Drawing.Point(406, 47);
@@ -791,26 +756,6 @@
         	this.QuestorStatelbl.Text = "Questor";
         	this.QuestorStatelbl.TextAlign = System.Drawing.ContentAlignment.TopRight;
         	// 
-        	// buttonOpenSchedulesXML
-        	// 
-        	this.buttonOpenSchedulesXML.Location = new System.Drawing.Point(566, 105);
-        	this.buttonOpenSchedulesXML.Name = "buttonOpenSchedulesXML";
-        	this.buttonOpenSchedulesXML.Size = new System.Drawing.Size(156, 23);
-        	this.buttonOpenSchedulesXML.TabIndex = 123;
-        	this.buttonOpenSchedulesXML.Text = "Open Current Schedules XML";
-        	this.buttonOpenSchedulesXML.UseVisualStyleBackColor = true;
-        	this.buttonOpenSchedulesXML.Click += new System.EventHandler(this.ButtonOpenSchedulesXMLClick);
-        	// 
-        	// buttonOpenCharacterXML
-        	// 
-        	this.buttonOpenCharacterXML.Location = new System.Drawing.Point(566, 76);
-        	this.buttonOpenCharacterXML.Name = "buttonOpenCharacterXML";
-        	this.buttonOpenCharacterXML.Size = new System.Drawing.Size(156, 23);
-        	this.buttonOpenCharacterXML.TabIndex = 122;
-        	this.buttonOpenCharacterXML.Text = "Open Current Character XML";
-        	this.buttonOpenCharacterXML.UseVisualStyleBackColor = true;
-        	this.buttonOpenCharacterXML.Click += new System.EventHandler(this.ButtonOpenCharacterXMLClick);
-        	// 
         	// label25
         	// 
         	this.label25.Location = new System.Drawing.Point(47, 31);
@@ -836,7 +781,7 @@
         	this.tabControlMain.Location = new System.Drawing.Point(2, 3);
         	this.tabControlMain.Name = "tabControlMain";
         	this.tabControlMain.SelectedIndex = 0;
-        	this.tabControlMain.Size = new System.Drawing.Size(799, 460);
+        	this.tabControlMain.Size = new System.Drawing.Size(799, 425);
         	this.tabControlMain.TabIndex = 127;
         	this.tabControlMain.SelectedIndexChanged += new System.EventHandler(this.TabControlMainSelectedIndexChanged);
         	this.tabControlMain.TabIndexChanged += new System.EventHandler(this.TabControlMainTabIndexChanged);
@@ -849,17 +794,12 @@
         	this.tabPage3.Controls.Add(this.label25);
         	this.tabPage3.Controls.Add(this.DamageTypeComboBox);
         	this.tabPage3.Controls.Add(this.lblDamageType);
-        	this.tabPage3.Controls.Add(this.buttonOpenSchedulesXML);
         	this.tabPage3.Controls.Add(this.PauseCheckBox);
-        	this.tabPage3.Controls.Add(this.buttonOpenCharacterXML);
         	this.tabPage3.Controls.Add(this.Disable3DCheckBox);
-        	this.tabPage3.Controls.Add(this.buttonOpenMissionXML);
         	this.tabPage3.Controls.Add(this.lblMissionName);
-        	this.tabPage3.Controls.Add(this.buttonOpenCommonSettingsXML);
         	this.tabPage3.Controls.Add(this.lblCurrentMissionInfo);
         	this.tabPage3.Controls.Add(this.buttonOpenLogDirectory);
         	this.tabPage3.Controls.Add(this.lblPocketAction);
-        	this.tabPage3.Controls.Add(this.buttonQuestorStatistics);
         	this.tabPage3.Controls.Add(this.QuestorStatelbl);
         	this.tabPage3.Controls.Add(this.BehaviorComboBox);
         	this.tabPage3.Controls.Add(this.QuestorStateComboBox);
@@ -868,7 +808,7 @@
         	this.tabPage3.Location = new System.Drawing.Point(4, 22);
         	this.tabPage3.Name = "tabPage3";
         	this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-        	this.tabPage3.Size = new System.Drawing.Size(791, 434);
+        	this.tabPage3.Size = new System.Drawing.Size(791, 399);
         	this.tabPage3.TabIndex = 1;
         	this.tabPage3.Text = "Questor";
         	this.tabPage3.UseVisualStyleBackColor = true;
@@ -884,7 +824,7 @@
         	this.Tabs.Controls.Add(this.Inventory);
         	this.Tabs.Controls.Add(this.tabModules);
         	this.Tabs.Controls.Add(this.tabPage1);
-        	this.Tabs.Location = new System.Drawing.Point(43, 134);
+        	this.Tabs.Location = new System.Drawing.Point(43, 101);
         	this.Tabs.Name = "Tabs";
         	this.Tabs.SelectedIndex = 0;
         	this.Tabs.Size = new System.Drawing.Size(695, 288);
@@ -6201,7 +6141,7 @@
         	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
         	this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         	this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-        	this.ClientSize = new System.Drawing.Size(801, 467);
+        	this.ClientSize = new System.Drawing.Size(801, 431);
         	this.Controls.Add(this.tabControlMain);
         	this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         	this.MaximizeBox = false;
@@ -6268,16 +6208,11 @@
         private System.Windows.Forms.Label lblMissionName;
         private System.Windows.Forms.Label lblPocketAction;
         private System.Windows.Forms.Label lblCurrentPocketAction;
-        private System.Windows.Forms.Button buttonQuestorStatistics;
-        private System.Windows.Forms.Button buttonOpenCommonSettingsXML;
-        private System.Windows.Forms.Button buttonOpenMissionXML;
         private System.Windows.Forms.Button buttonOpenLogDirectory;
         private System.Windows.Forms.ComboBox BehaviorComboBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox QuestorStateComboBox;
         private System.Windows.Forms.Label QuestorStatelbl;
-        private System.Windows.Forms.Button buttonOpenSchedulesXML;
-        private System.Windows.Forms.Button buttonOpenCharacterXML;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label26;
         public System.Windows.Forms.Label lblCurrentMissionInfo;
