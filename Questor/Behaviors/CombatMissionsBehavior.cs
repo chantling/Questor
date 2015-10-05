@@ -405,6 +405,19 @@ namespace Questor.Behaviors
 		{
 			if (!Cache.Instance.InStation) return;
 			
+			if(Cache.Instance.CurrentShipsCargo == null || Cache.Instance.CurrentShipsCargo.Items == null || Cache.Instance.ItemHangar == null || Cache.Instance.ItemHangar.Items == null) {
+				
+				return;
+			}
+					
+			if(Cache.Instance.CurrentShipsCargo.Items.Any() && Cache.Instance.DirectEve.ActiveShip != null && Cache.Instance.DirectEve.ActiveShip.GivenName.ToLower() != Combat.CombatShipName.ToLower()) {
+				Logging.Log("SwitchCMBState", "if(Cache.Instance.CurrentShipsCargo.Items.Any())", Logging.White);
+				ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.UnloadLoot);
+				return;
+			}
+			
+			
+			
 			if (_States.CurrentArmState == ArmState.Idle)
 			{
 				Logging.Log("Switch", "Begin", Logging.White);
