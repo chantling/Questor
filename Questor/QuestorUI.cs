@@ -16,6 +16,7 @@ namespace Questor
 	using global::Questor.Modules.Lookup;
 	using global::Questor.Modules.States;
 	using global::Questor.Modules.BackgroundTasks;
+	using DirectEve;
 
 	public partial class QuestorUI : Form
 	{
@@ -1501,15 +1502,8 @@ namespace Questor
 
 		private void bttnUserDefinedScript4_Click(object sender, EventArgs e)
 		{
-			if (Settings.Instance.UserDefinedLavishScriptScript4 != string.Empty)
-			{
-				Logging.Log("QuestorUI", "Running User Defined LavishScript Script #1 [" + Settings.Instance.UserDefinedLavishScriptScript4 + "]", Logging.Debug);
-				//                if (Logging.UseInnerspace) LavishScript.ExecuteCommand("runscript " + Settings.Instance.UserDefinedLavishScriptScript4);
-			}
-			else
-			{
-				Logging.Log("QuestorUI", "User Defined LavishScript Script #4 is not defined in your characters settings xml: doing nothing", Logging.Debug);
-			}
+			var frm = new PythonBrowser.PythonBrowserFrm();
+			frm.Show();
 		}
 		
 		void TabControlMainSelectedIndexChanged(object sender, EventArgs e)
