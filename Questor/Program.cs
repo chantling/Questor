@@ -61,7 +61,7 @@ namespace Questor
 
             Cache.D3DVersion = Cache.Instance.EveAccount.DX11 ? D3DDetour.D3DVersion.Direct3D11 : D3DDetour.D3DVersion.Direct3D9;
 
-            if (!string.IsNullOrEmpty(Logging.EVELoginUserName) && !string.IsNullOrEmpty(Logging.EVELoginPassword) && !string.IsNullOrEmpty(Logging.MyCharacterName))
+            if (string.IsNullOrEmpty(Logging.EVELoginUserName) || string.IsNullOrEmpty(Logging.EVELoginPassword) || string.IsNullOrEmpty(Logging.MyCharacterName))
 			{
 				return;
 			}
