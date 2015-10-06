@@ -129,11 +129,6 @@
     <Compile Include="Caching\ModuleCache.cs" />
     <Compile Include="Combat\Combat.cs" />
     <Compile Include="Combat\Drones.cs" />
-    <Compile Include="EVEInteraction\D3DDetour\D3D11.cs" />
-    <Compile Include="EVEInteraction\D3DDetour\D3D9.cs" />
-    <Compile Include="EVEInteraction\D3DDetour\D3DHook.cs" />
-    <Compile Include="EVEInteraction\D3DDetour\Pulse.cs" />
-    <Compile Include="EVEInteraction\StandAlone.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Logging\Statistics.cs" />
     <Compile Include="Lookup\AgentInteractionPurpose.cs" />

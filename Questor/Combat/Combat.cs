@@ -1336,7 +1336,7 @@ namespace Questor.Modules.Combat
 						correctAmmoInCargo= result.ToList();
 						
 					} else {
-						Logging.Log("Combat", "ReloadNormalAmmo: if(!result.Any())", Logging.Orange);
+						//Logging.Log("Combat", "ReloadNormalAmmo: if(!result.Any())", Logging.Orange);
 						return false;
 					}
 					

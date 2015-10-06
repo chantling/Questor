@@ -52,8 +52,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 		
-//		public static WCF.WCFClient.Instance.GetPipeProxy
-		
 		private DateTime LastEveAccountPoll = DateTime.MinValue;
 		private EveAccount _EveAccount = null;
 		public EveAccount EveAccount
