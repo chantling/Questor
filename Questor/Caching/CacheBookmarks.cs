@@ -33,10 +33,11 @@ namespace Questor.Modules.Caching
 	
 	public partial class Cache
 	{
-		
-		
-	
 		public List<DirectBookmark> _allBookmarks;
+		private IEnumerable<DirectBookmark> ListOfUndockBookmarks;
+		internal static DirectBookmark _undockBookmarkInLocal;
+		private int _bookmarkDeletionAttempt;
+		public DateTime NextBookmarkDeletionAttempt = DateTime.UtcNow;
 
 		public List<DirectBookmark> AllBookmarks
 		{
@@ -74,12 +75,7 @@ namespace Questor.Modules.Caching
 				_allBookmarks = value;
 			}
 		}
-
-		/// <summary>
-		///   Return a bookmark by id
-		/// </summary>
-		/// <param name = "bookmarkId"></param>
-		/// <returns></returns>
+		
 		public DirectBookmark BookmarkById(long bookmarkId)
 		{
 			try
@@ -116,7 +112,6 @@ namespace Questor.Modules.Caching
 				return null;
 			}
 		}
-
 		
 		public List<DirectBookmark> BookmarksThatContain(string label)
 		{
@@ -181,9 +176,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 		
-		private IEnumerable<DirectBookmark> ListOfUndockBookmarks;
-
-		internal static DirectBookmark _undockBookmarkInLocal;
 		public DirectBookmark UndockBookmark
 		{
 			get
@@ -285,7 +277,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		//Represents date when bookmarks are eligible for salvage. This should not be confused with when the bookmarks are too old to salvage.
 		public DateTime AgedDate
 		{
 			get
@@ -372,9 +363,6 @@ namespace Questor.Modules.Caching
 				}
 			}
 		}
-
-		private int _bookmarkDeletionAttempt;
-		public DateTime NextBookmarkDeletionAttempt = DateTime.UtcNow;
 
 		public bool DeleteBookmarksOnGrid(string module)
 		{

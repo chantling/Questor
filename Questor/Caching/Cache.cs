@@ -38,43 +38,111 @@ namespace Questor.Modules.Caching
 		
 		public static Storyline storyline { get; set; }
 
-		public static Cache Instance
-		{
-			get
-			{
-				if (_instance == null)
-				{
-					_instance = new Cache();
-				}
-				return _instance;
-			}
-		}
-		
 		private DateTime LastEveAccountPoll = DateTime.MinValue;
 		private EveAccount _EveAccount = null;
-		public EveAccount EveAccount
-		{
-			get  {
-				
-				if(_EveAccount == null || LastEveAccountPoll.AddSeconds(1) < DateTime.UtcNow) {
-					LastEveAccountPoll = DateTime.UtcNow;
-					_EveAccount = WCFClient.Instance.GetPipeProxy.GetEveAccount(this.CharName);
-					
-				}
-				
-				return _EveAccount;
-
-			}
-		}
-		
 		public string CharName { get; set; }
 		public string PipeName { get; set; }
-		
-		public WCFClient WCFClient {
-			get {
-				return WCFClient.Instance;
-			}
-		}
+		private DirectAgent _agent;
+		public long CurrentStorylineAgentId { get; set; }
+		public List<long> AgentBlacklist;
+		private EntityCache _approaching;
+		private List<EntityCache> _gates;
+		private List<EntityCache> _bigObjectsAndGates;
+		private List<EntityCache> _objects;
+		private List<DirectBookmark> _safeSpotBookmarks;
+		private readonly Dictionary<long, EntityCache> _entitiesById;
+		private List<ModuleCache> _modules;
+		public string OrbitEntityNamed;
+		public DirectLocation MissionSolarSystem;
+		public string DungeonId;
+		private EntityCache _star;
+		private List<EntityCache> _stations;
+		private List<EntityCache> _stargates;
+		private List<EntityCache> _containers;
+		private List<EntityCache> _bigObjects;
+		private EntityCache _stargate;
+		private IEnumerable<EntityCache> _jumpBridges;
+		private List<EntityCache> _targeting;
+		private List<EntityCache> _targets;
+		public List<long> _IDsinInventoryTree;
+		private List<EntityCache> _unlootedContainers;
+		private List<EntityCache> _unlootedWrecksAndSecureCans;
+		private List<DirectWindow> _windows;
+		private int? _maxLockedTargets;
+
+		public HashSet<long> ListOfWarpScramblingEntities = new HashSet<long>();
+		public HashSet<long> ListOfJammingEntities = new HashSet<long>();
+		public HashSet<long> ListOfTrackingDisruptingEntities = new HashSet<long>();
+		public HashSet<long> ListNeutralizingEntities = new HashSet<long>();
+		public HashSet<long> ListOfTargetPaintingEntities = new HashSet<long>();
+		public HashSet<long> ListOfDampenuingEntities = new HashSet<long>();
+		public HashSet<long> ListofWebbingEntities = new HashSet<long>();
+		public HashSet<long> ListofContainersToLoot = new HashSet<long>();
+		public HashSet<string> ListofMissionCompletionItemsToLoot = new HashSet<string>();
+		public long VolleyCount;
+		public static int CacheInstances;
+		public HashSet<long> LootedContainers { get; private set; }
+		public bool ExitWhenIdle;
+		public bool StopBot;
+		public static bool LootAlreadyUnloaded;
+		public bool RouteIsAllHighSecBool;
+		public double Wealth { get; set; }
+		public double WealthatStartofPocket { get; set; }
+		public int StackHangarAttempts { get; set; }
+		public bool NormalApproach = true;
+		public bool CourierMission;
+		public bool doneUsingRepairWindow;
+		public long AmmoHangarID = -99;
+		public long LootHangarID = -99;
+		public static D3DDetour.D3DVersion D3DVersion { get; set; }
+		public static Random _random = new Random();
+
+		public bool InMission { get; set; }
+		public bool normalNav = true;
+		public bool onlyKillAggro { get; set; }
+		public int StackLoothangarAttempts { get; set; }
+		public int StackAmmohangarAttempts { get; set; }
+		public int StackItemhangarAttempts { get; set; }
+		public Dictionary<int, String> UnloadLootTheseItemsAreLootById { get; private set; }
+		public List<ShipTargetValue> ShipTargetValues { get; private set; }
+		public DamageType FrigateDamageType { get; set; }
+		public DamageType CruiserDamageType { get; set; }
+		public DamageType BattleCruiserDamageType { get; set; }
+		public DamageType BattleShipDamageType { get; set; }
+		public DamageType LargeColidableDamageType { get; set; }
+		public bool AfterMissionSalvaging { get; set; }
+		private DirectContainer _currentShipsCargo;
+		private IEnumerable<ModuleCache> _weapons;
+		public string Path;
+		public bool _isCorpInWar = false;
+		public bool CloseQuestorCMDLogoff;
+		public bool CloseQuestorCMDExitGame = true;
+		public bool CloseQuestorEndProcess;
+		public bool GotoBaseNow;
+		public bool QuestorJustStarted = true;
+		public DirectEve DirectEve { get; set; }
+		private DirectItem _myCurrentAmmoInWeapon;
+		public Dictionary<long, long> LastModuleTargetIDs { get; private set; }
+		public Dictionary<long, DateTime> TargetingIDs { get; private set; }
+		public bool AllAgentsStillInDeclineCoolDown { get; set; }
+		private string _currentAgent { get; set; }
+		public bool Paused { get; set; }
+		public long TotalMegaBytesOfMemoryUsed = 0;
+		public double MyWalletBalance { get; set; }
+		public string CurrentPocketAction { get; set; }
+		public float AgentEffectiveStandingtoMe;
+		public string AgentEffectiveStandingtoMeText;
+		public float AgentCorpEffectiveStandingtoMe;
+		public float AgentFactionEffectiveStandingtoMe;
+		public float StandingUsedToAccessAgent;
+		public bool MissionBookmarkTimerSet;
+		public long AgentStationID { get; set; }
+		public string AgentStationName;
+		public long AgentSolarSystemID;
+		public DirectContainer _containerInSpace { get; set; }
+		private static readonly Func<DirectAgent, DirectSession, bool> AgentInThisSolarSystemSelector = (a, s) => a.SolarSystemId == s.SolarSystemId;
+		private static readonly Func<DirectAgent, DirectSession, bool> AgentInThisStationSelector = (a, s) => a.StationId == s.StationId;
+		public DirectContainer _fittedModules;
 		
 		public Cache()
 		{
@@ -158,180 +226,26 @@ namespace Questor.Modules.Caching
 			}
 		}
 		
-
-		private DirectAgent _agent;
-		public long CurrentStorylineAgentId { get; set; }
-		public List<long> AgentBlacklist;
-		private EntityCache _approaching;
-		private List<EntityCache> _gates;
-		private List<EntityCache> _bigObjectsAndGates;
-		private List<EntityCache> _objects;
-		private List<DirectBookmark> _safeSpotBookmarks;
-		private readonly Dictionary<long, EntityCache> _entitiesById;
-		private List<ModuleCache> _modules;
-		public string OrbitEntityNamed;
-		public DirectLocation MissionSolarSystem;
-		public string DungeonId;
-		private EntityCache _star;
-		private List<EntityCache> _stations;
-		private List<EntityCache> _stargates;
-		private List<EntityCache> _containers;
-		private List<EntityCache> _bigObjects;
-		private EntityCache _stargate;
-		private IEnumerable<EntityCache> _jumpBridges;
-		private List<EntityCache> _targeting;
-		private List<EntityCache> _targets;
-		public List<long> _IDsinInventoryTree;
-		private List<EntityCache> _unlootedContainers;
-		private List<EntityCache> _unlootedWrecksAndSecureCans;
-		private List<DirectWindow> _windows;
-		private int? _maxLockedTargets;
-
-		public HashSet<long> ListOfWarpScramblingEntities = new HashSet<long>();
-		public HashSet<long> ListOfJammingEntities = new HashSet<long>();
-		public HashSet<long> ListOfTrackingDisruptingEntities = new HashSet<long>();
-		public HashSet<long> ListNeutralizingEntities = new HashSet<long>();
-		public HashSet<long> ListOfTargetPaintingEntities = new HashSet<long>();
-		public HashSet<long> ListOfDampenuingEntities = new HashSet<long>();
-		public HashSet<long> ListofWebbingEntities = new HashSet<long>();
-		public HashSet<long> ListofContainersToLoot = new HashSet<long>();
-		public HashSet<string> ListofMissionCompletionItemsToLoot = new HashSet<string>();
-		public long VolleyCount;
-		public void IterateShipTargetValues(string module)
+		public EveAccount EveAccount
 		{
-			string path = Logging.PathToCurrentDirectory;
-
-			if (path != null)
-			{
-				string ShipTargetValuesXmlFile = System.IO.Path.Combine(path, "ShipTargetValues.xml");
-				ShipTargetValues = new List<ShipTargetValue>();
-
-				if (!File.Exists(ShipTargetValuesXmlFile))
-				{
-					Logging.Log(module, "IterateShipTargetValues - unable to find [" + ShipTargetValuesXmlFile + "]", Logging.White);
-					return;
+			get  {
+				
+				if(_EveAccount == null || LastEveAccountPoll.AddSeconds(1) < DateTime.UtcNow) {
+					LastEveAccountPoll = DateTime.UtcNow;
+					_EveAccount = WCFClient.Instance.GetPipeProxy.GetEveAccount(this.CharName);
+					
 				}
+				
+				return _EveAccount;
 
-				try
-				{
-					Logging.Log(module, "IterateShipTargetValues - Loading [" + ShipTargetValuesXmlFile + "]", Logging.White);
-					XDocument values = XDocument.Load(ShipTargetValuesXmlFile);
-					if (values.Root != null)
-					{
-						foreach (XElement value in values.Root.Elements("ship"))
-						{
-							ShipTargetValues.Add(new ShipTargetValue(value));
-						}
-					}
-				}
-				catch (Exception exception)
-				{
-					Logging.Log(module, "IterateShipTargetValues - Exception: [" + exception + "]", Logging.Red);
-				}
 			}
 		}
-		public void IterateUnloadLootTheseItemsAreLootItems(string module)
-		{
-			string path = Logging.PathToCurrentDirectory;
-
-			if (path != null)
-			{
-				string UnloadLootTheseItemsAreLootItemsXmlFile = System.IO.Path.Combine(path, "UnloadLootTheseItemsAreLootItems.xml");
-				UnloadLootTheseItemsAreLootById = new Dictionary<int, string>();
-
-				if (!File.Exists(UnloadLootTheseItemsAreLootItemsXmlFile))
-				{
-					Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - unable to find [" + UnloadLootTheseItemsAreLootItemsXmlFile + "]", Logging.White);
-					return;
-				}
-
-				try
-				{
-					Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - Loading [" + UnloadLootTheseItemsAreLootItemsXmlFile + "]", Logging.White);
-					MissionSettings.UnloadLootTheseItemsAreLootItems = XDocument.Load(UnloadLootTheseItemsAreLootItemsXmlFile);
-
-					if (MissionSettings.UnloadLootTheseItemsAreLootItems.Root != null)
-					{
-						foreach (XElement element in MissionSettings.UnloadLootTheseItemsAreLootItems.Root.Elements("invtype"))
-						{
-							UnloadLootTheseItemsAreLootById.Add((int)element.Attribute("id"), (string)element.Attribute("name"));
-						}
-					}
-				}
-				catch (Exception exception)
-				{
-					Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]", Logging.Red);
-				}
-			}
-			else
-			{
-				Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - unable to find [" + Logging.PathToCurrentDirectory + "]", Logging.White);
-			}
-		}
-		public static int CacheInstances;
-		public HashSet<long> LootedContainers { get; private set; }
-		public bool ExitWhenIdle;
-		public bool StopBot;
-		public static bool LootAlreadyUnloaded;
-		public bool RouteIsAllHighSecBool;
-		public double Wealth { get; set; }
-		public double WealthatStartofPocket { get; set; }
-		public int StackHangarAttempts { get; set; }
-		public bool NormalApproach = true;
-		public bool CourierMission;
-		public bool doneUsingRepairWindow;
-		public long AmmoHangarID = -99;
-		public long LootHangarID = -99;
-		public static D3DDetour.D3DVersion D3DVersion { get; set; }
-		public static Random _random = new Random();
-		public static int GetRandom(int minValue, int maxValue)
-		{
-			return _random.Next(minValue, maxValue);
-		}
-		public DirectAgentMission GetAgentMission(long agentId, bool ForceUpdate)
-		{
-			if (DateTime.UtcNow < Time.Instance.NextGetAgentMissionAction)
-			{
-				if (MissionSettings.FirstAgentMission != null)
-				{
-					return MissionSettings.FirstAgentMission;
-				}
-
-				return null;
-			}
-
-			try
-			{
-				if (ForceUpdate || MissionSettings.myAgentMissionList == null || !MissionSettings.myAgentMissionList.Any())
-				{
-					MissionSettings.myAgentMissionList = DirectEve.AgentMissions.Where(m => m.AgentId == agentId).ToList();
-					Time.Instance.NextGetAgentMissionAction = DateTime.UtcNow.AddSeconds(5);
-				}
-
-				if (MissionSettings.myAgentMissionList.Any())
-				{
-					MissionSettings.FirstAgentMission = MissionSettings.myAgentMissionList.FirstOrDefault();
-					return MissionSettings.FirstAgentMission;
-				}
-
-				return null;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.Instance.GetAgentMission", "DirectEve.AgentMissions failed: [" + exception + "]", Logging.Teal);
-				return null;
-			}
-		}
-		public bool InMission { get; set; }
-		public bool normalNav = true;
-		public bool onlyKillAggro { get; set; }
-		public int StackLoothangarAttempts { get; set; }
-		public int StackAmmohangarAttempts { get; set; }
-		public int StackItemhangarAttempts { get; set; }
 		
-		public string Path;
-
-		public bool _isCorpInWar = false;
+		public WCFClient WCFClient {
+			get {
+				return WCFClient.Instance;
+			}
+		}
 		
 		public bool IsCorpInWar
 		{
@@ -393,29 +307,17 @@ namespace Questor.Modules.Caching
 			return true;
 		}
 
-		public DirectEve DirectEve { get; set; }
-
-
-		public Dictionary<int, String> UnloadLootTheseItemsAreLootById { get; private set; }
-
-		public List<ShipTargetValue> ShipTargetValues { get; private set; }
-
-
-		public DamageType FrigateDamageType { get; set; }
-
-
-		public DamageType CruiserDamageType { get; set; }
-
-		public DamageType BattleCruiserDamageType { get; set; }
-
-
-		public DamageType BattleShipDamageType { get; set; }
-
-		public DamageType LargeColidableDamageType { get; set; }
-
-		public bool AfterMissionSalvaging { get; set; }
-
-		private DirectContainer _currentShipsCargo;
+		public static Cache Instance
+		{
+			get
+			{
+				if (_instance == null)
+				{
+					_instance = new Cache();
+				}
+				return _instance;
+			}
+		}
 
 		public DirectContainer CurrentShipsCargo
 		{
@@ -464,8 +366,6 @@ namespace Questor.Modules.Caching
 				}
 			}
 		}
-
-		public DirectContainer _containerInSpace { get; set; }
 
 		public DirectContainer ContainerInSpace
 		{
@@ -532,7 +432,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		private DirectItem _myCurrentAmmoInWeapon;
 		public DirectItem myCurrentAmmoInWeapon
 		{
 			get
@@ -566,20 +465,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-
-		public Dictionary<long, long> LastModuleTargetIDs { get; private set; }
-
-		public Dictionary<long, DateTime> TargetingIDs { get; private set; }
-
-		public bool AllAgentsStillInDeclineCoolDown { get; set; }
-
-		private string _currentAgent { get; set; }
-
-		public bool Paused { get; set; }
-
-		public long TotalMegaBytesOfMemoryUsed = 0;
-		public double MyWalletBalance { get; set; }
-
 		public bool UpdateMyWalletBalance()
 		{
 			//we know we are connected here
@@ -588,16 +473,6 @@ namespace Questor.Modules.Caching
 			return true;
 		}
 
-		public string CurrentPocketAction { get; set; }
-		public float AgentEffectiveStandingtoMe;
-		public string AgentEffectiveStandingtoMeText;
-		public float AgentCorpEffectiveStandingtoMe;
-		public float AgentFactionEffectiveStandingtoMe;
-		public float StandingUsedToAccessAgent;
-		public bool MissionBookmarkTimerSet;
-		public long AgentStationID { get; set; }
-		public string AgentStationName;
-		public long AgentSolarSystemID;
 		public string CurrentAgent
 		{
 			get
@@ -677,9 +552,7 @@ namespace Questor.Modules.Caching
 				}
 			}
 		}
-		private static readonly Func<DirectAgent, DirectSession, bool> AgentInThisSolarSystemSelector = (a, s) => a.SolarSystemId == s.SolarSystemId;
-		private static readonly Func<DirectAgent, DirectSession, bool> AgentInThisStationSelector = (a, s) => a.StationId == s.StationId;
-
+		
 		private string SelectNearestAgent(bool requireValidDeclineTimer )
 		{
 			string agentName = null;
@@ -905,8 +778,7 @@ namespace Questor.Modules.Caching
 				}
 			}
 		}
-
-		public DirectContainer _fittedModules;
+		
 		public DirectContainer FittedModules
 		{
 			get
@@ -927,9 +799,7 @@ namespace Questor.Modules.Caching
 				}
 			}
 		}
-
-
-		private IEnumerable<ModuleCache> _weapons;
+		
 		public IEnumerable<ModuleCache> Weapons
 		{
 			get
@@ -1010,16 +880,6 @@ namespace Questor.Modules.Caching
 				return null;
 			}
 		}
-
-		public bool CloseQuestorCMDLogoff;
-
-		public bool CloseQuestorCMDExitGame = true;
-
-		public bool CloseQuestorEndProcess;
-
-		public bool GotoBaseNow;
-
-		public bool QuestorJustStarted = true;
 
 		public DirectItem CheckCargoForItem(int typeIdToFind, int quantityToFind)
 		{
@@ -1163,6 +1023,119 @@ namespace Questor.Modules.Caching
 		{
 			Random random = new Random();
 			return random.Next(min, max);
+		}
+		
+		public void IterateShipTargetValues(string module)
+		{
+			string path = Logging.PathToCurrentDirectory;
+
+			if (path != null)
+			{
+				string ShipTargetValuesXmlFile = System.IO.Path.Combine(path, "ShipTargetValues.xml");
+				ShipTargetValues = new List<ShipTargetValue>();
+
+				if (!File.Exists(ShipTargetValuesXmlFile))
+				{
+					Logging.Log(module, "IterateShipTargetValues - unable to find [" + ShipTargetValuesXmlFile + "]", Logging.White);
+					return;
+				}
+
+				try
+				{
+					Logging.Log(module, "IterateShipTargetValues - Loading [" + ShipTargetValuesXmlFile + "]", Logging.White);
+					XDocument values = XDocument.Load(ShipTargetValuesXmlFile);
+					if (values.Root != null)
+					{
+						foreach (XElement value in values.Root.Elements("ship"))
+						{
+							ShipTargetValues.Add(new ShipTargetValue(value));
+						}
+					}
+				}
+				catch (Exception exception)
+				{
+					Logging.Log(module, "IterateShipTargetValues - Exception: [" + exception + "]", Logging.Red);
+				}
+			}
+		}
+		
+		public void IterateUnloadLootTheseItemsAreLootItems(string module)
+		{
+			string path = Logging.PathToCurrentDirectory;
+
+			if (path != null)
+			{
+				string UnloadLootTheseItemsAreLootItemsXmlFile = System.IO.Path.Combine(path, "UnloadLootTheseItemsAreLootItems.xml");
+				UnloadLootTheseItemsAreLootById = new Dictionary<int, string>();
+
+				if (!File.Exists(UnloadLootTheseItemsAreLootItemsXmlFile))
+				{
+					Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - unable to find [" + UnloadLootTheseItemsAreLootItemsXmlFile + "]", Logging.White);
+					return;
+				}
+
+				try
+				{
+					Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - Loading [" + UnloadLootTheseItemsAreLootItemsXmlFile + "]", Logging.White);
+					MissionSettings.UnloadLootTheseItemsAreLootItems = XDocument.Load(UnloadLootTheseItemsAreLootItemsXmlFile);
+
+					if (MissionSettings.UnloadLootTheseItemsAreLootItems.Root != null)
+					{
+						foreach (XElement element in MissionSettings.UnloadLootTheseItemsAreLootItems.Root.Elements("invtype"))
+						{
+							UnloadLootTheseItemsAreLootById.Add((int)element.Attribute("id"), (string)element.Attribute("name"));
+						}
+					}
+				}
+				catch (Exception exception)
+				{
+					Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]", Logging.Red);
+				}
+			}
+			else
+			{
+				Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - unable to find [" + Logging.PathToCurrentDirectory + "]", Logging.White);
+			}
+		}
+		
+		public static int GetRandom(int minValue, int maxValue)
+		{
+			return _random.Next(minValue, maxValue);
+		}
+		
+		public DirectAgentMission GetAgentMission(long agentId, bool ForceUpdate)
+		{
+			if (DateTime.UtcNow < Time.Instance.NextGetAgentMissionAction)
+			{
+				if (MissionSettings.FirstAgentMission != null)
+				{
+					return MissionSettings.FirstAgentMission;
+				}
+
+				return null;
+			}
+
+			try
+			{
+				if (ForceUpdate || MissionSettings.myAgentMissionList == null || !MissionSettings.myAgentMissionList.Any())
+				{
+					MissionSettings.myAgentMissionList = DirectEve.AgentMissions.Where(m => m.AgentId == agentId).ToList();
+					Time.Instance.NextGetAgentMissionAction = DateTime.UtcNow.AddSeconds(5);
+				}
+
+				if (MissionSettings.myAgentMissionList.Any())
+				{
+					MissionSettings.FirstAgentMission = MissionSettings.myAgentMissionList.FirstOrDefault();
+					return MissionSettings.FirstAgentMission;
+				}
+
+				return null;
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("Cache.Instance.GetAgentMission", "DirectEve.AgentMissions failed: [" + exception + "]", Logging.Teal);
+				return null;
+			}
 		}
 
 	}
