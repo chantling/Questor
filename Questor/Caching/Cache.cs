@@ -143,6 +143,15 @@ namespace Questor.Modules.Caching
 		private static readonly Func<DirectAgent, DirectSession, bool> AgentInThisSolarSystemSelector = (a, s) => a.SolarSystemId == s.SolarSystemId;
 		private static readonly Func<DirectAgent, DirectSession, bool> AgentInThisStationSelector = (a, s) => a.StationId == s.StationId;
 		public DirectContainer _fittedModules;
+		public static DateTime QuestorProgramLaunched = DateTime.UtcNow;
+		public static DateTime QuestorSchedulerReadyToLogin = DateTime.UtcNow;
+		public static DateTime EVEAccountLoginStarted = DateTime.UtcNow;
+		public static DateTime NextSlotActivate = DateTime.UtcNow;
+		public static bool UseDx9 { get; set; }
+		public static bool _humanInterventionRequired;
+		public static int ServerStatusCheck = 0;
+		public static DateTime _lastServerStatusCheckWasNotOK = DateTime.MinValue;
+		public static DateTime DoneLoggingInToEVETimeStamp = DateTime.MaxValue;
 		
 		public Cache()
 		{
@@ -245,6 +254,61 @@ namespace Questor.Modules.Caching
 			get {
 				return WCFClient.Instance;
 			}
+		}
+		
+		public static bool LoadDirectEVEInstance(D3DDetour.D3DVersion version)
+		{
+
+			try
+			{
+				int TryLoadingDirectVE = 0;
+				while (Cache.Instance.DirectEve == null && TryLoadingDirectVE < 30)
+				{
+					
+					try
+					{
+						Logging.Log("Startup", "Starting Instance of DirectEVE using StandaloneFramework", Logging.Debug);
+						Cache.Instance.DirectEve = new DirectEve(new StandaloneFramework(version));
+						TryLoadingDirectVE++;
+						Logging.Log("Startup", "DirectEVE should now be active: see above for any messages from DirectEVE", Logging.Debug);
+						return true;
+					}
+					catch (Exception exception)
+					{
+						Logging.Log("Startup", "exception [" + exception + "]", Logging.Orange);
+						continue;
+					}
+					
+				}
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("Startup", "exception [" + exception + "]", Logging.Orange);
+				return false;
+			}
+
+			if (Cache.Instance.DirectEve == null)
+			{
+				try
+				{
+					Logging.Log("Startup", "Error on Loading DirectEve, maybe server is down", Logging.Orange);
+					Cache.Instance.CloseQuestorCMDLogoff = false;
+					Cache.Instance.CloseQuestorCMDExitGame = true;
+					Cache.Instance.CloseQuestorEndProcess = true;
+					Cleanup.ReasonToStopQuestor = "Error on Loading DirectEve, maybe server is down";
+					Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
+					Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor, true);
+					return false;
+				}
+				catch (Exception exception)
+				{
+					Logging.BasicLog("Startup", "Exception while logging exception, oh joy [" + exception + "]");
+					return false;
+				}
+			}
+
+			return true;
+			
 		}
 		
 		public bool IsCorpInWar

@@ -67,7 +67,7 @@ namespace Questor
 			}
 			
 			Logging.Log("Startup", "Loading DirectEve with " + Cache.D3DVersion, Logging.Teal);
-			if (!LoginToEVE.LoadDirectEVEInstance(Cache.D3DVersion)) return;
+			if (!Cache.LoadDirectEVEInstance(Cache.D3DVersion)) return;
 			
 			Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;
 			

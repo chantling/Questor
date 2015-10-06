@@ -845,7 +845,7 @@ namespace Questor
 					extraWaitSeconds = 60;
 				}
 
-				if (DateTime.UtcNow.Subtract(Time.Instance.LastFrame).TotalSeconds > (Time.Instance.NoFramesRestart_seconds + extraWaitSeconds) && DateTime.UtcNow.Subtract(LoginToEVE.EVEAccountLoginStarted).TotalSeconds > 300)
+				if (DateTime.UtcNow.Subtract(Time.Instance.LastFrame).TotalSeconds > (Time.Instance.NoFramesRestart_seconds + extraWaitSeconds) && DateTime.UtcNow.Subtract(Cache.EVEAccountLoginStarted).TotalSeconds > 300)
 				{
 					if (DateTime.UtcNow.Subtract(Time.Instance.LastLogMessage).TotalSeconds > 30)
 					{
@@ -860,7 +860,7 @@ namespace Questor
 				}
 
 				if (DateTime.UtcNow.Subtract(Time.Instance.LastSessionIsReady).TotalSeconds > (Time.Instance.NoSessionIsReadyRestart_seconds + extraWaitSeconds) &&
-				    DateTime.UtcNow.Subtract(LoginToEVE.EVEAccountLoginStarted).TotalSeconds > 210)
+				    DateTime.UtcNow.Subtract(Cache.EVEAccountLoginStarted).TotalSeconds > 210)
 				{
 					if (DateTime.UtcNow.Subtract(Time.Instance.LastLogMessage).TotalSeconds > 60)
 					{

@@ -556,7 +556,7 @@ namespace Questor
 
 					//Time.Instance.LastSessionIsReady = DateTime.UtcNow;
 
-					if (DateTime.UtcNow < _lastServerStatusCheckWasNotOK.AddSeconds(LoginToEVE.RandomNumber(4, 7)))
+					if (DateTime.UtcNow < _lastServerStatusCheckWasNotOK.AddSeconds(Cache.Instance.RandomNumber(4, 7)))
 					{
 						Logging.Log("LoginOnFrame", "lastServerStatusCheckWasNotOK = [" + _lastServerStatusCheckWasNotOK.ToShortTimeString() + "] waiting 10 to 20 seconds.", Logging.White);
 						return;
@@ -575,7 +575,7 @@ namespace Questor
 
 					_nextPulse = DateTime.UtcNow.AddMilliseconds(Time.Instance.QuestorBeforeLoginPulseDelay_milliseconds);
 
-					if (DateTime.UtcNow < LoginToEVE.QuestorProgramLaunched.AddSeconds(5))
+					if (DateTime.UtcNow < Cache.QuestorProgramLaunched.AddSeconds(5))
 					{
 						//
 						// do not login for the first 7 seconds, wait...
@@ -583,7 +583,7 @@ namespace Questor
 						return;
 					}
 
-					if (LoginToEVE._humanInterventionRequired)
+					if (Cache._humanInterventionRequired)
 					{
 						Logging.Log("Startup", "OnFrame: _humanInterventionRequired is true (this will spam every second or so)", Logging.Orange);
 						_nextPulse = _nextPulse.AddMinutes(2);
@@ -753,7 +753,7 @@ namespace Questor
 									Logging.Log("Startup", "window.IsKillable is: " + window.IsKillable, Logging.Red);
 									Logging.Log("Startup", "window.Viewmode is: " + window.ViewMode, Logging.Red);
 									Logging.Log("Startup", "ERROR! - Human Intervention is required in this case: halting all login attempts - ERROR!", Logging.Red);
-									LoginToEVE._humanInterventionRequired = true;
+									Cache._humanInterventionRequired = true;
 									return;
 								}
 							}
@@ -780,12 +780,12 @@ namespace Questor
 
 					if (Cache.Instance.DirectEve.Login.AtLogin && Cache.Instance.DirectEve.Login.ServerStatus != "Status: OK")
 					{
-						if (LoginToEVE.ServerStatusCheck <= 20) // at 10 sec a piece this would be 200+ seconds
+						if (Cache.ServerStatusCheck <= 20) // at 10 sec a piece this would be 200+ seconds
 						{
 							Logging.Log("Startup", "Server status[" + Cache.Instance.DirectEve.Login.ServerStatus + "] != [OK] try later", Logging.Orange);
-							LoginToEVE.ServerStatusCheck++;
+							Cache.ServerStatusCheck++;
 							//retry the server status check twice (with 1 sec delay between each) before kicking in a larger delay
-							if (LoginToEVE.ServerStatusCheck > 2)
+							if (Cache.ServerStatusCheck > 2)
 							{
 								_lastServerStatusCheckWasNotOK = DateTime.UtcNow;
 							}
@@ -793,8 +793,8 @@ namespace Questor
 							return;
 						}
 
-						LoginToEVE.ServerStatusCheck = 0;
-						Cleanup.ReasonToStopQuestor = "Server Status Check shows server still not ready after more than 3 min. Restarting Questor. ServerStatusCheck is [" + LoginToEVE.ServerStatusCheck + "]";
+						Cache.ServerStatusCheck = 0;
+						Cleanup.ReasonToStopQuestor = "Server Status Check shows server still not ready after more than 3 min. Restarting Questor. ServerStatusCheck is [" + Cache.ServerStatusCheck + "]";
 						Logging.Log("Startup", Cleanup.ReasonToStopQuestor, Logging.Red);
 						Time.EnteredCloseQuestor_DateTime = DateTime.UtcNow;
 						Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor, true);
@@ -803,7 +803,7 @@ namespace Questor
 
 					if (Cache.Instance.DirectEve.Login.AtLogin && !Cache.Instance.DirectEve.Login.IsLoading && !Cache.Instance.DirectEve.Login.IsConnecting)
 					{
-						if (DateTime.UtcNow.Subtract(LoginToEVE.QuestorSchedulerReadyToLogin).TotalMilliseconds > LoginToEVE.RandomNumber(Time.Instance.EVEAccountLoginDelayMinimum_seconds * 1000, Time.Instance.EVEAccountLoginDelayMaximum_seconds * 1000))
+						if (DateTime.UtcNow.Subtract(Cache.QuestorSchedulerReadyToLogin).TotalMilliseconds > Cache.Instance.RandomNumber(Time.Instance.EVEAccountLoginDelayMinimum_seconds * 1000, Time.Instance.EVEAccountLoginDelayMaximum_seconds * 1000))
 						{
 							Logging.Log("Startup", "Login account [" + Logging.EVELoginUserName + "]", Logging.White);
 							Cache.Instance.DirectEve.Login.Login(Logging.EVELoginUserName, Logging.EVELoginPassword);
@@ -815,7 +815,7 @@ namespace Questor
 
 					if (Cache.Instance.DirectEve.Login.AtCharacterSelection && Cache.Instance.DirectEve.Login.IsCharacterSelectionReady && !Cache.Instance.DirectEve.Login.IsConnecting && !Cache.Instance.DirectEve.Login.IsLoading)
 					{
-						if (DateTime.UtcNow.Subtract(LoginToEVE.EVEAccountLoginStarted).TotalMilliseconds > LoginToEVE.RandomNumber(Time.Instance.CharacterSelectionDelayMinimum_seconds * 1000, Time.Instance.CharacterSelectionDelayMaximum_seconds * 1000) && DateTime.UtcNow > LoginToEVE.NextSlotActivate)
+						if (DateTime.UtcNow.Subtract(Cache.EVEAccountLoginStarted).TotalMilliseconds > Cache.Instance.RandomNumber(Time.Instance.CharacterSelectionDelayMinimum_seconds * 1000, Time.Instance.CharacterSelectionDelayMaximum_seconds * 1000) && DateTime.UtcNow > Cache.NextSlotActivate)
 						{
 							foreach (DirectLoginSlot slot in Cache.Instance.DirectEve.Login.CharacterSlots)
 							{
@@ -825,7 +825,7 @@ namespace Questor
 								}
 
 								Logging.Log("Startup", "Activating character [" + slot.CharName + "]", Logging.White);
-								LoginToEVE.NextSlotActivate = DateTime.UtcNow.AddSeconds(5);
+								Cache.NextSlotActivate = DateTime.UtcNow.AddSeconds(5);
 								slot.Activate();
 								_nextPulse = GetNowAddDelay(12,14);
 								return;
