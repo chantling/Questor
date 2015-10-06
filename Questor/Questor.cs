@@ -583,12 +583,6 @@ namespace Questor
 						return;
 					}
 
-					if (!LoginToEVE.ReadyToLoginToEVEAccount && Cache.Instance.DirectEve.Login.AtLogin)
-					{
-						Logging.Log("Startup", "if (!ReadyToLoginToEVEAccount)", Logging.White);
-						return;
-					}
-
 					if (LoginToEVE._humanInterventionRequired)
 					{
 						Logging.Log("Startup", "OnFrame: _humanInterventionRequired is true (this will spam every second or so)", Logging.Orange);

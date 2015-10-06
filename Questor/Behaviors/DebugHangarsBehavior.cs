@@ -481,13 +481,6 @@ namespace Questor.Behaviors
 					Cache.Instance.Paused = true;
 					break;
 
-				case DebugHangarsBehaviorState.OpenOreHold:
-					Logging.Log("DebugHangars", "DebugHangarsState.OpenOreHold:", Logging.White);
-					if (Cache.Instance.OreHold == null) return;
-					_States.CurrentDebugHangarBehaviorState = DebugHangarsBehaviorState.Error;
-					Cache.Instance.Paused = true;
-					break;
-
 				case DebugHangarsBehaviorState.Default:
 					break;
 			}

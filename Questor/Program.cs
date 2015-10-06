@@ -63,7 +63,7 @@ namespace Questor
 
             if (!string.IsNullOrEmpty(Logging.EVELoginUserName) && !string.IsNullOrEmpty(Logging.EVELoginPassword) && !string.IsNullOrEmpty(Logging.MyCharacterName))
 			{
-				LoginToEVE.ReadyToLoginToEVEAccount = true;
+				return;
 			}
 			
 			Logging.Log("Startup", "Loading DirectEve with " + Cache.D3DVersion, Logging.Teal);

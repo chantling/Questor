@@ -14,6 +14,7 @@ namespace Questor.Modules.Activities
 	using global::Questor.Modules.Logging;
 	using global::Questor.Modules.Lookup;
 	using global::Questor.Modules.States;
+	
 	public static class LoginToEVE
 	{
 		public static bool loggedInAndreadyToStartQuestorUI;
@@ -27,74 +28,13 @@ namespace Questor.Modules.Activities
 		public static bool _loginOnly;
 		public static bool _showHelp;
 		public static bool UseDx9 { get; set; }
-
-		private static bool __chantlingScheduler;
-
-		public static bool _chantlingScheduler
-		{
-			get
-			{
-				return __chantlingScheduler;
-			}
-			set
-			{
-				__chantlingScheduler = value;
-				if (__chantlingScheduler == false && string.IsNullOrEmpty(Logging.MyCharacterName))
-				{
-					Logging.Log("Startup", "We were told to use the scheduler but we are Missing the CharacterName to login with...", Logging.Debug);
-				}
-			}
-		}
-
-		private static bool __loginNowIgnoreScheduler;
-
-		public static bool _loginNowIgnoreScheduler
-		{
-			get
-			{
-				return __loginNowIgnoreScheduler;
-			}
-			set
-			{
-				__loginNowIgnoreScheduler = value;
-				_chantlingScheduler = false;
-			}
-		}
-
-		public static bool _loadAdaptEVE;
-		private static bool? _readyToLoginEVEAccount;
-
-		public static bool ReadyToLoginToEVEAccount
-		{
-			get
-			{
-				try
-				{
-					return _readyToLoginEVEAccount ?? false;
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("ReadyToLoginToEVE", "Exception [" + ex + "]", Logging.Debug);
-					return false;
-				}
-			}
-
-			set
-			{
-				_readyToLoginEVEAccount = value;
-				if (value) //if true
-				{
-					QuestorSchedulerReadyToLogin = DateTime.UtcNow;
-				}
-			}
-		}
 		public static bool _humanInterventionRequired;
 		public static bool MissingEasyHookWarningGiven;
 		public static readonly System.Timers.Timer Timer = new System.Timers.Timer();
 		public const int RandStartDelay = 30; //Random startup delay in minutes
 		public static readonly Random R = new Random();
 		public static int ServerStatusCheck = 0;
-		public static DateTime _nextPulse;
+		
 		public static DateTime _lastServerStatusCheckWasNotOK = DateTime.MinValue;
 		public static DateTime StartTime = DateTime.MaxValue;
 		public static DateTime StopTime = DateTime.MinValue;
@@ -104,13 +44,6 @@ namespace Questor.Modules.Activities
 
 		public static bool LoadDirectEVEInstance(D3DDetour.D3DVersion version)
 		{
-			#region Load DirectEVE
-
-			//
-			// Load DirectEVE
-			//
-			
-			
 
 			try
 			{
@@ -170,7 +103,7 @@ namespace Questor.Modules.Activities
 			}
 
 			return true;
-			#endregion Load DirectEVE
+			
 		}
 
 		public static int RandomNumber(int min, int max)

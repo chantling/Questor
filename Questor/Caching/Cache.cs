@@ -31,11 +31,9 @@ namespace Questor.Modules.Caching
 	using Ut;
 	using Ut::WCF;
 	
-	public class Cache
+	public partial class Cache
 	{
-		/// <summary>
-		///   Singleton implementation
-		/// </summary>
+		
 		private static Cache _instance = new Cache();
 		
 		public static Storyline storyline { get; set; }
@@ -77,138 +75,118 @@ namespace Questor.Modules.Caching
 				return WCFClient.Instance;
 			}
 		}
-	
+		
+		public Cache()
+		{
+			LastModuleTargetIDs = new Dictionary<long, long>();
+			TargetingIDs = new Dictionary<long, DateTime>();
+			_entitiesById = new Dictionary<long, EntityCache>();
+			
+			LootedContainers = new HashSet<long>();
+			Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
+			
+			Interlocked.Increment(ref CacheInstances);
+		}
 
-		/// <summary>
-		///   _agent cache //cleared in InvalidateCache
-		/// </summary>
+		~Cache()
+		{
+			Interlocked.Decrement(ref CacheInstances);
+		}
+		
+		public void InvalidateCache()
+		{
+			try
+			{
+				Logging.InvalidateCache();
+				Arm.InvalidateCache();
+				Drones.InvalidateCache();
+				Combat.InvalidateCache();
+				Salvage.InvalidateCache();
+
+				_ammoHangar = null;
+				_lootHangar = null;
+				_lootContainer = null;
+				_fittedModules = null;
+				
+
+				//
+				// this list of variables is cleared every pulse.
+				//
+				_agent = null;
+				_allBookmarks = null;
+				_approaching = null;
+				_bigObjects = null;
+				_bigObjectsAndGates = null;
+				_chargeEntities = null;
+				_currentShipsCargo = null;
+				_containerInSpace = null;
+				_containers = null;
+				_entities = null;
+				_entitiesNotSelf = null;
+				_entitiesOnGrid = null;
+				_entitiesById.Clear();
+				_fittingManagerWindow = null;
+				_gates = null;
+				_IDsinInventoryTree = null;
+				_itemHangar = null;
+				_jumpBridges = null;
+				_lpStore = null;
+				_maxLockedTargets = null;
+				_modules = null;
+				_myAmmoInSpace = null;
+				_myCurrentAmmoInWeapon = null;
+				_myShipEntity = null;
+				_objects = null;
+				_safeSpotBookmarks = null;
+				_shipHangar = null;
+				_star = null;
+				_stations = null;
+				_stargate = null;
+				_stargates = null;
+				_targets = null;
+				_targeting = null;
+				_TotalTargetsandTargeting = null;
+				_unlootedContainers = null;
+				_unlootedWrecksAndSecureCans = null;
+				_weapons = null;
+				_windows = null;
+				_wrecks = null;
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("Cache.InvalidateCache", "Exception [" + exception + "]", Logging.Debug);
+			}
+		}
+		
+
 		private DirectAgent _agent;
-
-		/// <summary>
-		///   Current Storyline Mission Agent
-		/// </summary>
 		public long CurrentStorylineAgentId { get; set; }
-
-		/// <summary>
-		///   Agent blacklist
-		/// </summary>
 		public List<long> AgentBlacklist;
-
-		/// <summary>
-		///   Approaching cache //cleared in InvalidateCache
-		/// </summary>
 		private EntityCache _approaching;
-
-		/// <summary>
-		///   BigObjects we are likely to bump into (mainly LCOs) //cleared in InvalidateCache
-		/// </summary>
-		private List<EntityCache> _bigObjects;
-
-		/// <summary>
-		///   BigObjects we are likely to bump into (mainly LCOs) //cleared in InvalidateCache
-		/// </summary>
 		private List<EntityCache> _gates;
-
-		/// <summary>
-		///   BigObjects we are likely to bump into (mainly LCOs) //cleared in InvalidateCache
-		/// </summary>
 		private List<EntityCache> _bigObjectsAndGates;
-
-		/// <summary>
-		///   objects we are likely to bump into (Anything that is not an NPC a wreck or a can) //cleared in InvalidateCache
-		/// </summary>
 		private List<EntityCache> _objects;
-
-		/// <summary>
-		///   Returns all non-empty wrecks and all containers //cleared in InvalidateCache
-		/// </summary>
-		private List<EntityCache> _containers;
-
-		/// <summary>
-		///   Safespot Bookmark cache (all bookmarks that start with the defined safespot prefix) //cleared in InvalidateCache
-		/// </summary>
 		private List<DirectBookmark> _safeSpotBookmarks;
-
-		/// <summary>
-		///   Entities by Id //cleared in InvalidateCache
-		/// </summary>
 		private readonly Dictionary<long, EntityCache> _entitiesById;
-
-		/// <summary>
-		///   Module cache //cleared in InvalidateCache
-		/// </summary>
 		private List<ModuleCache> _modules;
-
 		public string OrbitEntityNamed;
-
 		public DirectLocation MissionSolarSystem;
-
 		public string DungeonId;
-
-		/// <summary>
-		///   Star cache //cleared in InvalidateCache
-		/// </summary>
 		private EntityCache _star;
-
-		/// <summary>
-		///   Station cache //cleared in InvalidateCache
-		/// </summary>
 		private List<EntityCache> _stations;
-
-		/// <summary>
-		///   Stargate cache //cleared in InvalidateCache
-		/// </summary>
 		private List<EntityCache> _stargates;
-
-		/// <summary>
-		///   Stargate by name //cleared in InvalidateCache
-		/// </summary>
+		private List<EntityCache> _containers;
+		private List<EntityCache> _bigObjects;
 		private EntityCache _stargate;
-
-		/// <summary>
-		///   JumpBridges //cleared in InvalidateCache
-		/// </summary>
 		private IEnumerable<EntityCache> _jumpBridges;
-
-		/// <summary>
-		///   Targeting cache //cleared in InvalidateCache
-		/// </summary>
 		private List<EntityCache> _targeting;
-
-		/// <summary>
-		///   Targets cache //cleared in InvalidateCache
-		/// </summary>
 		private List<EntityCache> _targets;
-
-		
-		/// <summary>
-		///   IDs in Inventory window tree (on left) //cleared in InvalidateCache
-		/// </summary>
 		public List<long> _IDsinInventoryTree;
-
-		/// <summary>
-		///   Returns all unlooted wrecks & containers //cleared in InvalidateCache
-		/// </summary>
 		private List<EntityCache> _unlootedContainers;
-
-		/// <summary>
-		///   Returns all unlooted wrecks & containers and secure cans //cleared in InvalidateCache
-		/// </summary>
 		private List<EntityCache> _unlootedWrecksAndSecureCans;
-
-		/// <summary>
-		///   Returns all windows //cleared in InvalidateCache
-		/// </summary>
 		private List<DirectWindow> _windows;
-
-		/// <summary>
-		///   Returns maxLockedTargets, the minimum between the character and the ship //cleared in InvalidateCache
-		/// </summary>
 		private int? _maxLockedTargets;
-		
-		/// <summary>
-		///  Dictionary for cached EWAR target
-		/// </summary>
+
 		public HashSet<long> ListOfWarpScramblingEntities = new HashSet<long>();
 		public HashSet<long> ListOfJammingEntities = new HashSet<long>();
 		public HashSet<long> ListOfTrackingDisruptingEntities = new HashSet<long>();
@@ -219,7 +197,6 @@ namespace Questor.Modules.Caching
 		public HashSet<long> ListofContainersToLoot = new HashSet<long>();
 		public HashSet<string> ListofMissionCompletionItemsToLoot = new HashSet<string>();
 		public long VolleyCount;
-		
 		public void IterateShipTargetValues(string module)
 		{
 			string path = Logging.PathToCurrentDirectory;
@@ -253,7 +230,6 @@ namespace Questor.Modules.Caching
 				}
 			}
 		}
-
 		public void IterateUnloadLootTheseItemsAreLootItems(string module)
 		{
 			string path = Logging.PathToCurrentDirectory;
@@ -292,71 +268,26 @@ namespace Questor.Modules.Caching
 				Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - unable to find [" + Logging.PathToCurrentDirectory + "]", Logging.White);
 			}
 		}
-
 		public static int CacheInstances;
-
-		public Cache()
-		{
-			
-			//string line = "Cache: new cache instance being instantiated";
-			//InnerSpace.Echo(string.Format("{0:HH:mm:ss} {1}", DateTime.UtcNow, line));
-			//line = string.Empty;
-
-			LastModuleTargetIDs = new Dictionary<long, long>();
-			TargetingIDs = new Dictionary<long, DateTime>();
-			_entitiesById = new Dictionary<long, EntityCache>();
-
-			//InvTypesById = new Dictionary<int, InvType>();
-			//ShipTargetValues = new List<ShipTargetValue>();
-			//UnloadLootTheseItemsAreLootById = new Dictionary<int, InvType>();
-			
-			LootedContainers = new HashSet<long>();
-			Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-			
-			Interlocked.Increment(ref CacheInstances);
-		}
-
-		~Cache()
-		{
-			Interlocked.Decrement(ref CacheInstances);
-		}
-
-		/// <summary>
-		///   List of containers that have been looted
-		/// </summary>
 		public HashSet<long> LootedContainers { get; private set; }
-
 		public bool ExitWhenIdle;
 		public bool StopBot;
 		public static bool LootAlreadyUnloaded;
 		public bool RouteIsAllHighSecBool;
-
 		public double Wealth { get; set; }
 		public double WealthatStartofPocket { get; set; }
 		public int StackHangarAttempts { get; set; }
 		public bool NormalApproach = true;
 		public bool CourierMission;
 		public bool doneUsingRepairWindow;
-		
 		public long AmmoHangarID = -99;
 		public long LootHangarID = -99;
 		public static D3DDetour.D3DVersion D3DVersion { get; set; }
-		
-		
 		public static Random _random = new Random();
-		
 		public static int GetRandom(int minValue, int maxValue)
 		{
 			return _random.Next(minValue, maxValue);
 		}
-		
-		
-		/// <summary>
-		///   Returns the mission for a specific agent
-		/// </summary>
-		/// <param name="agentId"></param>
-		/// <param name="ForceUpdate"> </param>
-		/// <returns>null if no mission could be found</returns>
 		public DirectAgentMission GetAgentMission(long agentId, bool ForceUpdate)
 		{
 			if (DateTime.UtcNow < Time.Instance.NextGetAgentMissionAction)
@@ -391,12 +322,9 @@ namespace Questor.Modules.Caching
 				return null;
 			}
 		}
-
 		public bool InMission { get; set; }
-
-		public bool normalNav = true;  //Do we want to bypass normal navigation for some reason?
+		public bool normalNav = true;  
 		public bool onlyKillAggro { get; set; }
-
 		public int StackLoothangarAttempts { get; set; }
 		public int StackAmmohangarAttempts { get; set; }
 		public int StackItemhangarAttempts { get; set; }
@@ -467,48 +395,25 @@ namespace Questor.Modules.Caching
 
 		public DirectEve DirectEve { get; set; }
 
-		//public Dictionary<int, InvType> InvTypesById { get; private set; }
 
 		public Dictionary<int, String> UnloadLootTheseItemsAreLootById { get; private set; }
 
-
-		/// <summary>
-		///   List of ship target values, higher target value = higher kill priority
-		/// </summary>
 		public List<ShipTargetValue> ShipTargetValues { get; private set; }
 
-		/// <summary>
-		///   Best damage type for this mission
-		/// </summary>
+
 		public DamageType FrigateDamageType { get; set; }
 
-		/// <summary>
-		///   Best damage type for Frigates for this mission / faction
-		/// </summary>
+
 		public DamageType CruiserDamageType { get; set; }
 
-		/// <summary>
-		///   Best damage type for BattleCruisers for this mission / faction
-		/// </summary>
 		public DamageType BattleCruiserDamageType { get; set; }
 
-		/// <summary>
-		///   Best damage type for BattleShips for this mission / faction
-		/// </summary>
+
 		public DamageType BattleShipDamageType { get; set; }
 
-		/// <summary>
-		///   Best damage type for LargeColidables for this mission / faction
-		/// </summary>
 		public DamageType LargeColidableDamageType { get; set; }
 
-		/// <summary>
-		///   Force Salvaging after mission
-		/// </summary>
 		public bool AfterMissionSalvaging { get; set; }
-
-
-		//cargo =
 
 		private DirectContainer _currentShipsCargo;
 
@@ -585,9 +490,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		/// <summary>
-		///   Returns the maximum weapon distance
-		/// </summary>
 		public int WeaponRange
 		{
 			get
@@ -664,15 +566,9 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		
-		/// <summary>
-		///   Last target for a certain module
-		/// </summary>
+
 		public Dictionary<long, long> LastModuleTargetIDs { get; private set; }
 
-		/// <summary>
-		///   Targeting delay cache (used by LockTarget)
-		/// </summary>
 		public Dictionary<long, DateTime> TargetingIDs { get; private set; }
 
 		public bool AllAgentsStillInDeclineCoolDown { get; set; }
@@ -702,8 +598,6 @@ namespace Questor.Modules.Caching
 		public long AgentStationID { get; set; }
 		public string AgentStationName;
 		public long AgentSolarSystemID;
-		//public string AgentSolarSystemName;
-		//public string CurrentAgentText = string.Empty;
 		public string CurrentAgent
 		{
 			get
@@ -718,10 +612,10 @@ namespace Questor.Modules.Caching
 							{
 								
 
-                                // TODO: to use this, Unload & Arm needs to be modified to NOT arm/unload/load on the storyline agent station
+								// TODO: to use this, Unload & Arm needs to be modified to NOT arm/unload/load on the storyline agent station
 								//if(storyline != null && storyline.HasStoryline()) {
 								//	var agentId = storyline.StorylineMission.AgentId;
-									
+								
 								//	if(agentId > 0) {
 								//		var agent = Cache.Instance.DirectEve.GetAgentById(agentId);
 								//		if(agent != null) {
@@ -730,7 +624,7 @@ namespace Questor.Modules.Caching
 								//			return agent.Name;
 								//		}
 								//	}
-									
+								
 								//}
 								
 								if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1 && (!string.IsNullOrEmpty(SwitchAgent())))
@@ -1033,9 +927,7 @@ namespace Questor.Modules.Caching
 				}
 			}
 		}
-		//
-		// this CAN and should just list all possible weapon system groupIDs
-		//
+
 
 		private IEnumerable<ModuleCache> _weapons;
 		public IEnumerable<ModuleCache> Weapons
@@ -1097,914 +989,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		public int MaxLockedTargets
-		{
-			get
-			{
-				try
-				{
-					if (_maxLockedTargets == null)
-					{
-						_maxLockedTargets = Math.Min(Cache.Instance.DirectEve.Me.MaxLockedTargets, Cache.Instance.ActiveShip.MaxLockedTargets);
-						return (int)_maxLockedTargets;
-					}
-
-					return (int)_maxLockedTargets;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.MaxLockedTargets", "Exception [" + exception + "]", Logging.Debug);
-					return -1;
-				}
-			}
-		}
-
-		private List<EntityCache> _myAmmoInSpace;
-		public IEnumerable<EntityCache> myAmmoInSpace
-		{
-			get
-			{
-				if (_myAmmoInSpace == null)
-				{
-					if (myCurrentAmmoInWeapon != null)
-					{
-						_myAmmoInSpace = Cache.Instance.Entities.Where(e => e.Distance > 3000 && e.IsOnGridWithMe && e.TypeId == myCurrentAmmoInWeapon.TypeId && e.Velocity > 50).ToList();
-						if (_myAmmoInSpace.Any())
-						{
-							return _myAmmoInSpace;
-						}
-
-						return null;
-					}
-
-					return null;
-				}
-
-				return _myAmmoInSpace;
-			}
-		}
-
-		public IEnumerable<EntityCache> Containers
-		{
-			get
-			{
-				try
-				{
-					return _containers ?? (_containers = Cache.Instance.EntitiesOnGrid.Where(e =>
-					                                                                         e.IsContainer &&
-					                                                                         e.HaveLootRights &&
-					                                                                         //(e.GroupId == (int)Group.Wreck && !e.IsWreckEmpty) &&
-					                                                                         (e.Name != "Abandoned Container")).ToList());
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.Containers", "Exception [" + exception + "]", Logging.Debug);
-					return new List<EntityCache>();
-				}
-			}
-		}
-
-		public IEnumerable<EntityCache> ContainersIgnoringLootRights
-		{
-			get
-			{
-				return _containers ?? (_containers = Cache.Instance.EntitiesOnGrid.Where(e =>
-				                                                                         e.IsContainer &&
-				                                                                         //(e.GroupId == (int)Group.Wreck && !e.IsWreckEmpty) &&
-				                                                                         (e.Name != "Abandoned Container")).ToList());
-			}
-		}
-
-		private IEnumerable<EntityCache> _wrecks;
-		
-		public IEnumerable<EntityCache> Wrecks
-		{
-			get { return _wrecks ?? (_wrecks = Cache.Instance.EntitiesOnGrid.Where(e => (e.GroupId == (int)Group.Wreck)).ToList()); }
-		}
-
-		public IEnumerable<EntityCache> UnlootedContainers
-		{
-			get
-			{
-				return _unlootedContainers ?? (_unlootedContainers = Cache.Instance.EntitiesOnGrid.Where(e =>
-				                                                                                         e.IsContainer &&
-				                                                                                         e.HaveLootRights &&
-				                                                                                         (!LootedContainers.Contains(e.Id))).OrderBy(
-				                               	e => e.Distance).
-				                               ToList());
-			}
-		}
-
-		//This needs to include items you can steal from (thus gain aggro)
-		public IEnumerable<EntityCache> UnlootedWrecksAndSecureCans
-		{
-			get
-			{
-				return _unlootedWrecksAndSecureCans ?? (_unlootedWrecksAndSecureCans = Cache.Instance.EntitiesOnGrid.Where(e =>
-				                                                                                                           (e.GroupId == (int)Group.Wreck || e.GroupId == (int)Group.SecureContainer ||
-				                                                                                                            e.GroupId == (int)Group.AuditLogSecureContainer ||
-				                                                                                                            e.GroupId == (int)Group.FreightContainer)).OrderBy(e => e.Distance).
-				                                        ToList());
-			}
-		}
-
-		public IEnumerable<EntityCache> _TotalTargetsandTargeting;
-
-		public IEnumerable<EntityCache> TotalTargetsandTargeting
-		{
-			get
-			{
-				if (_TotalTargetsandTargeting == null)
-				{
-					_TotalTargetsandTargeting = Cache.Instance.Targets.Concat(Cache.Instance.Targeting.Where(i => !i.IsTarget));
-					return _TotalTargetsandTargeting;
-				}
-
-				return _TotalTargetsandTargeting;
-			}
-		}
-
-		public int TotalTargetsandTargetingCount
-		{
-			get
-			{
-				if (!TotalTargetsandTargeting.Any())
-				{
-					return 0;
-				}
-
-				return TotalTargetsandTargeting.Count();
-			}
-		}
-
-		public int TargetingSlotsNotBeingUsedBySalvager
-		{
-			get
-			{
-				if (Salvage.MaximumWreckTargets > 0 && Cache.Instance.MaxLockedTargets >= 5)
-				{
-					return Cache.Instance.MaxLockedTargets - Salvage.MaximumWreckTargets;
-				}
-
-				return Cache.Instance.MaxLockedTargets;
-			}
-		}
-		
-		public IEnumerable<EntityCache> Targets
-		{
-			get
-			{
-				if (_targets == null)
-				{
-					_targets = Cache.Instance.EntitiesOnGrid.Where(e => e.IsTarget).ToList();
-				}
-				
-				// Remove the target info from the TargetingIDs Queue (its been targeted)
-				foreach (EntityCache target in _targets.Where(t => TargetingIDs.ContainsKey(t.Id)))
-				{
-					TargetingIDs.Remove(target.Id);
-				}
-
-				return _targets;
-			}
-		}
-
-		public IEnumerable<EntityCache> Targeting
-		{
-			get
-			{
-				if (_targeting == null)
-				{
-					_targeting = Cache.Instance.EntitiesOnGrid.Where(e => e.IsTargeting || Cache.Instance.TargetingIDs.ContainsKey(e.Id)).ToList();
-				}
-
-				if (_targeting.Any())
-				{
-					return _targeting;
-				}
-
-				return new List<EntityCache>();
-			}
-		}
-
-		public List<long> IDsinInventoryTree
-		{
-			get
-			{
-				Logging.Log("Cache.IDsinInventoryTree", "Refreshing IDs from inventory tree, it has been longer than 30 seconds since the last refresh", Logging.Teal);
-				return _IDsinInventoryTree ?? (_IDsinInventoryTree = Cache.Instance.PrimaryInventoryWindow.GetIdsFromTree(false));
-			}
-		}
-
-		/// <summary>
-		///   Entities cache (all entities within 256km) //cleared in InvalidateCache
-		/// </summary>
-		private List<EntityCache> _entitiesOnGrid;
-
-		public IEnumerable<EntityCache> EntitiesOnGrid
-		{
-			get
-			{
-				try
-				{
-					if (_entitiesOnGrid == null)
-					{
-						_entitiesOnGrid = Cache.Instance.Entities.Where(e => e.IsOnGridWithMe).ToList();
-						return _entitiesOnGrid;
-					}
-
-					return _entitiesOnGrid;
-				}
-				catch (NullReferenceException) { }  // this can happen during session changes
-
-				return new List<EntityCache>();
-			}
-		}
-
-		/// <summary>
-		///   Entities cache (all entities within 256km) //cleared in InvalidateCache
-		/// </summary>
-		private List<EntityCache> _entities;
-
-		public IEnumerable<EntityCache> Entities
-		{
-			get
-			{
-				try
-				{
-					if (_entities == null)
-					{
-						_entities = Cache.Instance.DirectEve.Entities.Where(e => e.IsValid && !e.HasExploded && !e.HasReleased && e.CategoryId != (int)CategoryID.Charge).Select(i => new EntityCache(i)).ToList();
-						return _entities;
-					}
-
-					return _entities;
-				}
-				catch (NullReferenceException) { }  // this can happen during session changes
-
-				return new List<EntityCache>();
-			}
-		}
-
-		/// <summary>
-		///   Entities cache (all entities within 256km) //cleared in InvalidateCache
-		/// </summary>
-		private List<EntityCache> _chargeEntities;
-
-		public IEnumerable<EntityCache> ChargeEntities
-		{
-			get
-			{
-				try
-				{
-					if (_chargeEntities == null)
-					{
-						_chargeEntities = Cache.Instance.DirectEve.Entities.Where(e => e.IsValid && !e.HasExploded && !e.HasReleased && e.CategoryId == (int)CategoryID.Charge).Select(i => new EntityCache(i)).ToList();
-						return _chargeEntities;
-					}
-
-					return _chargeEntities;
-				}
-				catch (NullReferenceException) { }  // this can happen during session changes
-
-				return new List<EntityCache>();
-			}
-		}
-
-		public Dictionary<long, string> EntityNames = new Dictionary<long, string>();
-		public Dictionary<long, int> EntityTypeID = new Dictionary<long, int>();
-		public Dictionary<long, int> EntityGroupID = new Dictionary<long, int>();
-		public Dictionary<long, long> EntityBounty = new Dictionary<long, long>();
-		public Dictionary<long, bool> EntityIsFrigate = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsNPCFrigate = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsCruiser = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsNPCCruiser = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsBattleCruiser = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsNPCBattleCruiser = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsBattleShip = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsNPCBattleShip = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsHighValueTarget = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsLowValueTarget = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsLargeCollidable = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsMiscJunk = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsBadIdea = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsFactionWarfareNPC = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsNPCByGroupID = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsEntutyIShouldLeaveAlone = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsSentry = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityHaveLootRights = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsStargate = new Dictionary<long, bool>();
-
-		private IEnumerable<EntityCache> _entitiesActivelyBeingLocked;
-		public IEnumerable<EntityCache> EntitiesActivelyBeingLocked
-		{
-			get
-			{
-				if (!InSpace)
-				{
-					return new List<EntityCache>();
-				}
-
-				if (Cache.Instance.EntitiesOnGrid.Any())
-				{
-					if (_entitiesActivelyBeingLocked == null)
-					{
-						_entitiesActivelyBeingLocked = Cache.Instance.EntitiesOnGrid.Where(i => i.IsTargeting).ToList();
-						if (_entitiesActivelyBeingLocked.Any())
-						{
-							return _entitiesActivelyBeingLocked;
-						}
-
-						return new List<EntityCache>();
-					}
-
-					return _entitiesActivelyBeingLocked;
-				}
-				
-				return new List<EntityCache>();
-			}
-		}
-
-		/// <summary>
-		///   Entities cache (all entities within 256km) //cleared in InvalidateCache
-		/// </summary>
-		private List<EntityCache> _entitiesNotSelf;
-
-		public IEnumerable<EntityCache> EntitiesNotSelf
-		{
-			get
-			{
-				if (_entitiesNotSelf == null)
-				{
-					_entitiesNotSelf = Cache.Instance.EntitiesOnGrid.Where(i => i.CategoryId != (int)CategoryID.Asteroid && i.Id != Cache.Instance.ActiveShip.ItemId).ToList();
-					if (_entitiesNotSelf.Any())
-					{
-						return _entitiesNotSelf;
-					}
-
-					return new List<EntityCache>();
-				}
-
-				return _entitiesNotSelf;
-			}
-		}
-
-		private EntityCache _myShipEntity;
-		public EntityCache MyShipEntity
-		{
-			get
-			{
-				if (_myShipEntity == null)
-				{
-					if (!Cache.Instance.InSpace)
-					{
-						return null;
-					}
-
-					_myShipEntity = Cache.Instance.EntitiesOnGrid.FirstOrDefault(e => e.Id == Cache.Instance.ActiveShip.ItemId);
-					return _myShipEntity;
-				}
-
-				return _myShipEntity;
-			}
-		}
-
-		public bool InSpace
-		{
-			get
-			{
-				try
-				{
-					if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(7))
-					{
-						return false;
-					}
-
-					if (DateTime.UtcNow < Time.Instance.LastInSpace.AddMilliseconds(800))
-					{
-						//if We already set the LastInStation timestamp this iteration we do not need to check if we are in station
-						return true;
-					}
-					
-					if (DirectEve.Session.IsInSpace)
-					{
-						if (!Cache.Instance.InStation)
-						{
-							if (Cache.Instance.DirectEve.ActiveShip.Entity != null)
-							{
-								if (DirectEve.Session.IsReady)
-								{
-									if (Cache.Instance.Entities.Any())
-									{
-										Time.Instance.LastInSpace = DateTime.UtcNow;
-										return true;
-									}
-								}
-								
-								if (Logging.DebugInSpace) Logging.Log("InSpace", "Session is Not Ready", Logging.Debug);
-								return false;
-							}
-							
-							if (Logging.DebugInSpace) Logging.Log("InSpace", "Cache.Instance.DirectEve.ActiveShip.Entity is null", Logging.Debug);
-							return false;
-						}
-
-						if (Logging.DebugInSpace) Logging.Log("InSpace", "NOT InStation is False", Logging.Debug);
-						return false;
-					}
-
-					if (Logging.DebugInSpace) Logging.Log("InSpace", "InSpace is False", Logging.Debug);
-					return false;
-				}
-				catch (Exception ex)
-				{
-					if (Logging.DebugExceptions) Logging.Log("Cache.InSpace", "if (DirectEve.Session.IsInSpace && !DirectEve.Session.IsInStation && DirectEve.Session.IsReady && Cache.Instance.ActiveShip.Entity != null) <---must have failed exception was [" + ex.Message + "]", Logging.Teal);
-					return false;
-				}
-			}
-		}
-
-		public bool InStation
-		{
-			get
-			{
-				try
-				{
-					if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(7))
-					{
-						return false;
-					}
-
-					if (DateTime.UtcNow < Time.Instance.LastInStation.AddMilliseconds(800))
-					{
-						//if We already set the LastInStation timestamp this iteration we do not need to check if we are in station
-						return true;
-					}
-
-					if (DirectEve.Session.IsInStation && !DirectEve.Session.IsInSpace && DirectEve.Session.IsReady)
-					{
-						if (!Cache.Instance.Entities.Any())
-						{
-							Time.Instance.LastInStation = DateTime.UtcNow;
-							return true;
-						}
-					}
-
-					return false;
-				}
-				catch (Exception ex)
-				{
-					if (Logging.DebugExceptions) Logging.Log("Cache.InStation", "if (DirectEve.Session.IsInStation && !DirectEve.Session.IsInSpace && DirectEve.Session.IsReady) <---must have failed exception was [" + ex.Message + "]", Logging.Teal);
-					return false;
-				}
-			}
-		}
-
-		public bool InWarp
-		{
-			get
-			{
-				try
-				{
-					if (Cache.Instance.InSpace && !Cache.Instance.InStation)
-					{
-						if (Cache.Instance.ActiveShip != null)
-						{
-							if (Cache.Instance.ActiveShip.Entity != null)
-							{
-								if (Cache.Instance.ActiveShip.Entity.Mode == 3)
-								{
-									if (Cache.Instance.Modules != null && Cache.Instance.Modules.Any())
-									{
-										Combat.ReloadAll(Cache.Instance.MyShipEntity, true);
-									}
-									
-									Time.Instance.LastInWarp = DateTime.UtcNow;
-									return true;
-								}
-								
-								if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "We are not in warp.Cache.Instance.ActiveShip.Entity.Mode  is [" + (int)Cache.Instance.MyShipEntity.Mode + "]", Logging.Teal);
-								return false;
-							}
-							
-							if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "Why are we checking for InWarp if Cache.Instance.ActiveShip.Entity is Null? (session change?)", Logging.Teal);
-							return false;
-						}
-						
-						if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "Why are we checking for InWarp if Cache.Instance.ActiveShip is Null? (session change?)", Logging.Teal);
-						return false;
-					}
-					
-					if (Logging.DebugInWarp && !Cache.Instance.Paused) Logging.Log("Cache.InWarp", "Why are we checking for InWarp while docked or between session changes?", Logging.Teal);
-					return false;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.InWarp", "InWarp check failed, exception [" + exception + "]", Logging.Teal);
-				}
-
-				return false;
-			}
-		}
-
-		public bool IsOrbiting(long EntityWeWantToBeOrbiting = 0)
-		{
-			try
-			{
-				if (Cache.Instance.Approaching != null)
-				{
-					bool _followIDIsOnGrid = false;
-
-					if (EntityWeWantToBeOrbiting != 0)
-					{
-						_followIDIsOnGrid = (EntityWeWantToBeOrbiting == Cache.Instance.ActiveShip.Entity.FollowId);
-					}
-					else
-					{
-						_followIDIsOnGrid = Cache.Instance.EntitiesOnGrid.Any(i => i.Id == Cache.Instance.ActiveShip.Entity.FollowId);
-					}
-
-					if (Cache.Instance.ActiveShip.Entity != null && Cache.Instance.ActiveShip.Entity.Mode == 4 && _followIDIsOnGrid)
-					{
-						return true;
-					}
-
-					return false;
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.IsApproaching", "Exception [" + exception + "]", Logging.Debug);
-				return false;
-			}
-		}
-
-		public bool IsApproaching(long EntityWeWantToBeApproaching = 0)
-		{
-			try
-			{
-				if (Cache.Instance.Approaching != null)
-				{
-					bool _followIDIsOnGrid = false;
-
-					if (EntityWeWantToBeApproaching != 0)
-					{
-						_followIDIsOnGrid = (EntityWeWantToBeApproaching == Cache.Instance.ActiveShip.Entity.FollowId);
-					}
-					else
-					{
-						_followIDIsOnGrid = Cache.Instance.EntitiesOnGrid.Any(i => i.Id == Cache.Instance.ActiveShip.Entity.FollowId);
-					}
-
-					if (Cache.Instance.ActiveShip.Entity != null && Cache.Instance.ActiveShip.Entity.Mode == 1 && _followIDIsOnGrid)
-					{
-						return true;
-					}
-
-					return false;
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.IsApproaching", "Exception [" + exception + "]", Logging.Debug);
-				return false;
-			}
-		}
-
-		public bool IsApproachingOrOrbiting(long EntityWeWantToBeApproachingOrOrbiting = 0)
-		{
-			try
-			{
-				if (IsApproaching(EntityWeWantToBeApproachingOrOrbiting))
-				{
-					return true;
-				}
-
-				if (IsOrbiting(EntityWeWantToBeApproachingOrOrbiting))
-				{
-					return true;
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.IsApproachingOrOrbiting", "Exception [" + exception + "]", Logging.Debug);
-				return false;
-			}
-		}
-
-		public List<EntityCache> Stations
-		{
-			get
-			{
-				try
-				{
-					if (_stations == null)
-					{
-						if (Cache.Instance.Entities.Any())
-						{
-							_stations = Cache.Instance.Entities.Where(e => e.CategoryId == (int)CategoryID.Station).OrderBy(i => i.Distance).ToList();
-							if (_stations.Any())
-							{
-								return _stations;
-							}
-
-							return new List<EntityCache>();
-						}
-
-						return null;
-					}
-
-					return _stations;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.SolarSystems", "Exception [" + exception + "]", Logging.Debug);
-					return null;
-				}
-			}
-		}
-
-		public EntityCache ClosestStation
-		{
-			get
-			{
-				try
-				{
-					if (Stations != null && Stations.Any())
-					{
-						return Stations.OrderBy(s => s.Distance).FirstOrDefault() ?? Cache.Instance.Entities.OrderByDescending(s => s.Distance).FirstOrDefault();
-					}
-
-					return null;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.IsApproaching", "Exception [" + exception + "]", Logging.Debug);
-					return null;
-				}
-			}
-		}
-
-		public EntityCache StationByName(string stationName)
-		{
-			EntityCache station = Stations.First(x => x.Name.ToLower() == stationName.ToLower());
-			return station;
-		}
-
-
-		public IEnumerable<DirectSolarSystem> _solarSystems;
-		public IEnumerable<DirectSolarSystem> SolarSystems
-		{
-			get
-			{
-				try
-				{
-					//High sec: 1090
-					//Low sec: 817
-					//0.0: 3524 (of which 230 are not connected)
-					//W-space: 2499
-
-					//High sec + Low sec = Empire: 1907
-					//Empire + 0.0 = K-space: 5431
-					//K-space + W-space = Total: 7930
-					if (Time.Instance.LastSessionChange.AddSeconds(30) > DateTime.UtcNow && (Cache.Instance.InSpace || Cache.Instance.InStation))
-					{
-						if (_solarSystems == null || !_solarSystems.Any() || _solarSystems.Count() < 5400)
-						{
-							if (Cache.Instance.DirectEve.SolarSystems.Any())
-							{
-								if (Cache.Instance.DirectEve.SolarSystems.Values.Any())
-								{
-									_solarSystems = Cache.Instance.DirectEve.SolarSystems.Values.OrderBy(s => s.Name).ToList();
-								}
-
-								return null;
-							}
-							
-							return null;
-						}
-
-						return _solarSystems;
-					}
-
-					return null;
-				}
-				catch (NullReferenceException) // Not sure why this happens, but seems to be no problem
-				{
-					return null;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.SolarSystems", "Exception [" + exception + "]", Logging.Debug);
-					return null;
-				}
-			}
-		}
-
-		public IEnumerable<EntityCache> JumpBridges
-		{
-			get { return _jumpBridges ?? (_jumpBridges = Cache.Instance.Entities.Where(e => e.GroupId == (int)Group.JumpBridge).ToList()); }
-		}
-
-		public List<EntityCache> Stargates
-		{
-			get
-			{
-				try
-				{
-					if (_stargates == null)
-					{
-						if (Cache.Instance.Entities != null && Cache.Instance.Entities.Any())
-						{
-							//if (Cache.Instance.EntityIsStargate.Any())
-							//{
-							//    if (_stargates != null && _stargates.Any()) _stargates.Clear();
-							//    if (_stargates == null) _stargates = new List<EntityCache>();
-							//    foreach (KeyValuePair<long, bool> __stargate in Cache.Instance.EntityIsStargate)
-							//    {
-							//        _stargates.Add(Cache.Instance.Entities.FirstOrDefault(i => i.Id == __stargate.Key));
-							//    }
-							//
-							//    if (_stargates.Any()) return _stargates;
-							//}
-
-							_stargates = Cache.Instance.Entities.Where(e => e.GroupId == (int)Group.Stargate).ToList();
-							//foreach (EntityCache __stargate in _stargates)
-							//{
-							//    if (Cache.Instance.EntityIsStargate.Any())
-							//    {
-							//        if (!Cache.Instance.EntityIsStargate.ContainsKey(__stargate.Id))
-							//        {
-							//            Cache.Instance.EntityIsStargate.Add(__stargate.Id, true);
-							//            continue;
-							//        }
-							//
-							//        continue;
-							//    }
-							//
-							//    Cache.Instance.EntityIsStargate.Add(__stargate.Id, true);
-							//    continue;
-							//}
-
-							return _stargates;
-						}
-
-						return null;
-					}
-
-					return _stargates;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.Stargates", "Exception [" + exception + "]", Logging.Debug);
-					return null;
-				}
-			}
-		}
-
-		public EntityCache ClosestStargate
-		{
-			get
-			{
-				try
-				{
-					if (Cache.Instance.InSpace)
-					{
-						if (Cache.Instance.Entities != null && Cache.Instance.Entities.Any())
-						{
-							if (Cache.Instance.Stargates != null && Cache.Instance.Stargates.Any())
-							{
-								return Cache.Instance.Stargates.OrderBy(s => s.Distance).FirstOrDefault() ?? null;
-							}
-
-							return null;
-						}
-
-						return null;
-					}
-
-					return null;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.ClosestStargate", "Exception [" + exception + "]", Logging.Debug);
-					return null;
-				}
-			}
-		}
-
-		public EntityCache StargateByName(string locationName)
-		{
-			{
-				return _stargate ?? (_stargate = Cache.Instance.EntitiesByName(locationName, Cache.Instance.Entities.Where(i => i.GroupId == (int)Group.Stargate)).FirstOrDefault(e => e.GroupId == (int)Group.Stargate));
-			}
-		}
-
-		public IEnumerable<EntityCache> BigObjects
-		{
-			get
-			{
-				try
-				{
-					return _bigObjects ?? (_bigObjects = Cache.Instance.EntitiesOnGrid.Where(e =>
-					                                                                         e.Distance < (double)Distances.OnGridWithMe &&
-					                                                                         (e.IsLargeCollidable || e.CategoryId == (int)CategoryID.Asteroid || e.GroupId == (int)Group.SpawnContainer)
-					                                                                        ).OrderBy(t => t.Distance).ToList());
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.BigObjects", "Exception [" + exception + "]", Logging.Debug);
-					return new List<EntityCache>();
-				}
-			}
-		}
-
-		public IEnumerable<EntityCache> AccelerationGates
-		{
-			get
-			{
-				return _gates ?? (_gates = Cache.Instance.EntitiesOnGrid.Where(e =>
-				                                                               e.Distance < (double)Distances.OnGridWithMe &&
-				                                                               e.GroupId == (int)Group.AccelerationGate &&
-				                                                               e.Distance < (double)Distances.OnGridWithMe).OrderBy(t => t.Distance).ToList());
-			}
-		}
-
-		public IEnumerable<EntityCache> BigObjectsandGates
-		{
-			get
-			{
-				return _bigObjectsAndGates ?? (_bigObjectsAndGates = Cache.Instance.EntitiesOnGrid.Where(e =>
-				                                                                                         (e.IsLargeCollidable || e.CategoryId == (int)CategoryID.Asteroid || e.GroupId == (int)Group.AccelerationGate || e.GroupId == (int)Group.SpawnContainer)
-				                                                                                         && e.Distance < (double)Distances.DirectionalScannerCloseRange).OrderBy(t => t.Distance).ToList());
-			}
-		}
-
-		public IEnumerable<EntityCache> Objects
-		{
-			get
-			{
-				return _objects ?? (_objects = Cache.Instance.EntitiesOnGrid.Where(e =>
-				                                                                   !e.IsPlayer &&
-				                                                                   e.GroupId != (int)Group.SpawnContainer &&
-				                                                                   e.GroupId != (int)Group.Wreck &&
-				                                                                   e.Distance < 200000).OrderBy(t => t.Distance).ToList());
-			}
-		}
-
-		public EntityCache Star
-		{
-			get { return _star ?? (_star = Entities.FirstOrDefault(e => e.CategoryId == (int)CategoryID.Celestial && e.GroupId == (int)Group.Star)); }
-		}
-		
-		public EntityCache Approaching
-		{
-			get
-			{
-				try
-				{
-					if (_approaching == null)
-					{
-						DirectEntity ship = Cache.Instance.ActiveShip.Entity;
-						if (ship != null && ship.IsValid && !ship.HasExploded && !ship.HasReleased)
-						{
-							if (ship.FollowId != 0)
-							{
-								_approaching = EntityById(ship.FollowId);
-								if (_approaching != null && _approaching.IsValid)
-								{
-									return _approaching;
-								}
-
-								return null;
-							}
-
-							return null;
-						}
-
-						return null;
-					}
-					
-					return _approaching;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.Approaching", "Exception [" + exception + "]", Logging.Debug);
-					return null;
-				}
-			}
-			set
-			{
-				_approaching = value;
-			}
-		}
-
 		public List<DirectWindow> Windows
 		{
 			get
@@ -2027,17 +1011,16 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		public bool CloseQuestorCMDLogoff; //false;
+		public bool CloseQuestorCMDLogoff;
 
 		public bool CloseQuestorCMDExitGame = true;
 
 		public bool CloseQuestorEndProcess;
 
-		public bool GotoBaseNow; //false;
+		public bool GotoBaseNow;
 
 		public bool QuestorJustStarted = true;
 
-		//public bool DropMode;
 
 		public DirectWindow GetWindowByCaption(string caption)
 		{
@@ -2078,22 +1061,12 @@ namespace Questor.Modules.Caching
 			return null;
 		}
 
-		/// <summary>
-		///   Return entities by name
-		/// </summary>
-		/// <param name = "nameToSearchFor"></param>
-		/// <param name = "EntitiesToLookThrough"></param>
-		/// <returns></returns>
+
 		public IEnumerable<EntityCache> EntitiesByName(string nameToSearchFor, IEnumerable<EntityCache> EntitiesToLookThrough)
 		{
 			return EntitiesToLookThrough.Where(e => e.Name.ToLower() == nameToSearchFor.ToLower()).ToList();
 		}
 
-		/// <summary>
-		///   Return entity by name
-		/// </summary>
-		/// <param name = "name"></param>
-		/// <returns></returns>
 		public EntityCache EntityByName(string name)
 		{
 			return Cache.Instance.Entities.FirstOrDefault(e => System.String.Compare(e.Name, name, System.StringComparison.OrdinalIgnoreCase) == 0);
@@ -2129,10 +1102,7 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		/// <summary>
-		///   Return entities that contain the name
-		/// </summary>
-		/// <returns></returns>
+
 		public IEnumerable<EntityCache> EntitiesThatContainTheName(string label)
 		{
 			try
@@ -2146,11 +1116,7 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		/// <summary>
-		///   Return a cached entity by Id
-		/// </summary>
-		/// <param name = "id"></param>
-		/// <returns></returns>
+
 		public EntityCache EntityById(long id)
 		{
 			try
@@ -2170,191 +1136,9 @@ namespace Questor.Modules.Caching
 				return null;
 			}
 		}
+		
+		
 
-		public List<DirectBookmark> _allBookmarks;
-
-		public List<DirectBookmark> AllBookmarks
-		{
-			get
-			{
-				try
-				{
-					if (Cache.Instance._allBookmarks == null || !Cache.Instance._allBookmarks.Any())
-					{
-						if (DateTime.UtcNow > Time.Instance.NextBookmarkAction)
-						{
-							Time.Instance.NextBookmarkAction = DateTime.UtcNow.AddMilliseconds(200);
-							if (DirectEve.Bookmarks.Any())
-							{
-								_allBookmarks = Cache.Instance.DirectEve.Bookmarks;
-								return _allBookmarks;
-							}
-
-							return null; //there are no bookmarks to list...
-						}
-
-						return null; //new List<DirectBookmark>(); //there are no bookmarks to list...
-					}
-
-					return Cache.Instance._allBookmarks;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.allBookmarks", "Exception [" + exception + "]", Logging.Debug);
-					return new List<DirectBookmark>();;
-				}
-			}
-			set
-			{
-				_allBookmarks = value;
-			}
-		}
-
-		/// <summary>
-		///   Return a bookmark by id
-		/// </summary>
-		/// <param name = "bookmarkId"></param>
-		/// <returns></returns>
-		public DirectBookmark BookmarkById(long bookmarkId)
-		{
-			try
-			{
-				if (Cache.Instance.AllBookmarks != null && Cache.Instance.AllBookmarks.Any())
-				{
-					return Cache.Instance.AllBookmarks.FirstOrDefault(b => b.BookmarkId == bookmarkId);
-				}
-
-				return null;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.BookmarkById", "Exception [" + exception + "]", Logging.Debug);
-				return null;
-			}
-		}
-
-		/// <summary>
-		///   Returns bookmarks that start with the supplied label
-		/// </summary>
-		/// <param name = "label"></param>
-		/// <returns></returns>
-		public List<DirectBookmark> BookmarksByLabel(string label)
-		{
-			try
-			{
-				// Does not seems to refresh the Corporate Bookmark list so it's having troubles to find Corporate Bookmarks
-				if (Cache.Instance.AllBookmarks != null && Cache.Instance.AllBookmarks.Any())
-				{
-					return Cache.Instance.AllBookmarks.Where(b => !string.IsNullOrEmpty(b.Title) && b.Title.ToLower().StartsWith(label.ToLower())).OrderBy(f => f.LocationId).ThenBy(i => Cache.Instance.DistanceFromMe(i.X ?? 0, i.Y ?? 0, i.Z ?? 0)).ToList();
-				}
-
-				return null;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.BookmarkById", "Exception [" + exception + "]", Logging.Debug);
-				return null;
-			}
-		}
-
-		/// <summary>
-		///   Returns bookmarks that contain the supplied label anywhere in the title
-		/// </summary>
-		/// <param name = "label"></param>
-		/// <returns></returns>
-		public List<DirectBookmark> BookmarksThatContain(string label)
-		{
-			try
-			{
-				if (Cache.Instance.AllBookmarks != null && Cache.Instance.AllBookmarks.Any())
-				{
-					return Cache.Instance.AllBookmarks.Where(b => !string.IsNullOrEmpty(b.Title) && b.Title.ToLower().Contains(label.ToLower())).OrderBy(f => f.LocationId).ToList();
-				}
-
-				return null;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.BookmarksThatContain", "Exception [" + exception + "]", Logging.Debug);
-				return null;
-			}
-		}
-
-		/// <summary>
-		///   Invalidate the cached items
-		/// </summary>
-		public void InvalidateCache()
-		{
-			try
-			{
-				Logging.InvalidateCache();
-				Arm.InvalidateCache();
-				Drones.InvalidateCache();
-				Combat.InvalidateCache();
-				Salvage.InvalidateCache();
-
-				_ammoHangar = null;
-				_lootHangar = null;
-				_lootContainer = null;
-				_fittedModules = null;
-				_oreHold = null;
-
-				//
-				// this list of variables is cleared every pulse.
-				//
-				_agent = null;
-				_allBookmarks = null;
-				_approaching = null;
-				_bigObjects = null;
-				_bigObjectsAndGates = null;
-				_chargeEntities = null;
-				_currentShipsCargo = null;
-				_containerInSpace = null;
-				_containers = null;
-				_entities = null;
-				_entitiesNotSelf = null;
-				_entitiesOnGrid = null;
-				_entitiesById.Clear();
-				_fittingManagerWindow = null;
-				_gates = null;
-				_IDsinInventoryTree = null;
-				_itemHangar = null;
-				_jumpBridges = null;
-				_lpStore = null;
-				_maxLockedTargets = null;
-				_modules = null;
-				_myAmmoInSpace = null;
-				_myCurrentAmmoInWeapon = null;
-				_myShipEntity = null;
-				_objects = null;
-				_safeSpotBookmarks = null;
-				_shipHangar = null;
-				_star = null;
-				_stations = null;
-				_stargate = null;
-				_stargates = null;
-				_targets = null;
-				_targeting = null;
-				_TotalTargetsandTargeting = null;
-				_unlootedContainers = null;
-				_unlootedWrecksAndSecureCans = null;
-				_weapons = null;
-				_windows = null;
-				_wrecks = null;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.InvalidateCache", "Exception [" + exception + "]", Logging.Debug);
-			}
-		}
-
-		/// <summary>
-		///   Calculate distance from me
-		/// </summary>
-		/// <param name = "x"></param>
-		/// <param name = "y"></param>
-		/// <param name = "z"></param>
-		/// <returns></returns>
 		public double DistanceFromMe(double x, double y, double z)
 		{
 			try
@@ -2375,55 +1159,6 @@ namespace Questor.Modules.Caching
 			{
 				Logging.Log("DistanceFromMe", "Exception [" + ex + "]", Logging.Debug);
 				return 0;
-			}
-		}
-
-		/// <summary>
-		///   Create a bookmark
-		/// </summary>
-		/// <param name = "label"></param>
-		public void CreateBookmark(string label)
-		{
-			try
-			{
-				if (Cache.Instance.AfterMissionSalvageBookmarks.Count() < 100)
-				{
-					if (Salvage.CreateSalvageBookmarksIn.ToLower() == "corp".ToLower())
-					{
-						DirectBookmarkFolder folder = Cache.Instance.DirectEve.BookmarkFolders.FirstOrDefault(i => i.Name == Settings.Instance.BookmarkFolder);
-						if (folder != null)
-						{
-							Cache.Instance.DirectEve.CorpBookmarkCurrentLocation(label, "", folder.Id);
-						}
-						else
-						{
-							Cache.Instance.DirectEve.CorpBookmarkCurrentLocation(label, "", null);
-						}
-					}
-					else
-					{
-						DirectBookmarkFolder folder = Cache.Instance.DirectEve.BookmarkFolders.FirstOrDefault(i => i.Name == Settings.Instance.BookmarkFolder);
-						if (folder != null)
-						{
-							Cache.Instance.DirectEve.BookmarkCurrentLocation(label, "", folder.Id);
-						}
-						else
-						{
-							Cache.Instance.DirectEve.BookmarkCurrentLocation(label, "", null);
-						}
-					}
-				}
-				else
-				{
-					Logging.Log("CreateBookmark", "We already have over 100 AfterMissionSalvage bookmarks: their must be a issue processing or deleting bookmarks. No additional bookmarks will be created until the number of salvage bookmarks drops below 100.", Logging.Orange);
-				}
-
-				return;
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("CreateBookmark", "Exception [" + ex + "]", Logging.Debug);
-				return;
 			}
 		}
 		
@@ -2482,12 +1217,12 @@ namespace Questor.Modules.Caching
 							{
 								if (solarSystemInRoute.Security < 0.45)
 								{
-                                    //Bad bad bad
-                                    Instance.RouteIsAllHighSecBool = false;
+									//Bad bad bad
+									Instance.RouteIsAllHighSecBool = false;
 									return true;
 								}
 
-                                continue;
+								continue;
 							}
 
 							Logging.Log("CheckifRouteIsAllHighSec", "Jump number [" + _system + "of" + currentPath.Count() + "] in the route came back as null, we could not get the system name or sec level", Logging.Debug);
@@ -2507,8 +1242,6 @@ namespace Questor.Modules.Caching
 			Cache.Instance.RouteIsAllHighSecBool = true;
 			return true;
 		}
-		
-		//public int MyMissileProjectionSkillLevel;
 
 		public void ClearPerPocketCache(string callingroutine)
 		{
@@ -3103,329 +1836,7 @@ namespace Questor.Modules.Caching
 				return true;
 			}
 		}
-
-		private DirectContainer _shipHangar;
-		public DirectContainer ShipHangar
-		{
-			get
-			{
-				try
-				{
-					if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-					{
-						if (Logging.DebugHangars) Logging.Log("OpenShipsHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
-						return null;
-					}
-
-					if (SafeToUseStationHangars() && !Cache.Instance.InSpace && Cache.Instance.InStation)
-					{
-						if (Cache.Instance._shipHangar == null)
-						{
-							Cache.Instance._shipHangar = Cache.Instance.DirectEve.GetShipHangar();
-						}
-
-						if (Instance.Windows.All(i => i.Type != "form.StationShips")) // look for windows via the window (via caption of form type) ffs, not what is attached to this DirectCotnainer
-						{
-							if (DateTime.UtcNow > Time.Instance.LastOpenHangar.AddSeconds(15))
-							{
-								Statistics.LogWindowActionToWindowLog("ShipHangar", "Opening ShipHangar");
-								Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenShipHangar);
-								Time.Instance.LastOpenHangar = DateTime.UtcNow;
-								return null;
-							}
-
-							return null;
-						}
-
-						if (Instance.Windows.Any(i => i.Type == "form.StationShips"))
-						{
-							return Cache.Instance._shipHangar;
-						}
-
-						return null;
-					}
-
-					return null;
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("OpenShipsHangar", "Exception [" + ex + "]", Logging.Debug);
-					return null;
-				}
-			}
-
-			set { _shipHangar = value; }
-		}
-
-		public bool StackShipsHangar(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-				return false;
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-				return false;
-
-			try
-			{
-				if (Cache.Instance.InStation)
-				{
-					if (Cache.Instance.ShipHangar != null && Cache.Instance.ShipHangar.IsValid)
-					{
-						if (Cache.Instance.StackHangarAttempts > 0)
-						{
-							if (!WaitForLockedItems(Time.Instance.LastStackShipsHangar)) return false;
-							return true;
-						}
-
-						if (Cache.Instance.StackHangarAttempts <= 0)
-						{
-							if (Cache.Instance.ShipHangar.Items.Any())
-							{
-								Logging.Log(module, "Stacking Ship Hangar", Logging.White);
-								Time.Instance.LastStackShipsHangar = DateTime.UtcNow;
-								Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(Cache.Instance.RandomNumber(3, 5));
-								Cache.Instance.ShipHangar.StackAll();
-								return false;
-							}
-
-							return true;
-						}
-						
-					}
-					Logging.Log(module, "Stacking Ship Hangar: not yet ready: waiting [" + Math.Round(Time.Instance.NextOpenHangarAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]", Logging.White);
-					return false;
-				}
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("StackShipsHangar", "Unable to complete StackShipsHangar [" + exception + "]", Logging.Teal);
-				return true;
-			}
-		}
-
-		public bool CloseShipsHangar(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-				return false;
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-				return false;
-
-			try
-			{
-				if (Cache.Instance.InStation)
-				{
-					if (Logging.DebugHangars) Logging.Log("OpenShipsHangar", "We are in Station", Logging.Teal);
-					Cache.Instance.ShipHangar = Cache.Instance.DirectEve.GetShipHangar();
-
-					if (Cache.Instance.ShipHangar == null)
-					{
-						if (Logging.DebugHangars) Logging.Log("OpenShipsHangar", "ShipsHangar was null", Logging.Teal);
-						return false;
-					}
-					if (Logging.DebugHangars) Logging.Log("OpenShipsHangar", "ShipsHangar exists", Logging.Teal);
-
-					// Is the items hangar open?
-					if (Cache.Instance.ShipHangar.Window == null)
-					{
-						Logging.Log(module, "Ship Hangar: is closed", Logging.White);
-						return true;
-					}
-
-					if (!Cache.Instance.ShipHangar.Window.IsReady)
-					{
-						if (Logging.DebugHangars) Logging.Log("OpenShipsHangar", "ShipsHangar.window is not yet ready", Logging.Teal);
-						return false;
-					}
-
-					if (Cache.Instance.ShipHangar.Window.IsReady)
-					{
-						Cache.Instance.ShipHangar.Window.Close();
-						Statistics.LogWindowActionToWindowLog("ShipHangar", "Close ShipHangar");
-						return false;
-					}
-				}
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("CloseShipsHangar", "Unable to complete CloseShipsHangar [" + exception + "]", Logging.Teal);
-				return false;
-			}
-		}
-
-		//public DirectContainer CorpAmmoHangar { get; set; }
-
-		public bool GetCorpAmmoHangarID()
-		{
-			try
-			{
-				if (Cache.Instance.InStation && DateTime.UtcNow > Time.Instance.LastSessionChange.AddSeconds(10))
-				{
-					string CorpHangarName;
-					if (Settings.Instance.AmmoHangarTabName != null)
-					{
-						CorpHangarName = Settings.Instance.AmmoHangarTabName;
-						if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "CorpHangarName we are looking for is [" + CorpHangarName + "][ AmmoHangarID was: " + Cache.Instance.AmmoHangarID + "]", Logging.White);
-					}
-					else
-					{
-						if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangar not configured: Questor will default to item hangar", Logging.White);
-						return true;
-					}
-
-					if (CorpHangarName != string.Empty) //&& Cache.Instance.AmmoHangarID == -99)
-					{
-						Cache.Instance.AmmoHangarID = -99;
-						Cache.Instance.AmmoHangarID = Cache.Instance.DirectEve.GetCorpHangarId(Settings.Instance.AmmoHangarTabName); //- 1;
-						if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangarID is [" + Cache.Instance.AmmoHangarID + "]", Logging.Teal);
-						
-						Cache.Instance.AmmoHangar = null;
-						Cache.Instance.AmmoHangar = Cache.Instance.DirectEve.GetCorporationHangar((int)Cache.Instance.AmmoHangarID);
-						if (Cache.Instance.AmmoHangar.IsValid)
-						{
-							if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangar contains [" + Cache.Instance.AmmoHangar.Items.Count() + "] Items", Logging.White);
-
-							//if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangar Description [" + Cache.Instance.AmmoHangar.Description + "]", Logging.White);
-							//if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangar UsedCapacity [" + Cache.Instance.AmmoHangar.UsedCapacity + "]", Logging.White);
-							//if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangar Volume [" + Cache.Instance.AmmoHangar.Volume + "]", Logging.White);
-						}
-
-						return true;
-					}
-					return true;
-				}
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("GetCorpAmmoHangarID", "Unable to complete GetCorpAmmoHangarID [" + exception + "]", Logging.Teal);
-				return false;
-			}
-		}
-
-		public bool GetCorpLootHangarID()
-		{
-			try
-			{
-				if (Cache.Instance.InStation && DateTime.UtcNow > Time.Instance.LastSessionChange.AddSeconds(10))
-				{
-					string CorpHangarName;
-					if (Settings.Instance.LootHangarTabName != null)
-					{
-						CorpHangarName = Settings.Instance.LootHangarTabName;
-						if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "CorpHangarName we are looking for is [" + CorpHangarName + "][ LootHangarID was: " + Cache.Instance.LootHangarID + "]", Logging.White);
-					}
-					else
-					{
-						if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangar not configured: Questor will default to item hangar", Logging.White);
-						return true;
-					}
-
-					if (CorpHangarName != string.Empty) //&& Cache.Instance.LootHangarID == -99)
-					{
-						Cache.Instance.LootHangarID = -99;
-						Cache.Instance.LootHangarID = Cache.Instance.DirectEve.GetCorpHangarId(Settings.Instance.LootHangarTabName);  //- 1;
-						if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangarID is [" + Cache.Instance.LootHangarID + "]", Logging.Teal);
-
-						Cache.Instance.LootHangar = null;
-						Cache.Instance.LootHangar = Cache.Instance.DirectEve.GetCorporationHangar((int)Cache.Instance.LootHangarID);
-						if (Cache.Instance.LootHangar.IsValid)
-						{
-							if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangar contains [" + Cache.Instance.LootHangar.Items.Count() + "] Items", Logging.White);
-
-							//if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangar Description [" + Cache.Instance.LootHangar.Description + "]", Logging.White);
-							//if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangar UsedCapacity [" + Cache.Instance.LootHangar.UsedCapacity + "]", Logging.White);
-							//if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangar Volume [" + Cache.Instance.LootHangar.Volume + "]", Logging.White);
-						}
-
-						return true;
-					}
-					return true;
-				}
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("GetCorpLootHangarID", "Unable to complete GetCorpLootHangarID [" + exception + "]", Logging.Teal);
-				return false;
-			}
-		}
-
-		public bool StackCorpAmmoHangar(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-			{
-				return false;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-			{
-				return false;
-			}
-
-			try
-			{
-				if (Logging.DebugHangars) Logging.Log("StackCorpAmmoHangar", "LastStackAmmoHangar: [" + Time.Instance.LastStackAmmoHangar.AddSeconds(60) + "] DateTime.UtcNow: [" + DateTime.UtcNow + "]", Logging.Teal);
-				
-				if (Cache.Instance.InStation)
-				{
-					if (!string.IsNullOrEmpty(Settings.Instance.AmmoHangarTabName))
-					{
-						if (AmmoHangar != null && AmmoHangar.IsValid)
-						{
-							try
-							{
-								if (Cache.Instance.StackHangarAttempts > 0)
-								{
-									if (!WaitForLockedItems(Time.Instance.LastStackAmmoHangar)) return false;
-									return true;
-								}
-
-								if (Cache.Instance.StackHangarAttempts <= 0)
-								{
-									if (AmmoHangar.Items.Any() && AmmoHangar.Items.Count() > RandomNumber(600, 800))
-									{
-										Logging.Log(module, "Stacking Item Hangar (as AmmoHangar)", Logging.White);
-										Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(5);
-										Cache.Instance.AmmoHangar.StackAll();
-										Cache.Instance.StackHangarAttempts++;
-										Time.Instance.LastStackAmmoHangar = DateTime.UtcNow;
-										Time.Instance.LastStackItemHangar = DateTime.UtcNow;
-										return true;
-									}
-
-									return true;
-								}
-
-								Logging.Log(module, "Not Stacking AmmoHangar [" + Settings.Instance.AmmoHangarTabName + "]", Logging.White);
-								return true;
-							}
-							catch (Exception exception)
-							{
-								Logging.Log(module, "Stacking AmmoHangar failed [" + exception + "]", Logging.Teal);
-								return true;
-							}
-						}
-
-						return false;
-					}
-
-					Cache.Instance.AmmoHangar = null;
-					return true;
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("StackCorpAmmoHangar", "Unable to complete StackCorpAmmoHangar [" + exception + "]", Logging.Teal);
-				return true;
-			}
-		}
-
-		//public DirectContainer CorpLootHangar { get; set; }
+		
 		public DirectContainerWindow PrimaryInventoryWindow { get; set; }
 
 		public DirectContainerWindow corpAmmoHangarSecondaryWindow { get; set; }
@@ -3470,1049 +1881,6 @@ namespace Questor.Modules.Caching
 			}
 
 			return false;
-		}
-
-		public bool StackCorpLootHangar(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-			{
-				if (Logging.DebugHangars) Logging.Log("StackCorpLootHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Debug);
-				return false;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-			{
-				if (Logging.DebugHangars) Logging.Log("StackCorpLootHangar", "if (DateTime.UtcNow < Cache.Instance.NextOpenHangarAction)", Logging.Debug);
-				return false;
-			}
-
-			try
-			{
-				if (Cache.Instance.InStation)
-				{
-					if (!string.IsNullOrEmpty(Settings.Instance.LootHangarTabName))
-					{
-						if (LootHangar != null && LootHangar.IsValid)
-						{
-							try
-							{
-								if (Cache.Instance.StackHangarAttempts > 0)
-								{
-									if (!WaitForLockedItems(Time.Instance.LastStackAmmoHangar)) return false;
-									return true;
-								}
-
-								if (Cache.Instance.StackHangarAttempts <= 0)
-								{
-									if (LootHangar.Items.Any() && LootHangar.Items.Count() > RandomNumber(600, 800))
-									{
-										Logging.Log(module, "Stacking Item Hangar (as LootHangar)", Logging.White);
-										Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(5);
-										Cache.Instance.LootHangar.StackAll();
-										Cache.Instance.StackHangarAttempts++;
-										Time.Instance.LastStackLootHangar = DateTime.UtcNow;
-										Time.Instance.LastStackItemHangar = DateTime.UtcNow;
-										return false;
-									}
-
-									return true;
-								}
-
-								Logging.Log(module, "Done Stacking AmmoHangar [" + Settings.Instance.AmmoHangarTabName + "]", Logging.White);
-								return true;
-							}
-							catch (Exception exception)
-							{
-								Logging.Log(module, "Stacking LootHangar failed [" + exception + "]", Logging.Teal);
-								return true;
-							}
-						}
-
-						return false;
-					}
-
-					Cache.Instance.LootHangar = null;
-					return true;
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("StackCorpLootHangar", "Unable to complete StackCorpLootHangar [" + exception + "]", Logging.Teal);
-				return true;
-			}
-		}
-		
-
-		public bool CloseCorpHangar(string module, string window)
-		{
-			try
-			{
-				if (Cache.Instance.InStation && !string.IsNullOrEmpty(window))
-				{
-					DirectContainerWindow corpHangarWindow = (DirectContainerWindow)Cache.Instance.Windows.FirstOrDefault(w => w.Type.Contains("form.InventorySecondary") && w.Caption == window);
-
-					if (corpHangarWindow != null)
-					{
-						Logging.Log(module, "Closing Corp Window: " + window, Logging.Teal);
-						corpHangarWindow.Close();
-						Statistics.LogWindowActionToWindowLog("Corporate Hangar", "Close Corporate Hangar");
-						return false;
-					}
-
-					return true;
-				}
-
-				return true;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("CloseCorpHangar", "Unable to complete CloseCorpHangar [" + exception + "]", Logging.Teal);
-				return false;
-			}
-		}
-
-		public bool ClosePrimaryInventoryWindow(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-				return false;
-
-			//
-			// go through *every* window
-			//
-			try
-			{
-				foreach (DirectWindow window in Cache.Instance.Windows)
-				{
-					if (window.Type.Contains("form.Inventory"))
-					{
-						if (Logging.DebugHangars) Logging.Log(module, "ClosePrimaryInventoryWindow: Closing Primary Inventory Window Named [" + window.Name + "]", Logging.White);
-						window.Close();
-						Statistics.LogWindowActionToWindowLog("Inventory (main)", "Close Inventory");
-						Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddMilliseconds(500);
-						return false;
-					}
-				}
-
-				return true;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("ClosePrimaryInventoryWindow", "Unable to complete ClosePrimaryInventoryWindow [" + exception + "]", Logging.Teal);
-				return false;
-			}
-		}
-
-		private DirectContainer _lootContainer;
-
-		public DirectContainer LootContainer
-		{
-			get
-			{
-				try
-				{
-					if (Cache.Instance.InStation)
-					{
-						if (_lootContainer == null)
-						{
-							if (!string.IsNullOrEmpty(Settings.Instance.LootContainerName))
-							{
-								//if (Logging.DebugHangars) Logging.Log("LootContainer", "Debug: if (!string.IsNullOrEmpty(Settings.Instance.LootContainer))", Logging.Teal);
-
-								if (Instance.Windows.All(i => i.Type != "form.Inventory"))
-									// look for windows via the window (via caption of form type) ffs, not what is attached to this DirectCotnainer
-								{
-									if (DateTime.UtcNow > Time.Instance.LastOpenHangar.AddSeconds(10))
-									{
-										Statistics.LogWindowActionToWindowLog("Inventory", "Opening Inventory");
-										Cache.Instance.DirectEve.OpenInventory();
-										Time.Instance.LastOpenHangar = DateTime.UtcNow;
-										return null;
-									}
-								}
-								
-								DirectItem firstLootContainer = Cache.Instance.LootHangar.Items.FirstOrDefault(i => i.GivenName != null && i.IsSingleton && (i.GroupId == (int)Group.FreightContainer || i.GroupId == (int)Group.AuditLogSecureContainer) && i.GivenName.ToLower() == Settings.Instance.LootContainerName.ToLower());
-								if (firstLootContainer == null && Cache.Instance.LootHangar.Items.Any(i => i.IsSingleton && (i.GroupId == (int)Group.FreightContainer || i.GroupId == (int)Group.AuditLogSecureContainer)))
-								{
-									Logging.Log("LootContainer", "Unable to find a container named [" + Settings.Instance.LootContainerName + "], using the available unnamed container", Logging.Teal);
-									firstLootContainer = Cache.Instance.LootHangar.Items.FirstOrDefault(i => i.IsSingleton && (i.GroupId == (int)Group.FreightContainer || i.GroupId == (int)Group.AuditLogSecureContainer));
-								}
-
-								if (firstLootContainer != null)
-								{
-									_lootContainer = Cache.Instance.DirectEve.GetContainer(firstLootContainer.ItemId);
-									if (_lootContainer != null && _lootContainer.IsValid)
-									{
-										Logging.Log("LootContainer", "LootContainer is defined", Logging.Debug);
-										return _lootContainer;
-									}
-
-									Logging.Log("LootContainer", "LootContainer is still null", Logging.Debug);
-									return null;
-								}
-
-								Logging.Log("LootContainer", "unable to find LootContainer named [ " + Settings.Instance.LootContainerName.ToLower() + " ]", Logging.Orange);
-								DirectItem firstOtherContainer = Cache.Instance.ItemHangar.Items.FirstOrDefault(i => i.GivenName != null && i.IsSingleton && i.GroupId == (int)Group.FreightContainer);
-
-								if (firstOtherContainer != null)
-								{
-									Logging.Log("LootContainer", "we did however find a container named [ " + firstOtherContainer.GivenName + " ]", Logging.Orange);
-									return null;
-								}
-
-								return null;
-							}
-
-							return null;
-						}
-
-						return _lootContainer;
-					}
-
-					return null;
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("LootContainer", "Exception [" + ex + "]", Logging.Debug);
-					return null;
-				}
-			}
-			set
-			{
-				_lootContainer = value;
-			}
-		}
-
-		public bool ReadyHighTierLootContainer(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-			{
-				return false;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenLootContainerAction)
-			{
-				return false;
-			}
-
-			if (Cache.Instance.InStation)
-			{
-				if (!string.IsNullOrEmpty(Settings.Instance.LootContainerName))
-				{
-					if (Logging.DebugHangars) Logging.Log("OpenLootContainer", "Debug: if (!string.IsNullOrEmpty(Settings.Instance.HighTierLootContainer))", Logging.Teal);
-
-					DirectItem firstLootContainer = Cache.Instance.LootHangar.Items.FirstOrDefault(i => i.GivenName != null && i.IsSingleton && i.GroupId == (int)Group.FreightContainer && i.GivenName.ToLower() == Settings.Instance.HighTierLootContainer.ToLower());
-					if (firstLootContainer != null)
-					{
-						long highTierLootContainerID = firstLootContainer.ItemId;
-						Cache.Instance.HighTierLootContainer = Cache.Instance.DirectEve.GetContainer(highTierLootContainerID);
-
-						if (Cache.Instance.HighTierLootContainer != null && Cache.Instance.HighTierLootContainer.IsValid)
-						{
-							if (Logging.DebugHangars) Logging.Log(module, "HighTierLootContainer is defined (no window needed)", Logging.Debug);
-							return true;
-						}
-
-						if (Cache.Instance.HighTierLootContainer == null)
-						{
-							if (!string.IsNullOrEmpty(Settings.Instance.LootHangarTabName))
-								Logging.Log(module, "Opening HighTierLootContainer: failed! lag?", Logging.Orange);
-							return false;
-						}
-
-						if (Logging.DebugHangars) Logging.Log(module, "HighTierLootContainer is not yet ready. waiting...", Logging.Debug);
-						return false;
-					}
-
-					Logging.Log(module, "unable to find HighTierLootContainer named [ " + Settings.Instance.HighTierLootContainer.ToLower() + " ]", Logging.Orange);
-					DirectItem firstOtherContainer = Cache.Instance.ItemHangar.Items.FirstOrDefault(i => i.GivenName != null && i.IsSingleton && i.GroupId == (int)Group.FreightContainer);
-
-					if (firstOtherContainer != null)
-					{
-						Logging.Log(module, "we did however find a container named [ " + firstOtherContainer.GivenName + " ]", Logging.Orange);
-						return false;
-					}
-
-					return false;
-				}
-
-				return true;
-			}
-
-			return false;
-		}
-		
-		public bool OpenAndSelectInvItem(string module, long id)
-		{
-			try
-			{
-				if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(10))
-				{
-					if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
-					return false;
-				}
-
-				if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-				{
-					if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: if (DateTime.UtcNow < NextOpenHangarAction)", Logging.Teal);
-					return false;
-				}
-
-				if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: about to: if (!Cache.Instance.OpenInventoryWindow", Logging.Teal);
-
-				if (!Cache.Instance.OpenInventoryWindow(module)) return false;
-
-				Cache.Instance.PrimaryInventoryWindow = (DirectContainerWindow)Cache.Instance.Windows.FirstOrDefault(w => w.Type.Contains("form.Inventory") && w.Name.Contains("Inventory"));
-
-				if (Cache.Instance.PrimaryInventoryWindow != null && Cache.Instance.PrimaryInventoryWindow.IsReady)
-				{
-					if (id < 0)
-					{
-						//
-						// this also kicks in if we have no corp hangar at all in station... can we detect that some other way?
-						//
-						Logging.Log("OpenAndSelectInvItem", "Inventory item ID from tree cannot be less than 0, retrying", Logging.White);
-						return false;
-					}
-
-					List<long> idsInInvTreeView = Cache.Instance.PrimaryInventoryWindow.GetIdsFromTree(false);
-					if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: IDs Found in the Inv Tree [" + idsInInvTreeView.Count() + "]", Logging.Teal);
-
-					foreach (Int64 itemInTree in idsInInvTreeView)
-					{
-						if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: itemInTree [" + itemInTree + "][looking for: " + id, Logging.Teal);
-						if (itemInTree == id)
-						{
-							if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: Found a match! itemInTree [" + itemInTree + "] = id [" + id + "]", Logging.Teal);
-							if (Cache.Instance.PrimaryInventoryWindow.currInvIdItem != id)
-							{
-								if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: We do not have the right ID selected yet, select it now.", Logging.Teal);
-								Cache.Instance.PrimaryInventoryWindow.SelectTreeEntryByID(id);
-								Statistics.LogWindowActionToWindowLog("Select Tree Entry", "Selected Entry on Left of Primary Inventory Window");
-								Time.Instance.NextOpenCargoAction = DateTime.UtcNow.AddMilliseconds(Cache.Instance.RandomNumber(2000, 4400));
-								return false;
-							}
-
-							if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: We already have the right ID selected.", Logging.Teal);
-							return true;
-						}
-
-						continue;
-					}
-
-					if (!idsInInvTreeView.Contains(id))
-					{
-						if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: if (!Cache.Instance.InventoryWindow.GetIdsFromTree(false).Contains(ID))", Logging.Teal);
-
-						if (id >= 0 && id <= 6 && Cache.Instance.PrimaryInventoryWindow.ExpandCorpHangarView())
-						{
-							Logging.Log(module, "ExpandCorpHangar executed", Logging.Teal);
-							Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(4);
-							return false;
-						}
-
-						foreach (Int64 itemInTree in idsInInvTreeView)
-						{
-							Logging.Log(module, "ID: " + itemInTree, Logging.Red);
-						}
-
-						Logging.Log(module, "Was looking for: " + id, Logging.Red);
-						return false;
-					}
-
-					return false;
-				}
-
-				return false;
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("OpenAndSelectInvItem", "Exception [" + ex + "]", Logging.Debug);
-				return false;
-			}
-		}
-
-		public bool ListInvTree(string module)
-		{
-			try
-			{
-				if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(10))
-				{
-					if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
-					return false;
-				}
-
-				if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-				{
-					if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: if (DateTime.UtcNow < NextOpenHangarAction)", Logging.Teal);
-					return false;
-				}
-
-				if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: about to: if (!Cache.Instance.OpenInventoryWindow", Logging.Teal);
-
-				if (!Cache.Instance.OpenInventoryWindow(module)) return false;
-
-				Cache.Instance.PrimaryInventoryWindow = (DirectContainerWindow)Cache.Instance.Windows.FirstOrDefault(w => w.Type.Contains("form.Inventory") && w.Name.Contains("Inventory"));
-
-				if (Cache.Instance.PrimaryInventoryWindow != null && Cache.Instance.PrimaryInventoryWindow.IsReady)
-				{
-					List<long> idsInInvTreeView = Cache.Instance.PrimaryInventoryWindow.GetIdsFromTree(false);
-					if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: IDs Found in the Inv Tree [" + idsInInvTreeView.Count() + "]", Logging.Teal);
-
-					if (Cache.Instance.PrimaryInventoryWindow.ExpandCorpHangarView())
-					{
-						Statistics.LogWindowActionToWindowLog("Corporate Hangar", "ExpandCorpHangar executed");
-						Logging.Log(module, "ExpandCorpHangar executed", Logging.Teal);
-						Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(4);
-						return false;
-					}
-
-					foreach (Int64 itemInTree in idsInInvTreeView)
-					{
-						Logging.Log(module, "ID: " + itemInTree, Logging.Red);
-					}
-					return false;
-				}
-
-				return false;
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("ListInvTree", "Exception [" + ex + "]", Logging.Debug);
-				return false;
-			}
-		}
-
-		public bool StackLootContainer(string module)
-		{
-			try
-			{
-				if (DateTime.UtcNow.AddMinutes(10) < Time.Instance.LastStackLootContainer)
-				{
-					return true;
-				}
-
-				if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-				{
-					return false;
-				}
-
-				if (DateTime.UtcNow < Time.Instance.NextOpenLootContainerAction)
-				{
-					return false;
-				}
-
-				if (Cache.Instance.InStation)
-				{
-					if (LootContainer.Window == null)
-					{
-						DirectItem firstLootContainer = Cache.Instance.LootHangar.Items.FirstOrDefault(i => i.GivenName != null && i.IsSingleton && i.GroupId == (int)Group.FreightContainer && i.GivenName.ToLower() == Settings.Instance.LootContainerName.ToLower());
-						if (firstLootContainer != null)
-						{
-							long lootContainerID = firstLootContainer.ItemId;
-							if (!OpenAndSelectInvItem(module, lootContainerID))
-								return false;
-						}
-						else
-						{
-							return false;
-						}
-					}
-
-					if (LootContainer.Window == null || !LootContainer.Window.IsReady) return false;
-
-					if (Cache.Instance.StackHangarAttempts > 0)
-					{
-						if (!WaitForLockedItems(Time.Instance.LastStackLootContainer)) return false;
-						return true;
-					}
-
-					if (Cache.Instance.StackHangarAttempts <= 0)
-					{
-						if (Cache.Instance.LootContainer.Items.Any())
-						{
-							Logging.Log(module, "Loot Container window named: [ " + LootContainer.Window.Name + " ] was found and its contents are being stacked", Logging.White);
-							LootContainer.StackAll();
-							Time.Instance.LastStackLootContainer = DateTime.UtcNow;
-							Time.Instance.LastStackLootHangar = DateTime.UtcNow;
-							Time.Instance.NextOpenLootContainerAction = DateTime.UtcNow.AddSeconds(2 + Cache.Instance.RandomNumber(1, 3));
-							return false;
-						}
-
-						return true;
-					}
-				}
-
-				return false;
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("StackLootContainer", "Exception [" + ex + "]", Logging.Debug);
-				return false;
-			}
-		}
-
-		public bool CloseLootContainer(string module)
-		{
-			try
-			{
-				if (!string.IsNullOrEmpty(Settings.Instance.LootContainerName))
-				{
-					if (Logging.DebugHangars) Logging.Log("CloseCorpLootHangar", "Debug: else if (!string.IsNullOrEmpty(Settings.Instance.LootContainer))", Logging.Teal);
-					DirectContainerWindow lootHangarWindow = (DirectContainerWindow)Cache.Instance.Windows.FirstOrDefault(w => w.Type.Contains("form.Inventory") && w.Caption == Settings.Instance.LootContainerName);
-
-					if (lootHangarWindow != null)
-					{
-						lootHangarWindow.Close();
-						Statistics.LogWindowActionToWindowLog("LootHangar", "Closing LootHangar [" + Settings.Instance.LootHangarTabName + "]");
-						return false;
-					}
-
-					return true;
-				}
-
-				return true;
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("CloseLootContainer", "Exception [" + ex + "]", Logging.Debug);
-				return false;
-			}
-		}
-
-		private DirectContainer _oreHold;
-		public DirectContainer OreHold
-		{
-			get
-			{
-				try
-				{
-					if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-					{
-						if (Logging.DebugHangars) Logging.Log("OpenShipsHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
-						return null;
-					}
-
-					if (!Cache.Instance.InSpace && Cache.Instance.InStation)
-					{
-						if (Cache.Instance._oreHold == null)
-						{
-							Cache.Instance._oreHold = Cache.Instance.DirectEve.GetShipsOreHold();
-						}
-
-						if (Instance.Windows.All(i => i.Type != "form.ActiveShipOreHold"))
-							// look for windows via the window (via caption of form type) ffs, not what is attached to this DirectCotnainer
-						{
-							if (DateTime.UtcNow > Time.Instance.LastOpenHangar.AddSeconds(10))
-							{
-								Statistics.LogWindowActionToWindowLog("OreHold", "Opening OreHold");
-								Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenOreHoldOfActiveShip);
-								Time.Instance.LastOpenHangar = DateTime.UtcNow;
-							}
-						}
-
-						return Cache.Instance._oreHold;
-					}
-
-					return null;
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("ItemHangar", "Exception [" + ex + "]", Logging.Debug);
-					return null;
-				}
-			}
-
-			set { _shipHangar = value; }
-		}
-		
-		public DirectContainer _lootHangar;
-
-		public DirectContainer LootHangar
-		{
-			get
-			{
-				try
-				{
-					if (Cache.Instance.InStation)
-					{
-						if (_lootHangar == null && DateTime.UtcNow > Time.Instance.NextOpenHangarAction)
-						{
-							if (Settings.Instance.LootHangarTabName != string.Empty)
-							{
-								//
-								// todo: we should check for the Inventory window w CorpHangar selected and open it if necessary!
-								//
-
-								Cache.Instance.LootHangarID = -99;
-								Cache.Instance.LootHangarID = Cache.Instance.DirectEve.GetCorpHangarId(Settings.Instance.LootHangarTabName); //- 1;
-								if (Logging.DebugHangars) Logging.Log("LootHangar: GetCorpLootHangarID", "LootHangarID is [" + Cache.Instance.LootHangarID + "]", Logging.Teal);
-
-								_lootHangar = null;
-								Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2);
-								_lootHangar = Cache.Instance.DirectEve.GetCorporationHangar((int)Cache.Instance.LootHangarID);
-								
-								if (_lootHangar != null && _lootHangar.IsValid) //do we have a corp hangar tab setup with that name?
-								{
-									if (Logging.DebugHangars)
-									{
-										Logging.Log("LootHangar", "LootHangar is defined (no window needed)", Logging.Debug);
-										try
-										{
-											if (_lootHangar.Items.Any())
-											{
-												int LootHangarItemCount = _lootHangar.Items.Count();
-												if (Logging.DebugHangars) Logging.Log("LootHangar", "LootHangar [" + Settings.Instance.LootHangarTabName + "] has [" + LootHangarItemCount + "] items", Logging.Debug);
-											}
-										}
-										catch (Exception exception)
-										{
-											Logging.Log("ReadyCorpLootHangar", "Exception [" + exception + "]", Logging.Debug);
-										}
-									}
-
-									return _lootHangar;
-								}
-
-								Logging.Log("LootHangar", "Opening Corporate LootHangar: failed! No Corporate Hangar in this station! lag?", Logging.Orange);
-								return Cache.Instance.ItemHangar;
-
-							}
-							//else if (Settings.Instance.AmmoHangarTabName == string.Empty && Cache.Instance._ammoHangar != null)
-							//{
-							//    Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2);
-							//    _lootHangar = _ammoHangar;
-							//}
-							else
-							{
-								if (Logging.DebugHangars) Logging.Log("Cache.LootHangar","Using ItemHangar as the LootHangar",Logging.Debug);
-								Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2);
-								_lootHangar = Cache.Instance.ItemHangar;
-							}
-
-							return _lootHangar;
-						}
-
-						return _lootHangar;
-					}
-
-					return null;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("LootHangar", "Unable to define LootHangar [" + exception + "]", Logging.Teal);
-					return null;
-				}
-			}
-			set
-			{
-				_lootHangar = value;
-			}
-		}
-
-		public DirectContainer HighTierLootContainer { get; set; }
-
-		public bool CloseLootHangar(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-			{
-				return false;
-			}
-
-			try
-			{
-				if (Cache.Instance.InStation)
-				{
-					if (!string.IsNullOrEmpty(Settings.Instance.LootHangarTabName))
-					{
-						Cache.Instance.LootHangar = Cache.Instance.DirectEve.GetCorporationHangar(Settings.Instance.LootHangarTabName);
-
-						// Is the corp loot Hangar open?
-						if (Cache.Instance.LootHangar != null)
-						{
-							Cache.Instance.corpLootHangarSecondaryWindow = (DirectContainerWindow)Cache.Instance.Windows.FirstOrDefault(w => w.Type.Contains("form.InventorySecondary") && w.Caption.Contains(Settings.Instance.LootHangarTabName));
-							if (Logging.DebugHangars) Logging.Log("CloseCorpLootHangar", "Debug: if (Cache.Instance.LootHangar != null)", Logging.Teal);
-
-							if (Cache.Instance.corpLootHangarSecondaryWindow != null)
-							{
-								// if open command it to close
-								Cache.Instance.corpLootHangarSecondaryWindow.Close();
-								Statistics.LogWindowActionToWindowLog("LootHangar", "Closing LootHangar [" + Settings.Instance.LootHangarTabName + "]");
-								Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2 + Cache.Instance.RandomNumber(1, 3));
-								Logging.Log(module, "Closing Corporate Loot Hangar: waiting [" + Math.Round(Time.Instance.NextOpenHangarAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]", Logging.White);
-								return false;
-							}
-
-							return true;
-						}
-
-						if (Cache.Instance.LootHangar == null)
-						{
-							if (!string.IsNullOrEmpty(Settings.Instance.LootHangarTabName))
-							{
-								Logging.Log(module, "Closing Corporate Hangar: failed! No Corporate Hangar in this station! lag or setting misconfiguration?", Logging.Orange);
-								return true;
-							}
-							return false;
-						}
-					}
-					else if (!string.IsNullOrEmpty(Settings.Instance.LootContainerName))
-					{
-						if (Logging.DebugHangars) Logging.Log("CloseCorpLootHangar", "Debug: else if (!string.IsNullOrEmpty(Settings.Instance.LootContainer))", Logging.Teal);
-						DirectContainerWindow lootHangarWindow = (DirectContainerWindow)Cache.Instance.Windows.FirstOrDefault(w => w.Type.Contains("form.InventorySecondary") && w.Caption.Contains(Settings.Instance.LootContainerName));
-
-						if (lootHangarWindow != null)
-						{
-							lootHangarWindow.Close();
-							Statistics.LogWindowActionToWindowLog("LootHangar", "Closing LootHangar [" + Settings.Instance.LootHangarTabName + "]");
-							return false;
-						}
-						return true;
-					}
-					else //use local items hangar
-					{
-						Cache.Instance.LootHangar = Cache.Instance.DirectEve.GetItemHangar();
-						if (Cache.Instance.LootHangar == null)
-							return false;
-
-						// Is the items hangar open?
-						if (Cache.Instance.LootHangar.Window != null)
-						{
-							// if open command it to close
-							Cache.Instance.LootHangar.Window.Close();
-							Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2 + Cache.Instance.RandomNumber(1, 4));
-							Logging.Log(module, "Closing Item Hangar: waiting [" + Math.Round(Time.Instance.NextOpenHangarAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]", Logging.White);
-							return false;
-						}
-
-						return true;
-					}
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("CloseLootHangar", "Unable to complete CloseLootHangar [" + exception + "]", Logging.Teal);
-				return false;
-			}
-		}
-
-		public bool StackLootHangar(string module)
-		{
-			if (Math.Abs(DateTime.UtcNow.Subtract(Time.Instance.LastStackLootHangar).TotalMinutes) < 10)
-			{
-				return true;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-			{
-				if (Logging.DebugHangars) Logging.Log("StackLootHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
-				return false;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-			{
-				if (Logging.DebugHangars) Logging.Log("StackLootHangar", "if (DateTime.UtcNow [" + DateTime.UtcNow + "] < Cache.Instance.NextOpenHangarAction [" + Time.Instance.NextOpenHangarAction + "])", Logging.Teal);
-				return false;
-			}
-
-			try
-			{
-				if (Cache.Instance.InStation)
-				{
-					if (!string.IsNullOrEmpty(Settings.Instance.LootHangarTabName))
-					{
-						if (Logging.DebugHangars) Logging.Log("StackLootHangar", "Starting [Cache.Instance.StackCorpLootHangar]", Logging.Teal);
-						if (!Cache.Instance.StackCorpLootHangar("Cache.StackCorpLootHangar")) return false;
-						if (Logging.DebugHangars) Logging.Log("StackLootHangar", "Finished [Cache.Instance.StackCorpLootHangar]", Logging.Teal);
-						return true;
-					}
-
-					if (!string.IsNullOrEmpty(Settings.Instance.LootContainerName))
-					{
-						if (Logging.DebugHangars) Logging.Log("StackLootHangar", "if (!string.IsNullOrEmpty(Settings.Instance.LootContainer))", Logging.Teal);
-						//if (!Cache.Instance.StackLootContainer("Cache.StackLootContainer")) return false;
-						Logging.Log("StackLootHangar", "We do not stack containers, you will need to do so manually. StackAll does not seem to work with Primary Inventory windows.", Logging.Teal);
-						return true;
-					}
-
-					if (Logging.DebugHangars) Logging.Log("StackLootHangar", "!Cache.Instance.StackItemsHangarAsLootHangar(Cache.StackLootHangar))", Logging.Teal);
-					if (!Cache.Instance.StackItemsHangarAsLootHangar("Cache.StackItemsHangarAsLootHangar")) return false;
-					return true;
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("StackLootHangar", "Unable to complete StackLootHangar [" + exception + "]", Logging.Teal);
-				return true;
-			}
-		}
-
-		public bool SortLootHangar(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-			{
-				return false;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-			{
-				return false;
-			}
-
-			if (Cache.Instance.InStation)
-			{
-				if (LootHangar != null && LootHangar.IsValid)
-				{
-					List<DirectItem> items = Cache.Instance.LootHangar.Items;
-					foreach (DirectItem item in items)
-					{
-						//if (item.FlagId)
-						Logging.Log(module, "Items: " + item.TypeName, Logging.White);
-
-						//
-						// add items with a high tier or faction to transferlist
-						//
-					}
-
-					//
-					// transfer items in transferlist to HighTierLootContainer
-					//
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		//public DirectContainer _ammoHangar { get; set; }
-
-		public DirectContainer _ammoHangar;
-
-		public DirectContainer AmmoHangar
-		{
-			get
-			{
-				try
-				{
-					if (Cache.Instance.InStation)
-					{
-						if (_ammoHangar == null && DateTime.UtcNow > Time.Instance.NextOpenHangarAction)
-						{
-							if (Settings.Instance.AmmoHangarTabName != string.Empty)
-							{
-								Cache.Instance.AmmoHangarID = -99;
-								Cache.Instance.AmmoHangarID = Cache.Instance.DirectEve.GetCorpHangarId(Settings.Instance.AmmoHangarTabName); //- 1;
-								if (Logging.DebugHangars) Logging.Log("AmmoHangar: GetCorpAmmoHangarID", "AmmoHangarID is [" + Cache.Instance.AmmoHangarID + "]", Logging.Teal);
-
-								_ammoHangar = null;
-								Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2);
-								_ammoHangar = Cache.Instance.DirectEve.GetCorporationHangar((int)Cache.Instance.AmmoHangarID);
-								Statistics.LogWindowActionToWindowLog("AmmoHangar", "AmmoHangar Defined (not opened?)");
-
-								if (_ammoHangar != null && _ammoHangar.IsValid) //do we have a corp hangar tab setup with that name?
-								{
-									if (Logging.DebugHangars)
-									{
-										Logging.Log("AmmoHangar", "AmmoHangar is defined (no window needed)", Logging.Debug);
-										try
-										{
-											if (AmmoHangar.Items.Any())
-											{
-												int AmmoHangarItemCount = AmmoHangar.Items.Count();
-												if (Logging.DebugHangars) Logging.Log("AmmoHangar", "AmmoHangar [" + Settings.Instance.AmmoHangarTabName + "] has [" + AmmoHangarItemCount + "] items", Logging.Debug);
-											}
-										}
-										catch (Exception exception)
-										{
-											Logging.Log("ReadyCorpAmmoHangar", "Exception [" + exception + "]", Logging.Debug);
-										}
-									}
-
-									return _ammoHangar;
-								}
-
-								Logging.Log("AmmoHangar", "Opening Corporate Ammo Hangar: failed! No Corporate Hangar in this station! lag?", Logging.Orange);
-								return _ammoHangar;
-
-							}
-
-							if (Settings.Instance.LootHangarTabName == string.Empty && Cache.Instance._lootHangar != null)
-							{
-								Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2);
-								_ammoHangar = Cache.Instance._lootHangar;
-							}
-							else
-							{
-								Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2);
-								_ammoHangar = Cache.Instance.ItemHangar;
-							}
-
-							return _ammoHangar;
-						}
-
-						return _ammoHangar;
-					}
-
-					return null;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("AmmoHangar", "Unable to define AmmoHangar [" + exception + "]", Logging.Teal);
-					return null;
-				}
-			}
-			set
-			{
-				_ammoHangar = value;
-			}
-		}
-
-		public bool StackAmmoHangar(string module)
-		{
-			StackAmmohangarAttempts++;
-			if (StackAmmohangarAttempts > 10)
-			{
-				Logging.Log("StackAmmoHangar", "Stacking the ammoHangar has failed: attempts [" + StackAmmohangarAttempts + "]", Logging.Teal);
-				return true;
-			}
-
-			if (Math.Abs(DateTime.UtcNow.Subtract(Time.Instance.LastStackAmmoHangar).TotalMinutes) < 10)
-			{
-				return true;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-			{
-				if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
-				return false;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-			{
-				if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "if (DateTime.UtcNow [" + DateTime.UtcNow + "] < Cache.Instance.NextOpenHangarAction [" + Time.Instance.NextOpenHangarAction + "])", Logging.Teal);
-				return false;
-			}
-
-			try
-			{
-				if (Cache.Instance.InStation)
-				{
-					if (!string.IsNullOrEmpty(Settings.Instance.AmmoHangarTabName))
-					{
-						if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "Starting [Cache.Instance.StackCorpAmmoHangar]", Logging.Teal);
-						if (!Cache.Instance.StackCorpAmmoHangar(module)) return false;
-						if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "Finished [Cache.Instance.StackCorpAmmoHangar]", Logging.Teal);
-						return true;
-					}
-
-					//if (!string.IsNullOrEmpty(Settings.Instance.LootContainer))
-					//{
-					//    if (Logging.DebugHangars) Logging.Log("StackLootHangar", "if (!string.IsNullOrEmpty(Settings.Instance.LootContainer))", Logging.Teal);
-					//    if (!Cache.Instance.StackLootContainer("Cache.StackLootHangar")) return false;
-					//    StackLoothangarAttempts = 0;
-					//    return true;
-					//}
-
-					if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "Starting [Cache.Instance.StackItemsHangarAsAmmoHangar]", Logging.Teal);
-					if (!Cache.Instance.StackItemsHangarAsAmmoHangar(module)) return false;
-					if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "Finished [Cache.Instance.StackItemsHangarAsAmmoHangar]", Logging.Teal);
-					StackAmmohangarAttempts = 0;
-					return true;
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("StackAmmoHangar", "Unable to complete StackAmmoHangar [" + exception + "]", Logging.Teal);
-				return true;
-			}
-		}
-
-		public bool CloseAmmoHangar(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-			{
-				return false;
-			}
-
-			try
-			{
-				if (Cache.Instance.InStation)
-				{
-					if (!string.IsNullOrEmpty(Settings.Instance.AmmoHangarTabName))
-					{
-						if (Logging.DebugHangars) Logging.Log("CloseCorpAmmoHangar", "Debug: if (!string.IsNullOrEmpty(Settings.Instance.AmmoHangar))", Logging.Teal);
-
-						if (Cache.Instance.AmmoHangar == null)
-						{
-							Cache.Instance.AmmoHangar = Cache.Instance.DirectEve.GetCorporationHangar(Settings.Instance.AmmoHangarTabName);
-						}
-
-						// Is the corp Ammo Hangar open?
-						if (Cache.Instance.AmmoHangar != null)
-						{
-							Cache.Instance.corpAmmoHangarSecondaryWindow = (DirectContainerWindow)Cache.Instance.Windows.FirstOrDefault(w => w.Type.Contains("form.InventorySecondary") && w.Caption.Contains(Settings.Instance.AmmoHangarTabName));
-							if (Logging.DebugHangars) Logging.Log("CloseCorpAmmoHangar", "Debug: if (Cache.Instance.AmmoHangar != null)", Logging.Teal);
-
-							if (Cache.Instance.corpAmmoHangarSecondaryWindow != null)
-							{
-								if (Logging.DebugHangars) Logging.Log("CloseCorpAmmoHangar", "Debug: if (ammoHangarWindow != null)", Logging.Teal);
-
-								// if open command it to close
-								Cache.Instance.corpAmmoHangarSecondaryWindow.Close();
-								Statistics.LogWindowActionToWindowLog("Ammohangar", "Closing AmmoHangar");
-								Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2 + Cache.Instance.RandomNumber(1, 3));
-								Logging.Log(module, "Closing Corporate Ammo Hangar: waiting [" + Math.Round(Time.Instance.NextOpenHangarAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]", Logging.White);
-								return false;
-							}
-
-							return true;
-						}
-
-						if (Cache.Instance.AmmoHangar == null)
-						{
-							if (!string.IsNullOrEmpty(Settings.Instance.AmmoHangarTabName))
-							{
-								Logging.Log(module, "Closing Corporate Hangar: failed! No Corporate Hangar in this station! lag or setting misconfiguration?", Logging.Orange);
-							}
-
-							return false;
-						}
-					}
-					else //use local items hangar
-					{
-						if (Cache.Instance.AmmoHangar == null)
-						{
-							Cache.Instance.AmmoHangar = Cache.Instance.DirectEve.GetItemHangar();
-							return false;
-						}
-
-						// Is the items hangar open?
-						if (Cache.Instance.AmmoHangar.Window != null)
-						{
-							// if open command it to close
-							if (!Cache.Instance.CloseItemsHangar(module)) return false;
-							Logging.Log(module, "Closing AmmoHangar Hangar", Logging.White);
-							return true;
-						}
-
-						return true;
-					}
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("CloseAmmoHangar", "Unable to complete CloseAmmoHangar [" + exception + "]", Logging.Teal);
-				return false;
-			}
 		}
 
 		public DirectLoyaltyPointStoreWindow _lpStore;
@@ -4603,7 +1971,7 @@ namespace Questor.Modules.Caching
 			return true; //if we are not in station then the LP Store should have auto closed already.
 		}
 
-		private DirectFittingManagerWindow _fittingManagerWindow; //cleared in invalidatecache()
+		private DirectFittingManagerWindow _fittingManagerWindow; 
 		public DirectFittingManagerWindow FittingManagerWindow
 		{
 			get
@@ -4954,314 +2322,35 @@ namespace Questor.Modules.Caching
 			}
 		}
 		
-		private IEnumerable<DirectBookmark> ListOfUndockBookmarks;
-
-		internal static DirectBookmark _undockBookmarkInLocal;
-		public DirectBookmark UndockBookmark
+		public bool ClosePrimaryInventoryWindow(string module)
 		{
-			get
-			{
-				try
-				{
-					if (_undockBookmarkInLocal == null)
-					{
-						if (ListOfUndockBookmarks == null)
-						{
-							if (Settings.Instance.UndockBookmarkPrefix != "")
-							{
-								ListOfUndockBookmarks = Cache.Instance.BookmarksByLabel(Settings.Instance.UndockBookmarkPrefix);
-							}
-						}
-						if (ListOfUndockBookmarks != null && ListOfUndockBookmarks.Any())
-						{
-							ListOfUndockBookmarks = ListOfUndockBookmarks.Where(i => i.LocationId == Cache.Instance.DirectEve.Session.LocationId).ToList();
-							_undockBookmarkInLocal = ListOfUndockBookmarks.OrderBy(i => Cache.Instance.DistanceFromMe(i.X ?? 0, i.Y ?? 0, i.Z ?? 0)).FirstOrDefault(b => Cache.Instance.DistanceFromMe(b.X ?? 0, b.Y ?? 0, b.Z ?? 0) < (int)Distances.NextPocketDistance);
-							if (_undockBookmarkInLocal != null)
-							{
-								return _undockBookmarkInLocal;
-							}
+			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
+				return false;
 
-							return null;
-						}
-
-						return null;
-					}
-
-					return _undockBookmarkInLocal;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("UndockBookmark", "[" + exception + "]", Logging.Teal);
-					return null;
-				}
-			}
-			internal set
-			{
-				_undockBookmarkInLocal = value;
-			}
-
-		}
-		
-		public IEnumerable<DirectBookmark> SafeSpotBookmarks
-		{
-			get
-			{
-				try
-				{
-
-					if (_safeSpotBookmarks == null)
-					{
-						_safeSpotBookmarks = Cache.Instance.BookmarksByLabel(Settings.Instance.SafeSpotBookmarkPrefix).ToList();
-					}
-
-					if (_safeSpotBookmarks != null && _safeSpotBookmarks.Any())
-					{
-						return _safeSpotBookmarks;
-					}
-
-					return new List<DirectBookmark>();
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.SafeSpotBookmarks", "Exception [" + exception + "]", Logging.Debug);
-				}
-
-				return new List<DirectBookmark>();
-			}
-		}
-
-		public IEnumerable<DirectBookmark> AfterMissionSalvageBookmarks
-		{
-			get
-			{
-				try
-				{
-					string _bookmarkprefix = Settings.Instance.BookmarkPrefix;
-
-					if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
-					{
-						return Cache.Instance.BookmarksByLabel(_bookmarkprefix + " ").Where(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(AgedDate) < 0).ToList();
-					}
-
-					if (Cache.Instance.BookmarksByLabel(_bookmarkprefix + " ") != null)
-					{
-						return Cache.Instance.BookmarksByLabel(_bookmarkprefix + " ").ToList();
-					}
-
-					return new List<DirectBookmark>();
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("AfterMissionSalvageBookmarks", "Exception [" + ex + "]", Logging.Debug);
-					return new List<DirectBookmark>();
-				}
-			}
-		}
-
-		//Represents date when bookmarks are eligible for salvage. This should not be confused with when the bookmarks are too old to salvage.
-		public DateTime AgedDate
-		{
-			get
-			{
-				try
-				{
-					return DateTime.UtcNow.AddMinutes(-Salvage.AgeofBookmarksForSalvageBehavior);
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("AgedDate", "Exception [" + ex + "]", Logging.Debug);
-					return DateTime.UtcNow.AddMinutes(-45);
-				}
-			}
-		}
-
-		public DirectBookmark GetSalvagingBookmark
-		{
-			get
-			{
-				try
-				{
-					if (Cache.Instance.AllBookmarks != null && Cache.Instance.AllBookmarks.Any())
-					{
-						List<DirectBookmark> _SalvagingBookmarks;
-						DirectBookmark _SalvagingBookmark;
-						if (Salvage.FirstSalvageBookmarksInSystem)
-						{
-							Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "Salvaging at first bookmark from system", Logging.White);
-							_SalvagingBookmarks = Cache.Instance.BookmarksByLabel(Settings.Instance.BookmarkPrefix + " ");
-							if (_SalvagingBookmarks != null && _SalvagingBookmarks.Any())
-							{
-								_SalvagingBookmark = _SalvagingBookmarks.OrderBy(b => b.CreatedOn).FirstOrDefault(c => c.LocationId == Cache.Instance.DirectEve.Session.SolarSystemId);
-								return _SalvagingBookmark;
-							}
-
-							return null;
-						}
-
-						Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "Salvaging at first oldest bookmarks", Logging.White);
-						_SalvagingBookmarks = Cache.Instance.BookmarksByLabel(Settings.Instance.BookmarkPrefix + " ");
-						if (_SalvagingBookmarks != null && _SalvagingBookmarks.Any())
-						{
-							_SalvagingBookmark = _SalvagingBookmarks.OrderBy(b => b.CreatedOn).FirstOrDefault();
-							return _SalvagingBookmark;
-						}
-
-						return null;
-					}
-
-					return null;
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("GetSalvagingBookmark", "Exception [" + ex + "]", Logging.Debug);
-					return null;
-				}
-			}
-		}
-
-		public DirectBookmark GetTravelBookmark
-		{
-			get
-			{
-				try
-				{
-					DirectBookmark bm = Cache.Instance.BookmarksByLabel(Settings.Instance.TravelToBookmarkPrefix).OrderByDescending(b => b.CreatedOn).FirstOrDefault(c => c.LocationId == Cache.Instance.DirectEve.Session.SolarSystemId) ??
-						Cache.Instance.BookmarksByLabel(Settings.Instance.TravelToBookmarkPrefix).OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
-						Cache.Instance.BookmarksByLabel("Jita").OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
-						Cache.Instance.BookmarksByLabel("Rens").OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
-						Cache.Instance.BookmarksByLabel("Amarr").OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
-						Cache.Instance.BookmarksByLabel("Dodixie").OrderByDescending(b => b.CreatedOn).FirstOrDefault();
-
-					if (bm != null)
-					{
-						Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "GetTravelBookmark [" + bm.Title + "][" + bm.LocationId + "]", Logging.White);
-					}
-					return bm;
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("GetTravelBookmark", "Exception [" + ex + "]", Logging.Debug);
-					return null;
-				}
-			}
-		}
-
-		public bool GateInGrid()
-		{
+			//
+			// go through *every* window
+			//
 			try
 			{
-				if (Cache.Instance.AccelerationGates.FirstOrDefault() == null || !Cache.Instance.AccelerationGates.Any())
+				foreach (DirectWindow window in Cache.Instance.Windows)
 				{
-					return false;
-				}
-
-				Time.Instance.LastAccelerationGateDetected = DateTime.UtcNow;
-				return true;
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("GateInGrid", "Exception [" + ex + "]", Logging.Debug);
-				return true;
-			}
-		}
-
-		private int _bookmarkDeletionAttempt;
-		public DateTime NextBookmarkDeletionAttempt = DateTime.UtcNow;
-
-		public bool DeleteBookmarksOnGrid(string module)
-		{
-			try
-			{
-				if (DateTime.UtcNow < NextBookmarkDeletionAttempt)
-				{
-					return false;
-				}
-
-				NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(5 + Settings.Instance.RandomNumber(1, 5));
-
-				//
-				// remove all salvage bookmarks over 48hrs old - they have long since been rendered useless
-				//
-				DeleteUselessSalvageBookmarks(module);
-
-				List<DirectBookmark> bookmarksInLocal = new List<DirectBookmark>(AfterMissionSalvageBookmarks.Where(b => b.LocationId == Cache.Instance.DirectEve.Session.SolarSystemId).OrderBy(b => b.CreatedOn));
-				DirectBookmark onGridBookmark = bookmarksInLocal.FirstOrDefault(b => Cache.Instance.DistanceFromMe(b.X ?? 0, b.Y ?? 0, b.Z ?? 0) < (int)Distances.OnGridWithMe);
-				if (onGridBookmark != null)
-				{
-					_bookmarkDeletionAttempt++;
-					if (_bookmarkDeletionAttempt <= bookmarksInLocal.Count() + 60)
+					if (window.Type.Contains("form.Inventory"))
 					{
-						Logging.Log(module, "removing salvage bookmark:" + onGridBookmark.Title, Logging.White);
-						onGridBookmark.Delete();
-						Logging.Log(module, "after: removing salvage bookmark:" + onGridBookmark.Title, Logging.White);
-						NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(Cache.Instance.RandomNumber(2, 6));
+						if (Logging.DebugHangars) Logging.Log(module, "ClosePrimaryInventoryWindow: Closing Primary Inventory Window Named [" + window.Name + "]", Logging.White);
+						window.Close();
+						Statistics.LogWindowActionToWindowLog("Inventory (main)", "Close Inventory");
+						Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddMilliseconds(500);
 						return false;
 					}
-
-					if (_bookmarkDeletionAttempt > bookmarksInLocal.Count() + 60)
-					{
-						Logging.Log(module, "error removing bookmark!" + onGridBookmark.Title, Logging.White);
-						_States.CurrentQuestorState = QuestorState.Error;
-						return false;
-					}
-
-					return false;
 				}
 
-				_bookmarkDeletionAttempt = 0;
-				Time.Instance.NextSalvageTrip = DateTime.UtcNow;
-				Statistics.FinishedSalvaging = DateTime.UtcNow;
 				return true;
 			}
-			catch (Exception ex)
+			catch (Exception exception)
 			{
-				Logging.Log("DeleteBookmarksOnGrid", "Exception [" + ex + "]", Logging.Debug);
-				return true;
-			}
-		}
-
-		public bool DeleteUselessSalvageBookmarks(string module)
-		{
-			if (DateTime.UtcNow < NextBookmarkDeletionAttempt)
-			{
-				if (Logging.DebugSalvage) Logging.Log("DeleteUselessSalvageBookmarks", "NextBookmarkDeletionAttempt is still [" + NextBookmarkDeletionAttempt.Subtract(DateTime.UtcNow).TotalSeconds + "] sec in the future... waiting", Logging.Debug);
+				Logging.Log("ClosePrimaryInventoryWindow", "Unable to complete ClosePrimaryInventoryWindow [" + exception + "]", Logging.Teal);
 				return false;
 			}
-
-			try
-			{
-				//Delete bookmarks older than 2 hours.
-				DateTime bmExpirationDate = DateTime.UtcNow.AddMinutes(-Salvage.AgeofSalvageBookmarksToExpire);
-				List<DirectBookmark> uselessSalvageBookmarks = new List<DirectBookmark>(AfterMissionSalvageBookmarks.Where(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0).ToList());
-
-				DirectBookmark uselessSalvageBookmark = uselessSalvageBookmarks.FirstOrDefault();
-				if (uselessSalvageBookmark != null)
-				{
-					_bookmarkDeletionAttempt++;
-					if (_bookmarkDeletionAttempt <= uselessSalvageBookmarks.Count(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0) + 60)
-					{
-						Logging.Log(module, "removing a salvage bookmark that aged more than [" + Salvage.AgeofSalvageBookmarksToExpire + "]" + uselessSalvageBookmark.Title, Logging.White);
-						NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(5 + Settings.Instance.RandomNumber(1, 5));
-						uselessSalvageBookmark.Delete();
-						return false;
-					}
-
-					if (_bookmarkDeletionAttempt > uselessSalvageBookmarks.Count(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0) + 60)
-					{
-						Logging.Log(module, "error removing bookmark!" + uselessSalvageBookmark.Title, Logging.White);
-						_States.CurrentQuestorState = QuestorState.Error;
-						return false;
-					}
-
-					return false;
-				}
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("Cache.DeleteUselessSalvageBookmarks", "Exception:" + ex.Message, Logging.White);
-			}
-
-			return true;
 		}
 
 	}

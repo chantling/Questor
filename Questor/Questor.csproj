@@ -124,6 +124,10 @@
     <Compile Include="Behaviors\DebugHangarsBehavior.cs" />
     <Compile Include="Behaviors\DedicatedBookmarkSalvagerBehavior.cs" />
     <Compile Include="Caching\Cache.cs" />
+    <Compile Include="Caching\CacheBookmarks.cs" />
+    <Compile Include="Caching\CacheEntities.cs" />
+    <Compile Include="Caching\CacheHangars.cs" />
+    <Compile Include="Caching\CacheWindows.cs" />
     <Compile Include="Caching\EntityCache.cs" />
     <Compile Include="Caching\ItemCache.cs" />
     <Compile Include="Caching\ModuleCache.cs" />
