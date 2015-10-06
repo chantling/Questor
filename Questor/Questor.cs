@@ -504,6 +504,10 @@ namespace Questor
 					return;
 				}
 				
+				if(Cache.Instance.Paused) {
+					return;
+				}
+				
 				if(!BeforeLogin.questorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questor")) {
 					_nextPulse = DateTime.UtcNow.AddSeconds(2);
 					return;
