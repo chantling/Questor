@@ -33,6 +33,397 @@ namespace Questor.Modules.Caching
 	
 	public partial class Cache
 	{
+		private DirectContainer _shipHangar;
+		public DirectContainer _itemHangar { get; set; }
+		private DirectContainer _lootContainer;
+		public DirectContainer _lootHangar;
+		public DirectContainer _ammoHangar;
+		public DirectContainer HighTierLootContainer { get; set; }
+
+		public DirectContainer ItemHangar
+		{
+			get
+			{
+				try
+				{
+					if (!SafeToUseStationHangars())
+					{
+						//Logging.Log("ItemHangar", "if (!SafeToUseStationHangars())", Logging.Debug);
+						return null;
+					}
+
+					if (!Cache.Instance.InSpace && Cache.Instance.InStation)
+					{
+						if (Cache.Instance._itemHangar == null)
+						{
+							Cache.Instance._itemHangar = Cache.Instance.DirectEve.GetItemHangar();
+						}
+
+						if (Cache.Instance.Windows.All(i => i.Type != "form.StationItems")) // look for windows via the window (via caption of form type) ffs, not what is attached to this DirectCotnainer
+						{
+							if (DateTime.UtcNow > Time.Instance.LastOpenHangar.AddSeconds(10))
+							{
+								Logging.Log("Cache.ItemHangar", "Opening ItemHangar", Logging.Debug);
+								Statistics.LogWindowActionToWindowLog("Itemhangar", "Opening ItemHangar");
+								Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenHangarFloor);
+								Time.Instance.LastOpenHangar = DateTime.UtcNow;
+								return null;
+							}
+
+							if (Logging.DebugArm || Logging.DebugUnloadLoot || Logging.DebugHangars ) Logging.Log("Cache.ItemHangar", "ItemHangar recently opened, waiting for the window to actually appear", Logging.Debug);
+							return null;
+						}
+
+						if (Cache.Instance.Windows.Any(i => i.Type == "form.StationItems"))
+						{
+							if (Logging.DebugArm || Logging.DebugUnloadLoot || Logging.DebugHangars) Logging.Log("Cache.ItemHangar", "if (Cache.Instance.Windows.Any(i => i.Type == form.StationItems))", Logging.Debug);
+							return Cache.Instance._itemHangar;
+						}
+
+						if (Logging.DebugArm || Logging.DebugUnloadLoot || Logging.DebugHangars) Logging.Log("Cache.ItemHangar", "Not sure how we got here... ", Logging.Debug);
+						return null;
+					}
+
+					if (Logging.DebugArm || Logging.DebugUnloadLoot || Logging.DebugHangars) Logging.Log("Cache.ItemHangar", "InSpace [" + Cache.Instance.InSpace + "] InStation [" + Cache.Instance.InStation + "] waiting...", Logging.Debug);
+					return null;
+				}
+				catch (Exception ex)
+				{
+					Logging.Log("ItemHangar", "Exception [" + ex + "]", Logging.Debug);
+					return null;
+				}
+			}
+
+			set { _itemHangar = value; }
+		}
+
+		public bool SafeToUseStationHangars()
+		{
+			if (DateTime.UtcNow < Time.Instance.NextDockAction.AddSeconds(10)) //yes we are adding 10 more seconds...
+			{
+				if (Logging.DebugArm || Logging.DebugUnloadLoot || Logging.DebugHangars) Logging.Log("ItemHangar", "if (DateTime.UtcNow < Time.Instance.NextDockAction.AddSeconds(10))", Logging.Debug);
+				return false;
+			}
+
+			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(15))
+			{
+				if (Logging.DebugArm || Logging.DebugUnloadLoot || Logging.DebugHangars) Logging.Log("ItemHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(15))", Logging.Debug);
+				return false;
+			}
+
+			return true;
+		}
+
+		public bool ReadyItemsHangarSingleInstance(string module)
+		{
+			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
+			{
+				return false;
+			}
+
+			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
+			{
+				return false;
+			}
+
+			if (Cache.Instance.InStation)
+			{
+				DirectContainerWindow lootHangarWindow = (DirectContainerWindow)Cache.Instance.Windows.FirstOrDefault(w => w.Type.Contains("form.StationItems") && w.Caption.Contains("Item hangar"));
+
+				// Is the items hangar open?
+				if (lootHangarWindow == null)
+				{
+					// No, command it to open
+					Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenHangarFloor);
+					Statistics.LogWindowActionToWindowLog("Itemhangar", "Opening ItemHangar");
+					Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(Cache.Instance.RandomNumber(3, 5));
+					Logging.Log(module, "Opening Item Hangar: waiting [" + Math.Round(Time.Instance.NextOpenHangarAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]", Logging.White);
+					return false;
+				}
+
+				Cache.Instance.ItemHangar = Cache.Instance.DirectEve.GetContainer(lootHangarWindow.currInvIdItem);
+				return true;
+			}
+
+			return false;
+		}
+
+		public bool CloseItemsHangar(string module)
+		{
+			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
+			{
+				return false;
+			}
+
+			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
+			{
+				return false;
+			}
+
+			try
+			{
+				if (Cache.Instance.InStation)
+				{
+					if (Logging.DebugHangars) Logging.Log("OpenItemsHangar", "We are in Station", Logging.Teal);
+					Cache.Instance.ItemHangar = Cache.Instance.DirectEve.GetItemHangar();
+
+					if (Cache.Instance.ItemHangar == null)
+					{
+						if (Logging.DebugHangars) Logging.Log("OpenItemsHangar", "ItemsHangar was null", Logging.Teal);
+						return false;
+					}
+
+					if (Logging.DebugHangars) Logging.Log("OpenItemsHangar", "ItemsHangar exists", Logging.Teal);
+
+					// Is the items hangar open?
+					if (Cache.Instance.ItemHangar.Window == null)
+					{
+						Logging.Log(module, "Item Hangar: is closed", Logging.White);
+						return true;
+					}
+
+					if (!Cache.Instance.ItemHangar.Window.IsReady)
+					{
+						if (Logging.DebugHangars) Logging.Log("OpenItemsHangar", "ItemsHangar.window is not yet ready", Logging.Teal);
+						return false;
+					}
+
+					if (Cache.Instance.ItemHangar.Window.IsReady)
+					{
+						Cache.Instance.ItemHangar.Window.Close();
+						Statistics.LogWindowActionToWindowLog("Itemhangar", "Closing ItemHangar");
+						return false;
+					}
+				}
+				return false;
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("CloseItemsHangar", "Unable to complete CloseItemsHangar [" + exception + "]", Logging.Teal);
+				return false;
+			}
+		}
+
+		public bool ReadyItemsHangarAsLootHangar(string module)
+		{
+			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
+			{
+				return false;
+			}
+
+			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
+			{
+				return false;
+			}
+
+			try
+			{
+				if (Cache.Instance.InStation)
+				{
+					if (Logging.DebugItemHangar) Logging.Log("ReadyItemsHangarAsLootHangar", "We are in Station", Logging.Teal);
+					Cache.Instance.LootHangar = Cache.Instance.ItemHangar;
+					return true;
+				}
+
+				return false;
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("ReadyItemsHangarAsLootHangar", "Unable to complete ReadyItemsHangarAsLootHangar [" + exception + "]", Logging.Teal);
+				return false;
+			}
+		}
+
+		public bool ReadyItemsHangarAsAmmoHangar(string module)
+		{
+			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
+			{
+				if (Logging.DebugHangars) Logging.Log("ReadyItemsHangarAsAmmoHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
+				return false;
+			}
+
+			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
+			{
+				if (Logging.DebugHangars) Logging.Log("ReadyItemsHangarAsAmmoHangar", "if (DateTime.UtcNow < Cache.Instance.NextOpenHangarAction)", Logging.Teal);
+				return false;
+			}
+
+			try
+			{
+				if (Cache.Instance.InStation)
+				{
+					if (Logging.DebugHangars) Logging.Log("ReadyItemsHangarAsAmmoHangar", "We are in Station", Logging.Teal);
+					Cache.Instance.AmmoHangar = Cache.Instance.ItemHangar;
+					return true;
+				}
+
+				return false;
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("ReadyItemsHangarAsAmmoHangar", "unable to complete ReadyItemsHangarAsAmmoHangar [" + exception + "]", Logging.Teal);
+				return false;
+			}
+		}
+
+		public bool StackItemsHangarAsLootHangar(string module)
+		{
+			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
+			{
+				return false;
+			}
+
+			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
+			{
+				return false;
+			}
+
+			try
+			{
+				if (Logging.DebugItemHangar) Logging.Log("StackItemsHangarAsLootHangar", "public bool StackItemsHangarAsLootHangar(String module)", Logging.Teal);
+
+				if (Cache.Instance.InStation)
+				{
+					if (Logging.DebugHangars) Logging.Log("StackItemsHangarAsLootHangar", "if (Cache.Instance.InStation)", Logging.Teal);
+					if (Cache.Instance.LootHangar != null)
+					{
+						try
+						{
+							if (Cache.Instance.StackHangarAttempts > 0)
+							{
+								if (!WaitForLockedItems(Time.Instance.LastStackLootHangar)) return false;
+								return true;
+							}
+
+							if (Cache.Instance.StackHangarAttempts <= 0)
+							{
+								if (LootHangar.Items.Any() && LootHangar.Items.Count() > RandomNumber(600, 800))
+								{
+									Logging.Log(module, "Stacking Item Hangar (as LootHangar)", Logging.White);
+									Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(5);
+									Cache.Instance.LootHangar.StackAll();
+									Cache.Instance.StackHangarAttempts++;
+									Time.Instance.LastStackLootHangar = DateTime.UtcNow;
+									Time.Instance.LastStackItemHangar = DateTime.UtcNow;
+									return false;
+								}
+
+								return true;
+							}
+
+							Logging.Log(module, "Not Stacking LootHangar", Logging.White);
+							return true;
+						}
+						catch (Exception exception)
+						{
+							Logging.Log(module,"Stacking Item Hangar failed ["  + exception +  "]",Logging.Teal);
+							return true;
+						}
+					}
+
+					if (Logging.DebugHangars) Logging.Log("StackItemsHangarAsLootHangar", "if (!Cache.Instance.ReadyItemsHangarAsLootHangar(Cache.StackItemsHangar)) return false;", Logging.Teal);
+					if (!Cache.Instance.ReadyItemsHangarAsLootHangar("Cache.StackItemsHangar")) return false;
+					return false;
+				}
+
+				return false;
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("StackItemsHangarAsLootHangar", "Unable to complete StackItemsHangarAsLootHangar [" + exception + "]", Logging.Teal);
+				return true;
+			}
+		}
+
+		private static bool WaitForLockedItems(DateTime __lastAction)
+		{
+			if (Cache.Instance.DirectEve.GetLockedItems().Count != 0)
+			{
+				if (Math.Abs(DateTime.UtcNow.Subtract(__lastAction).TotalSeconds) > 15)
+				{
+					Logging.Log(_States.CurrentArmState.ToString(), "Moving Ammo timed out, clearing item locks", Logging.Orange);
+					Cache.Instance.DirectEve.UnlockItems();
+					return false;
+				}
+
+				if (Logging.DebugUnloadLoot) Logging.Log(_States.CurrentArmState.ToString(), "Waiting for Locks to clear. GetLockedItems().Count [" + Cache.Instance.DirectEve.GetLockedItems().Count + "]", Logging.Teal);
+				return false;
+			}
+
+			Cache.Instance.StackHangarAttempts = 0;
+			return true;
+		}
+
+		public bool StackItemsHangarAsAmmoHangar(string module)
+		{
+			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
+			{
+				if (Logging.DebugHangars) Logging.Log("StackItemsHangarAsAmmoHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
+				return false;
+			}
+
+			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
+			{
+				if (Logging.DebugHangars) Logging.Log("StackItemsHangarAsAmmoHangar", "if (DateTime.UtcNow < Cache.Instance.NextOpenHangarAction)", Logging.Teal);
+				return false;
+			}
+
+			try
+			{
+				if (Logging.DebugItemHangar) Logging.Log("StackItemsHangarAsAmmoHangar", "public bool StackItemsHangarAsAmmoHangar(String module)", Logging.Teal);
+
+				if (Cache.Instance.InStation)
+				{
+					if (Logging.DebugHangars) Logging.Log("StackItemsHangarAsAmmoHangar", "if (Cache.Instance.InStation)", Logging.Teal);
+					if (Cache.Instance.AmmoHangar != null)
+					{
+						try
+						{
+							if (Cache.Instance.StackHangarAttempts > 0)
+							{
+								if (!WaitForLockedItems(Time.Instance.LastStackAmmoHangar)) return false;
+								return true;
+							}
+
+							if (Cache.Instance.StackHangarAttempts <= 0)
+							{
+								if (AmmoHangar.Items.Any() && AmmoHangar.Items.Count() > RandomNumber(600, 800))
+								{
+									Logging.Log(module, "Stacking Item Hangar (as AmmoHangar)", Logging.White);
+									Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(5);
+									Cache.Instance.AmmoHangar.StackAll();
+									Cache.Instance.StackHangarAttempts++;
+									Time.Instance.LastStackAmmoHangar = DateTime.UtcNow;
+									Time.Instance.LastStackItemHangar = DateTime.UtcNow;
+									return true;
+								}
+
+								return true;
+							}
+
+							Logging.Log(module, "Not Stacking AmmoHangar[" + "ItemHangar" + "]", Logging.White);
+							return true;
+						}
+						catch (Exception exception)
+						{
+							Logging.Log(module, "Stacking Item Hangar failed [" + exception + "]", Logging.Teal);
+							return true;
+						}
+					}
+
+					if (Logging.DebugHangars) Logging.Log("StackItemsHangarAsAmmoHangar", "if (!Cache.Instance.ReadyItemsHangarAsAmmoHangar(Cache.StackItemsHangar)) return false;", Logging.Teal);
+					if (!Cache.Instance.ReadyItemsHangarAsAmmoHangar("Cache.StackItemsHangar")) return false;
+					return false;
+				}
+
+				return false;
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("StackItemsHangarAsAmmoHangar", "Unable to complete StackItemsHangarAsAmmoHangar [" + exception + "]", Logging.Teal);
+				return true;
+			}
+		}
 		
 		public bool StackCorpLootHangar(string module)
 		{
@@ -133,8 +524,7 @@ namespace Questor.Modules.Caching
 				return false;
 			}
 		}
-
-		private DirectContainer _shipHangar;
+		
 		public DirectContainer ShipHangar
 		{
 			get
@@ -453,8 +843,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		private DirectContainer _lootContainer;
-
 		public DirectContainer LootContainer
 		{
 			get
@@ -682,57 +1070,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		public bool ListInvTree(string module)
-		{
-			try
-			{
-				if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(10))
-				{
-					if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
-					return false;
-				}
-
-				if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-				{
-					if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: if (DateTime.UtcNow < NextOpenHangarAction)", Logging.Teal);
-					return false;
-				}
-
-				if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: about to: if (!Cache.Instance.OpenInventoryWindow", Logging.Teal);
-
-				if (!Cache.Instance.OpenInventoryWindow(module)) return false;
-
-				Cache.Instance.PrimaryInventoryWindow = (DirectContainerWindow)Cache.Instance.Windows.FirstOrDefault(w => w.Type.Contains("form.Inventory") && w.Name.Contains("Inventory"));
-
-				if (Cache.Instance.PrimaryInventoryWindow != null && Cache.Instance.PrimaryInventoryWindow.IsReady)
-				{
-					List<long> idsInInvTreeView = Cache.Instance.PrimaryInventoryWindow.GetIdsFromTree(false);
-					if (Logging.DebugHangars) Logging.Log("OpenAndSelectInvItem", "Debug: IDs Found in the Inv Tree [" + idsInInvTreeView.Count() + "]", Logging.Teal);
-
-					if (Cache.Instance.PrimaryInventoryWindow.ExpandCorpHangarView())
-					{
-						Statistics.LogWindowActionToWindowLog("Corporate Hangar", "ExpandCorpHangar executed");
-						Logging.Log(module, "ExpandCorpHangar executed", Logging.Teal);
-						Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(4);
-						return false;
-					}
-
-					foreach (Int64 itemInTree in idsInInvTreeView)
-					{
-						Logging.Log(module, "ID: " + itemInTree, Logging.Red);
-					}
-					return false;
-				}
-
-				return false;
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("ListInvTree", "Exception [" + ex + "]", Logging.Debug);
-				return false;
-			}
-		}
-
 		public bool StackLootContainer(string module)
 		{
 			try
@@ -830,8 +1167,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 		
-		public DirectContainer _lootHangar;
-
 		public DirectContainer LootHangar
 		{
 			get
@@ -913,8 +1248,6 @@ namespace Questor.Modules.Caching
 				_lootHangar = value;
 			}
 		}
-
-		public DirectContainer HighTierLootContainer { get; set; }
 
 		public bool CloseLootHangar(string module)
 		{
@@ -1091,8 +1424,6 @@ namespace Questor.Modules.Caching
 
 			return false;
 		}
-
-		public DirectContainer _ammoHangar;
 
 		public DirectContainer AmmoHangar
 		{

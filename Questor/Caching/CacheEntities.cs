@@ -35,6 +35,115 @@ namespace Questor.Modules.Caching
 	{
 		
 		
+				public IEnumerable<EntityCache> EntitiesByName(string nameToSearchFor, IEnumerable<EntityCache> EntitiesToLookThrough)
+		{
+			return EntitiesToLookThrough.Where(e => e.Name.ToLower() == nameToSearchFor.ToLower()).ToList();
+		}
+
+		public EntityCache EntityByName(string name)
+		{
+			return Cache.Instance.Entities.FirstOrDefault(e => System.String.Compare(e.Name, name, System.StringComparison.OrdinalIgnoreCase) == 0);
+		}
+
+		public IEnumerable<EntityCache> EntitiesByPartialName(string nameToSearchFor)
+		{
+			try
+			{
+				if (Cache.Instance.Entities != null && Cache.Instance.Entities.Any())
+				{
+					IEnumerable<EntityCache> _entitiesByPartialName = Cache.Instance.Entities.Where(e => e.Name.Contains(nameToSearchFor)).ToList();
+					if (!_entitiesByPartialName.Any())
+					{
+						_entitiesByPartialName = Cache.Instance.Entities.Where(e => e.Name == nameToSearchFor).ToList();
+					}
+					
+					//if we have no entities by that name return null;
+					if (!_entitiesByPartialName.Any())
+					{
+						_entitiesByPartialName = null;
+					}
+
+					return _entitiesByPartialName;
+				}
+
+				return null;
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("Cache.allBookmarks", "Exception [" + exception + "]", Logging.Debug);
+				return null;
+			}
+		}
+
+		public IEnumerable<EntityCache> EntitiesThatContainTheName(string label)
+		{
+			try
+			{
+				return Cache.Instance.Entities.Where(e => !string.IsNullOrEmpty(e.Name) && e.Name.ToLower().Contains(label.ToLower())).ToList();
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("Cache.EntitiesThatContainTheName", "Exception [" + exception + "]", Logging.Debug);
+				return null;
+			}
+		}
+
+		public EntityCache EntityById(long id)
+		{
+			try
+			{
+				if (_entitiesById.ContainsKey(id))
+				{
+					return _entitiesById[id];
+				}
+
+				EntityCache entity = Cache.Instance.EntitiesOnGrid.FirstOrDefault(e => e.Id == id);
+				_entitiesById[id] = entity;
+				return entity;
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("Cache.EntityById", "Exception [" + exception + "]", Logging.Debug);
+				return null;
+			}
+		}
+
+		public double DistanceFromMe(double x, double y, double z)
+		{
+			try
+			{
+
+				if (Cache.Instance.ActiveShip.Entity == null)
+				{
+					return double.MaxValue;
+				}
+
+				double curX = Cache.Instance.ActiveShip.Entity.X;
+				double curY = Cache.Instance.ActiveShip.Entity.Y;
+				double curZ = Cache.Instance.ActiveShip.Entity.Z;
+
+				return Math.Round(Math.Sqrt((curX - x) * (curX - x) + (curY - y) * (curY - y) + (curZ - z) * (curZ - z)), 2);
+			}
+			catch (Exception ex)
+			{
+				Logging.Log("DistanceFromMe", "Exception [" + ex + "]", Logging.Debug);
+				return 0;
+			}
+		}
+		
+		public Func<EntityCache, int> OrderByLowestHealth()
+		{
+			try
+			{
+				return t => (int)(t.ShieldPct + t.ArmorPct + t.StructurePct);
+			}
+			catch (Exception ex)
+			{
+				Logging.Log("OrderByLowestHealth", "Exception [" + ex + "]", Logging.Debug);
+				return null;
+			}
+		}
+		
 		public int MaxLockedTargets
 		{
 			get
