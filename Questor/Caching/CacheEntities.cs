@@ -34,8 +34,41 @@ namespace Questor.Modules.Caching
 	public partial class Cache
 	{
 		
+		public Dictionary<long, string> EntityNames = new Dictionary<long, string>();
+		public Dictionary<long, int> EntityTypeID = new Dictionary<long, int>();
+		public Dictionary<long, int> EntityGroupID = new Dictionary<long, int>();
+		public Dictionary<long, long> EntityBounty = new Dictionary<long, long>();
+		public Dictionary<long, bool> EntityIsFrigate = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsNPCFrigate = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsCruiser = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsNPCCruiser = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsBattleCruiser = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsNPCBattleCruiser = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsBattleShip = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsNPCBattleShip = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsHighValueTarget = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsLowValueTarget = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsLargeCollidable = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsMiscJunk = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsBadIdea = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsFactionWarfareNPC = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsNPCByGroupID = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsEntutyIShouldLeaveAlone = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsSentry = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityHaveLootRights = new Dictionary<long, bool>();
+		public Dictionary<long, bool> EntityIsStargate = new Dictionary<long, bool>();
+		private List<EntityCache> _myAmmoInSpace;
+		private IEnumerable<EntityCache> _wrecks;
+		public IEnumerable<EntityCache> _TotalTargetsandTargeting;
+		private List<EntityCache> _entitiesOnGrid;
+		public IEnumerable<DirectSolarSystem> _solarSystems;
+		private List<EntityCache> _entities;
+		private List<EntityCache> _chargeEntities;
+		private List<EntityCache> _entitiesNotSelf;
+		private IEnumerable<EntityCache> _entitiesActivelyBeingLocked;
+		private EntityCache _myShipEntity;
 		
-				public IEnumerable<EntityCache> EntitiesByName(string nameToSearchFor, IEnumerable<EntityCache> EntitiesToLookThrough)
+		public IEnumerable<EntityCache> EntitiesByName(string nameToSearchFor, IEnumerable<EntityCache> EntitiesToLookThrough)
 		{
 			return EntitiesToLookThrough.Where(e => e.Name.ToLower() == nameToSearchFor.ToLower()).ToList();
 		}
@@ -166,7 +199,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		private List<EntityCache> _myAmmoInSpace;
 		public IEnumerable<EntityCache> myAmmoInSpace
 		{
 			get
@@ -221,8 +253,6 @@ namespace Questor.Modules.Caching
 				                                                                         (e.Name != "Abandoned Container")).ToList());
 			}
 		}
-
-		private IEnumerable<EntityCache> _wrecks;
 		
 		public IEnumerable<EntityCache> Wrecks
 		{
@@ -242,7 +272,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		
 		public IEnumerable<EntityCache> UnlootedWrecksAndSecureCans
 		{
 			get
@@ -254,8 +283,6 @@ namespace Questor.Modules.Caching
 				                                        ToList());
 			}
 		}
-
-		public IEnumerable<EntityCache> _TotalTargetsandTargeting;
 
 		public IEnumerable<EntityCache> TotalTargetsandTargeting
 		{
@@ -343,9 +370,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-
-		private List<EntityCache> _entitiesOnGrid;
-
 		public IEnumerable<EntityCache> EntitiesOnGrid
 		{
 			get
@@ -365,9 +389,6 @@ namespace Questor.Modules.Caching
 				return new List<EntityCache>();
 			}
 		}
-
-		
-		private List<EntityCache> _entities;
 
 		public IEnumerable<EntityCache> Entities
 		{
@@ -389,9 +410,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-
-		private List<EntityCache> _chargeEntities;
-
 		public IEnumerable<EntityCache> ChargeEntities
 		{
 			get
@@ -412,31 +430,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		public Dictionary<long, string> EntityNames = new Dictionary<long, string>();
-		public Dictionary<long, int> EntityTypeID = new Dictionary<long, int>();
-		public Dictionary<long, int> EntityGroupID = new Dictionary<long, int>();
-		public Dictionary<long, long> EntityBounty = new Dictionary<long, long>();
-		public Dictionary<long, bool> EntityIsFrigate = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsNPCFrigate = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsCruiser = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsNPCCruiser = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsBattleCruiser = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsNPCBattleCruiser = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsBattleShip = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsNPCBattleShip = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsHighValueTarget = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsLowValueTarget = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsLargeCollidable = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsMiscJunk = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsBadIdea = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsFactionWarfareNPC = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsNPCByGroupID = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsEntutyIShouldLeaveAlone = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsSentry = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityHaveLootRights = new Dictionary<long, bool>();
-		public Dictionary<long, bool> EntityIsStargate = new Dictionary<long, bool>();
-
-		private IEnumerable<EntityCache> _entitiesActivelyBeingLocked;
 		public IEnumerable<EntityCache> EntitiesActivelyBeingLocked
 		{
 			get
@@ -466,8 +459,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		private List<EntityCache> _entitiesNotSelf;
-
 		public IEnumerable<EntityCache> EntitiesNotSelf
 		{
 			get
@@ -487,7 +478,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		private EntityCache _myShipEntity;
 		public EntityCache MyShipEntity
 		{
 			get
@@ -795,8 +785,6 @@ namespace Questor.Modules.Caching
 			return station;
 		}
 
-
-		public IEnumerable<DirectSolarSystem> _solarSystems;
 		public IEnumerable<DirectSolarSystem> SolarSystems
 		{
 			get
@@ -1042,7 +1030,6 @@ namespace Questor.Modules.Caching
 				_approaching = value;
 			}
 		}
-		
 		
 		public bool GateInGrid()
 		{
