@@ -525,6 +525,7 @@ namespace Questor.Modules.Caching
 									if (Cache.Instance.Entities.Any())
 									{
 										Time.Instance.LastInSpace = DateTime.UtcNow;
+                                        WCFClient.Instance.GetPipeProxy.SetIsDocked(this.CharName, false);
 										return true;
 									}
 								}
@@ -574,7 +575,8 @@ namespace Questor.Modules.Caching
 						if (!Cache.Instance.Entities.Any())
 						{
 							Time.Instance.LastInStation = DateTime.UtcNow;
-							return true;
+                            WCFClient.Instance.GetPipeProxy.SetIsDocked(this.CharName, true);
+                            return true;
 						}
 					}
 
