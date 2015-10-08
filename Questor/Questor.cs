@@ -529,7 +529,7 @@ namespace Questor
 					//Logging.Log("Questor.ProcessState", "if(GetNowAddDelay(8,10) > _lastSessionNotReady)", Logging.White);
 					return;
 				}
-			
+				
 				
 				if(!Cache.Instance.DirectEve.Session.IsReady && !Cache.Instance.DirectEve.Login.AtLogin && !Cache.Instance.DirectEve.Login.AtCharacterSelection) {
 					_lastSessionNotReady = GetNowAddDelay(7,8);
@@ -964,6 +964,9 @@ namespace Questor
 						if (!Combat.ReloadAll(Cache.Instance.EntitiesNotSelf.OrderBy(t => t.Distance).FirstOrDefault(t => t.Distance < (double)Distances.OnGridWithMe))) return;
 						_States.CurrentQuestorState = QuestorState.Start;
 						break;
+						
+						
+
 
 					case QuestorState.Start:
 						switch (Settings.Instance.CharacterMode.ToLower())
@@ -1087,6 +1090,40 @@ namespace Questor
 						//
 						//_backgroundbehavior.ProcessState();
 						//break;
+						
+						
+					case QuestorState.DebugDirectionalScanner:
+						
+						OpenDirectionalScanner();
+						
+						if(!IsDirectionalScannerReady())
+						{
+							return;
+						}
+						var w = DirectScannerWindow;
+						
+						if(DirectScannerWindow != null) {
+							
+							Logging.Log("DebugBehavior.Traveler", "if(DirectScannerWindow != null)", Logging.White);
+							
+							Logging.Log("DebugBehavior.Traveler", " window.UserOverViewPreset [" + w.UserOverViewPreset + "]", Logging.White);
+							Logging.Log("DebugBehavior.Traveler", " window.Angle [" + w.Angle + "]", Logging.White);
+							Logging.Log("DebugBehavior.Traveler", " window.Range [" + w.Range + "]", Logging.White);
+
+							
+						}
+						
+						SetUseOverviewPresetFalse();
+						ScanRangeTest();
+						ScanAngleTest();
+						
+						
+						foreach(var ent in w.DirectionalScanResults) {
+							Logging.Log("DebugBehavior.Traveler", " ent.typeId [" + ent.TypeId + "]", Logging.White);
+						}
+						
+						break;
+						
 				}
 			}
 			catch (Exception ex)
@@ -1095,6 +1132,91 @@ namespace Questor
 				return;
 			}
 		}
+		
+		
+		#region Scanner Functions
+
+		private void OpenDirectionalScanner()
+		{
+			
+			DirectDirectionalScannerWindow scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
+			if (scanner == null)
+			{
+				Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenDirectionalScanner);
+			}
+		}
+
+		private bool IsDirectionalScannerReady()
+		{
+			DirectDirectionalScannerWindow scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
+			if (scanner != null && scanner.IsReady)
+			{
+				Logging.Log("IsScannerReady", "scanner: [" + scanner + "]", Logging.Debug);
+				return true;
+			}
+			else
+			{
+				Logging.Log("IsScannerReady", "scanner is not yet ready", Logging.Debug);
+				return false;
+			}
+		}
+		
+		private DirectDirectionalScannerWindow DirectScannerWindow {
+			get {
+				return Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
+			}
+		}
+		
+		private void SetUseOverviewPresetFalse() {
+			
+			DirectDirectionalScannerWindow scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
+			if (scanner != null && scanner.IsReady && scanner.UserOverViewPreset)
+			{
+				scanner.UserOverViewPreset = false;
+			}
+		}
+
+		private void ScanRangeTest()
+		{
+			DirectDirectionalScannerWindow scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
+			if (scanner != null && scanner.IsReady && scanner.Range != scanner.MAX_SCANNER_RANGE)
+			{
+				scanner.Range = scanner.MAX_SCANNER_RANGE;
+			}
+		}
+		
+		private void ScanAngleTest()
+		{
+			DirectDirectionalScannerWindow scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
+			if (scanner != null && scanner.IsReady && scanner.Angle != 360)
+			{
+				scanner.Angle = 360;
+			}
+		}
+
+
+		private void DumpDirectionalScanResults()
+		{
+			
+			var scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
+			if (scanner != null && scanner.IsReady)
+			{
+				foreach (DirectDirectionalScanResult result in scanner.DirectionalScanResults)
+				{
+					var entity = result.Entity;
+					if (entity != null && entity.IsValid)
+					{
+						Logging.Log("DumpScanResults", "SR: name [" + result.Name + "] TypeName [" + result.TypeName + "] Distance [" + Math.Round(entity.Distance / 1000, 2) + "k]", Logging.Debug);
+					}
+					else
+					{
+						Logging.Log("DumpScanResults", "SR: name [" + result.Name + "] TypeName [" + result.TypeName + "]", Logging.Debug);
+					}
+				}
+			}
+		}
+
+		#endregion Old Scanner Functions
 
 		#region IDisposable implementation
 		public void Dispose()

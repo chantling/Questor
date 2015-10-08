@@ -9,6 +9,7 @@
         Arm,
         LocalWatch,
         DelayedGotoBase,
+        DirectionalScannerBehavior,
         GotoBase,
         UnloadLoot,
         GotoNearestStation,

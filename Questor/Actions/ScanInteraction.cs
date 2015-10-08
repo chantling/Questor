@@ -15,7 +15,7 @@ namespace Questor.Modules.Actions
 
         public void ProcessState()
         {
-            DirectScannerWindow scannerWindow = Cache.Instance.Windows.OfType<DirectScannerWindow>().FirstOrDefault();
+            DirectDirectionalScannerWindow scannerWindow = Cache.Instance.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
 
             switch (_States.CurrentScanInteractionState)
             {
