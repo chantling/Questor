@@ -246,62 +246,6 @@ namespace Questor
 				return false;
 
 			Time.Instance.NextTimeCheckAction = DateTime.UtcNow.AddSeconds(90);
-//			Logging.Log("Questor", "Checking: Current time [" + DateTime.Now.ToString(CultureInfo.InvariantCulture) +
-//			            "] StopTimeSpecified [" + Time.Instance.StopTimeSpecified +
-//			            "] StopTime [ " + Time.Instance.StopTime +
-//			            "] ManualStopTime = " + Time.Instance.ManualStopTime, Logging.White);
-//
-//			if (DateTime.UtcNow.Subtract(Time.Instance.QuestorStarted_DateTime).TotalMinutes > Time.Instance.MaxRuntime)
-//			{
-//				// quit questor
-//				Logging.Log("Questor", "Maximum runtime exceeded.  Quitting...", Logging.White);
-//				Cleanup.ReasonToStopQuestor = "Maximum runtime specified and reached.";
-//				Settings.Instance.AutoStart = false;
-//				Cache.Instance.CloseQuestorCMDLogoff = false;
-//				Cache.Instance.CloseQuestorCMDExitGame = true;
-//				Cleanup.SessionState = "Exiting";
-//				Cleanup.BeginClosingQuestor();
-//				return true;
-//			}
-//
-//			if (Time.Instance.StopTimeSpecified)
-//			{
-//				if (DateTime.Now >= Time.Instance.StopTime)
-//				{
-//					Logging.Log("Questor", "Time to stop. StopTimeSpecified and reached. Quitting game.", Logging.White);
-//					Cleanup.ReasonToStopQuestor = "StopTimeSpecified and reached.";
-//					Settings.Instance.AutoStart = false;
-//					Cache.Instance.CloseQuestorCMDLogoff = false;
-//					Cache.Instance.CloseQuestorCMDExitGame = true;
-//					Cleanup.SessionState = "Exiting";
-//					Cleanup.BeginClosingQuestor();
-//					return true;
-//				}
-//			}
-//
-//			if (DateTime.Now >= Time.Instance.ManualRestartTime)
-//			{
-//				Logging.Log("Questor", "Time to stop. ManualRestartTime reached. Quitting game.", Logging.White);
-//				Cleanup.ReasonToStopQuestor = "ManualRestartTime reached.";
-//				Settings.Instance.AutoStart = true;
-//				Cache.Instance.CloseQuestorCMDLogoff = false;
-//				Cache.Instance.CloseQuestorCMDExitGame = true;
-//				Cleanup.SessionState = "Exiting";
-//				Cleanup.BeginClosingQuestor();
-//				return true;
-//			}
-//
-//			if (DateTime.Now >= Time.Instance.ManualStopTime)
-//			{
-//				Logging.Log("Questor", "Time to stop. ManualStopTime reached. Quitting game.", Logging.White);
-//				Cleanup.ReasonToStopQuestor = "ManualStopTime reached.";
-//				Settings.Instance.AutoStart = false;
-//				Cache.Instance.CloseQuestorCMDLogoff = false;
-//				Cache.Instance.CloseQuestorCMDExitGame = true;
-//				Cleanup.SessionState = "Exiting";
-//				Cleanup.BeginClosingQuestor();
-//				return true;
-//			}
 
 			if (Cache.Instance.ExitWhenIdle)
 			{
@@ -314,18 +258,7 @@ namespace Questor
 				Cleanup.BeginClosingQuestor();
 				return true;
 			}
-
-//			if (Statistics.MissionsThisSession > MissionSettings.StopSessionAfterMissionNumber)
-//			{
-//				Logging.Log("Questor", "MissionsThisSession [" + Statistics.MissionsThisSession + "] is greater than StopSessionAfterMissionNumber [" + MissionSettings.StopSessionAfterMissionNumber + "].  Quitting game.", Logging.White);
-//				Cleanup.ReasonToStopQuestor = "MissionsThisSession > StopSessionAfterMissionNumber";
-//				Settings.Instance.AutoStart = false;
-//				Cache.Instance.CloseQuestorCMDLogoff = false;
-//				Cache.Instance.CloseQuestorCMDExitGame = true;
-//				Cleanup.SessionState = "Exiting";
-//				Cleanup.BeginClosingQuestor();
-//				return true;
-//			}
+			
 			return false;
 		}
 
@@ -1100,6 +1033,7 @@ namespace Questor
 						{
 							return;
 						}
+						
 						var w = DirectScannerWindow;
 						
 						if(DirectScannerWindow != null) {
