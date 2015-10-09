@@ -161,6 +161,7 @@
     <Compile Include="States\CombatMissionCtrlState.cs" />
     <Compile Include="States\CombatMissionsBehaviorState.cs" />
     <Compile Include="States\CombatState.cs" />
+    <Compile Include="States\CourierMissionCtrlState.cs" />
     <Compile Include="States\DebugBehaviorState.cs" />
     <Compile Include="States\DebugHangarsBehaviorState.cs" />
     <Compile Include="States\DebugModuleState.cs" />

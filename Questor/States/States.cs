@@ -38,6 +38,8 @@ namespace Questor.Modules.States
 
         public static DebugHangarsBehaviorState CurrentDebugHangarBehaviorState { get; set; }
 
+        public static CourierMissionCtrlState CurrentCourierMissionCtrlState { get; set; }
+
         public static CombatMissionCtrlState CurrentCombatMissionCtrlState { get; set; }
 
         //public static ActionState CurrentActionState { get; set; }
