@@ -690,17 +690,17 @@ namespace Questor
 
 				}
 
-				if (Settings.Instance.WindowXPosition.HasValue)
-				{
-					Left = Settings.Instance.WindowXPosition.Value;
-					Settings.Instance.WindowXPosition = null;
-				}
-
-				if (Settings.Instance.WindowYPosition.HasValue)
-				{
-					Top = Settings.Instance.WindowYPosition.Value;
-					Settings.Instance.WindowYPosition = null;
-				}
+//				if (Settings.Instance.WindowXPosition.HasValue)
+//				{
+//					Left = Settings.Instance.WindowXPosition.Value;
+//					Settings.Instance.WindowXPosition = null;
+//				}
+//
+//				if (Settings.Instance.WindowYPosition.HasValue)
+//				{
+//					Top = Settings.Instance.WindowYPosition.Value;
+//					Settings.Instance.WindowYPosition = null;
+//				}
 
 				if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.ExecuteMission && Cache.Instance.CurrentPocketAction != null)
 				{
