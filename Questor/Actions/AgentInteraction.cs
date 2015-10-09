@@ -614,6 +614,9 @@ namespace Questor.Modules.Actions
 						MissionSettings.SetmissionXmlPath(Logging.FilterPath(MissionSettings.MissionName));
 
 						MissionSettings.AmmoTypesToLoad = new Dictionary<Ammo, DateTime>();
+						
+						MissionSettings.ClearMissionSpecificSettings(); // we want to clear this every time, not only if the xml exists. else we run into troubles with faction damagetype selection
+						
 						if (File.Exists(MissionSettings.MissionXmlPath))
 						{
 							MissionSettings.LoadMissionXmlData();

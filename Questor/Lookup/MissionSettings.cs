@@ -663,7 +663,7 @@ namespace Questor.Modules.Lookup
 		{
 			Logging.Log("AgentInteraction", "Loading mission xml [" + MissionName + "] from [" + MissionSettings.MissionXmlPath + "]", Logging.Yellow);
 
-			ClearMissionSpecificSettings();
+			
 
 			//FactionDamageType,
 			//MissionDamageType,
@@ -804,8 +804,11 @@ namespace Questor.Modules.Lookup
 				
 				if (MissionDamageType != null)
 				{
+					Logging.Log("damageTypeToSearchFor","if (MissionDamageType != null)",Logging.White);
+					
 					if (Combat.Ammo.Any(a => a.DamageType == MissionSettings.MissionDamageType))
 					{
+						
 						foreach (KeyValuePair<DamageType, DateTime> missionDamageType in DamageTypesForThisMission)
 						{
 							Logging.Log("LoadCorrectFactionOrMissionAmmo", "DamageType [" + missionDamageType + "] is one of the damagetypes we should load", Logging.White);
@@ -813,7 +816,7 @@ namespace Questor.Modules.Lookup
 							foreach (Ammo specificAmmoType in Combat.Ammo.Where(a => a.DamageType == damageTypeToSearchFor.Key).Select(a => a.Clone()))
 							{
 								Logging.Log("LoadCorrectFactionOrMissionAmmo", "Adding [" + specificAmmoType + "] to the list of AmmoTypes to load. It is defined as [" + missionDamageType + "] Quantity [" + specificAmmoType.Quantity + "]", Logging.White);
-								MissionSettings.AmmoTypesToLoad.Clear();
+								MissionSettings.AmmoTypesToLoad.Clear(); // this is probaby bad if we want to load more than one ammo 
 								MissionSettings.AmmoTypesToLoad.AddOrUpdate(specificAmmoType, DateTime.UtcNow);
 								MissionSettings.loadedAmmo = true;
 							}
@@ -823,8 +826,13 @@ namespace Questor.Modules.Lookup
 
 				if (FactionDamageType != null && !MissionSettings.AmmoTypesToLoad.Any())
 				{
-					if (Combat.Ammo.Any(a => a.DamageType == MissionSettings.FactionDamageType))
+					
+					Logging.Log("LoadCorrectFactionOrMissionAmmo","if (FactionDamageType != null && !MissionSettings.AmmoTypesToLoad.Any())",Logging.White);
+					
+					
+					if (Combat.Ammo.Any(a => a.DamageType == FactionDamageType))
 					{
+						
 						Logging.Log("LoadCorrectFactionOrMissionAmmo", "DamageType [" + FactionDamageType + "] is one of the damagetypes we should load", Logging.White);
 						foreach (Ammo specificAmmoType in Combat.Ammo.Where(a => a.DamageType == FactionDamageType).Select(a => a.Clone()))
 						{	
