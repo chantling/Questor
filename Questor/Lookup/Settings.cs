@@ -1025,7 +1025,7 @@ namespace Questor.Modules.Lookup
 				Statistics.PocketStatistics = (bool?)CharacterSettingsXml.Element("PocketStatistics") ?? (bool?)CommonSettingsXml.Element("PocketStatistics") ?? true;
 				Statistics.PocketStatsUseIndividualFilesPerPocket = (bool?)CharacterSettingsXml.Element("PocketStatsUseIndividualFilesPerPocket") ?? (bool?)CommonSettingsXml.Element("PocketStatsUseIndividualFilesPerPocket") ?? true;
 				Statistics.PocketObjectStatisticsLog = (bool?)CharacterSettingsXml.Element("PocketObjectStatisticsLog") ?? (bool?)CommonSettingsXml.Element("PocketObjectStatisticsLog") ?? true;
-				Statistics.VolleyStatsLog = (bool?)CharacterSettingsXml.Element("VolleyStatsLog") ?? (bool?)CommonSettingsXml.Element("VolleyStatsLog") ?? true;
+				//Statistics.VolleyStatsLog = (bool?)CharacterSettingsXml.Element("VolleyStatsLog") ?? (bool?)CommonSettingsXml.Element("VolleyStatsLog") ?? true;
 				Statistics.WindowStatsLog = (bool?)CharacterSettingsXml.Element("WindowStatsLog") ?? (bool?)CommonSettingsXml.Element("WindowStatsLog") ?? true;
 
 				//
@@ -1629,8 +1629,7 @@ namespace Questor.Modules.Lookup
 			Statistics.SessionsLogFile = System.IO.Path.Combine(Statistics.SessionsLogPath, Logging.characterNameForLogs + ".Sessions.log");
 			Statistics.DroneStatsLogPath = Logging.Logpath;
 			Statistics.DroneStatslogFile = System.IO.Path.Combine(Statistics.DroneStatsLogPath, Logging.characterNameForLogs + ".DroneStats.log");
-			Statistics.VolleyStatsLogPath = System.IO.Path.Combine(Logging.Logpath, "VolleyStats\\");
-			Statistics.VolleyStatslogFile = System.IO.Path.Combine(Statistics.VolleyStatsLogPath, Logging.characterNameForLogs + ".VolleyStats-DayOfYear[" + DateTime.UtcNow.DayOfYear + "].log");
+			
 			Statistics.WindowStatsLogPath = System.IO.Path.Combine(Logging.Logpath, "WindowStats\\");
 			Statistics.WindowStatslogFile = System.IO.Path.Combine(Statistics.WindowStatsLogPath, Logging.characterNameForLogs + ".WindowStats-DayOfYear[" + DateTime.UtcNow.DayOfYear + "].log");
 			Statistics.WreckLootStatisticsPath = Logging.Logpath;
@@ -1663,7 +1662,7 @@ namespace Questor.Modules.Lookup
 				Directory.CreateDirectory(Statistics.MissionDungeonIdLogPath);
 				Directory.CreateDirectory(Statistics.PocketStatisticsPath);
 				Directory.CreateDirectory(Statistics.PocketObjectStatisticsPath);
-				Directory.CreateDirectory(Statistics.VolleyStatsLogPath);
+				
 				Directory.CreateDirectory(Statistics.WindowStatsLogPath);
 			}
 			catch (Exception exception)
