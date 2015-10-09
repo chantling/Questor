@@ -95,6 +95,7 @@
     <Compile Include="Actions\Arm.cs" />
     <Compile Include="Actions\BookmarkDestination.cs" />
     <Compile Include="Actions\Buy.cs" />
+    <Compile Include="Actions\BuyAmmo.cs" />
     <Compile Include="Actions\DebugModule.cs" />
     <Compile Include="Actions\Drop.cs" />
     <Compile Include="Actions\Fitting.cs" />

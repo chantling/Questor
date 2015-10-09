@@ -96,103 +96,103 @@ namespace Questor
 
 //				if (Settings.Instance.CharacterMode != null) {
 				
-					//if (Logging.DebugUI) Logging.Log("SkillTrainerUI", "PopulateStateComboBoxes", Logging.White);
-					//SkillTrainerStateComboBox.Items.Clear();
-					//foreach (string text in Enum.GetNames(typeof(SkillTrainerState)))
-					//{
-					//    SkillTrainerStateComboBox.Items.Add(text);
-					//}
+				//if (Logging.DebugUI) Logging.Log("SkillTrainerUI", "PopulateStateComboBoxes", Logging.White);
+				//SkillTrainerStateComboBox.Items.Clear();
+				//foreach (string text in Enum.GetNames(typeof(SkillTrainerState)))
+				//{
+				//    SkillTrainerStateComboBox.Items.Add(text);
+				//}
 
 
-					//
-					// populate combo boxes with the various states that are possible
-					//
-					// ComboxBoxes on main windows (at top)
-					//
-					DamageTypeComboBox.Items.Clear();
-					DamageTypeComboBox.Items.Add("Auto");
-					foreach (string text in Enum.GetNames(typeof(DamageType)))
-					{
-						DamageTypeComboBox.Items.Add(text);
-					}
+				//
+				// populate combo boxes with the various states that are possible
+				//
+				// ComboxBoxes on main windows (at top)
+				//
+				DamageTypeComboBox.Items.Clear();
+				DamageTypeComboBox.Items.Add("Auto");
+				foreach (string text in Enum.GetNames(typeof(DamageType)))
+				{
+					DamageTypeComboBox.Items.Add(text);
+				}
 
-					//
-					// middle column
-					//
-					PanicStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(PanicState)))
-					{
-						PanicStateComboBox.Items.Add(text);
-					}
+				//
+				// middle column
+				//
+				PanicStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(PanicState)))
+				{
+					PanicStateComboBox.Items.Add(text);
+				}
 
-					CombatStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(CombatState)))
-					{
-						CombatStateComboBox.Items.Add(text);
-					}
+				CombatStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(CombatState)))
+				{
+					CombatStateComboBox.Items.Add(text);
+				}
 
-					DronesStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(DroneState)))
-					{
-						DronesStateComboBox.Items.Add(text);
-					}
+				DronesStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(DroneState)))
+				{
+					DronesStateComboBox.Items.Add(text);
+				}
 
-					CleanupStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(CleanupState)))
-					{
-						CleanupStateComboBox.Items.Add(text);
-					}
+				CleanupStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(CleanupState)))
+				{
+					CleanupStateComboBox.Items.Add(text);
+				}
 
-					LocalWatchStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(LocalWatchState)))
-					{
-						LocalWatchStateComboBox.Items.Add(text);
-					}
+				LocalWatchStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(LocalWatchState)))
+				{
+					LocalWatchStateComboBox.Items.Add(text);
+				}
 
-					SalvageStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(SalvageState)))
-					{
-						SalvageStateComboBox.Items.Add(text);
-					}
+				SalvageStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(SalvageState)))
+				{
+					SalvageStateComboBox.Items.Add(text);
+				}
 
-					//
-					// right column
-					//
-					CombatMissionCtrlStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(CombatMissionCtrlState)))
-					{
-						CombatMissionCtrlStateComboBox.Items.Add(text);
-					}
+				//
+				// right column
+				//
+				CombatMissionCtrlStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(CombatMissionCtrlState)))
+				{
+					CombatMissionCtrlStateComboBox.Items.Add(text);
+				}
 
-					StorylineStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(StorylineState)))
-					{
-						StorylineStateComboBox.Items.Add(text);
-					}
+				StorylineStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(StorylineState)))
+				{
+					StorylineStateComboBox.Items.Add(text);
+				}
 
-					ArmStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(ArmState)))
-					{
-						ArmStateComboBox.Items.Add(text);
-					}
+				ArmStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(ArmState)))
+				{
+					ArmStateComboBox.Items.Add(text);
+				}
 
-					UnloadStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(UnloadLootState)))
-					{
-						UnloadStateComboBox.Items.Add(text);
-					}
+				UnloadStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(UnloadLootState)))
+				{
+					UnloadStateComboBox.Items.Add(text);
+				}
 
-					TravelerStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(TravelerState)))
-					{
-						TravelerStateComboBox.Items.Add(text);
-					}
+				TravelerStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(TravelerState)))
+				{
+					TravelerStateComboBox.Items.Add(text);
+				}
 
-					AgentInteractionStateComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(AgentInteractionState)))
-					{
-						AgentInteractionStateComboBox.Items.Add(text);
-					}
+				AgentInteractionStateComboBox.Items.Clear();
+				foreach (string text in Enum.GetNames(typeof(AgentInteractionState)))
+				{
+					AgentInteractionStateComboBox.Items.Add(text);
+				}
 //				}
 			}
 			catch (Exception ex)
@@ -411,63 +411,63 @@ namespace Questor
 				if (Logging.DebugUI) Logging.Log("QuestorUI", "PopulateBehaviorStateComboBox", Logging.White);
 //				if (Settings.Instance.CharacterMode != null)
 //				{
-					//
-					// populate combo boxes with the various states that are possible
-					//
-					// left column
-					//
-					if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)
+				//
+				// populate combo boxes with the various states that are possible
+				//
+				// left column
+				//
+				if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)
+				{
+					BehaviorComboBox.Items.Clear();
+					foreach (string text in Enum.GetNames(typeof(CombatMissionsBehaviorState)))
 					{
-						BehaviorComboBox.Items.Clear();
-						foreach (string text in Enum.GetNames(typeof(CombatMissionsBehaviorState)))
-						{
-							BehaviorComboBox.Items.Add(text);
-						}
+						BehaviorComboBox.Items.Add(text);
 					}
-					if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
+				}
+				if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
+				{
+					BehaviorComboBox.Items.Clear();
+					foreach (string text in Enum.GetNames(typeof(DedicatedBookmarkSalvagerBehaviorState)))
 					{
-						BehaviorComboBox.Items.Clear();
-						foreach (string text in Enum.GetNames(typeof(DedicatedBookmarkSalvagerBehaviorState)))
-						{
-							BehaviorComboBox.Items.Add(text);
-						}
+						BehaviorComboBox.Items.Add(text);
 					}
-					if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior)
+				}
+				if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior)
+				{
+					BehaviorComboBox.Items.Clear();
+					foreach (string text in Enum.GetNames(typeof(CombatHelperBehaviorState)))
 					{
-						BehaviorComboBox.Items.Clear();
-						foreach (string text in Enum.GetNames(typeof(CombatHelperBehaviorState)))
-						{
-							BehaviorComboBox.Items.Add(text);
-						}
+						BehaviorComboBox.Items.Add(text);
 					}
-					if (_States.CurrentQuestorState == QuestorState.Mining)
+				}
+				if (_States.CurrentQuestorState == QuestorState.Mining)
+				{
+					
+				}
+				if (_States.CurrentQuestorState == QuestorState.DirectionalScannerBehavior)
+				{
+					BehaviorComboBox.Items.Clear();
+					foreach (string text in Enum.GetNames(typeof(DirectionalScannerBehaviorState)))
 					{
-						
+						BehaviorComboBox.Items.Add(text);
 					}
-					if (_States.CurrentQuestorState == QuestorState.DirectionalScannerBehavior)
+				}
+				if (_States.CurrentQuestorState == QuestorState.DebugHangarsBehavior)
+				{
+					BehaviorComboBox.Items.Clear();
+					foreach (string text in Enum.GetNames(typeof(DebugHangarsBehaviorState)))
 					{
-						BehaviorComboBox.Items.Clear();
-						foreach (string text in Enum.GetNames(typeof(DirectionalScannerBehaviorState)))
-						{
-							BehaviorComboBox.Items.Add(text);
-						}
+						BehaviorComboBox.Items.Add(text);
 					}
-					if (_States.CurrentQuestorState == QuestorState.DebugHangarsBehavior)
-					{
-						BehaviorComboBox.Items.Clear();
-						foreach (string text in Enum.GetNames(typeof(DebugHangarsBehaviorState)))
-						{
-							BehaviorComboBox.Items.Add(text);
-						}
-					}
-					//if (_States.CurrentQuestorState == QuestorState.BackgroundBehavior)
-					//{
-					//    BehaviorComboBox.Items.Clear();
-					//    foreach (string text in Enum.GetNames(typeof(BackgroundBehaviorState)))
-					//    {
-					//        BehaviorComboBox.Items.Add(text);
-					//    }
-					//}
+				}
+				//if (_States.CurrentQuestorState == QuestorState.BackgroundBehavior)
+				//{
+				//    BehaviorComboBox.Items.Clear();
+				//    foreach (string text in Enum.GetNames(typeof(BackgroundBehaviorState)))
+				//    {
+				//        BehaviorComboBox.Items.Add(text);
+				//    }
+				//}
 //				}
 			}
 			catch (Exception ex)
@@ -845,31 +845,38 @@ namespace Questor
 					extraWaitSeconds = 60;
 				}
 
-				if (DateTime.UtcNow.Subtract(Time.Instance.LastFrame).TotalSeconds > (Time.Instance.NoFramesRestart_seconds + extraWaitSeconds) && DateTime.UtcNow.Subtract(Cache.EVEAccountLoginStarted).TotalSeconds > 300)
-				{
-					if (DateTime.UtcNow.Subtract(Time.Instance.LastLogMessage).TotalSeconds > 30)
+				
+				if(!Cache.Instance.Paused) {
+					
+					
+					if (DateTime.UtcNow.Subtract(Time.Instance.LastFrame).TotalSeconds > (Time.Instance.NoFramesRestart_seconds + extraWaitSeconds) && DateTime.UtcNow.Subtract(Cache.EVEAccountLoginStarted).TotalSeconds > 300)
 					{
-						Logging.Log("QuestorUI", "The Last UI Frame Drawn by EVE was [" + Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastFrame).TotalSeconds, 0) + "] seconds ago! This is bad. - Exiting EVE", Logging.Red);
-						Cleanup.ReasonToStopQuestor = "The Last UI Frame Drawn by EVE was [" + Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastFrame).TotalSeconds, 0) + "] seconds ago! This is bad. - Exiting EVE";
-						//
-						// closing eve would be a very good idea here
-						//
-						Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
-						Application.Exit();
+						if (DateTime.UtcNow.Subtract(Time.Instance.LastLogMessage).TotalSeconds > 30)
+						{
+							Logging.Log("QuestorUI", "The Last UI Frame Drawn by EVE was [" + Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastFrame).TotalSeconds, 0) + "] seconds ago! This is bad. - Exiting EVE", Logging.Red);
+							Cleanup.ReasonToStopQuestor = "The Last UI Frame Drawn by EVE was [" + Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastFrame).TotalSeconds, 0) + "] seconds ago! This is bad. - Exiting EVE";
+							//
+							// closing eve would be a very good idea here
+							//
+							Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
+							Application.Exit();
+						}
 					}
-				}
 
-				if (DateTime.UtcNow.Subtract(Time.Instance.LastSessionIsReady).TotalSeconds > (Time.Instance.NoSessionIsReadyRestart_seconds + extraWaitSeconds) &&
-				    DateTime.UtcNow.Subtract(Cache.EVEAccountLoginStarted).TotalSeconds > 210)
-				{
-					if (DateTime.UtcNow.Subtract(Time.Instance.LastLogMessage).TotalSeconds > 60)
+					if (DateTime.UtcNow.Subtract(Time.Instance.LastSessionIsReady).TotalSeconds > (Time.Instance.NoSessionIsReadyRestart_seconds + extraWaitSeconds) &&
+					    DateTime.UtcNow.Subtract(Cache.EVEAccountLoginStarted).TotalSeconds > 210)
 					{
-						Logging.Log("QuestorUI", "The Last Session.IsReady = true was [" + Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastSessionIsReady).TotalSeconds, 0) + "] seconds ago! This is bad. - Exiting EVE", Logging.Red);
-						Cleanup.ReasonToStopQuestor = "The Last Session.IsReady = true was [" + Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastSessionIsReady).TotalSeconds, 0) + "] seconds ago! This is bad. - Exiting EVE";
-						Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
-						Application.Exit();
+						if (DateTime.UtcNow.Subtract(Time.Instance.LastLogMessage).TotalSeconds > 60)
+						{
+							Logging.Log("QuestorUI", "The Last Session.IsReady = true was [" + Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastSessionIsReady).TotalSeconds, 0) + "] seconds ago! This is bad. - Exiting EVE", Logging.Red);
+							Cleanup.ReasonToStopQuestor = "The Last Session.IsReady = true was [" + Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastSessionIsReady).TotalSeconds, 0) + "] seconds ago! This is bad. - Exiting EVE";
+							Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
+							Application.Exit();
+						}
 					}
+					
 				}
+				
 			}
 			catch (Exception ex)
 			{
@@ -1511,10 +1518,10 @@ namespace Questor
 			//Cache.Instance.Paused = true;
 			
 		}
-        
-        void TabControlMainTabIndexChanged(object sender, EventArgs e)
-        {
-           //Cache.Instance.Paused = true;	
-        }
+		
+		void TabControlMainTabIndexChanged(object sender, EventArgs e)
+		{
+			//Cache.Instance.Paused = true;
+		}
 	}
 }
