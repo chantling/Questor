@@ -109,6 +109,7 @@
     <Compile Include="Actions\TravelerDestination.cs" />
     <Compile Include="Actions\UnloadLoot.cs" />
     <Compile Include="Activities\CombatMissionCtrl.cs" />
+    <Compile Include="Activities\CourierMissionCtrl.cs" />
     <Compile Include="Activities\Traveler.cs" />
     <Compile Include="BackgroundTasks\Cleanup.cs" />
     <Compile Include="BackgroundTasks\Defense.cs" />
