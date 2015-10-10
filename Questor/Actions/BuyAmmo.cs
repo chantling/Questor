@@ -38,6 +38,7 @@ namespace Questor.Actions
 		private static int _jumps;
 		private static TravelerDestination travelerDestination;
 		private static int orderIterations = 0;
+		private static Dictionary<BuyAmmoState,int> stateIterations = new Dictionary<BuyAmmoState, int>();
 		public static bool error { get; set; }
 		
 		public static void ProcessState()
@@ -82,11 +83,35 @@ namespace Questor.Actions
 						
 					}
 					
-					if(Drones.UseDrones && Drones.DroneTypeID != 0) {
-						var totalQuantityDrones = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == Drones.DroneTypeID).Sum(i => i.Quantity);
-						if(totalQuantityDrones < minimumDroneAmount) {
-							Logging.Log("BuyAmmo", "Total drone amount in hangar [" + totalQuantityDrones + "]  Minimum amount [" + minimumDroneAmount + "] We're going to buy drones.", Logging.White);
-							buy = true;
+					if(Drones.UseDrones) {
+						
+						List<int> droneTypeIds = new List<int>();
+						droneTypeIds.Add(Drones.DroneTypeID);
+						
+						foreach(var factionFtting in MissionSettings.ListofFactionFittings) {
+							if(factionFtting.DroneTypeID == null)
+								continue;
+							if(factionFtting.DroneTypeID == 0)
+								continue;
+							if(!droneTypeIds.Contains((int)factionFtting.DroneTypeID))
+								droneTypeIds.Add((int)factionFtting.DroneTypeID);
+						}
+						
+						foreach(var missionFitting in MissionSettings.ListOfMissionFittings) {
+							if(missionFitting.DroneTypeID == null)
+								continue;
+							if(missionFitting.DroneTypeID == 0)
+								continue;
+							if(!droneTypeIds.Contains((int)missionFitting.DroneTypeID))
+								droneTypeIds.Add((int)missionFitting.DroneTypeID);
+						}
+						
+						foreach(int droneTypeId in droneTypeIds) {
+							var totalQuantityDrones = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == droneTypeId).Sum(i => i.Quantity);
+							if(totalQuantityDrones < minimumDroneAmount) {
+								Logging.Log("BuyAmmo", "Total drone amount in hangar [" + totalQuantityDrones + "]  Minimum amount [" + minimumDroneAmount + "] We're going to buy drones.", Logging.White);
+								buy = true;
+							}
 						}
 					}
 					
@@ -142,11 +167,11 @@ namespace Questor.Actions
 					if(Cache.Instance.ItemHangar == null)
 						return;
 					
-					if(!Combat.Ammo.Any()) {
+					if(Cache.Instance.CurrentShipsCargo == null) {
 						return;
 					}
 					
-					if(Cache.Instance.CurrentShipsCargo == null) {
+					if(!Combat.Ammo.Any()) {
 						return;
 					}
 					
@@ -163,10 +188,36 @@ namespace Questor.Actions
 					Logging.Log("BuyAmmo", "Current [" + Cache.Instance.ActiveShip.GivenName + "] Cargo [" + Cache.Instance.CurrentShipsCargo.Capacity + "] Used Capacity [" + Cache.Instance.CurrentShipsCargo.UsedCapacity + "] Free Capacity [" +  freeCargo + "]" , Logging.White);
 					
 					
-					if(Drones.UseDrones && Drones.DroneTypeID != 0) {
-						var totalQuantityDrones = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == Drones.DroneTypeID).Sum(i => i.Quantity);
-						if(totalQuantityDrones < minimumDroneAmount) {
-							buyList.Add(Drones.DroneTypeID,Drones.BuyAmmoDroneAmmount);
+					if(Drones.UseDrones) {
+						
+						List<int> droneTypeIds = new List<int>();
+						droneTypeIds.Add(Drones.DroneTypeID);
+						
+						foreach(var factionFtting in MissionSettings.ListofFactionFittings) {
+							if(factionFtting.DroneTypeID == null)
+								continue;
+							if(factionFtting.DroneTypeID == 0)
+								continue;
+							if(!droneTypeIds.Contains((int)factionFtting.DroneTypeID))
+								droneTypeIds.Add((int)factionFtting.DroneTypeID);
+						}
+						
+						foreach(var missionFitting in MissionSettings.ListOfMissionFittings) {
+							if(missionFitting.DroneTypeID == null)
+								continue;
+							if(missionFitting.DroneTypeID == 0)
+								continue;
+							if(!droneTypeIds.Contains((int)missionFitting.DroneTypeID))
+								droneTypeIds.Add((int)missionFitting.DroneTypeID);
+						}
+						
+						foreach(int droneTypeId in droneTypeIds) {
+							var totalQuantityDrones = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == droneTypeId).Sum(i => i.Quantity);
+							
+							if(totalQuantityDrones < minimumDroneAmount) {
+								Logging.Log("BuyAmmo", "Total drone amount in hangar [" + totalQuantityDrones + "]  Minimum amount [" + minimumDroneAmount + "]", Logging.White);
+								buyList.Add(Drones.DroneTypeID,Drones.BuyAmmoDroneAmmount);
+							}
 						}
 					}
 					
@@ -184,10 +235,10 @@ namespace Questor.Actions
 					}
 					
 					
-					foreach(var buyListKeyValuePair in buyList) {
+					foreach(var buyListKeyValuePair in buyList.ToList()) { // create a copy to allow removing elements
 						
 						if(!Cache.Instance.DirectEve.InvTypes.ContainsKey(buyListKeyValuePair.Key)) {
-							Logging.Log("BuyAmmo","Removing [" + buyListKeyValuePair.Key + "] from buyList. THIS SHOULD NOT HAPPEN AT ALL." , Logging.White);
+							Logging.Log("BuyAmmo","TypeId [" + buyListKeyValuePair.Key + "] does not exist in eve invtypes. THIS SHOULD NOT HAPPEN AT ALL." , Logging.White);
 							buyList.Remove(buyListKeyValuePair.Key);
 							continue;
 						}
@@ -199,22 +250,32 @@ namespace Questor.Actions
 						
 					}
 					
-					freeCargo = freeCargo * 0.995; // leave 0.5% space
-					bool fouryPercentAmmoBuySlotUsed = false;
+					freeCargo = freeCargo * 0.995; // leave 0.5% free space
+					bool majorBuySlotUsed = false;
 					foreach(var ammo in Combat.Ammo) {
 
 						try {
 							
 							var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Quantity);
-							int minQty = ammo.Quantity * 4;
+							int minQty = ammo.Quantity * 15;
+							int maxQty = ammo.Quantity * 100;
+							
+							
+							if(!Cache.Instance.DirectEve.InvTypes.ContainsKey(ammo.TypeId)) {
+								Logging.Log("BuyAmmo","TypeId [" + ammo.TypeId + "] does not exist in eve invtypes. THIS SHOULD NOT HAPPEN AT ALL." , Logging.White);
+								continue;
+							}
+							
 							var ammoInvType = Cache.Instance.DirectEve.InvTypes.FirstOrDefault( d => d.Key == ammo.TypeId).Value;
-							if(totalQuantity < minQty && !fouryPercentAmmoBuySlotUsed) {
-								fouryPercentAmmoBuySlotUsed = true;
-								int ammoBuyAmount = (int)((freeCargo * 0.4) / ammoInvType.Volume); // 40% of the volume for the first missing ammo
+							if(totalQuantity < minQty && !majorBuySlotUsed) {
+								majorBuySlotUsed = true;
+								int ammoBuyAmount = (int)((freeCargo * 0.4) / ammoInvType.Volume); // 50% of the volume for the first missing ammo
 								buyList.Add(ammo.TypeId,ammoBuyAmount);
 							} else {
-								int ammoBuyAmount = (int)((freeCargo * (0.6/Combat.Ammo.Count)) / ammoInvType.Volume); // 60% for the rest
-								buyList.Add(ammo.TypeId,ammoBuyAmount);
+								if(totalQuantity <= maxQty) {
+									int ammoBuyAmount = (int)((freeCargo * (0.6/(Combat.Ammo.Count-1))) / ammoInvType.Volume); // 60% for the rest
+									buyList.Add(ammo.TypeId,ammoBuyAmount); // yes we're not using the whole cargo here if one or more types are above max qty
+								}
 							}
 							
 						} catch (Exception) {
@@ -230,7 +291,7 @@ namespace Questor.Actions
 					int z = 0;
 					double totalVolumeBuyList = 0;
 					foreach(var entry in buyList) {
-						var buyInvType = Cache.Instance.DirectEve.InvTypes.FirstOrDefault( d => d.Key == entry.Key).Value;
+						var buyInvType = Cache.Instance.DirectEve.InvTypes.FirstOrDefault(d => d.Key == entry.Key).Value;
 						double buyTotalVolume = buyInvType.Volume * entry.Value;
 						z++;
 						
@@ -296,6 +357,16 @@ namespace Questor.Actions
 					
 					break;
 				case BuyAmmoState.BuyAmmo:
+					
+					if(!Cache.Instance.InStation)
+						return;
+					
+					if(Cache.Instance.ItemHangar == null)
+						return;
+					
+					if(Cache.Instance.CurrentShipsCargo == null) {
+						return;
+					}
 					
 					// Is there a market window?
 					DirectMarketWindow marketWindow = Cache.Instance.DirectEve.Windows.OfType<DirectMarketWindow>().FirstOrDefault();
