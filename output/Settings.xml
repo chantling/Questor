@@ -380,7 +380,10 @@
   </ammoTypes>
   
   
-  <!-- BuyAmmo -->
+  <!-- BuyAmmo 
+  This checks every few hours if we're lacking ammo. This automatically buys ammo and drones depending on <ammoTypes>,
+  <factionfittings> and <missionfittings>. The transport ship is used and optimal volume is calculated depending on m3.
+  --> 
   <buyAmmo>false</buyAmmo>
   <buyAmmoStationID>60003760</buyAmmoStationID>
   <buyAmmoDroneAmount>200</buyAmmoDroneAmount>

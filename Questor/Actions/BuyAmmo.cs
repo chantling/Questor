@@ -257,6 +257,9 @@ namespace Questor.Actions
 							}
 						}
 					}
+					
+					// here we could also run through our mission xml folder and seach for the bring, trybring items and add them here?
+
 
 					if (Combat.Ammo.Select(a => a.DamageType).Distinct().Count() != 4)
 					{
@@ -299,7 +302,7 @@ namespace Questor.Actions
 						{
 
 							var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Quantity);
-							int minQty = ammo.Quantity * 15;
+							int minQty = ammo.Quantity * 20;
 							int maxQty = ammo.Quantity * 100;
 
 
@@ -313,7 +316,7 @@ namespace Questor.Actions
 							if (totalQuantity < minQty && !majorBuySlotUsed)
 							{
 								majorBuySlotUsed = true;
-								int ammoBuyAmount = (int)((freeCargo * 0.4) / ammoInvType.Volume); // 50% of the volume for the first missing ammo
+								int ammoBuyAmount = (int)((freeCargo * 0.4) / ammoInvType.Volume); // 40% of the volume for the first missing ammo
 								buyList.Add(ammo.TypeId, ammoBuyAmount);
 							}
 							else
@@ -562,14 +565,25 @@ namespace Questor.Actions
 						DirectOrder order = orders.OrderBy(o => o.Price).FirstOrDefault();
 						if (order != null)
 						{
+							
 							// Calculate how much ammo we still need
 							int remaining = Math.Min(neededQuantity, order.VolumeRemaining);
 							order.Buy(remaining, DirectOrderRange.Station);
+							long orderPrice = (long)(remaining * order.Price);
+							
+							if (orderPrice < Cache.Instance.MyWalletBalance)
+							{
 
-							Logging.Log("BuyAmmo", "Buying [" + remaining + "] ammo price [" + order.Price + "]", Logging.White);
+								Logging.Log("BuyAmmo", "Buying [" + remaining + "] ammo price [" + order.Price + "]", Logging.White);
 
-							// Wait for the order to go through
-							nextAction = DateTime.UtcNow.AddSeconds(10);
+								// Wait for the order to go through
+								nextAction = DateTime.UtcNow.AddSeconds(10);
+							} else {
+								
+								Logging.Log("BuyAmmo", "ERROR: We don't have enough ISK on our wallet to finish that transaction.", Logging.White);
+								state = BuyAmmoState.Error;
+								return;
+							}
 						}
 					}
 
