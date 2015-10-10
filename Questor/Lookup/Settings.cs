@@ -264,6 +264,9 @@ namespace Questor.Modules.Lookup
 
 		public string CommonSettingsPath { get; private set; }
 		public string CommonSettingsFileName { get; private set; }
+		
+		public bool BuyAmmo { get; private set; }
+		public int BuyAmmoStationID { get; private set; }
 
 		public event EventHandler<EventArgs> SettingsLoaded;
 
@@ -405,6 +408,11 @@ namespace Questor.Modules.Lookup
 				Logging.DebugWeShouldBeInSpaceORInStationAndOutOfSessionChange = (bool?)CharacterSettingsXml.Element("debugWeShouldBeInSpaceORInStationAndOutOfSessionChange") ?? (bool?)CommonSettingsXml.Element("debugWeShouldBeInSpaceORInStationAndOutOfSessionChange") ?? false;
 				Logging.DebugWatchForActiveWars = (bool?)CharacterSettingsXml.Element("debugWatchForActiveWars") ?? (bool?)CommonSettingsXml.Element("debugWatchForActiveWars") ?? false;
 				DetailedCurrentTargetHealthLogging = (bool?)CharacterSettingsXml.Element("detailedCurrentTargetHealthLogging") ?? (bool?)CommonSettingsXml.Element("detailedCurrentTargetHealthLogging") ?? true;
+				
+				
+				BuyAmmo = (bool?)CharacterSettingsXml.Element("buyAmmo") ?? (bool?)CommonSettingsXml.Element("buyAmmo") ?? false;
+				BuyAmmoStationID = (int?)CharacterSettingsXml.Element("buyAmmoStationID") ?? (int?)CommonSettingsXml.Element("buyAmmoStationID") ?? 60003760;
+				
 				DefendWhileTraveling = (bool?)CharacterSettingsXml.Element("defendWhileTraveling") ?? (bool?)CommonSettingsXml.Element("defendWhileTraveling") ?? true;
 				//DisableAutoBackgroundMoveToGate = (bool?)CharacterSettingsXml.Element("disableAutoBackgroundMoveToGate") ?? (bool?)CommonSettingsXml.Element("disableAutoBackgroundMoveToGate") ?? false;
 				//Logging.UseInnerspace = (bool?)CharacterSettingsXml.Element("useInnerspace") ?? (bool?)CommonSettingsXml.Element("useInnerspace") ?? true;
@@ -827,6 +835,8 @@ namespace Questor.Modules.Lookup
 				{
 					Drones.UseDrones = (bool?)CharacterSettingsXml.Element("useDrones") ?? (bool?)CommonSettingsXml.Element("useDrones") ?? true;
 					Drones.DroneTypeID = (int?)CharacterSettingsXml.Element("droneTypeId") ?? (int?)CommonSettingsXml.Element("droneTypeId") ?? 0;
+					Drones.BuyAmmoDroneAmmount = (int?)CharacterSettingsXml.Element("buyAmmoDroneAmount") ?? (int?)CommonSettingsXml.Element("buyAmmoDroneAmount") ?? 200;
+					
 					Drones.DroneControlRange = (int?)CharacterSettingsXml.Element("droneControlRange") ?? (int?)CommonSettingsXml.Element("droneControlRange") ?? 0;
 					Drones.DronesDontNeedTargetsBecauseWehaveThemSetOnAggressive = (bool?)CharacterSettingsXml.Element("dronesDontNeedTargetsBecauseWehaveThemSetOnAggressive") ?? (bool?)CommonSettingsXml.Element("dronesDontNeedTargetsBecauseWehaveThemSetOnAggressive") ?? true;
 					Drones.DroneMinimumShieldPct = (int?)CharacterSettingsXml.Element("droneMinimumShieldPct") ?? (int?)CommonSettingsXml.Element("droneMinimumShieldPct") ?? 50;

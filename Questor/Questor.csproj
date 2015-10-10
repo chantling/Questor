@@ -156,6 +156,7 @@
     <Compile Include="States\AgentInteractionState.cs" />
     <Compile Include="States\ArmState.cs" />
     <Compile Include="States\BackgrounsBehaviorState.cs" />
+    <Compile Include="States\BuyAmmoState.cs" />
     <Compile Include="States\BuyLPIState.cs" />
     <Compile Include="States\BuyState.cs" />
     <Compile Include="States\CleanupState.cs" />
