@@ -61,13 +61,13 @@ namespace Questor.Actions
 
 					if (!Cache.Instance.InStation)
 						return;
-//
-					//                    if (Cache.Instance.EveAccount.LastAmmoBuy.AddHours(hoursBetweenAmmoBuy) > DateTime.UtcNow) // temporarily disabled
-					//                    {
-					//                        Logging.Log("BuyAmmo", "We were buying ammo already in the past [" + hoursBetweenAmmoBuy + "] hours.", Logging.White);
-					//                        state = BuyAmmoState.Done;
-					//                        return;
-					//                    }
+
+					if (Cache.Instance.EveAccount.LastAmmoBuy.AddHours(hoursBetweenAmmoBuy) > DateTime.UtcNow) // temporarily disabled
+					{
+						Logging.Log("BuyAmmo", "We were buying ammo already in the past [" + hoursBetweenAmmoBuy + "] hours.", Logging.White);
+						state = BuyAmmoState.Done;
+						return;
+					}
 
 					if (Cache.Instance.ItemHangar == null)
 						return;
