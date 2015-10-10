@@ -310,11 +310,14 @@ namespace Questor.Behaviors
 			if (!WeShouldBeInSpaceORInStationAndOutOfSessionChange()) return;
 			
 			
+
 			if (Cache.LootAlreadyUnloaded == false)
 			{
 				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Switch;
 				return;
 			}
+			
+
 
 			if (Cache.Instance.InSpace)
 			{
@@ -403,13 +406,22 @@ namespace Questor.Behaviors
 		
 		private void SwitchCMBState()
 		{
-			if (!Cache.Instance.InStation) return;
+			if (!Cache.Instance.InStation)  {
+				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.DelayedGotoBase;
+				return;
+			}
+			
+			if(Cache.Instance.DirectEve.Session.StationId != null && Cache.Instance.Agent != null  && Cache.Instance.DirectEve.Session.StationId != Cache.Instance.Agent.StationId) {
+				Logging.Log("SwitchCMBState", "We're not in the right station, going home.", Logging.White);
+				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.DelayedGotoBase;
+				return;
+			}
 			
 			if(Cache.Instance.CurrentShipsCargo == null || Cache.Instance.CurrentShipsCargo.Items == null || Cache.Instance.ItemHangar == null || Cache.Instance.ItemHangar.Items == null) {
 				
 				return;
 			}
-					
+			
 			if(Cache.Instance.CurrentShipsCargo.Items.Any() && Cache.Instance.DirectEve.ActiveShip != null && Cache.Instance.DirectEve.ActiveShip.GivenName.ToLower() != Combat.CombatShipName.ToLower()) {
 				Logging.Log("SwitchCMBState", "if(Cache.Instance.CurrentShipsCargo.Items.Any())", Logging.White);
 				ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.UnloadLoot);
@@ -440,7 +452,15 @@ namespace Questor.Behaviors
 		
 		private void ArmCMBState()
 		{
-			if (!Cache.Instance.InStation) return;
+			
+			if(Settings.Instance.BuyAmmo) {
+				
+				Actions.BuyAmmo.ProcessState();
+				
+				if(Actions.BuyAmmo.state != BuyAmmoState.Done && Actions.BuyAmmo.state != BuyAmmoState.DisabledForThisSession) {
+					return;
+				}
+			}
 
 			if (_States.CurrentArmState == ArmState.Idle)
 			{
@@ -455,6 +475,8 @@ namespace Questor.Behaviors
 					Arm.ChangeArmState(ArmState.Begin);
 				}
 			}
+			
+			if (!Cache.Instance.InStation) return;
 
 			Arm.ProcessState();
 
@@ -485,6 +507,11 @@ namespace Questor.Behaviors
 				//we know we are connected if we were able to arm the ship - update the lastknownGoodConnectedTime
 				if (!Cache.Instance.UpdateMyWalletBalance()) return;
 				Arm.ChangeArmState(ArmState.Idle);
+				
+				if(Settings.Instance.BuyAmmo && Actions.BuyAmmo.state != BuyAmmoState.DisabledForThisSession) {
+					Actions.BuyAmmo.state = BuyAmmoState.Idle;
+				}
+				
 				_States.CurrentDroneState = DroneState.WaitingForTargets;
 				_States.CurrentCombatMissionBehaviorState = Cache.Instance.CourierMission ? CombatMissionsBehaviorState.CourierMission : CombatMissionsBehaviorState.LocalWatch;
 				return;

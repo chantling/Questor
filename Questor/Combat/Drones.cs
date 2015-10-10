@@ -119,6 +119,8 @@ namespace Questor.Modules.Combat
 				_droneTypeID = value;
 			}
 		}
+		
+		public static int BuyAmmoDroneAmmount { get; set; }
 
 		public static int FactionDroneTypeID { get; set; }
 

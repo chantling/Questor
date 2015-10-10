@@ -378,6 +378,12 @@
     <ammoType typeId="2801"  damageType="Explosive" range="55000" quantity="1250" />
     <ammoType typeId="27359" damageType="Explosive" range="35000" quantity="1250" />
   </ammoTypes>
+  
+  
+  <!-- BuyAmmo -->
+  <buyAmmo>true</buyAmmo>
+  <buyAmmoStationID>60003760</buyAmmoStationID>
+  <buyAmmoDroneAmount>200</buyAmmoDroneAmount>
     
   <!-- If we cant figure out what damage type to use (PocketDamageType, MissionDamageType and FactionDamageType all 3 would have to be null -->
   <defaultDamageType>EM</defaultDamageType>
