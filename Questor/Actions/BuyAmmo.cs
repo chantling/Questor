@@ -507,7 +507,7 @@ namespace Questor.Actions
 					if (currentAmmoDirectItem != null)
 					{
 						double avgPrice = currentAmmoDirectItem.GetAverAgePrice;
-						double basePrice = currentAmmoDirectItem.BasePrice;
+						double basePrice = currentAmmoDirectItem.BasePrice/currentAmmoDirectItem.PortionSize;
 						
 						if (avgPrice != 0)
 						{
