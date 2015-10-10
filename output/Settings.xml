@@ -381,7 +381,7 @@
   
   
   <!-- BuyAmmo -->
-  <buyAmmo>true</buyAmmo>
+  <buyAmmo>false</buyAmmo>
   <buyAmmoStationID>60003760</buyAmmoStationID>
   <buyAmmoDroneAmount>200</buyAmmoDroneAmount>
     
