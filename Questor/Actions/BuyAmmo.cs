@@ -177,37 +177,43 @@ namespace Questor.Actions
 						return;
 					}
 					
-					if(buyList.ContainsKey(Drones.DroneTypeID)) {
+					if (Combat.Ammo.Any( a => Combat.Ammo.Count( b => b.TypeId == a.TypeId) > 1)) {
+						Logging.Log("BuyAmmo", "ERROR: One or more ammo types have the same type id. Fix that.", Logging.White);
+						state = BuyAmmoState.Error;
+						return;
+					}
+					
+					
+					foreach(var buyListKeyValuePair in buyList) {
 						
-						
-						if(invtypes.Any(d => d.Key == Drones.DroneTypeID)) {
-							var droneInvType = Cache.Instance.DirectEve.InvTypes.FirstOrDefault( d => d.Key == Drones.DroneTypeID).Value;
-							var cargoBefore = freeCargo;
-							freeCargo = freeCargo - (buyList[Drones.DroneTypeID] * droneInvType.Volume);
-							Logging.Log("BuyAmmo","BuyList contains DroneTypeID, reducing freeCargo from [" + cargoBefore  +"] to [" + freeCargo + "]", Logging.White);
+						if(!Cache.Instance.DirectEve.InvTypes.ContainsKey(buyListKeyValuePair.Key)) {
+							Logging.Log("BuyAmmo","Removing [" + buyListKeyValuePair.Key + "] from buyList. THIS SHOULD NOT HAPPEN AT ALL." , Logging.White);
+							buyList.Remove(buyListKeyValuePair.Key);
+							continue;
 						}
+						
+						var droneInvType = Cache.Instance.DirectEve.InvTypes.FirstOrDefault(d => d.Key == buyListKeyValuePair.Key).Value;
+						var cargoBefore = freeCargo;
+						freeCargo = freeCargo - (buyList[Drones.DroneTypeID] * droneInvType.Volume);
+						Logging.Log("BuyAmmo","Drones, Reducing freeCargo from [" + cargoBefore  +"] to [" + freeCargo + "]", Logging.White);
 						
 					}
 					
-					freeCargo = freeCargo * 0.99; // leave 1% space
-					int n = 0;
-					bool fiftyPercentAmmoBuySlotAlreadyUsed = false;
+					freeCargo = freeCargo * 0.995; // leave 0.5% space
+					bool fouryPercentAmmoBuySlotUsed = false;
 					foreach(var ammo in Combat.Ammo) {
-						
-						if(n > 3)
-							break;
-						
+
 						try {
 							
 							var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Quantity);
 							int minQty = ammo.Quantity * 4;
 							var ammoInvType = Cache.Instance.DirectEve.InvTypes.FirstOrDefault( d => d.Key == ammo.TypeId).Value;
-							if(totalQuantity < minQty && !fiftyPercentAmmoBuySlotAlreadyUsed) {
-								fiftyPercentAmmoBuySlotAlreadyUsed = true;
-								int ammoBuyAmount = (int)((freeCargo * 0.5) / ammoInvType.Volume);
+							if(totalQuantity < minQty && !fouryPercentAmmoBuySlotUsed) {
+								fouryPercentAmmoBuySlotUsed = true;
+								int ammoBuyAmount = (int)((freeCargo * 0.4) / ammoInvType.Volume); // 40% of the volume for the first missing ammo
 								buyList.Add(ammo.TypeId,ammoBuyAmount);
 							} else {
-								int ammoBuyAmount = (int)((freeCargo * (0.5/3)) / ammoInvType.Volume);
+								int ammoBuyAmount = (int)((freeCargo * (0.6/Combat.Ammo.Count)) / ammoInvType.Volume); // 60% for the rest
 								buyList.Add(ammo.TypeId,ammoBuyAmount);
 							}
 							
@@ -217,7 +223,7 @@ namespace Questor.Actions
 							state = BuyAmmoState.Error;
 							return;
 						}
-						n++;
+						
 					}
 					
 					Logging.Log("BuyAmmo", "Builded the AmmoToBuy list. AmmoToBuyList []", Logging.White);
@@ -248,6 +254,7 @@ namespace Questor.Actions
 					travelerDestination = new StationDestination(Settings.Instance.BuyAmmoStationID);
 					
 					break;
+					
 				case BuyAmmoState.TravelToDestinationStation:
 					Console.WriteLine(state.ToString());
 					
@@ -382,7 +389,7 @@ namespace Questor.Actions
 						Logging.Log("BuyAmmo", "Item [" + currentAmmoDirectItem.TypeName + "] avgPrice [" + avgPrice + "] basePrice [" + basePrice + "]", Logging.Orange);
 					}
 					
-					// Do we have orders that sell enough ammo for the mission?
+					// Are there any orders with an reasonable price?
 					IEnumerable<DirectOrder> orders;
 					if(maxPrice == 0) {
 						Logging.Log("BuyAmmo", "if(maxPrice == 0)", Logging.Orange);
@@ -399,14 +406,12 @@ namespace Questor.Actions
 						return;
 					}
 					
-					if (!orders.Any() || orders.Sum(o => o.VolumeRemaining) < ammoQuantity)
+					
+					// Is there any order left?
+					if (!orders.Any())
 					{
-						Logging.Log("BuyAmmo", "ERROR: Not enough (reasonably priced) ammo available! Moving (maybe) bought ammo and going home.", Logging.Orange);
-
-						// Close the market window
-						marketWindow.Close();
-
-						state = BuyAmmoState.MoveItemsToCargo;
+						Logging.Log("BuyAmmo", "No reasonably priced ammo available! Removing this item from the buyList", Logging.Orange);
+						buyList.Remove(ammoTypeId);
 						nextAction = DateTime.UtcNow.AddSeconds(3);
 						return;
 					}
