@@ -1015,14 +1015,60 @@ namespace Questor
 							}
 						}
 						break;
+						
+					case QuestorState.DebugMarket:
+						
+						
+						int ammoTypeId = 20307;
+						// Is there a market window?
+						DirectMarketWindow marketWindow = Cache.Instance.DirectEve.Windows.OfType<DirectMarketWindow>().FirstOrDefault();
+						
+						// We do not have enough ammo, open the market window
+						if (marketWindow == null)
+						{
+							_nextPulse = DateTime.UtcNow.AddSeconds(10);
 
-						//case QuestorState.BackgroundBehavior:
+							Logging.Log("BuyAmmo", "Opening market window", Logging.White);
 
-						//
-						// QuestorState will stay here until changed externally by the behavior we just kicked into starting
-						//
-						//_backgroundbehavior.ProcessState();
-						//break;
+							Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenMarket);
+							Statistics.LogWindowActionToWindowLog("MarketWindow", "MarketWindow Opened");
+							return;
+						}
+
+						// Wait for the window to become ready
+						if (!marketWindow.IsReady)
+						{
+							return;
+						}
+
+						// Are we currently viewing the correct ammo orders?
+						if (marketWindow.DetailTypeId != ammoTypeId)
+						{
+							// No, load the ammo orders
+							marketWindow.LoadTypeId(ammoTypeId);
+
+							Logging.Log("BuyAmmo", "Loading market window", Logging.White);
+
+							_nextPulse = DateTime.UtcNow.AddSeconds(10);
+							return;
+						}
+
+						// Get the median sell price
+						DirectInvType type;
+						Cache.Instance.DirectEve.InvTypes.TryGetValue(ammoTypeId, out type);
+
+						var currentAmmoDirectItem = type;
+						double maxPrice = 0;
+
+						if (currentAmmoDirectItem != null)
+						{
+							double avgPrice = currentAmmoDirectItem.GetAverAgePrice;
+							double basePrice = currentAmmoDirectItem.BasePrice/currentAmmoDirectItem.PortionSize;
+							
+							Logging.Log("BuyAmmo", "Item [" + currentAmmoDirectItem.TypeName + "] avgPrice [" + avgPrice + "] basePrice [" + basePrice + "]", Logging.Orange);
+						}
+						
+						break;
 						
 						
 					case QuestorState.DebugDirectionalScanner:
