@@ -611,26 +611,29 @@ namespace Questor.Actions
 					IEnumerable<DirectItem> ammoItems = Cache.Instance.ItemHangar.Items.Where(i => Combat.Ammo.Any(r => r.TypeId == i.TypeId)).ToList();
 					if (ammoItems.Any())
 					{
-						Logging.Log("Arm", "Moving ammo to cargohold", Logging.White);
+						Logging.Log("BuyAmmo", "Moving ammo to cargohold", Logging.White);
 						Cache.Instance.CurrentShipsCargo.Add(ammoItems);
 						return;
 					}
 
-					Logging.Log("Arm", "Done moving ammo to cargohold", Logging.White);
-
-
+					Logging.Log("BuyAmmo", "Done moving ammo to cargohold", Logging.White);
 					state = BuyAmmoState.Done;
 					break;
 
 				case BuyAmmoState.Done:
 					Console.WriteLine(state.ToString());
-					_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.DelayedGotoBase;
+					
+					if(Cache.Instance.DirectEve.Session.StationId != null && Cache.Instance.DirectEve.Session.StationId == Settings.Instance.BuyAmmoStationID) {
+						_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.DelayedGotoBase;
+						_States.CurrentArmState = ArmState.Idle;
+					}
 					break;
 
 				case BuyAmmoState.Error:
 					Console.WriteLine(state.ToString());
 					state = BuyAmmoState.DisabledForThisSession;
 					_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.DelayedGotoBase;
+					_States.CurrentArmState = ArmState.Idle;
 					Logging.Log("BuyAmmo", "ERROR. BuyAmmo should stay disabled while this session is still active.", Logging.White);
 					break;
 
