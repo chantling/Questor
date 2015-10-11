@@ -133,7 +133,7 @@ namespace Questor
 
 		public void RunOnceAfterStartup()
 		{
-			if (!_runOnceAfterStartupalreadyProcessed && DateTime.UtcNow > Time.Instance.QuestorStarted_DateTime.AddSeconds(15))
+			if (!_runOnceAfterStartupalreadyProcessed && DateTime.UtcNow > Time.Instance.QuestorStarted_DateTime.AddSeconds(15) && Cache.Instance.DirectEve.Session.CharacterId != null && Cache.Instance.DirectEve.Session.CharacterId > 0)
 			{
 				if (Settings.Instance.CharacterXMLExists && DateTime.UtcNow > Time.Instance.NextStartupAction)
 				{
@@ -146,7 +146,11 @@ namespace Questor
 
 					MissionSettings.UpdateMissionName();
 					Logging.MaintainConsoleLogs();
-				}
+
+                    //var daysLeft = Cache.Instance.DirectEve.Me.DaysLeftOnAccount;
+                    //Logging.Log("RunOnceAfterStartup", "Cache.Instance.DirectEve.Me.DaysLeftOnAccount [" + daysLeft + "]", Logging.Debug);
+
+                }
 				else
 				{
 					Logging.Log("RunOnceAfterStartup", "Settings.Instance.CharacterName is still null", Logging.Orange);
@@ -170,7 +174,9 @@ namespace Questor
 						Statistics.LogWindowActionToWindowLog("CorpHangar", "CorpHangar Opened");
 					}
 
-					_runOnceInStationAfterStartupalreadyProcessed = true;
+
+
+                    _runOnceInStationAfterStartupalreadyProcessed = true;
 				}
 				else
 				{
@@ -436,12 +442,13 @@ namespace Questor
 				{
 					return;
 				}
-				
-				if(Cache.Instance.Paused) {
-					return;
-				}
-				
-				if(!BeforeLogin.questorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questor")) {
+
+                if (Cache.Instance.Paused)
+                {
+                    return;
+                }
+
+                if (!BeforeLogin.questorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questor")) {
 					_nextPulse = DateTime.UtcNow.AddSeconds(2);
 					return;
 				}
@@ -1022,9 +1029,13 @@ namespace Questor
 						int ammoTypeId = 20307;
 						// Is there a market window?
 						DirectMarketWindow marketWindow = Cache.Instance.DirectEve.Windows.OfType<DirectMarketWindow>().FirstOrDefault();
-						
-						// We do not have enough ammo, open the market window
-						if (marketWindow == null)
+
+
+                        var daysLeft = Cache.Instance.DirectEve.Me.DaysLeftOnAccount;
+                        Logging.Log("RunOnceAfterStartup", "Cache.Instance.DirectEve.Me.DaysLeftOnAccount [" + daysLeft + "]", Logging.Debug);
+
+                        // We do not have enough ammo, open the market window
+                        if (marketWindow == null)
 						{
 							_nextPulse = DateTime.UtcNow.AddSeconds(10);
 
