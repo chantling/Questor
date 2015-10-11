@@ -226,7 +226,8 @@ namespace Questor.Storylines
 
 				if (OreTypeNeededForThisMission != null)
 				{
-				    maxPrice = OreTypeNeededForThisMission.GetAverAgePrice * 50;
+				    maxPrice = OreTypeNeededForThisMission.BasePrice / OreTypeNeededForThisMission.PortionSize;
+				    maxPrice = maxPrice * 10;
 				}
 				
 				IEnumerable<DirectOrder> orders;
@@ -242,7 +243,7 @@ namespace Questor.Storylines
 				orders = marketWindow.SellOrders.Where(o => o.StationId == directEve.Session.StationId).ToList();
 				if (!orders.Any() || orders.Sum(o => o.VolumeRemaining) < orequantity)
 				{
-					Logging.Log("MaterialsForWarPreparation", "Not enough (reasonably priced) ore available! Blacklisting agent for this Questor session!", Logging.Orange);
+					Logging.Log("MaterialsForWarPreparation", "Not enough (reasonably priced) ore available! Blacklisting agent for this Questor session! maxPrice [" + maxPrice + "]", Logging.Orange);
 
 					// Close the market window
 					marketWindow.Close();
