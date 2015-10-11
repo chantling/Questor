@@ -30,17 +30,18 @@ namespace Questor.Actions
 	public static class BuyAmmo
 	{
 
-
 		public static BuyAmmoState state { get; set; } // idle == default
 		private static Dictionary<int, int> buyList = new Dictionary<int, int>();
 		private static int minimumDroneAmount = 200;
 		private static DateTime nextAction = DateTime.MinValue;
-		private static int _jumps;
+		private static int jumps;
 		private static TravelerDestination travelerDestination;
 		private static int orderIterations = 0;
 		private static Dictionary<BuyAmmoState, int> stateIterations = new Dictionary<BuyAmmoState, int>();
 		private static int hoursBetweenAmmoBuy = 10;
 		public static bool error { get; set; }
+		private static int minAmmoMultiplier = 20;
+		private static int maxAmmoMultiplier = 100;
 
 		public static void ProcessState()
 		{
@@ -85,7 +86,7 @@ namespace Questor.Actions
 					{
 
 						var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Quantity);
-						int minQty = ammo.Quantity * 4;
+						int minQty = ammo.Quantity * minAmmoMultiplier;
 						if (totalQuantity < minQty)
 						{
 							Logging.Log("BuyAmmo", "Total ammo amount in hangar [" + totalQuantity + "] Minimum amount [" + minQty + "] We're going to buy ammo.", Logging.White);
@@ -302,8 +303,8 @@ namespace Questor.Actions
 						{
 
 							var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Quantity);
-							int minQty = ammo.Quantity * 20;
-							int maxQty = ammo.Quantity * 100;
+							int minQty = ammo.Quantity * minAmmoMultiplier;
+							int maxQty = ammo.Quantity * maxAmmoMultiplier;
 
 
 							if (!Cache.Instance.DirectEve.InvTypes.ContainsKey(ammo.TypeId))
@@ -381,7 +382,7 @@ namespace Questor.Actions
 						Traveler.Destination = travelerDestination;
 					}
 
-					_jumps = Cache.Instance.DirectEve.Navigation.GetDestinationPath().Count;
+					jumps = Cache.Instance.DirectEve.Navigation.GetDestinationPath().Count;
 
 					Traveler.ProcessState();
 

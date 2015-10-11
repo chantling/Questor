@@ -824,7 +824,7 @@
         	this.Tabs.Controls.Add(this.Inventory);
         	this.Tabs.Controls.Add(this.tabModules);
         	this.Tabs.Controls.Add(this.tabPage1);
-        	this.Tabs.Location = new System.Drawing.Point(43, 101);
+        	this.Tabs.Location = new System.Drawing.Point(43, 106);
         	this.Tabs.Name = "Tabs";
         	this.Tabs.SelectedIndex = 0;
         	this.Tabs.Size = new System.Drawing.Size(695, 288);
@@ -6131,7 +6131,7 @@
         	this.tabPage2.Location = new System.Drawing.Point(4, 22);
         	this.tabPage2.Name = "tabPage2";
         	this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-        	this.tabPage2.Size = new System.Drawing.Size(791, 434);
+        	this.tabPage2.Size = new System.Drawing.Size(791, 399);
         	this.tabPage2.TabIndex = 2;
         	this.tabPage2.Text = "QuestorManager";
         	this.tabPage2.UseVisualStyleBackColor = true;
