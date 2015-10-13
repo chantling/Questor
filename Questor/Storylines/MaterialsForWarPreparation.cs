@@ -39,12 +39,11 @@ namespace Questor.Storylines
 				// Open the ship hangar
 				if (Cache.Instance.ShipHangar == null) return StorylineState.Arm;
 
-				List<DirectItem> ships = Cache.Instance.ShipHangar.Items;
-				
+				List<DirectItem> ships = Cache.Instance.ShipHangar.Items.Where(i => i.IsSingleton).ToList();
 				
 				// this SHOULD allow usage of shuttles again for this storyline, atm commented out due the fact i have no time for testing
 				if(ships.Any( s => s.GroupId == (int)Group.Shuttle)) {
-					ships.FirstOrDefault( s => s.GroupId == (int)Group.Shuttle).ActivateShip();
+					ships.FirstOrDefault(s => s.GivenName != null && s.GroupId == (int)Group.Shuttle && s.IsSingleton).ActivateShip();
 					Logging.Log("MaterialsForWarPreparation", "Found a shuttle - Making Shuttle active", Logging.White);
 					_nextAction = DateTime.UtcNow.AddSeconds(Modules.Lookup.Time.Instance.SwitchShipsDelay_seconds);
 					return StorylineState.GotoAgent;
@@ -226,8 +225,8 @@ namespace Questor.Storylines
 
 				if (OreTypeNeededForThisMission != null)
 				{
-				    maxPrice = OreTypeNeededForThisMission.BasePrice / OreTypeNeededForThisMission.PortionSize;
-				    maxPrice = maxPrice * 10;
+					maxPrice = OreTypeNeededForThisMission.BasePrice / OreTypeNeededForThisMission.PortionSize;
+					maxPrice = maxPrice * 10;
 				}
 				
 				IEnumerable<DirectOrder> orders;

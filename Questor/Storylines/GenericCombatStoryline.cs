@@ -119,7 +119,7 @@ namespace Questor.Storylines
             {
                 if (AgentInteraction.Agent.Window != null)
                     AgentInteraction.Agent.Window.Close();
-                Logging.Log("GenericCombatStoryline", "Mission offer is in a Low Security System", Logging.Orange); //do storyline missions in lowsec get blacklisted by: "public StorylineState Arm(Storyline storyline)"?
+                Logging.Log("GenericCombatStoryline", "Mission offer is in a Low Security System or faction blacklisted.", Logging.Orange); //do storyline missions in lowsec get blacklisted by: "public StorylineState Arm(Storyline storyline)"?
                 throw new Exception("Low security systems");
             }
 
