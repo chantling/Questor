@@ -658,7 +658,7 @@
 					if(currentStorylines.Any())
 					{
 						var mission = currentStorylines.FirstOrDefault();
-						if(mission == null)
+						if(mission != null)
 						{
 							Logging.Log("Storyline", "Removing storyline mission [" +  mission.Name + "] because it's against a blacklisted faction.", Logging.Orange);
 							mission.RemoveOffer();
