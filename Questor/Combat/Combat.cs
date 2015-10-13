@@ -2628,6 +2628,7 @@ namespace Questor.Modules.Combat
 			{
 				// Clear targeting list as it does not apply
 				Cache.Instance.TargetingIDs.Clear();
+				Drones.LastTargetIDDronesEngaged = null;
 				Logging.Log("Combat", "We are no longer jammed, reTargeting", Logging.Teal);
 			}
 
