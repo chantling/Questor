@@ -1776,7 +1776,11 @@ namespace Questor.Behaviors
 						{
 							Cache.Instance.CurrentAgent = agent.Name;
 							Cache.Instance.CurrentStorylineAgentId = agent.AgentId;
+							Cache.Instance.AgentStationID = agent.StationId;
+							var a = Cache.Instance.Agent; // Update agent relevant attributes. The agent related redundancy needs to be recuded a lot.
+							
 							Logging.Log("CombatMissionsBehaviorState.PrepareStorylineSwitchAgents", "new agent is " + Cache.Instance.CurrentAgent, Logging.White);
+							
 							_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.PrepareStorylineGotoBase;
 						} else {
 							
