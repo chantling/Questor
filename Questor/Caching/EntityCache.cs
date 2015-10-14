@@ -3099,7 +3099,7 @@ namespace Questor.Modules.Caching
 
 							if (TargetValue != null)
 							{
-								if (!IsIgnored || !IsContainer || !IsBadIdea || !IsCustomsOffice || !IsFactionWarfareNPC || !IsPlayer)
+								if (!IsIgnored && !IsContainer && !IsBadIdea && !IsCustomsOffice && !IsFactionWarfareNPC && !IsPlayer)
 								{
 									if (TargetValue >= Combat.MinimumTargetValueToConsiderTargetAHighValueTarget)
 									{
@@ -3174,7 +3174,7 @@ namespace Questor.Modules.Caching
 								}
 							}
 
-							if (!IsIgnored || !IsContainer || !IsBadIdea || !IsCustomsOffice || !IsFactionWarfareNPC || !IsPlayer)
+							if (!IsIgnored && !IsContainer && !IsBadIdea && !IsCustomsOffice && !IsFactionWarfareNPC && !IsPlayer)
 							{
 								if (TargetValue != null && TargetValue <= Combat.MaximumTargetValueToConsiderTargetALowValueTarget)
 								{

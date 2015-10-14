@@ -2655,6 +2655,10 @@ namespace Questor.Modules.Combat
 			catch (NullReferenceException) { }
 
 			int targetsTargeted = highValueTargetsTargeted.Count() + lowValueTargetsTargeted.Count();
+			
+			
+			Logging.Log("Combat.TargetCombatants", "Targets targeted: [" + targetsTargeted +  "]", Logging.White);
+			
 			#endregion
 
 			#region Remove any target that is out of range (lower of Weapon Range or targeting range, definitely matters if damped)
@@ -3231,7 +3235,7 @@ namespace Questor.Modules.Combat
 					    && TargetThisNotYetAggressiveNPC.LockTarget("TargetCombatants.TargetThisNotYetAggressiveNPC"))
 					{
 						Logging.Log("Combat", "Targeting non-aggressed NPC target [" + TargetThisNotYetAggressiveNPC.Name + "][GroupID: " + TargetThisNotYetAggressiveNPC.GroupId + "][TypeID: " + TargetThisNotYetAggressiveNPC.TypeId + "][" + TargetThisNotYetAggressiveNPC.MaskedId + "][" + Math.Round(TargetThisNotYetAggressiveNPC.Distance / 1000, 0) + "k away]", Logging.Teal);
-						Time.Instance.NextTargetAction = DateTime.UtcNow.AddMilliseconds(4000);
+						Time.Instance.NextTargetAction = DateTime.UtcNow.AddMilliseconds(Time.Instance.TargetDelay_milliseconds);
 						if (Cache.Instance.TotalTargetsandTargeting.Any() && (Cache.Instance.TotalTargetsandTargeting.Count() >= Cache.Instance.MaxLockedTargets))
 						{
 							Time.Instance.NextTargetAction = DateTime.UtcNow.AddSeconds(Time.Instance.TargetsAreFullDelay_seconds);

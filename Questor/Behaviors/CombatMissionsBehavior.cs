@@ -1781,7 +1781,8 @@ namespace Questor.Behaviors
 							
 							Logging.Log("CombatMissionsBehaviorState.PrepareStorylineSwitchAgents", "new agent is " + Cache.Instance.CurrentAgent, Logging.White);
 							
-							_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.PrepareStorylineGotoBase;
+//							_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.PrepareStorylineGotoBase; // why going to the storyline if the storyline.cs already travels on it's own?
+							_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Storyline;
 						} else {
 							
 							Logging.Log("CombatMissionsBehaviorState.PrepareStorylineSwitchAgents", "Storyline agent  error.", Logging.White);
