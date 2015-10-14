@@ -1523,5 +1523,11 @@ namespace Questor
 		{
 			//Cache.Instance.Paused = true;
 		}
+        
+        void QuestorUIShown(object sender, EventArgs e)
+        {
+        	if(Cache.Instance.WCFClient.GetPipeProxy.ShouldHideEveWindows())
+        		this.Hide();
+        }
 	}
 }

@@ -6149,6 +6149,7 @@
         	this.Text = "Questor";
         	this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.QuestorfrmMainFormClosed);
         	this.Load += new System.EventHandler(this.FrmMainLoad);
+        	this.Shown += new System.EventHandler(this.QuestorUIShown);
         	this.tabControlMain.ResumeLayout(false);
         	this.tabPage3.ResumeLayout(false);
         	this.tabPage3.PerformLayout();
