@@ -2657,7 +2657,7 @@ namespace Questor.Modules.Combat
 			int targetsTargeted = highValueTargetsTargeted.Count() + lowValueTargetsTargeted.Count();
 			
 			
-			Logging.Log("Combat.TargetCombatants", "Rat target amount: [" + targetsTargeted +  "] Total target amount [" + Cache.Instance.TotalTargetsandTargeting.Count() + "]", Logging.White);
+			//Logging.Log("Combat.TargetCombatants", "Rat target amount: [" + targetsTargeted +  "] Total target amount [" + Cache.Instance.TotalTargetsandTargeting.Count() + "]", Logging.White);
 			
 			#endregion
 
