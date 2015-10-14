@@ -569,8 +569,8 @@ namespace Questor.Modules.Actions
 			try
 			{
 				//disable stacking for now
-				_States.CurrentUnloadLootState = UnloadLootState.Done;
-				return true;
+//				_States.CurrentUnloadLootState = UnloadLootState.Done;
+//				return true;
 
 				if (DateTime.UtcNow < _lastUnloadAction.AddMilliseconds(Cache.Instance.RandomNumber(2000, 3000)))
 				{

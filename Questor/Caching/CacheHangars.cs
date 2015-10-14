@@ -268,7 +268,7 @@ namespace Questor.Modules.Caching
 
 		public bool StackItemsHangarAsLootHangar(string module)
 		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
+			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(12) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
 			{
 				return false;
 			}
@@ -358,23 +358,23 @@ namespace Questor.Modules.Caching
 		{
 			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
 			{
-				if (Logging.DebugHangars) Logging.Log("StackItemsHangarAsAmmoHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
+				Logging.Log("StackItemsHangarAsAmmoHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Teal);
 				return false;
 			}
 
 			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
 			{
-				if (Logging.DebugHangars) Logging.Log("StackItemsHangarAsAmmoHangar", "if (DateTime.UtcNow < Cache.Instance.NextOpenHangarAction)", Logging.Teal);
+				Logging.Log("StackItemsHangarAsAmmoHangar", "if (DateTime.UtcNow < Cache.Instance.NextOpenHangarAction)", Logging.Teal);
 				return false;
 			}
 
 			try
 			{
-				if (Logging.DebugItemHangar) Logging.Log("StackItemsHangarAsAmmoHangar", "public bool StackItemsHangarAsAmmoHangar(String module)", Logging.Teal);
+				Logging.Log("StackItemsHangarAsAmmoHangar", "public bool StackItemsHangarAsAmmoHangar(String module)", Logging.Teal);
 
 				if (Cache.Instance.InStation)
 				{
-					if (Logging.DebugHangars) Logging.Log("StackItemsHangarAsAmmoHangar", "if (Cache.Instance.InStation)", Logging.Teal);
+					Logging.Log("StackItemsHangarAsAmmoHangar", "if (Cache.Instance.InStation)", Logging.Teal);
 					if (Cache.Instance.AmmoHangar != null)
 					{
 						try
@@ -387,6 +387,7 @@ namespace Questor.Modules.Caching
 
 							if (Cache.Instance.StackHangarAttempts <= 0)
 							{
+								Logging.Log("StackItemsHangarAsAmmoHangar", "AmmoHangar.Items.Count [" + AmmoHangar.Items.Count() + "]", Logging.White);
 								if (AmmoHangar.Items.Any() && AmmoHangar.Items.Count() > RandomNumber(600, 800))
 								{
 									Logging.Log(module, "Stacking Item Hangar (as AmmoHangar)", Logging.White);
@@ -411,7 +412,7 @@ namespace Questor.Modules.Caching
 						}
 					}
 
-					if (Logging.DebugHangars) Logging.Log("StackItemsHangarAsAmmoHangar", "if (!Cache.Instance.ReadyItemsHangarAsAmmoHangar(Cache.StackItemsHangar)) return false;", Logging.Teal);
+					Logging.Log("StackItemsHangarAsAmmoHangar", "if (!Cache.Instance.ReadyItemsHangarAsAmmoHangar(Cache.StackItemsHangar)) return false;", Logging.Teal);
 					if (!Cache.Instance.ReadyItemsHangarAsAmmoHangar("Cache.StackItemsHangar")) return false;
 					return false;
 				}
@@ -1507,11 +1508,13 @@ namespace Questor.Modules.Caching
 		public bool StackAmmoHangar(string module)
 		{
 			StackAmmohangarAttempts++;
-			if (StackAmmohangarAttempts > 10)
+			if (StackAmmohangarAttempts > 15)
 			{
-				Logging.Log("StackAmmoHangar", "Stacking the ammoHangar has failed: attempts [" + StackAmmohangarAttempts + "]", Logging.Teal);
+				Logging.Log("StackAmmoHangar", "Pausing. Stacking the ammoHangar has failed: attempts [" + StackAmmohangarAttempts + "]", Logging.Teal);
+				Cache.Instance.Paused = true;
 				return true;
 			}
+			
 
 			if (Math.Abs(DateTime.UtcNow.Subtract(Time.Instance.LastStackAmmoHangar).TotalMinutes) < 10)
 			{
@@ -1539,6 +1542,7 @@ namespace Questor.Modules.Caching
 						if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "Starting [Cache.Instance.StackCorpAmmoHangar]", Logging.Teal);
 						if (!Cache.Instance.StackCorpAmmoHangar(module)) return false;
 						if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "Finished [Cache.Instance.StackCorpAmmoHangar]", Logging.Teal);
+						StackAmmohangarAttempts = 0;
 						return true;
 					}
 

@@ -2657,7 +2657,7 @@ namespace Questor.Modules.Combat
 			int targetsTargeted = highValueTargetsTargeted.Count() + lowValueTargetsTargeted.Count();
 			
 			
-			Logging.Log("Combat.TargetCombatants", "Targets targeted: [" + targetsTargeted +  "]", Logging.White);
+			Logging.Log("Combat.TargetCombatants", "Rat target amount: [" + targetsTargeted +  "] Total target amount [" + Cache.Instance.TotalTargetsandTargeting.Count() + "]", Logging.White);
 			
 			#endregion
 
@@ -3016,9 +3016,12 @@ namespace Questor.Modules.Combat
 			if ((highValueTargetsTargeted.Count() >= maxHighValueTargets - highValueSlotsreservedForPriorityTargets)
 			    && lowValueTargetsTargeted.Count() >= maxLowValueTargets - lowValueSlotsreservedForPriorityTargets)
 			{
-				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: we have enough targets targeted [" + Cache.Instance.TotalTargetsandTargeting.Count() + "] __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] maxLowValueTargets [" + maxLowValueTargets + "]", Logging.Debug);
-				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] highValueSlotsreservedForPriorityTargets [" + highValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
-				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxLowValueTargets [" + maxLowValueTargets + "] lowValueSlotsreservedForPriorityTargets [" + lowValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
+//				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: we have enough targets targeted [" + Cache.Instance.TotalTargetsandTargeting.Count() + "] __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] maxLowValueTargets [" + maxLowValueTargets + "]", Logging.Debug);
+//				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] highValueSlotsreservedForPriorityTargets [" + highValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
+//				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxLowValueTargets [" + maxLowValueTargets + "] lowValueSlotsreservedForPriorityTargets [" + lowValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
+				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: we have enough targets targeted [" + Cache.Instance.TotalTargetsandTargeting.Count() + "] __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] maxLowValueTargets [" + maxLowValueTargets + "]", Logging.Debug);
+				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] highValueSlotsreservedForPriorityTargets [" + highValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
+				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxLowValueTargets [" + maxLowValueTargets + "] lowValueSlotsreservedForPriorityTargets [" + lowValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
 				//Cache.Instance.NextTargetAction = DateTime.UtcNow.AddSeconds(Time.Instance.TargetsAreFullDelay_seconds);
 				return;
 			}
@@ -3203,11 +3206,11 @@ namespace Questor.Modules.Combat
 			// If we have 2 PotentialCombatTargets targeted at this point return... we do not want to target anything that is not yet aggressed if we have something aggressed.
 			// or are in the middle of attempting to aggro something
 			// 
-			if (Combat.PotentialCombatTargets.Count(e => e.IsTarget) > 1 || (Cache.Instance.MaxLockedTargets < 2 && Cache.Instance.Targets.Any()))
-			{
-				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: We already have [" + Combat.PotentialCombatTargets.Count(e => e.IsTarget) + "] PotentialCombatTargets Locked. Do not aggress non aggressed NPCs until we have no targets", Logging.Debug);
-				return;
-			}
+//			if (Combat.PotentialCombatTargets.Count(e => e.IsTarget) > 1 || (Cache.Instance.MaxLockedTargets < 2 && Cache.Instance.Targets.Any()))
+//			{
+//				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: We already have [" + Combat.PotentialCombatTargets.Count(e => e.IsTarget) + "] PotentialCombatTargets Locked. Do not aggress non aggressed NPCs until we have no targets", Logging.Debug);
+//				return;
+//			}
 
 			#endregion
 
