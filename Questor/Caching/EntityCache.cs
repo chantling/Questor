@@ -1938,8 +1938,19 @@ namespace Questor.Modules.Caching
 								{
 									optimal = Cache.Instance.ActiveShip.MaxTargetRange - 500;
 								}
+								
+								if(Combat.DoWeCurrentlyProjectilesMounted()) {
+									if (Distance > Combat.InsideThisRangeIsHardToTrack)
+									{
+										if (Distance < (optimal * 10) && Distance < Cache.Instance.ActiveShip.MaxTargetRange)
+										{
+											_isInOptimalRange = true;
+											return (bool) _isInOptimalRange;
+										}
+									}
+								}
 
-								if (Combat.DoWeCurrentlyHaveTurretsMounted()) //Lasers, Projectile, and Hybrids
+								else if (Combat.DoWeCurrentlyHaveTurretsMounted()) //Lasers, Projectile, and Hybrids
 								{
 									if (Distance > Combat.InsideThisRangeIsHardToTrack)
 									{
@@ -3380,13 +3391,14 @@ namespace Questor.Modules.Caching
 					if (_directEntity != null && _directEntity.IsValid)
 					{
 						bool result = false;
-						result |= (((IsNpc || IsNpcByGroupID) || IsAttacking || Cache.Instance.InMission)
+						result |= (((IsNpc || IsNpcByGroupID))
 						           && (!IsTargeting && !IsTarget)
 						           && !IsContainer
 						           && CategoryId == (int)CategoryID.Entity
 						           && Distance < Combat.MaxTargetRange
 						           && !IsIgnored
-						           && (!IsBadIdea || IsAttacking)
+						           && !IsBadIdea
+						           && !IsTargetedBy
 						           && !IsEntityIShouldLeaveAlone
 						           && !IsFactionWarfareNPC
 						           && !IsLargeCollidable

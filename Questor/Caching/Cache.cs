@@ -1020,7 +1020,7 @@ namespace Questor.Modules.Caching
 				if (DateTime.Now > Time.NextClearPocketCache)
 				{
 					MissionSettings.ClearPocketSpecificSettings();
-					Combat._doWeCurrentlyHaveTurretsMounted = null;
+					Combat._doWeCurrentlyHaveProjectilesMounted = null;
 					Combat.LastTargetPrimaryWeaponsWereShooting = null;
 					Drones.LastTargetIDDronesEngaged = null;
 

@@ -91,7 +91,7 @@ namespace Questor.Modules.Combat
 		public static int NosDistance { get; set; }
 		public static int RemoteRepairDistance { get; set; }
 		public static List<EntityCache> TargetingMe { get; set; }
-		public static List<EntityCache> NotYetTargetingMe { get; set; }
+		public static List<EntityCache> NotYetTargetingMeAndNotYetTargeted { get; set; }
 		private static bool _killSentries;
 		public static bool KillSentries
 		{
@@ -733,6 +733,41 @@ namespace Questor.Modules.Combat
 			catch (Exception exception)
 			{
 				Logging.Log("Cache.DoWeCurrentlyHaveTurretsMounted", "Exception [" + exception + "]", Logging.Debug);
+			}
+
+			return false;
+		}
+		
+		
+		public static bool? _doWeCurrentlyHaveProjectilesMounted;
+		public static bool DoWeCurrentlyProjectilesMounted()
+		{
+			try
+			{
+				if (_doWeCurrentlyHaveProjectilesMounted == null)
+				{
+					//int ModuleNumber = 0;
+					foreach (ModuleCache m in Cache.Instance.Modules)
+					{
+						if (m.GroupId == (int)Group.ProjectileWeapon
+						   )
+						{
+							_doWeCurrentlyHaveProjectilesMounted = true;
+							return _doWeCurrentlyHaveProjectilesMounted ?? true;
+						}
+
+						continue;
+					}
+
+					_doWeCurrentlyHaveProjectilesMounted = false;
+					return _doWeCurrentlyHaveProjectilesMounted ?? false;
+				}
+
+				return _doWeCurrentlyHaveProjectilesMounted ?? false;
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("Cache.DoWeCurrentlyHaveProjectilesMounted", "Exception [" + exception + "]", Logging.Debug);
 			}
 
 			return false;
@@ -3016,13 +3051,13 @@ namespace Questor.Modules.Combat
 			if ((highValueTargetsTargeted.Count() >= maxHighValueTargets - highValueSlotsreservedForPriorityTargets)
 			    && lowValueTargetsTargeted.Count() >= maxLowValueTargets - lowValueSlotsreservedForPriorityTargets)
 			{
-//				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: we have enough targets targeted [" + Cache.Instance.TotalTargetsandTargeting.Count() + "] __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] maxLowValueTargets [" + maxLowValueTargets + "]", Logging.Debug);
-//				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] highValueSlotsreservedForPriorityTargets [" + highValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
-//				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxLowValueTargets [" + maxLowValueTargets + "] lowValueSlotsreservedForPriorityTargets [" + lowValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
-				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: we have enough targets targeted [" + Cache.Instance.TotalTargetsandTargeting.Count() + "] __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] maxLowValueTargets [" + maxLowValueTargets + "]", Logging.Debug);
-				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] highValueSlotsreservedForPriorityTargets [" + highValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
-				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxLowValueTargets [" + maxLowValueTargets + "] lowValueSlotsreservedForPriorityTargets [" + lowValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
-				//Cache.Instance.NextTargetAction = DateTime.UtcNow.AddSeconds(Time.Instance.TargetsAreFullDelay_seconds);
+				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: we have enough targets targeted [" + Cache.Instance.TotalTargetsandTargeting.Count() + "] __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] maxLowValueTargets [" + maxLowValueTargets + "]", Logging.Debug);
+				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] highValueSlotsreservedForPriorityTargets [" + highValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
+				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxLowValueTargets [" + maxLowValueTargets + "] lowValueSlotsreservedForPriorityTargets [" + lowValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
+//				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: we have enough targets targeted [" + Cache.Instance.TotalTargetsandTargeting.Count() + "] __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] maxLowValueTargets [" + maxLowValueTargets + "]", Logging.Debug);
+//				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] highValueSlotsreservedForPriorityTargets [" + highValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
+//				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxLowValueTargets [" + maxLowValueTargets + "] lowValueSlotsreservedForPriorityTargets [" + lowValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
+//				 = DateTime.UtcNow.AddSeconds(Time.Instance.TargetsAreFullDelay_seconds);
 				return;
 			}
 			
@@ -3043,8 +3078,7 @@ namespace Questor.Modules.Combat
 			                                      && t.CategoryId != (int)CategoryID.Asteroid
 			                                      && t.IsTargetingMeAndNotYetTargeted
 			                                      && (!t.IsSentry || (t.IsSentry && Combat.KillSentries) || (t.IsSentry && t.IsEwarTarget))
-			                                      && t.Nearest5kDistance < Combat.MaxRange)
-				.ToList();
+			                                      && t.Nearest5kDistance < Combat.MaxRange).ToList();
 
 			List<EntityCache> highValueTargetingMe = TargetingMe.Where(t => (t.IsHighValueTarget))
 				.OrderByDescending(t => !t.IsNPCCruiser) //prefer battleships
@@ -3096,6 +3130,11 @@ namespace Questor.Modules.Combat
 						return;
 					}
 
+					if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", (highValueTargetingMeEntity.Distance < Combat.MaxRange).ToString()
+					                                               + (highValueTargetingMeEntity.IsReadyToTarget).ToString()
+					                                               + (highValueTargetingMeEntity.IsInOptimalRangeOrNothingElseAvail).ToString()
+					                                               + (!highValueTargetingMeEntity.IsIgnored).ToString(), Logging.Debug);
+					
 					if (highValueTargetingMeEntity != null
 					    && highValueTargetingMeEntity.Distance < Combat.MaxRange
 					    && highValueTargetingMeEntity.IsReadyToTarget
@@ -3164,6 +3203,11 @@ namespace Questor.Modules.Combat
 						UnlockLowValueTarget("Combat.TargetCombatants", "HighValueTarget");
 						return;
 					}
+					
+					if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", (lowValueTargetingMeEntity.Distance < Combat.MaxRange).ToString()
+					                                               + (lowValueTargetingMeEntity.IsReadyToTarget).ToString()
+					                                               + (lowValueTargetingMeEntity.IsInOptimalRangeOrNothingElseAvail).ToString()
+					                                               + (!lowValueTargetingMeEntity.IsIgnored).ToString(), Logging.Debug);
 
 					if (lowValueTargetingMeEntity != null
 					    && lowValueTargetingMeEntity.Distance < Cache.Instance.WeaponRange
@@ -3220,15 +3264,15 @@ namespace Questor.Modules.Combat
 			// Build a list of things not yet targeting me and not yet targeted
 			//
 			
-			NotYetTargetingMe = Combat.PotentialCombatTargets.Where(e => e.IsNotYetTargetingMeAndNotYetTargeted)
+			NotYetTargetingMeAndNotYetTargeted = Combat.PotentialCombatTargets.Where(e => e.IsNotYetTargetingMeAndNotYetTargeted)
 				.OrderBy(t => t.Nearest5kDistance)
 				.ToList();
 
-			if (NotYetTargetingMe.Any())
+			if (NotYetTargetingMeAndNotYetTargeted.Any())
 			{
-				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: [" + NotYetTargetingMe.Count() + "] NotYetTargetingMe targets", Logging.Debug);
+				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: [" + NotYetTargetingMeAndNotYetTargeted.Count() + "] IsNotYetTargetingMeAndNotYetTargeted targets", Logging.Debug);
 
-				foreach (EntityCache TargetThisNotYetAggressiveNPC in NotYetTargetingMe)
+				foreach (EntityCache TargetThisNotYetAggressiveNPC in NotYetTargetingMeAndNotYetTargeted)
 				{
 					if (TargetThisNotYetAggressiveNPC != null
 					    && TargetThisNotYetAggressiveNPC.IsReadyToTarget
@@ -3250,7 +3294,7 @@ namespace Questor.Modules.Combat
 			}
 			else
 			{
-				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: 0 NotYetTargetingMe targets", Logging.Debug);
+				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: 0 IsNotYetTargetingMeAndNotYetTargeted targets", Logging.Debug);
 			}
 			
 			return;
