@@ -46,7 +46,7 @@ namespace Questor.Actions
         private static int minAmmoMultiplier = 20;
         private static int maxAmmoMultiplier = 100;
         private static int maxAvgPriceMultiplier = 3;
-        private static int maxBasePriceMultiplier = 6;
+        private static int maxBasePriceMultiplier = 10;
 
         private static bool StateCheckEveryPulse
         {
@@ -540,6 +540,9 @@ namespace Questor.Actions
                     {
                         double avgPrice = currentAmmoDirectItem.GetAverAgePrice;
                         double basePrice = currentAmmoDirectItem.BasePrice / currentAmmoDirectItem.PortionSize;
+                        
+                        Logging.Log("BuyAmmo", "Item [" + currentAmmoDirectItem.TypeName + "] avgPrice [" + avgPrice + "] basePrice [" + basePrice + "] groupID [" + currentAmmoDirectItem.GroupId + "] groupName [" + currentAmmoDirectItem.GroupId + "]", Logging.Orange);
+                        
 
                         if (avgPrice != 0)
                         {
@@ -550,6 +553,7 @@ namespace Questor.Actions
                             if (basePrice != 0)
                             {
                                 maxPrice = basePrice * maxBasePriceMultiplier; // 6 times the base price
+                                
                             }
                             else
                             {

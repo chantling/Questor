@@ -139,14 +139,9 @@ namespace Questor.Modules.Logging
 
         public static bool WreckStatistics(IEnumerable<ItemCache> items, EntityCache containerEntity)
         {
-            //if (Settings.Instance.DateTimeForLogs = EveTime)
-            //{
-            //    DateTimeForLogs = DateTime.UtcNow;
-            //}
-            //else //assume LocalTime
-            //{
+            
             DateTimeForLogs = DateTime.Now;
-            //}
+            
 
             if (Statistics.WreckLootStatistics)
             {

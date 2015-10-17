@@ -846,6 +846,9 @@ namespace Questor.Modules.Actions
 				
 				if ((int)Drones.DroneBay.Capacity == (int)Drones.DroneBay.UsedCapacity)
 				{
+					
+					Logging.Log("Arm.MoveDronesToDroneBay", "if ((int)Drones.DroneBay.Capacity == (int)Drones.DroneBay.UsedCapacity)", Logging.White);
+					
 					DirectItem d = Drones.DroneBay.Items.FirstOrDefault();
 					if (d != null && d.TypeId == Drones.DroneTypeID)
 					{

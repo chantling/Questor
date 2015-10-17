@@ -172,7 +172,7 @@ namespace Questor.Modules.BackgroundTasks
                     OrbitDistanceToUse = 2000;
                 }
 
-                if (target.Distance + OrbitDistanceToUse < Combat.MaxRange - 5000)
+                if (target.Distance + OrbitDistanceToUse < Combat.MaxRange - 5000 || (Combat.DoWeCurrentlyProjectilesMounted() && !target.IsFrigate))
                 {
                     if (Logging.DebugNavigateOnGrid) Logging.Log("NavigateOnGrid", "if (target.Distance + Cache.Instance.OrbitDistance < Combat.MaxRange - 5000)", Logging.White);
 
