@@ -280,7 +280,7 @@ namespace Questor.Actions
 								droneTypeIds.Add((int)missionFitting.DroneTypeID);
 						}
 
-						foreach (int droneTypeId in droneTypeIds)
+						foreach (int droneTypeId in droneTypeIds.Distinct())
 						{
 							var totalQuantityDrones = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == droneTypeId).Sum(i => i.Quantity);
 
