@@ -32,6 +32,7 @@ namespace Questor.Actions
 
         public static BuyAmmoState state { get; set; } // idle == default
         private static Dictionary<int, int> buyList = new Dictionary<int, int>();
+        private static List<int> moveToCargoList = new List<int>();
         private static int minimumDroneAmount = 200;
         private static DateTime nextAction = DateTime.MinValue;
         private static int jumps;
@@ -109,6 +110,7 @@ namespace Questor.Actions
                     }
 
                     buyList = new Dictionary<int, int>();
+                    moveToCargoList = new List<int>();
 
                     bool buy = false;
 
@@ -496,6 +498,7 @@ namespace Questor.Actions
                         }
 
                         buyList.Remove(ammoTypeId);
+                        moveToCargoList.Add(ammoTypeId);
                         return;
                     }
 
@@ -648,7 +651,7 @@ namespace Questor.Actions
                         return;
                     }
 
-                    IEnumerable<DirectItem> ammoItems = Cache.Instance.ItemHangar.Items.Where(i => Combat.Ammo.Any(r => r.TypeId == i.TypeId)).ToList();
+                    IEnumerable<DirectItem> ammoItems = Cache.Instance.ItemHangar.Items.Where(i => moveToCargoList.Contains(i.TypeId)).ToList();
                     if (ammoItems.Any())
                     {
                         Logging.Log("BuyAmmo", "Moving ammo to cargohold", Logging.White);
