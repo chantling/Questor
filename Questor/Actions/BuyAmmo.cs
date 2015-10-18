@@ -663,7 +663,7 @@ namespace Questor.Actions
 						maxVolumeToMove = Math.Max(1,maxVolumeToMove);
 						
 						Logging.Log("BuyAmmo", "Moving ammo to cargohold", Logging.White);
-						Cache.Instance.CurrentShipsCargo.Add(ammoItems);
+						Cache.Instance.CurrentShipsCargo.Add(ammoItem,maxVolumeToMove);
 						return;
 					}
 
