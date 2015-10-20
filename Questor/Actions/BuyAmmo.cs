@@ -138,7 +138,7 @@ namespace Questor.Actions
 						{
 							if (factionFtting.DroneTypeID == null)
 								continue;
-							if (factionFtting.DroneTypeID == 0)
+							if (factionFtting.DroneTypeID <= 0)
 								continue;
 							if (!droneTypeIds.Contains((int)factionFtting.DroneTypeID))
 								droneTypeIds.Add((int)factionFtting.DroneTypeID);
@@ -148,7 +148,7 @@ namespace Questor.Actions
 						{
 							if (missionFitting.DroneTypeID == null)
 								continue;
-							if (missionFitting.DroneTypeID == 0)
+							if (missionFitting.DroneTypeID <= 0)
 								continue;
 							if (!droneTypeIds.Contains((int)missionFitting.DroneTypeID))
 								droneTypeIds.Add((int)missionFitting.DroneTypeID);
@@ -287,7 +287,7 @@ namespace Questor.Actions
 							if (totalQuantityDrones < minimumDroneAmount)
 							{
 								Logging.Log("BuyAmmo", "Total drone amount in hangar [" + totalQuantityDrones + "]  Minimum amount [" + minimumDroneAmount + "]", Logging.White);
-								buyList.AddOrUpdate(Drones.DroneTypeID, Drones.BuyAmmoDroneAmmount);
+								buyList.AddOrUpdate(droneTypeId, Drones.BuyAmmoDroneAmmount);
 							}
 						}
 					}
