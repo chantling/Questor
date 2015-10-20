@@ -66,7 +66,7 @@ namespace Questor.Modules.Actions
 				}
 				catch (Exception ex)
 				{
-					Logging.Log("LoadSpecificAmmoTypeForNonMissionSituations", "Exception [" + ex + "]", Logging.Debug);
+					Logging.Log("DroneInvTypeItem", "Exception [" + ex + "]", Logging.Debug);
 					return null;
 				}
 			}
@@ -849,13 +849,13 @@ namespace Questor.Modules.Actions
 					
 					Logging.Log("Arm.MoveDronesToDroneBay", "if ((int)Drones.DroneBay.Capacity == (int)Drones.DroneBay.UsedCapacity)", Logging.White);
 					
-					DirectItem d = Drones.DroneBay.Items.FirstOrDefault();
-					if (d != null && d.TypeId == Drones.DroneTypeID)
-					{
-						Logging.Log("Arm.MoveDronesToDroneBay", "Dronebay is Full. No need to move any more drones.", Logging.White);
-						ChangeArmState(nextState);
-						return false;
-					}
+//					DirectItem d = Drones.DroneBay.Items.FirstOrDefault();
+//					if (d != null && d.TypeId == Drones.DroneTypeID || MissionSettings.FactionDroneTypeID)
+//					{
+					Logging.Log("Arm.MoveDronesToDroneBay", "Dronebay is Full. No need to move any more drones.", Logging.White);
+					ChangeArmState(nextState);
+					return false;
+//					}
 					
 					return false;
 				}

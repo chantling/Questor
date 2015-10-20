@@ -322,7 +322,7 @@ namespace Questor.Actions
 
 						var droneInvType = Cache.Instance.DirectEve.InvTypes.FirstOrDefault(d => d.Key == buyListKeyValuePair.Key).Value;
 						var cargoBefore = freeCargo;
-						freeCargo = freeCargo - (buyList[Drones.DroneTypeID] * droneInvType.Volume);
+						freeCargo = freeCargo - (buyListKeyValuePair.Value * droneInvType.Volume);
 						Logging.Log("BuyAmmo", "Drones, Reducing freeCargo from [" + cargoBefore + "] to [" + freeCargo + "]", Logging.White);
 
 					}
