@@ -254,7 +254,7 @@ namespace Questor.Modules.BackgroundTasks
 				
 				// If the wreck no longer exists, or its within loot range then disable the tractor beam
 				// If the wreck no longer exist, beam should be deactivated automatically. Without our interaction.
-				if (tractorBeam.IsActive)
+				if (tractorBeam.IsActive && !NavigateOnGrid.SpeedTank)
 				{
 					if (wreck == null || (wreck.Distance <= (int) Distances.SafeScoopRange && !currentWreckUnlooted && Cache.Instance.MyShipEntity.Velocity < 300))
 					{
