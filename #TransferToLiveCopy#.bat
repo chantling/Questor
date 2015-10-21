@@ -1,69 +1,13 @@
 @Echo off
 cls
-:: delims is a TAB followed by a space
 set debug=false
-::Custom Path to innerspace if you have yours in another location
-::set InnerSpacePath=
-:: Path for 32bit OSs - likely Windows XP (but could be windows vista or windows 7, but not commonly)
-::set InnerSpacePath=%ProgramFiles%\InnerSpace\InnerSpace.exe
-:: Path for 64bit OSs - likely windows Vista or Windows 7
-set InnerSpacePath=%ProgramFiles(x86)%\InnerSpace\
-::
-:: if you choose not to hard code the path above we will search the registry for your innerSpace directory
-:: 
 set scripturl=%~dp0
 set scripturl=%scripturl:~0,-1%
 
-if exist "%InnerSpacePath%" goto :dequote
-if not exist "%InnerSpacePath%" Echo.
-if not exist "%InnerSpacePath%" Echo [before registry] Unable to Find Innerspace Path [ %InnerSpacePath% ] attempting to lookup path using the windows registry
-if not exist "%InnerSpacePath%" Echo.
-if not exist "%InnerSpacePath%" (set InnerSpacePath=)
-if not exist "%InnerSpacePath%" if "%debug%"=="true" Echo.
-if not exist "%InnerSpacePath%" if "%debug%"=="true" echo [before registry] InnerSpacePath is now [ %InnerSpacePath% ] && pause
-if not exist "%InnerSpacePath%" if "%debug%"=="true" Echo.
-::
-:: if the directory above did not exist then check the registry for where innerspace is located and use that
-::
-:registrysearch
-if "%InnerSpacePath%"=="" if "%debug%"=="true" Echo [about to query registry] InnerSpacePath is [ %InnerSpacePath% ] - trying to query known registry keys for innerspace.exe
-if "%InnerSpacePath%"=="" FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\InnerSpace.exe" /v "Path"') DO (SET InnerSpacePath=%%B)
-if "%InnerSpacePath%"=="" FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "HKCU\Software\Microsoft\IntelliPoint\AppSpecific\InnerSpace.exe" /v "Path"') DO (SET InnerSpacePath=%%B)
-if "%InnerSpacePath%"=="" FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "HKCU\Software\Microsoft\IntelliType Pro\AppSpecific\InnerSpace.exe" /v "Path"') DO  (SET InnerSpacePath=%%B)
-if "%InnerSpacePath%"=="" if exist "%ProgramFiles(x86)%\Innerspace\Innerspace.exe" SET InnerSpacePath = %ProgramFiles(x86)%\Innerspace\
-if "%InnerSpacePath%"=="" if exist "%ProgramFiles%\Innerspace\Innerspace.exe" SET InnerSpacePath = %ProgramFiles%\Innerspace\
-if "%InnerSpacePath%"=="" if exist "%userprofile%\Documents\Innerspace\Innerspace.exe" SET InnerSpacePath = %systemdrive%\Innerspace\
-if "%InnerSpacePath%"=="" if exist "%systemdrive%\My Documents\Innerspace\Innerspace.exe" SET InnerSpacePath = %systemdrive%\Innerspace\
-if "%InnerSpacePath%"=="" if exist "%userprofile%\Innerspace\Innerspace.exe" SET InnerSpacePath = %systemdrive%\Innerspace\
-if "%InnerSpacePath%"=="" if exist "%systemdrive%\Innerspace\Innerspace.exe" SET InnerSpacePath = %systemdrive%\Innerspace\
-
-if "%InnerSpacePath%"=="" goto :ERROR
-if "%debug%"=="true" Echo [registry] After registry queries: InnerSpacePath is [ %InnerSpacePath% ] && pause
-if "%debug%"=="true" echo [remove exe] if "%InnerSpacePath:~-15%"=="\InnerSpace.exe" (set InnerSpacePath=%InnerSpacePath:~0,-15%)
-if "%InnerSpacePath:~-15%"=="\InnerSpace.exe" (set InnerSpacePath=%InnerSpacePath:~0,-15%)
-
-:dequote
-pushd
-cd %scripturl%
-call dequote.cmd InnerSpacePath
-call dequote.cmd InnerSpacePath
-popd
-
 :setinnerspacedotnetdirectory
-if exist "%InnerSpacePath%" if "%debug%"=="true" Echo (set innerspacedotnetdirectory="%InnerSpacePath%\.Net Programs\")
-if exist "%InnerSpacePath%" set innerspacedotnetdirectory=%InnerSpacePath%\.Net Programs\
-@echo [finished] Innerspace Path is: [%InnerSpacePath%]
-@echo [finished] innerspacedotnetdirectory Path is: [%innerspacedotnetdirectory%]
 if "%debug%"=="true" pause && echo ------------------------------------------ && echo ------------------------------------------
 if exist ".\..\..\Questor\" set innerspacedotnetdirectory=.\..\..\Questor\
 if not exist "%Innerspacedotnetdirectory%" goto :error
-
-:dequote2
-pushd
-cd %scripturl%
-call dequote.cmd innerspacedotnetdirectory
-call dequote.cmd innerspacedotnetdirectory
-popd
 
 :CopyQuestor
 @Echo.
@@ -81,10 +25,10 @@ set RandomNumber=%Random%
 @Echo Rename prior Quester.exe to Questor.exe.RandomNumber.questorold
 ren "%innerspacedotnetdirectory%\Questor.exe" "Questor.exe.%RandomNumber%.questorold"
 @Echo off
-@Echo.
-@Echo Rename prior Questor.Modules.dll to Questor.Modules.dll.RandomNumber.questorold
-ren "%innerspacedotnetdirectory%\Questor.Modules.dll" "Questor.Modules.dll.%RandomNumber%.questorold"
+@Echo Rename prior Utility.dll to Utility.dll.RandomNumber.questorold
+ren "%innerspacedotnetdirectory%\Utility.dll" "Utility.dll.%RandomNumber%.questorold"
 @Echo off
+@Echo.
 @Echo.@Echo Trying to delete all .questorold files
 Del /Q "%innerspacedotnetdirectory%\*.questorold"
 @Echo off
@@ -123,8 +67,6 @@ if not exist "%innerspacedotnetdirectory%\invtypes.xml" copy /y ".\output\invtyp
 @Echo *** only copy InvIgnore.xml if one does not already exist (it contains invtypes that will not be sold by valuedump)
 if not exist "%innerspacedotnetdirectory%\InvIgnore.xml" copy /y ".\output\InvIgnore.xml" "%innerspacedotnetdirectory%"
 @Echo.
-@Echo *** only copy Schedules.xml if one does not already exist (it contains the schedule your toons will use to logoff and login if you start eve early)
-if not exist "%innerspacedotnetdirectory%\Schedules.xml" copy /y ".\output\Schedules.xml" "%innerspacedotnetdirectory%"
 @Echo. 
 @Echo *** only copy Skill_Prerequisites.xml if one does not already exist (it contains skill prerequisites which allows questor to determine which skills can be injected)
 if not exist "%innerspacedotnetdirectory%\Skill_Prerequisites.xml" copy /y ".\output\Skill_Prerequisites.xml" "%innerspacedotnetdirectory%"
@@ -134,15 +76,7 @@ goto :done
 
 :error
 echo ------------------------------------------ && echo ------------------------------------------
-Echo.
-Echo unable to find your innerspace directory via the 3 registry keys we tried
-Echo InnerSpacePath is [ %InnerSpacePath% ]
-Echo innerspacedotnetdirectory is [ %innerspacedotnetdirectory% ]
-Echo      you can edit the script and change:
-Echo                (set InnerSpacePath=..\..\innerspace\)
-Echo      to the full path to your innerspace directory if needed. 
-Echo.
-Echo if you want to debug this script you can set debug=true near the top of the script
+echo Error
 echo ------------------------------------------ && echo ------------------------------------------
 :done
 echo [done copying questor related files to: %innerspacedotnetdirectory%]
