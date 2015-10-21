@@ -56,7 +56,7 @@ namespace Questor.Actions
 				if (stateIterations.ContainsKey(state))
 					stateIterations[state] = stateIterations[state] + 1;
 				else
-					stateIterations.Add(state, 1);
+					stateIterations.AddOrUpdate(state, 1);
 
 				if (stateIterations[state] >= maxStateIterations)
 				{
@@ -351,22 +351,23 @@ namespace Questor.Actions
 							{
 								majorBuySlotUsed = true;
 								int ammoBuyAmount = (int)((freeCargo * 0.4) / ammoInvType.Volume); // 40% of the volume for the first missing ammo
-								buyList.Add(ammo.TypeId, ammoBuyAmount);
+								buyList.AddOrUpdate(ammo.TypeId, ammoBuyAmount);
 							}
 							else
 							{
 								if (totalQuantity <= maxQty)
 								{
 									int ammoBuyAmount = (int)((freeCargo * (0.6 / (Combat.Ammo.Count - 1))) / ammoInvType.Volume); // 60% for the rest
-									buyList.Add(ammo.TypeId, ammoBuyAmount); // yes we're not using the whole cargo here if one or more types are above max qty
+									buyList.AddOrUpdate(ammo.TypeId, ammoBuyAmount); // yes we're not using the whole cargo here if one or more types are above max qty
 								}
 							}
 
 						}
-						catch (Exception)
+						catch (Exception e)
 						{
 
 							Logging.Log("BuyAmmo", "ERROR: foreach(var ammo in Combat.Ammo)", Logging.White);
+							Logging.Log("BuyAmmo", "Stacktrace [" + e.StackTrace + "]", Logging.White);
 							state = BuyAmmoState.Error;
 							return;
 						}
