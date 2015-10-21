@@ -302,12 +302,12 @@ namespace Questor.Actions
 						return;
 					}
 
-					if (Combat.Ammo.Any(a => Combat.Ammo.Count(b => b.TypeId == a.TypeId) > 1))
-					{
-						Logging.Log("BuyAmmo", "ERROR: One or more ammo types have the same type id. Fix that.", Logging.White);
-						state = BuyAmmoState.Error;
-						return;
-					}
+//					if (Combat.Ammo.Any(a => Combat.Ammo.Count(b => b.TypeId == a.TypeId) > 1))
+//					{
+//						Logging.Log("BuyAmmo", "ERROR: One or more ammo types have the same type id. Fix that.", Logging.White);
+//						state = BuyAmmoState.Error;
+//						return;
+//					}
 
 
 					foreach (var buyListKeyValuePair in buyList.ToList())
