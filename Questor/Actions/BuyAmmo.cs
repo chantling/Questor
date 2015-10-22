@@ -117,7 +117,7 @@ namespace Questor.Actions
 					foreach (var ammo in Combat.Ammo)
 					{
 
-						var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Quantity);
+						var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Stacksize);
 						int minQty = ammo.Quantity * minAmmoMultiplier;
 						if (totalQuantity < minQty)
 						{
@@ -156,7 +156,7 @@ namespace Questor.Actions
 
 						foreach (int droneTypeId in droneTypeIds)
 						{
-							var totalQuantityDrones = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == droneTypeId).Sum(i => i.Quantity);
+							var totalQuantityDrones = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == droneTypeId).Sum(i => i.Stacksize);
 							if (totalQuantityDrones < minimumDroneAmount)
 							{
 								Logging.Log("BuyAmmo", "Total drone amount in hangar [" + totalQuantityDrones + "]  Minimum amount [" + minimumDroneAmount + "] We're going to buy drones of type [" + droneTypeId + "]", Logging.White);
@@ -282,7 +282,7 @@ namespace Questor.Actions
 
 						foreach (int droneTypeId in droneTypeIds.Distinct())
 						{
-							var totalQuantityDrones = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == droneTypeId).Sum(i => i.Quantity);
+							var totalQuantityDrones = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == droneTypeId).Sum(i => i.Stacksize);
 
 							if (totalQuantityDrones < minimumDroneAmount)
 							{
@@ -335,7 +335,7 @@ namespace Questor.Actions
 						try
 						{
 
-							var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Quantity);
+							var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Stacksize);
 							int minQty = ammo.Quantity * minAmmoMultiplier;
 							int maxQty = ammo.Quantity * maxAmmoMultiplier;
 
@@ -494,12 +494,12 @@ namespace Questor.Actions
 
 					// Do we have the ammo we need in the Item Hangar?
 
-					if (Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Quantity) >= ammoQuantity)
+					if (Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Stacksize) >= ammoQuantity)
 					{
 						DirectItem ammoItemInHangar = Cache.Instance.ItemHangar.Items.FirstOrDefault(i => i.TypeId == ammoTypeId);
 						if (ammoItemInHangar != null)
 						{
-							Logging.Log("BuyAmmo", "We have [" + Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Quantity).ToString(CultureInfo.InvariantCulture) + "] " + ammoItemInHangar.TypeName + " in the item hangar.", Logging.White);
+							Logging.Log("BuyAmmo", "We have [" + Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Stacksize).ToString(CultureInfo.InvariantCulture) + "] " + ammoItemInHangar.TypeName + " in the item hangar.", Logging.White);
 						}
 
 						buyList.Remove(ammoTypeId);
@@ -603,7 +603,7 @@ namespace Questor.Actions
 					}
 
 					// How much ammo do we still need?
-					int neededQuantity = ammoQuantity - Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Quantity);
+					int neededQuantity = ammoQuantity - Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Stacksize);
 					if (neededQuantity > 0)
 					{
 						// Get the first order

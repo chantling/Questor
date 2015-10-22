@@ -147,10 +147,10 @@ namespace Questor
 					MissionSettings.UpdateMissionName();
 					Logging.MaintainConsoleLogs();
 
-                    //var daysLeft = Cache.Instance.DirectEve.Me.DaysLeftOnAccount;
-                    //Logging.Log("RunOnceAfterStartup", "Cache.Instance.DirectEve.Me.DaysLeftOnAccount [" + daysLeft + "]", Logging.Debug);
+					//var daysLeft = Cache.Instance.DirectEve.Me.DaysLeftOnAccount;
+					//Logging.Log("RunOnceAfterStartup", "Cache.Instance.DirectEve.Me.DaysLeftOnAccount [" + daysLeft + "]", Logging.Debug);
 
-                }
+				}
 				else
 				{
 					Logging.Log("RunOnceAfterStartup", "Settings.Instance.CharacterName is still null", Logging.Orange);
@@ -176,7 +176,7 @@ namespace Questor
 
 
 
-                    _runOnceInStationAfterStartupalreadyProcessed = true;
+					_runOnceInStationAfterStartupalreadyProcessed = true;
 				}
 				else
 				{
@@ -443,12 +443,12 @@ namespace Questor
 					return;
 				}
 
-                if (Cache.Instance.Paused)
-                {
-                    return;
-                }
+				if (Cache.Instance.Paused)
+				{
+					return;
+				}
 
-                if (!BeforeLogin.questorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questor")) {
+				if (!BeforeLogin.questorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questor")) {
 					_nextPulse = DateTime.UtcNow.AddSeconds(2);
 					return;
 				}
@@ -1026,59 +1026,94 @@ namespace Questor
 					case QuestorState.DebugMarket:
 						
 						
-						int ammoTypeId = 20307;
+						int ammoTypeId = 2456;
 						// Is there a market window?
 						DirectMarketWindow marketWindow = Cache.Instance.DirectEve.Windows.OfType<DirectMarketWindow>().FirstOrDefault();
 
 
-                        var daysLeft = Cache.Instance.DirectEve.Me.DaysLeftOnAccount;
-                        Logging.Log("RunOnceAfterStartup", "Cache.Instance.DirectEve.Me.DaysLeftOnAccount [" + daysLeft + "]", Logging.Debug);
-
-                        // We do not have enough ammo, open the market window
-                        if (marketWindow == null)
+						var daysLeft = Cache.Instance.DirectEve.Me.DaysLeftOnAccount;
+						Logging.Log("RunOnceAfterStartup", "Cache.Instance.DirectEve.Me.DaysLeftOnAccount [" + daysLeft + "]", Logging.Debug);
+						
+						
+						
+						
+						if (Cache.Instance.ItemHangar == null) return;
+						if (Cache.Instance.ItemHangar.Items.Any())
 						{
-							_nextPulse = DateTime.UtcNow.AddSeconds(10);
-
-							Logging.Log("BuyAmmo", "Opening market window", Logging.White);
-
-							Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenMarket);
-							Statistics.LogWindowActionToWindowLog("MarketWindow", "MarketWindow Opened");
-							return;
-						}
-
-						// Wait for the window to become ready
-						if (!marketWindow.IsReady)
-						{
-							return;
-						}
-
-						// Are we currently viewing the correct ammo orders?
-						if (marketWindow.DetailTypeId != ammoTypeId)
-						{
-							// No, load the ammo orders
-							marketWindow.LoadTypeId(ammoTypeId);
-
-							Logging.Log("BuyAmmo", "Loading market window", Logging.White);
-
-							_nextPulse = DateTime.UtcNow.AddSeconds(10);
-							return;
-						}
-
-						// Get the median sell price
-						DirectInvType type;
-						Cache.Instance.DirectEve.InvTypes.TryGetValue(ammoTypeId, out type);
-
-						var currentAmmoDirectItem = type;
-						double maxPrice = 0;
-
-						if (currentAmmoDirectItem != null)
-						{
-							double avgPrice = currentAmmoDirectItem.GetAverAgePrice;
-							double basePrice = currentAmmoDirectItem.BasePrice/currentAmmoDirectItem.PortionSize;
 							
-							Logging.Log("BuyAmmo", "Item [" + currentAmmoDirectItem.TypeName + "] avgPrice [" + avgPrice + "] basePrice [" + basePrice + "]", Logging.Orange);
+							
+							foreach (var ammo in Combat.Ammo)
+							{
+
+								var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Quantity);
+								var totalStacksize = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Stacksize);
+								int minQty = ammo.Quantity * 20;
+
+								Logging.Log("BuyAmmo", "Total ammo amount in hangar type [" + ammo.TypeId + "] stacksize [" + totalStacksize + "] Minimum amount [" + minQty + "] We're going to buy ammo.", Logging.White);
+								Logging.Log("BuyAmmo", "Total ammo amount in hangar type [" + ammo.TypeId + "] quantity [" + totalQuantity + "] Minimum amount [" + minQty + "] We're going to buy ammo.", Logging.White);
+								
+								
+								
+
+							}
+							
+							
+							var totalQ = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Quantity);
+							var totalS = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Stacksize);
+							
+
+							Logging.Log("BuyAmmo", "Total ammo amount in hangar type [" + ammoTypeId + "] stacksize [" + totalS + "] Minimum amount [" + "" + "] We're going to buy ammo.", Logging.White);
+							Logging.Log("BuyAmmo", "Total ammo amount in hangar type [" + ammoTypeId + "] quantity [" + totalQ + "] Minimum amount [" + "" + "] We're going to buy ammo.", Logging.White);
+
+							
 						}
 						
+
+						//                        // We do not have enough ammo, open the market window
+						//                        if (marketWindow == null)
+//						{
+//							_nextPulse = DateTime.UtcNow.AddSeconds(10);
+//
+//							Logging.Log("BuyAmmo", "Opening market window", Logging.White);
+//
+//							Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenMarket);
+//							Statistics.LogWindowActionToWindowLog("MarketWindow", "MarketWindow Opened");
+//							return;
+//						}
+//
+//						// Wait for the window to become ready
+//						if (!marketWindow.IsReady)
+//						{
+//							return;
+//						}
+//
+//						// Are we currently viewing the correct ammo orders?
+//						if (marketWindow.DetailTypeId != ammoTypeId)
+//						{
+//							// No, load the ammo orders
+//							marketWindow.LoadTypeId(ammoTypeId);
+//
+//							Logging.Log("BuyAmmo", "Loading market window", Logging.White);
+//
+//							_nextPulse = DateTime.UtcNow.AddSeconds(10);
+//							return;
+//						}
+//
+//						// Get the median sell price
+//						DirectInvType type;
+//						Cache.Instance.DirectEve.InvTypes.TryGetValue(ammoTypeId, out type);
+//
+//						var currentAmmoDirectItem = type;
+//						double maxPrice = 0;
+//
+//						if (currentAmmoDirectItem != null)
+//						{
+//							double avgPrice = currentAmmoDirectItem.GetAverAgePrice;
+//							double basePrice = currentAmmoDirectItem.BasePrice/currentAmmoDirectItem.PortionSize;
+//
+//							Logging.Log("BuyAmmo", "Item [" + currentAmmoDirectItem.TypeName + "] avgPrice [" + avgPrice + "] basePrice [" + basePrice + "]", Logging.Orange);
+//						}
+//
 						break;
 						
 						
