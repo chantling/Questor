@@ -443,6 +443,9 @@ namespace Questor
 					return;
 				}
 
+				
+				Time.Instance.LastFrame = DateTime.UtcNow;
+				
 				if (Cache.Instance.Paused)
 				{
 					return;
@@ -475,7 +478,7 @@ namespace Questor
 					_lastSessionNotReady = GetNowAddDelay(7,8);
 				}
 				
-				Time.Instance.LastFrame = DateTime.UtcNow;
+				
 				_lastQuestorPulse = DateTime.UtcNow;
 				
 				if (Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)

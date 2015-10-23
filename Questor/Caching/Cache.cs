@@ -97,7 +97,25 @@ namespace Questor.Modules.Caching
 		public static D3DDetour.D3DVersion D3DVersion { get; set; }
 		public static Random _random = new Random();
 
-		public bool InMission { get; set; }
+		bool inMission;
+		
+		public bool InMission {
+			get {
+				
+				if(!InStation) {
+					EntityCache station = Cache.Instance.Stations.OrderBy(s => s.Distance).FirstOrDefault();
+					
+					if(station != null && station.Distance < 1000000) {
+						return false;
+					}
+				}
+				
+				return inMission;
+			}
+
+			set { inMission = value; }
+		}
+		
 		public bool normalNav = true;
 		public bool onlyKillAggro { get; set; }
 		public int StackLoothangarAttempts { get; set; }
