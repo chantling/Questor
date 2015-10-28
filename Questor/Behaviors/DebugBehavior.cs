@@ -174,7 +174,7 @@ namespace Questor.Behaviors
 					break;
 					
 				case DebugBehaviorState.Traveler:
-					Salvage.openWrecks = false;
+					Salvage.OpenWrecks = false;
 					List<int> destination = Cache.Instance.DirectEve.Navigation.GetDestinationPath();
 					if (destination == null || destination.Count == 0)
 					{

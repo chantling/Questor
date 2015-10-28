@@ -41,9 +41,11 @@ namespace Questor.Modules.BackgroundTasks
 		public static bool openWrecks = true;
 		
 		public static bool OpenWrecks {
-			get { return openWrecks; }
-			set { 
-				Console.WriteLine("---------------------------Openwrecks set---------------------------");
+			get {
+				return openWrecks;
+			}
+			set {
+				//Console.WriteLine("---------------------------Openwrecks set [" + value.ToString() + "]");
 				openWrecks = value;
 			}
 		}
@@ -241,12 +243,9 @@ namespace Questor.Modules.BackgroundTasks
 					continue;
 				}
 
-				//if ( !tractorBeam.IsActive && !tractorBeam.IsDeactivating)
-				//    continue;
-
 				EntityCache wreck = wrecks.FirstOrDefault(w => w.Id == tractorBeam.TargetId);
 
-				//for  Cache.Instance.UnlootedContainers.Contains()
+				
 				bool currentWreckUnlooted = false;
 
 				if (Logging.DebugTractorBeams) Logging.Log("Salvage.ActivateTractorBeams.Deactivating", "MyShip.Velocity [" + Math.Round(Cache.Instance.MyShipEntity.Velocity, 0) + "]", Logging.Teal);
@@ -262,6 +261,7 @@ namespace Questor.Modules.BackgroundTasks
 				
 				// If the wreck no longer exists, or its within loot range then disable the tractor beam
 				// If the wreck no longer exist, beam should be deactivated automatically. Without our interaction.
+				// Only deactivate while NOT speed tanking
 				if (tractorBeam.IsActive && !NavigateOnGrid.SpeedTank)
 				{
 					if (wreck == null || (wreck.Distance <= (int) Distances.SafeScoopRange && !currentWreckUnlooted && Cache.Instance.MyShipEntity.Velocity < 300))
@@ -601,7 +601,7 @@ namespace Questor.Modules.BackgroundTasks
 				tractorBeamRange = tractorBeams.Min(t => t.OptimalRange);
 			}
 
-			if (!openWrecks)
+			if (!OpenWrecks)
 			{
 				if (Logging.DebugTargetWrecks) Logging.Log("Salvage.TargetWrecks", "Debug: OpenWrecks is false, we do not need to target any wrecks.", Logging.Teal);
 				return;
@@ -836,7 +836,7 @@ namespace Questor.Modules.BackgroundTasks
 					}
 
 					// Don't even try to open a wreck if you are speed tanking and you are not processing a loot action
-					if (NavigateOnGrid.SpeedTank && !Cache.Instance.MyShipEntity.IsBattleship && openWrecks == false)
+					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking && OpenWrecks == false)
 					{
 						if (Logging.DebugLootWrecks) Logging.Log("Salvage.LootWrecks", "SpeedTank is true and OpenWrecks is false [" + containerEntity.Id + "]", Logging.White);
 						continue;

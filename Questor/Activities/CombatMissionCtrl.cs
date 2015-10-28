@@ -69,9 +69,11 @@ namespace Questor.Modules.Activities
 
 			// now that we have completed this action revert OpenWrecks to false
 			
-			Console.WriteLine("Settings.Instance.LootWhileSpeedTanking: " + Settings.Instance.LootWhileSpeedTanking.ToString());
+			if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) {
+				if (Logging.DebugTargetWrecks) Logging.Log("Nextaction", "Salvage.OpenWrecks = false;", Logging.Debug);
+				Salvage.OpenWrecks = false;
+			}
 			
-			if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) Salvage.openWrecks = false;
 			Salvage.MissionLoot = false;
 			Cache.Instance.normalNav = true;
 			Cache.Instance.onlyKillAggro = false;
@@ -1887,7 +1889,7 @@ namespace Questor.Modules.Activities
 
 				// if we are not generally looting we need to re-enable the opening of wrecks to
 				// find this LootItems we are looking for
-				Salvage.openWrecks = true;
+				Salvage.OpenWrecks = true;
 
 				int quantity;
 				if (!int.TryParse(action.GetParameterValue("quantity"), out quantity))
@@ -1900,7 +1902,12 @@ namespace Questor.Modules.Activities
 					Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "We are done - we have the item(s)", Logging.Teal);
 
 					// now that we have completed this action revert OpenWrecks to false
-					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) Salvage.openWrecks = false;
+					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) {
+						if (Logging.DebugTargetWrecks) Logging.Log("LootItemAction", "Salvage.OpenWrecks = false;", Logging.Debug);
+						Salvage.OpenWrecks = false;
+					}
+					
+					
 					Salvage.MissionLoot = false;
 					Salvage.CurrentlyShouldBeSalvaging = false;
 					Nextaction();
@@ -1915,7 +1922,14 @@ namespace Questor.Modules.Activities
 				if (!containers.Any())
 				{
 					Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "no containers left to loot, next action", Logging.Teal);
-					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) Salvage.openWrecks = false;
+					
+							
+					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) {
+						if (Logging.DebugTargetWrecks) Logging.Log("LootItemAction", "Salvage.OpenWrecks = false;", Logging.Debug);
+						Salvage.OpenWrecks = false;
+					}
+										
+					
 					Salvage.MissionLoot = false;
 					Salvage.CurrentlyShouldBeSalvaging = false;
 					Nextaction();
@@ -2045,7 +2059,11 @@ namespace Questor.Modules.Activities
 					Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "We are done - we have the item(s)", Logging.Teal);
 
 					// now that we have completed this action revert OpenWrecks to false
-					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) Salvage.openWrecks = false;
+					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) {
+						if (Logging.DebugTargetWrecks) Logging.Log("SalvageAction", "Salvage.OpenWrecks = false;", Logging.Debug);
+						Salvage.OpenWrecks = false;
+					}
+					
 					Salvage.MissionLoot = false;
 					Salvage.CurrentlyShouldBeSalvaging = false;
 					Nextaction();
@@ -2086,7 +2104,7 @@ namespace Questor.Modules.Activities
 				}
 				else if (closest.Distance < Salvage.salvagers.Min(s => s.OptimalRange))
 				{
-					if (NavigateOnGrid.SpeedTank) Salvage.openWrecks = true;
+					if (NavigateOnGrid.SpeedTank) Salvage.OpenWrecks = true;
 					Salvage.CurrentlyShouldBeSalvaging = true;
 					Salvage.TargetWrecks(targets);
 					Salvage.ActivateSalvagers(targets);
@@ -2117,7 +2135,7 @@ namespace Questor.Modules.Activities
 
 				// if we are not generally looting we need to re-enable the opening of wrecks to
 				// find this LootItems we are looking for
-				Salvage.openWrecks = true;
+				Salvage.OpenWrecks = true;
 				Salvage.CurrentlyShouldBeSalvaging = true;
 
 				if (!Salvage.LootEverything)
@@ -2127,7 +2145,12 @@ namespace Questor.Modules.Activities
 						Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "LootEverything:  We are done looting", Logging.Teal);
 
 						// now that we are done with this action revert OpenWrecks to false
-						if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) Salvage.openWrecks = false;
+						
+								if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) {
+						if (Logging.DebugTargetWrecks) Logging.Log("LootAction", "Salvage.OpenWrecks = false;", Logging.Debug);
+						Salvage.OpenWrecks = false;
+					}
+						
 						Salvage.MissionLoot = false;
 						Salvage.CurrentlyShouldBeSalvaging = false;
 						Nextaction();
@@ -2159,7 +2182,12 @@ namespace Questor.Modules.Activities
 					Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], "We are done looting", Logging.Teal);
 
 					// now that we are done with this action revert OpenWrecks to false
-					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) Salvage.openWrecks = false;
+					
+								if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) {
+						if (Logging.DebugTargetWrecks) Logging.Log("LootAction", "Salvage.OpenWrecks = false;", Logging.Debug);
+						Salvage.OpenWrecks = false;
+					}
+					
 					Salvage.MissionLoot = false;
 					Salvage.CurrentlyShouldBeSalvaging = false;
 					Nextaction();
@@ -2478,7 +2506,7 @@ namespace Questor.Modules.Activities
 					//
 					// LogStatistics();
 					//
-//					
+//
 //					if(Settings.Instance.DisableAutoBackgroundMoveToGate) {
 //						Logging.Log("-", "Settings.Instance.DisableAutoBackgroundMoveToGate ==  true", Logging.White);
 //					}
@@ -2564,8 +2592,14 @@ namespace Questor.Modules.Activities
 					Console.WriteLine("Settings.Instance.LootWhileSpeedTanking: " + Settings.Instance.LootWhileSpeedTanking.ToString());
 					
 					Drones.IsMissionPocketDone = false;
-					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) Salvage.openWrecks = false;
-					if (!NavigateOnGrid.SpeedTank) Salvage.openWrecks = true;
+					
+					
+					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) {
+						if (Logging.DebugTargetWrecks) Logging.Log("CombatMissionCtrlState.LoadPocket", "Salvage.OpenWrecks = false;", Logging.Debug);
+						Salvage.OpenWrecks = false;
+					} else {
+						Salvage.OpenWrecks = true;	
+					}
 					
 					IgnoreTargets.Clear();
 					Statistics.PocketObjectStatistics(Cache.Instance.Objects.ToList());

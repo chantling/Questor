@@ -357,9 +357,9 @@
 						//    Console.WriteLine(m.Name + " state: " + m.State.ToString());
 						//}
 
-						if (notCompatibleStorylines.Any())
+						if (notCompatibleStorylines.Any(m => m.State == (int)MissionState.Offered))
 						{
-							var mission = notCompatibleStorylines.FirstOrDefault();
+							var mission = notCompatibleStorylines.FirstOrDefault(m => m.State == (int)MissionState.Offered);
 							if (mission != null)
 							{
 								Logging.Log("Storyline", "Removing storyline mission offer [" + mission.Name + "] to make room for new storylines.", Logging.White);

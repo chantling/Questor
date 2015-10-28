@@ -289,7 +289,7 @@ namespace Questor.Behaviors
 					break;
 
 				case DedicatedBookmarkSalvagerBehaviorState.Start:
-					Salvage.openWrecks = true;
+					Salvage.OpenWrecks = true;
 					ValidateDedicatedSalvageSettings();
 					_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.UnloadLoot;
 					break;
@@ -414,7 +414,7 @@ namespace Questor.Behaviors
 					//we know we are connected here
 					if (!Cache.Instance.UpdateMyWalletBalance()) return;
 
-					Salvage.openWrecks = true;
+					Salvage.OpenWrecks = true;
 					if (Cache.Instance.InStation)
 					{
 						if (_States.CurrentArmState == ArmState.Idle)
@@ -533,7 +533,7 @@ namespace Questor.Behaviors
 
 					if (Logging.DebugSalvage) Logging.Log("DedicatedBookmarkSalvagerBehavior", "salvage::: done opening cargo hold", Logging.White);
 					Salvage.SalvageAll = true;
-					Salvage.openWrecks = true;
+					Salvage.OpenWrecks = true;
 					Salvage.CurrentlyShouldBeSalvaging = true;
 
 					const int distanceToCheck = (int)Distances.OnGridWithMe;

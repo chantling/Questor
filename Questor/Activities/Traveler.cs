@@ -449,7 +449,11 @@ namespace Questor.Modules.Activities
                 }
             }
 
-            if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) Salvage.openWrecks = false;
+            
+            					if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) {
+						if (Logging.DebugTargetWrecks) Logging.Log("_defendOnTravel", "Salvage.OpenWrecks = false;", Logging.Debug);
+						Salvage.OpenWrecks = false;
+					}
 
             return canWarp;
         }

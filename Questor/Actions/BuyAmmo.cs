@@ -292,9 +292,7 @@ namespace Questor.Actions
 						}
 					}
 
-					// here we could also run through our mission xml folder and seach for the bring, trybring items and add them here?
-
-
+					// here we could also run through our mission xml folder and seach for the bring, trybring items and add them here ( if we dont have them in our hangar )
 					if (Combat.Ammo.Select(a => a.DamageType).Distinct().Count() != 4)
 					{
 						Logging.Log("BuyAmmo", "ERROR: if (Combat.Ammo.Select(a => a.DamageType).Distinct().Count() != 4)", Logging.White);

@@ -344,7 +344,7 @@ namespace Questor.Behaviors
 				return;
 			}
 
-			Salvage.openWrecks = false;
+			Salvage.OpenWrecks = false;
 			if (_States.CurrentAgentInteractionState == AgentInteractionState.Idle)
 			{
 				Cache.Instance.Wealth = Cache.Instance.DirectEve.Me.Wealth;
@@ -821,7 +821,11 @@ namespace Questor.Behaviors
 			{
 				if (!WeShouldBeInSpaceORInStationAndOutOfSessionChange()) return; //either in space or in station is fine, but we should not continue until we are not in a session change
 
-				if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) Salvage.openWrecks = false;
+				
+				if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) {
+					if (Logging.DebugTargetWrecks) Logging.Log("TravelerCMBState", "Salvage.OpenWrecks = false;", Logging.Debug);
+					Salvage.OpenWrecks = false;
+				}
 
 				List<int> destination = Cache.Instance.DirectEve.Navigation.GetDestinationPath();
 				if (destination == null || destination.Count == 0)
@@ -1119,7 +1123,7 @@ namespace Questor.Behaviors
 
 			
 			
-			Salvage.openWrecks = true;
+			Salvage.OpenWrecks = true;
 			
 
 			if (_States.CurrentArmState == ArmState.Idle)
@@ -1154,7 +1158,7 @@ namespace Questor.Behaviors
 		private void SalvageCMBState()
 		{
 			Salvage.SalvageAll = true;
-			Salvage.openWrecks = true;
+			Salvage.OpenWrecks = true;
 			Salvage.CurrentlyShouldBeSalvaging = true;
 
 			EntityCache deadlyNPC = Combat.PotentialCombatTargets.FirstOrDefault();
@@ -1305,7 +1309,7 @@ namespace Questor.Behaviors
 		
 		private void SalageUseGateCMBState()
 		{
-			Salvage.openWrecks = true;
+			Salvage.OpenWrecks = true;
 
 			if (Cache.Instance.AccelerationGates == null || !Cache.Instance.AccelerationGates.Any())
 			{
@@ -1362,7 +1366,7 @@ namespace Questor.Behaviors
 		
 		private void SalvageNextPocketCMBState()
 		{
-			Salvage.openWrecks = true;
+			Salvage.OpenWrecks = true;
 			double distance = Cache.Instance.DistanceFromMe(_lastX, _lastY, _lastZ);
 			if (distance > (int)Distances.NextPocketDistance)
 			{
