@@ -266,6 +266,7 @@ namespace Questor.Modules.Lookup
 		public string CommonSettingsFileName { get; private set; }
 		
 		public bool BuyAmmo { get; private set; }
+		public bool LootWhileSpeedTanking { get; private set; }
 		public int BuyAmmoStationID { get; private set; }
 
 		public event EventHandler<EventArgs> SettingsLoaded;
@@ -836,7 +837,7 @@ namespace Questor.Modules.Lookup
 					Drones.UseDrones = (bool?)CharacterSettingsXml.Element("useDrones") ?? (bool?)CommonSettingsXml.Element("useDrones") ?? true;
 					Drones.DroneTypeID = (int?)CharacterSettingsXml.Element("droneTypeId") ?? (int?)CommonSettingsXml.Element("droneTypeId") ?? 0;
 					Drones.BuyAmmoDroneAmmount = (int?)CharacterSettingsXml.Element("buyAmmoDroneAmount") ?? (int?)CommonSettingsXml.Element("buyAmmoDroneAmount") ?? 200;
-					
+					LootWhileSpeedTanking = (bool?)CharacterSettingsXml.Element("lootWhileSpeedTanking") ?? (bool?)CommonSettingsXml.Element("lootWhileSpeedTanking") ?? false;
 					Drones.DroneControlRange = (int?)CharacterSettingsXml.Element("droneControlRange") ?? (int?)CommonSettingsXml.Element("droneControlRange") ?? 0;
 					Drones.DronesDontNeedTargetsBecauseWehaveThemSetOnAggressive = (bool?)CharacterSettingsXml.Element("dronesDontNeedTargetsBecauseWehaveThemSetOnAggressive") ?? (bool?)CommonSettingsXml.Element("dronesDontNeedTargetsBecauseWehaveThemSetOnAggressive") ?? true;
 					Drones.DroneMinimumShieldPct = (int?)CharacterSettingsXml.Element("droneMinimumShieldPct") ?? (int?)CommonSettingsXml.Element("droneMinimumShieldPct") ?? 50;

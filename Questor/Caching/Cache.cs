@@ -104,10 +104,16 @@ namespace Questor.Modules.Caching
 				
 				if(!InStation) {
 					EntityCache station = Cache.Instance.Stations.OrderBy(s => s.Distance).FirstOrDefault();
+					EntityCache stargate = Cache.Instance.Stargates.OrderBy(s => s.Distance).FirstOrDefault();
 					
 					if(station != null && station.Distance < 1000000) {
 						return false;
 					}
+					
+					if(stargate != null && stargate.Distance < 1000000) {
+						return false;
+					}
+					
 				}
 				
 				return inMission;

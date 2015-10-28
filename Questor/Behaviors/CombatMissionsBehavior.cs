@@ -344,7 +344,7 @@ namespace Questor.Behaviors
 				return;
 			}
 
-			Salvage.OpenWrecks = false;
+			Salvage.openWrecks = false;
 			if (_States.CurrentAgentInteractionState == AgentInteractionState.Idle)
 			{
 				Cache.Instance.Wealth = Cache.Instance.DirectEve.Me.Wealth;
@@ -821,7 +821,7 @@ namespace Questor.Behaviors
 			{
 				if (!WeShouldBeInSpaceORInStationAndOutOfSessionChange()) return; //either in space or in station is fine, but we should not continue until we are not in a session change
 
-				if (NavigateOnGrid.SpeedTank) Salvage.OpenWrecks = false;
+				if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) Salvage.openWrecks = false;
 
 				List<int> destination = Cache.Instance.DirectEve.Navigation.GetDestinationPath();
 				if (destination == null || destination.Count == 0)
@@ -1117,10 +1117,10 @@ namespace Questor.Behaviors
 				Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "Next Bookmark refresh in [" + Math.Round(_nextBookmarksrefresh.Subtract(DateTime.UtcNow).TotalMinutes, 0) + "min]", Logging.White);
 			}
 
-			if (NavigateOnGrid.SpeedTank || !NavigateOnGrid.SpeedTank)
-			{
-				Salvage.OpenWrecks = true;
-			}
+			
+			
+			Salvage.openWrecks = true;
+			
 
 			if (_States.CurrentArmState == ArmState.Idle)
 			{
@@ -1154,7 +1154,7 @@ namespace Questor.Behaviors
 		private void SalvageCMBState()
 		{
 			Salvage.SalvageAll = true;
-			if (NavigateOnGrid.SpeedTank || !NavigateOnGrid.SpeedTank) Salvage.OpenWrecks = true;
+			Salvage.openWrecks = true;
 			Salvage.CurrentlyShouldBeSalvaging = true;
 
 			EntityCache deadlyNPC = Combat.PotentialCombatTargets.FirstOrDefault();
@@ -1305,7 +1305,7 @@ namespace Questor.Behaviors
 		
 		private void SalageUseGateCMBState()
 		{
-			if (NavigateOnGrid.SpeedTank || !NavigateOnGrid.SpeedTank) Salvage.OpenWrecks = true;
+			Salvage.openWrecks = true;
 
 			if (Cache.Instance.AccelerationGates == null || !Cache.Instance.AccelerationGates.Any())
 			{
@@ -1362,7 +1362,7 @@ namespace Questor.Behaviors
 		
 		private void SalvageNextPocketCMBState()
 		{
-			if (NavigateOnGrid.SpeedTank || !NavigateOnGrid.SpeedTank) Salvage.OpenWrecks = true;
+			Salvage.openWrecks = true;
 			double distance = Cache.Instance.DistanceFromMe(_lastX, _lastY, _lastZ);
 			if (distance > (int)Distances.NextPocketDistance)
 			{

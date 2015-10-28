@@ -500,6 +500,8 @@
   <avoidBumpingThings>true</avoidBumpingThings>
   <!-- When SpeedTank is enabled, Combat-module will try to orbit ships at orbitDistance -->
   <speedTank>false</speedTank>
+  <!-- When SpeedTank is enabled, this will allow looting & salvaging while we are speed tanking -->
+  <lootWhileSpeedTanking>false</lootWhileSpeedTanking>
   <!-- The range used by SpeedTank -->
   <orbitDistance>5000</orbitDistance>
   <!--  When SpeedTank is true this optional setting allows you to orbit the gate rather than the target -->

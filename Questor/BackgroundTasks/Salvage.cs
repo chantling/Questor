@@ -38,7 +38,15 @@ namespace Questor.Modules.BackgroundTasks
 		public static List<int> WreckBlackList { get; set; }
 		public static bool WreckBlackListSmallWrecks { get; set; }
 		public static bool WreckBlackListMediumWrecks { get; set; }
-		public static bool OpenWrecks;
+		public static bool openWrecks = true;
+		
+		public static bool OpenWrecks {
+			get { return openWrecks; }
+			set { 
+				Console.WriteLine("---------------------------Openwrecks set---------------------------");
+				openWrecks = value;
+			}
+		}
 		public static bool MissionLoot;
 		public static bool SalvageAll;
 		public static bool CurrentlyShouldBeSalvaging;
@@ -593,7 +601,7 @@ namespace Questor.Modules.BackgroundTasks
 				tractorBeamRange = tractorBeams.Min(t => t.OptimalRange);
 			}
 
-			if (!OpenWrecks)
+			if (!openWrecks)
 			{
 				if (Logging.DebugTargetWrecks) Logging.Log("Salvage.TargetWrecks", "Debug: OpenWrecks is false, we do not need to target any wrecks.", Logging.Teal);
 				return;
@@ -828,7 +836,7 @@ namespace Questor.Modules.BackgroundTasks
 					}
 
 					// Don't even try to open a wreck if you are speed tanking and you are not processing a loot action
-					if (NavigateOnGrid.SpeedTank && !Cache.Instance.MyShipEntity.IsBattleship && OpenWrecks == false)
+					if (NavigateOnGrid.SpeedTank && !Cache.Instance.MyShipEntity.IsBattleship && openWrecks == false)
 					{
 						if (Logging.DebugLootWrecks) Logging.Log("Salvage.LootWrecks", "SpeedTank is true and OpenWrecks is false [" + containerEntity.Id + "]", Logging.White);
 						continue;

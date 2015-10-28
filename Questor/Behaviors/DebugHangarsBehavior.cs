@@ -101,7 +101,7 @@ namespace Questor.Behaviors
 			switch (_States.CurrentDebugHangarBehaviorState)
 			{
 				case DebugHangarsBehaviorState.Traveler:
-					Salvage.OpenWrecks = false;
+					Salvage.openWrecks = false;
 					List<int> destination = Cache.Instance.DirectEve.Navigation.GetDestinationPath();
 					if (destination == null || destination.Count == 0)
 					{
