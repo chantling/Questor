@@ -242,6 +242,7 @@ namespace Questor.Modules.Lookup
 		// Faction Specific Settings (we should make these ALL settable via some mechanic that I have not come up with yet
 		//
 		public static int? FactionDroneTypeID { get; set; }
+		
 		public static bool? FactionDronesKillHighValueTargets = null;
 		public static double? FactionOrbitDistance = null;
 		public static double? FactionOptimalRange = null;
@@ -414,6 +415,7 @@ namespace Questor.Modules.Lookup
 								if (FactionFittingForThisMissionsFaction.DroneTypeID != null && FactionFittingForThisMissionsFaction.DroneTypeID != 0)
 								{
 									Drones.FactionDroneTypeID = (int)FactionFittingForThisMissionsFaction.DroneTypeID;
+									MissionSettings.FactionDroneTypeID = (int)FactionFittingForThisMissionsFaction.DroneTypeID;
 								}
 
 								Logging.Log("FactionFittingNameForThisMissionsFaction", "Faction fitting [" + FactionFittingForThisMissionsFaction.FactionName + "] DroneTypeID [" + Drones.DroneTypeID + "]", Logging.Yellow);
@@ -440,6 +442,7 @@ namespace Questor.Modules.Lookup
 								if (FactionFittingForThisMissionsFaction.DroneTypeID != null && FactionFittingForThisMissionsFaction.DroneTypeID != 0)
 								{
 									Drones.FactionDroneTypeID = (int)FactionFittingForThisMissionsFaction.DroneTypeID;
+									MissionSettings.FactionDroneTypeID = (int)FactionFittingForThisMissionsFaction.DroneTypeID;
 								}
 
 								Logging.Log("FactionFittingNameForThisMissionsFaction", "Faction fitting [" + FactionFittingForThisMissionsFaction.FactionName + "] Using DroneTypeID [" + Drones.DroneTypeID + "]", Logging.Yellow);

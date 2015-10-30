@@ -845,7 +845,7 @@ namespace Questor.Modules.Activities
 			if(orderDescending) {
 				
 				Logging.Log("CombatMissionCtrl[" + PocketNumber + "]." + _pocketActions[_currentAction], " moveTo: orderDescending == true", Logging.Teal);
-				targets.OrderByDescending(t => t.Distance).FirstOrDefault();
+				moveToTarget = targets.OrderByDescending(t => t.Distance).FirstOrDefault();
 			}
 
 			//if (Settings.Instance.TargetSelectionMethod == "isdp")
