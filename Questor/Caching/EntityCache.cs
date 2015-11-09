@@ -43,6 +43,13 @@ namespace Questor.Modules.Caching
 		//{
 		//    Interlocked.Decrement(ref EntityCacheInstances);
 		//}
+		
+		
+		public double GetBounty {
+			get {
+				return _directEntity != null ? _directEntity.GetBounty() : 0;
+			}
+		}
 
 		public double? DistanceFromEntity(EntityCache OtherEntityToMeasureFrom)
 		{
@@ -4867,6 +4874,13 @@ namespace Questor.Modules.Caching
 												}
 											}
 											// Only add targeting id's when its actually being targeted
+											
+											long entId = _directEntity.Id;
+											if(!Statistics.BountyValues.ContainsKey(entId)) {
+												double bounty = _directEntity.GetBounty();
+												Logging.Log("EntityCache.LockTarget", "Added bounty [" + bounty + "] ent.id [" + entId + "]", Logging.White);
+												Statistics.BountyValues.AddOrUpdate(entId,bounty);
+											}
 
 											if (_directEntity.LockTarget())
 											{

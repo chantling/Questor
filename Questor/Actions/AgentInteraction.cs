@@ -634,7 +634,7 @@ namespace Questor.Modules.Actions
 					
 					Statistics.LoyaltyPointsTotal = AgentInteraction.Agent.LoyaltyPoints;
 					Statistics.LoyaltyPointsForCurrentMission = lpCurrentMission;
-					Statistics.IskFinishedMission = iskFinishedMission;
+					Statistics.ISKMissionReward = iskFinishedMission;
 					Cache.Instance.Wealth = Cache.Instance.DirectEve.Me.Wealth;
 					Logging.Log("AgentInteraction", "ISK finished mission [" + iskFinishedMission + "] LoyalityPoints [" + lpCurrentMission + "]", Logging.White);
 
