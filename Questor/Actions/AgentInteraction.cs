@@ -605,6 +605,38 @@ namespace Questor.Modules.Actions
 							}
 						}
 					}
+					
+					
+					// stats
+					
+					// regex to read current mission lp & isk value
+					// print read values
+					// ([0-9]+)\.([0-9]+)\.([0-9]+) ISK
+					// ([0-9]+) Loyalty Points
+					
+					int lpCurrentMission = 0;
+					int iskFinishedMission = 0;
+					Regex iskRegex = new Regex(@"([0-9]+)\.([0-9]+)\.([0-9]+) ISK", RegexOptions.Compiled);
+					foreach (Match itemMatch in iskRegex.Matches(html))
+					{
+						int val = 0;
+						int.TryParse(Regex.Match(itemMatch.Value.Replace(".",""), @"\d+").Value, out val);
+						iskFinishedMission += val;
+					}
+
+					Regex lpRegex = new Regex(@"([0-9]+) Loyalty Points", RegexOptions.Compiled);
+					foreach (Match itemMatch in lpRegex.Matches(html))
+					{
+						int val = 0;
+						int.TryParse(Regex.Match(itemMatch.Value, @"\d+").Value, out val);
+						lpCurrentMission += val;
+					}
+					
+					Statistics.LoyaltyPointsTotal = AgentInteraction.Agent.LoyaltyPoints;
+					Statistics.LoyaltyPointsForCurrentMission = lpCurrentMission;
+					Statistics.IskFinishedMission = iskFinishedMission;
+					Cache.Instance.Wealth = Cache.Instance.DirectEve.Me.Wealth;
+					Logging.Log("AgentInteraction", "ISK finished mission [" + iskFinishedMission + "] LoyalityPoints [" + lpCurrentMission + "]", Logging.White);
 
 					if (!Cache.Instance.CourierMission)
 					{
@@ -679,6 +711,8 @@ namespace Questor.Modules.Actions
 				if (DateTime.UtcNow < _lastAgentActionStateChange.AddMilliseconds(Cache.Instance.RandomNumber(800,1200))) return; // was 4000
 
 				List<DirectAgentResponse> responses = Agent.Window.AgentResponses;
+				string html = Agent.Window.Briefing;
+				
 				if (responses == null || responses.Count == 0)
 					return;
 
@@ -698,10 +732,12 @@ namespace Questor.Modules.Actions
 						return;
 					}
 				}
+				
+
 
 				LoyaltyPointCounter = 0;
-				Statistics.LoyaltyPoints = AgentInteraction.Agent.LoyaltyPoints;
-				Cache.Instance.Wealth = Cache.Instance.DirectEve.Me.Wealth;
+				
+				
 				Logging.Log("AgentInteraction", "Saying [Accept]", Logging.Yellow);
 				accept.Say();
 				ChangeAgentInteractionState(AgentInteractionState.CloseConversation, true, "Closing conversation");

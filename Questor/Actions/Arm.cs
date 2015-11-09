@@ -450,7 +450,7 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
-				if (DateTime.UtcNow < _lastArmAction.AddMilliseconds(Cache.Instance.RandomNumber(2000, 3000))) return false;
+				if (DateTime.UtcNow < _lastArmAction.AddMilliseconds(Cache.Instance.RandomNumber(4000, 5000))) return false;
 
 				//
 				// have we attempted to switch ships already (and are waiting for it to take effect)

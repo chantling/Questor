@@ -41,7 +41,7 @@ namespace Questor.Storylines
 
 				List<DirectItem> ships = Cache.Instance.ShipHangar.Items.Where(i => i.IsSingleton).ToList();
 				
-				// this SHOULD allow usage of shuttles again for this storyline, atm commented out due the fact i have no time for testing
+				
 				if(ships.Any( s => s.GroupId == (int)Group.Shuttle)) {
 					ships.FirstOrDefault(s => s.GivenName != null && s.GroupId == (int)Group.Shuttle && s.IsSingleton).ActivateShip();
 					Logging.Log("MaterialsForWarPreparation", "Found a shuttle - Making Shuttle active", Logging.White);

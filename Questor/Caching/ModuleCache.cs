@@ -77,6 +77,16 @@ namespace Questor.Modules.Caching
 		{
 			get { return _module.FallOff ?? 0; }
 		}
+		
+		public void OnlineModule() {
+			
+			_module.OnlineModule();
+		}
+		
+		public void OfflineModule() {
+			
+			_module.OfflineModule();
+		}
 
 		public double MaxRange
 		{

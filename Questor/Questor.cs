@@ -813,6 +813,21 @@ namespace Questor
 				// We also always check panic
 				
 				Defense.ProcessState();
+				
+				
+				
+				// temporarily fix
+				if(!Cache.Instance.Paused && Cache.Instance.InSpace &&  Cache.Instance.Modules.Count(m => !m.IsOnline) > 1) {
+					
+					foreach(var mod in Cache.Instance.Modules.Where(m => !m.IsOnline)) {
+						Logging.Log("Questor.ProcessState", "Offline module: " + mod.TypeName, Logging.Debug);
+					}
+					
+					Logging.Log("Questor.ProcessState", "Offline modules found, closing questor. Modules needs to be activated again manually.", Logging.Debug);
+					Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
+					Cleanup.SignalToQuitQuestor = true;
+//					_States.CurrentQuestorState = QuestorState.Error;
+				}
 
 				if (Cache.Instance.Paused) //|| DateTime.UtcNow < _nextQuestorAction)
 				{
@@ -1133,11 +1148,11 @@ namespace Questor
 						
 						if(DirectScannerWindow != null) {
 							
-							Logging.Log("DebugBehavior.Traveler", "if(DirectScannerWindow != null)", Logging.White);
+							Logging.Log("DebugBehavior.DebugDirectionalScanner", "if(DirectScannerWindow != null)", Logging.White);
 							
-							Logging.Log("DebugBehavior.Traveler", " window.UserOverViewPreset [" + w.UserOverViewPreset + "]", Logging.White);
-							Logging.Log("DebugBehavior.Traveler", " window.Angle [" + w.Angle + "]", Logging.White);
-							Logging.Log("DebugBehavior.Traveler", " window.Range [" + w.Range + "]", Logging.White);
+							Logging.Log("DebugBehavior.DebugDirectionalScanner", " window.UserOverViewPreset [" + w.UserOverViewPreset + "]", Logging.White);
+							Logging.Log("DebugBehavior.DebugDirectionalScanner", " window.Angle [" + w.Angle + "]", Logging.White);
+							Logging.Log("DebugBehavior.DebugDirectionalScanner", " window.Range [" + w.Range + "]", Logging.White);
 
 							
 						}
@@ -1150,6 +1165,31 @@ namespace Questor
 						foreach(var ent in w.DirectionalScanResults) {
 							Logging.Log("DebugBehavior.Traveler", " ent.typeId [" + ent.TypeId + "]", Logging.White);
 						}
+						
+						break;
+						
+						
+					case QuestorState.DebugModules:
+						
+						if(!Cache.Instance.InStation) {
+							return;
+						}
+						
+						var offlineModules = Cache.Instance.Modules.Where(m => !m.IsOnline);
+						
+						Console.WriteLine("------------------------------");
+						
+						if(offlineModules.Count() > 0) {
+							foreach(var module in offlineModules) {
+								
+								Console.WriteLine(module.TypeName);
+//								break;
+							}
+						}
+						
+						
+						_nextPulse = DateTime.UtcNow.AddSeconds(10);
+						
 						
 						break;
 						

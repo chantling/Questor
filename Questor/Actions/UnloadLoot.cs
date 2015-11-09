@@ -467,6 +467,7 @@ namespace Questor.Modules.Actions
 			}
 	
 			IEnumerable<DirectItem>	lootToMove = Cache.Instance.CurrentShipsCargo.Items.ToList();
+			
 
 			//IEnumerable<DirectItem> somelootToMove = lootToMove;
 			if (Logging.DebugUnloadLoot) Logging.Log(WeAreInThisStateForLogs(), "foreach (DirectItem item in lootToMove) (start)", Logging.White);
@@ -483,7 +484,7 @@ namespace Questor.Modules.Actions
 				}
 				x++;
 			}
-
+			
 			if (Logging.DebugUnloadLoot) Logging.Log(WeAreInThisStateForLogs(), "foreach (DirectItem item in lootToMove) (done)", Logging.White);
 			if (lootToMove.Any())
 			{

@@ -32,6 +32,7 @@ namespace Questor.Modules.States
         DebugCloseQuestor,
         DebugReloadAll,
         DebugDirectionalScanner,
-        DebugMarket
+        DebugMarket,
+        DebugModules
     }
 }

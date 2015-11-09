@@ -1086,7 +1086,7 @@ namespace Questor.Modules.Lookup
 				if (MissionSettings.Mission != null && AgentInteraction.Agent != null)
 				{
 					// Update loyalty points again (the first time might return -1)
-					Statistics.LoyaltyPoints = AgentInteraction.Agent.LoyaltyPoints;
+					Statistics.LoyaltyPointsTotal = AgentInteraction.Agent.LoyaltyPoints;
 					MissionSettings.MissionName = MissionSettings.Mission.Name;
 					if (Logging.UseInnerspace)
 					{
