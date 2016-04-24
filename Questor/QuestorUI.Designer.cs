@@ -963,7 +963,7 @@
         	this.label19.Size = new System.Drawing.Size(400, 13);
         	this.label19.TabIndex = 168;
         	this.label19.Text = "it is a very bad idea to change these states unless you understand what will happ" +
-        	"en";
+	"en";
         	// 
         	// label11
         	// 
@@ -973,7 +973,7 @@
         	this.label11.Size = new System.Drawing.Size(400, 13);
         	this.label11.TabIndex = 167;
         	this.label11.Text = "it is a very bad idea to change these states unless you understand what will happ" +
-        	"en";
+	"en";
         	// 
         	// panel2
         	// 
@@ -1137,7 +1137,7 @@
         	// label5
         	// 
         	this.label5.AutoSize = true;
-        	this.label5.Location = new System.Drawing.Point(-203, 210);
+        	this.label5.Location = new System.Drawing.Point(0, 210);
         	this.label5.Name = "label5";
         	this.label5.Size = new System.Drawing.Size(105, 13);
         	this.label5.TabIndex = 168;
@@ -1529,7 +1529,7 @@
         	this.label27.Size = new System.Drawing.Size(460, 13);
         	this.label27.TabIndex = 169;
         	this.label27.Text = "These values are used this session only and will be overwritten if questor restar" +
-        	"ts for ANY reason";
+	"ts for ANY reason";
         	// 
         	// ScheduleWarninglabel1
         	// 
@@ -1539,7 +1539,7 @@
         	this.ScheduleWarninglabel1.Size = new System.Drawing.Size(460, 13);
         	this.ScheduleWarninglabel1.TabIndex = 168;
         	this.ScheduleWarninglabel1.Text = "These values are used this session only and will be overwritten if questor restar" +
-        	"ts for ANY reason";
+	"ts for ANY reason";
         	// 
         	// ExitWhenIdleCheckBox
         	// 
@@ -6196,6 +6196,7 @@
         	this.tabPage1.ResumeLayout(false);
         	this.tabPage1.PerformLayout();
         	this.ResumeLayout(false);
+
         }
 
         #endregion

@@ -112,6 +112,10 @@ namespace Questor.Modules.Actions
 
 				if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(10)) // we wait 10 seconds after we last thought we were in space before trying to do anything in station
 					return;
+				
+				if(Time.Instance.NextArmAction > DateTime.UtcNow) {
+					return;
+				}
 
 				switch (_States.CurrentArmState)
 				{
@@ -128,6 +132,10 @@ namespace Questor.Modules.Actions
 
 					case ArmState.RepairShop:
 						if (!RepairShop()) return;
+						break;
+						
+					case ArmState.LoadEmptyFitting:
+						if (!LoadEmptyFitting()) return;
 						break;
 
 					case ArmState.LoadSavedFitting:
@@ -837,7 +845,7 @@ namespace Questor.Modules.Actions
 						Logging.Log("Arm.MoveDronesToDroneBay", "We have other drones in the bay, moving them to the ammo hangar.", Logging.Red);
 						var droneBayItem = Drones.DroneBay.Items.FirstOrDefault();
 						Cache.Instance.AmmoHangar.Add(droneBayItem);
-						Time.Instance.NextArmAction = DateTime.UtcNow.AddSeconds(1);
+						Time.Instance.NextArmAction = DateTime.UtcNow.AddMilliseconds(300);
 					}
 					return false;
 				}
@@ -1072,7 +1080,7 @@ namespace Questor.Modules.Actions
 				Arm.NeedRepair = false;
 
 				LastRepairDateTime = DateTime.UtcNow;
-				ChangeArmState(ArmState.LoadSavedFitting, true);
+				ChangeArmState(ArmState.LoadEmptyFitting, true);
 				
 				return true;
 			}
@@ -1081,7 +1089,56 @@ namespace Questor.Modules.Actions
 				Logging.Log(WeAreInThisStateForLogs(), "Exception [" + ex + "]", Logging.Debug);
 				return false;
 			}
-		} // --> ArmState.LoadSavedFitting
+		} // --> ArmState.LoadEmptyFitting
+		
+		
+		private static bool LoadEmptyFitting() {
+			
+			if(!Settings.Instance.UseFittingManager) {
+				ChangeArmState(ArmState.MoveDrones, true);
+				return true;
+			}
+			
+			if (Cache.Instance.FittingManagerWindow == null) return false;
+			
+			// if there are no offline modules we dont need to load the empty fitting
+			if(!MissionSettings.OfflineModulesFound) {
+				Logging.Log(WeAreInThisStateForLogs(), "Not loading empty fitting as there are no offline modules.", Logging.White);
+				ChangeArmState(ArmState.LoadSavedFitting, true);
+				return true;
+			}
+			
+			
+			
+			foreach (DirectFitting fitting in Cache.Instance.FittingManagerWindow.Fittings)
+			{
+				
+				DirectActiveShip currentShip = Cache.Instance.ActiveShip;
+				
+				
+				if (fitting.Name.ToLower().Equals("empty".ToLower()) && fitting.ShipTypeId == currentShip.TypeId)
+				{
+					Time.Instance.NextArmAction = DateTime.UtcNow.AddSeconds(Time.Instance.SwitchShipsDelay_seconds);
+					Logging.Log(WeAreInThisStateForLogs(), "Loading empty fitting due offline modules.", Logging.White);
+					
+					MissionSettings.CurrentFit = String.Empty; // force to acutally select the correct mission fitting
+					//switch to the requested fitting for the current mission
+					fitting.Fit();
+					ChangeArmState(ArmState.LoadSavedFitting, true);
+					return true;
+				}
+
+				continue;
+			}
+			
+			Logging.Log(WeAreInThisStateForLogs(), "If you have troubles with offline modules, add an empty fitting with just rigs and name it 'EMPTY'", Logging.White);
+			
+			ChangeArmState(ArmState.LoadSavedFitting, true);
+			return true;
+			
+			
+		}  // --> ArmState.LoadSavedFtting
+		
 		
 		private static bool LoadSavedFitting() // --> ArmState.MoveDrones
 		{
@@ -1177,6 +1234,7 @@ namespace Questor.Modules.Actions
 								_lastFitAction = DateTime.UtcNow;
 								ItemsAreBeingMoved = true;
 								MissionSettings.CurrentFit = fitting.Name;
+								MissionSettings.OfflineModulesFound = false;
 								CustomFittingFound = true;
 								return false;
 							}
@@ -1219,7 +1277,7 @@ namespace Questor.Modules.Actions
 			try
 			{
 				
-				if (DateTime.UtcNow < _lastFitAction.AddMilliseconds(Cache.Instance.RandomNumber(3200, 4000)))
+				if (DateTime.UtcNow < _lastFitAction.AddMilliseconds(Cache.Instance.RandomNumber(400,600)))
 				{
 					//if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "if (DateTime.UtcNow < Cache.Instance.NextArmAction)) return;", Logging.Teal);
 					return false;

@@ -163,7 +163,7 @@ namespace Questor
 
 		public void RunOnceInStationAfterStartup()
 		{
-			if (!_runOnceInStationAfterStartupalreadyProcessed && DateTime.UtcNow > Time.Instance.QuestorStarted_DateTime.AddSeconds(15) && Cache.Instance.InStation && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(10))
+			if (!_runOnceInStationAfterStartupalreadyProcessed && DateTime.UtcNow > Time.Instance.QuestorStarted_DateTime.AddSeconds(20) && Cache.Instance.InStation && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(10))
 			{
 				if (Settings.Instance.CharacterXMLExists && DateTime.UtcNow > Time.Instance.NextStartupAction)
 				{
@@ -476,6 +476,7 @@ namespace Questor
 				
 				if(!Cache.Instance.DirectEve.Session.IsReady && !Cache.Instance.DirectEve.Login.AtLogin && !Cache.Instance.DirectEve.Login.AtCharacterSelection) {
 					_lastSessionNotReady = GetNowAddDelay(7,8);
+					return;
 				}
 				
 				
@@ -817,16 +818,27 @@ namespace Questor
 				
 				
 				// temporarily fix
-				if(!Cache.Instance.Paused && Cache.Instance.InSpace &&  Cache.Instance.Modules.Count(m => !m.IsOnline) > 1) {
+				if(!Cache.Instance.Paused && Cache.Instance.InSpace &&  Cache.Instance.Modules.Count(m => !m.IsOnline) > 0) {
 					
-					foreach(var mod in Cache.Instance.Modules.Where(m => !m.IsOnline)) {
-						Logging.Log("Questor.ProcessState", "Offline module: " + mod.TypeName, Logging.Debug);
-					}
 					
-					Logging.Log("Questor.ProcessState", "Offline modules found, closing questor. Modules needs to be activated again manually.", Logging.Debug);
-					Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
-					Cleanup.SignalToQuitQuestor = true;
+					if(Time.Instance.LastOfflineModuleCheck.AddSeconds(45) < DateTime.UtcNow) {
+						
+						Time.Instance.LastOfflineModuleCheck = DateTime.UtcNow;
+						
+						foreach(var mod in Cache.Instance.Modules.Where(m => !m.IsOnline)) {
+							Logging.Log("Questor.ProcessState", "Offline module: " + mod.TypeName, Logging.Debug);
+						}
+						
+						Logging.Log("Questor.ProcessState", "Offline modules found, going back to base trying to fit again", Logging.Debug);
+						MissionSettings.CurrentFit = String.Empty;
+						MissionSettings.OfflineModulesFound = true;
+						//Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
+						//Cleanup.SignalToQuitQuestor = true;
 //					_States.CurrentQuestorState = QuestorState.Error;
+						_States.CurrentQuestorState = QuestorState.CombatMissionsBehavior;
+						_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
+						_States.CurrentTravelerState = TravelerState.Idle;
+					}
 				}
 
 				if (Cache.Instance.Paused) //|| DateTime.UtcNow < _nextQuestorAction)

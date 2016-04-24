@@ -1178,10 +1178,10 @@ namespace Questor.Modules.Actions
 							Statistics.MissionCompletionErrors++;
 							Statistics.LastMissionCompletionError = DateTime.UtcNow;
 
-							Logging.Log("AgentInteraction", "This window indicates an error completing a mission: [" + Statistics.MissionCompletionErrors + "] errors already we will stop questor and halt restarting when we reach 3", Logging.White);
+							Logging.Log("AgentInteraction", "This window indicates an error completing a mission: [" + Statistics.MissionCompletionErrors + "] errors already we will stop questor and halt restarting when we reach 4", Logging.White);
 							window.Close();
 
-							if (Statistics.MissionCompletionErrors > 3 && Cache.Instance.InStation)
+							if (Statistics.MissionCompletionErrors > 4 && Cache.Instance.InStation)
 							{
 								if (MissionSettings.MissionXMLIsAvailable)
 								{

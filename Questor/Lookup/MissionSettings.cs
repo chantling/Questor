@@ -394,6 +394,7 @@ namespace Questor.Modules.Lookup
 		public static string MissionSpecificShip { get; set; } //stores name of mission specific ship
 		public static string FactionSpecificShip { get; set; } //stores name of mission specific ship
 		public static string CurrentFit { get; set; }
+		public static bool OfflineModulesFound { get; set; }
 
 		private static string _factionFittingNameForThisMissionsFaction;
 

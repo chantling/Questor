@@ -24,6 +24,7 @@ namespace Questor.Modules.States
         StackAmmoHangar,
         ActivateSalvageShip,
         ActivateTransportShip,
+        LoadEmptyFitting,
         LoadSavedFitting,
         Cleanup,
         Done,
