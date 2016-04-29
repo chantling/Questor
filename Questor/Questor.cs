@@ -480,6 +480,7 @@ namespace Questor
 					return;
 				}
 				
+				Cache.Instance.WCFClient.GetPipeProxy.SetEveAccountAttributeValue(Cache.Instance.CharName, "LastQuestorSessionReady", DateTime.UtcNow);
 				
 				_lastQuestorPulse = DateTime.UtcNow;
 				
