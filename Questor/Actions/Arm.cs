@@ -134,8 +134,8 @@ namespace Questor.Modules.Actions
 						if (!RepairShop()) return;
 						break;
 						
-					case ArmState.LoadEmptyFitting:
-						if (!LoadEmptyFitting()) return;
+					case ArmState.StripFitting:
+						if (!StripFitting()) return;
 						break;
 
 					case ArmState.LoadSavedFitting:
@@ -1080,7 +1080,7 @@ namespace Questor.Modules.Actions
 				Arm.NeedRepair = false;
 
 				LastRepairDateTime = DateTime.UtcNow;
-				ChangeArmState(ArmState.LoadEmptyFitting, true);
+				ChangeArmState(ArmState.StripFitting, true);
 				
 				return true;
 			}
@@ -1092,7 +1092,7 @@ namespace Questor.Modules.Actions
 		} // --> ArmState.LoadEmptyFitting
 		
 		
-		private static bool LoadEmptyFitting() {
+		private static bool StripFitting() {
 			
 			if(!Settings.Instance.UseFittingManager) {
 				ChangeArmState(ArmState.MoveDrones, true);
@@ -1108,30 +1108,9 @@ namespace Questor.Modules.Actions
 				return true;
 			}
 			
-			
-			
-			foreach (DirectFitting fitting in Cache.Instance.FittingManagerWindow.Fittings)
-			{
-				
-				DirectActiveShip currentShip = Cache.Instance.ActiveShip;
-				
-				
-				if (fitting.Name.ToLower().Equals("empty".ToLower()) && fitting.ShipTypeId == currentShip.TypeId)
-				{
-					Time.Instance.NextArmAction = DateTime.UtcNow.AddSeconds(Time.Instance.SwitchShipsDelay_seconds);
-					Logging.Log(WeAreInThisStateForLogs(), "Loading empty fitting due offline modules.", Logging.White);
-					
-					MissionSettings.CurrentFit = String.Empty; // force to acutally select the correct mission fitting
-					//switch to the requested fitting for the current mission
-					fitting.Fit();
-					ChangeArmState(ArmState.LoadSavedFitting, true);
-					return true;
-				}
-
-				continue;
-			}
-			
-			Logging.Log(WeAreInThisStateForLogs(), "If you have troubles with offline modules, add an empty fitting with just rigs and name it 'EMPTY'", Logging.White);
+			MissionSettings.CurrentFit = String.Empty; // force to acutally select the correct mission fitting
+			DirectActiveShip currentShip = Cache.Instance.ActiveShip;
+			currentShip.StripFitting();
 			
 			ChangeArmState(ArmState.LoadSavedFitting, true);
 			return true;
@@ -1145,12 +1124,12 @@ namespace Questor.Modules.Actions
 			try
 			{
 				
-				if(LastRepairDateTime.AddSeconds(20) < DateTime.UtcNow) {
-					Logging.Log(WeAreInThisStateForLogs(), "FAILED selecting Fitting. Moving next state.", Logging.White);
-					ChangeArmState(ArmState.MoveDrones, true);
-					return true;
-				}
-				
+//				if(LastRepairDateTime.AddSeconds(20) < DateTime.UtcNow) {
+//					Logging.Log(WeAreInThisStateForLogs(), "FAILED selecting Fitting. Moving next state.", Logging.White);
+//					ChangeArmState(ArmState.MoveDrones, true);
+//					return true;
+//				}
+//				
 				
 				DirectAgent agent = Cache.Instance.Agent;
 				

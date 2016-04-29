@@ -330,6 +330,7 @@ namespace Questor
 				_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
 				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
 				_States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
+			
 				return;
 			}
 		}
@@ -835,9 +836,14 @@ namespace Questor
 						//Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
 						//Cleanup.SignalToQuitQuestor = true;
 //					_States.CurrentQuestorState = QuestorState.Error;
-						_States.CurrentQuestorState = QuestorState.CombatMissionsBehavior;
-						_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
+						_States.CurrentQuestorState = QuestorState.Start;
 						_States.CurrentTravelerState = TravelerState.Idle;
+						_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
+						_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
+						_States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
+						Traveler.Destination = null;
+						Cache.Instance.GotoBaseNow = true;
+						return;
 					}
 				}
 
