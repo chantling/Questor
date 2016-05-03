@@ -1041,7 +1041,7 @@ namespace Questor.Modules.Caching
 		{
 			try
 			{
-				if (DateTime.Now > Time.NextClearPocketCache)
+				if (DateTime.UtcNow > Time.NextClearPocketCache)
 				{
 					MissionSettings.ClearPocketSpecificSettings();
 					Combat._doWeCurrentlyHaveProjectilesMounted = null;

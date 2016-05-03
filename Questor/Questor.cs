@@ -341,6 +341,7 @@ namespace Questor
 			{
 				// New frame, invalidate old cache
 				Cache.Instance.InvalidateCache();
+			
 
 				if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
 				{
@@ -449,6 +450,11 @@ namespace Questor
 				
 				if (Cache.Instance.Paused)
 				{
+					  // Chant - 05/02/2016 - Reset our timeouts so we don't exit every time we're paused for more than a few seconds
+					 Time.Instance.LastSessionIsReady = DateTime.UtcNow;
+					 Time.Instance.LastFrame = DateTime.UtcNow;
+					 Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
+					 NavigateOnGrid.AvoidBumpingThingsTimeStamp = DateTime.UtcNow;
 					return;
 				}
 
