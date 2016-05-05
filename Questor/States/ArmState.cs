@@ -19,6 +19,7 @@ namespace Questor.Modules.States
         MoveDrones,
         MoveMissionItems,
         MoveOptionalItems,
+        MoveScripts, // Chant - 05/02/2016 - need to bring sensor booster scripts if specified
         MoveCapBoosters,
         MoveAmmo,
         StackAmmoHangar,
