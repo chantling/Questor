@@ -35,8 +35,18 @@ namespace Questor.Modules.Actions
 
 		
 		private static int _itemsLeftToMoveQuantity;
-		
-		private static bool DefaultFittingChecked; //false; //flag to check for the correct default fitting before using the fitting manager
+
+        // Chant - 05/03/2016 - globals for moving scripts to cargo
+        private static int TrackingDisruptorScripts = 0;
+        private static int TrackingComputerScripts = 0;
+        private static int TrackingLinkScripts = 0;
+        private static int SensorBoosterScripts = 0;
+        private static int SensorDampenerScripts = 0;
+        private static int CapacitorInjectorScripts = 0;
+        private static int AncillaryShieldBoosterScripts = 0;
+        private static bool bWaitingonScripts = false;
+
+        private static bool DefaultFittingChecked; //false; //flag to check for the correct default fitting before using the fitting manager
 		private static bool DefaultFittingFound; //Did we find the default fitting?
 		private static bool UseMissionShip; //false; // Were we successful in activating the mission specific ship?
 		private static bool CustomFittingFound;
@@ -154,7 +164,11 @@ namespace Questor.Modules.Actions
 						if (!MoveOptionalItems()) return;
 						break;
 
-					case ArmState.MoveCapBoosters:
+                    case ArmState.MoveScripts:
+                        if (!MoveScripts()) return;
+                        break;
+
+                    case ArmState.MoveCapBoosters:
 						if (!MoveCapBoosters()) return;
 						break;
 
@@ -663,62 +677,68 @@ namespace Questor.Modules.Actions
 			}
 			
 		} // let's assume this work
-		
-		private static bool MoveItemsToCargo(string itemName,int quantity, ArmState nextState, ArmState fromState, bool moveToNextStateIfQuantityIsBelowAsk = false)
-		{
-			try
-			{
-				
-				
 
-				if (string.IsNullOrEmpty(itemName))
-				{
-					ChangeArmState(nextState);
-					return false;
-				}
+        private static bool MoveItemsToCargo(string itemName, int quantity, ArmState nextState, ArmState fromState, bool moveToNextStateIfQuantityIsBelowAsk = false)
+        {
+            try
+            {
 
-				if (ItemsAreBeingMoved)
-				{
-					if (!WaitForLockedItems(fromState)) return false;
-					return false;
-				}
 
-				if (!LookForItem(itemName, Cache.Instance.CurrentShipsCargo)) return false;
-				
-				
-				if (WeHaveThisManyOfThoseItemsInCargo + WeHaveThisManyOfThoseItemsInItemHangar + WeHaveThisManyOfThoseItemsInAmmoHangar + WeHaveThisManyOfThoseItemsInLootHangar < quantity)
-				{
-					if (moveToNextStateIfQuantityIsBelowAsk)
-					{
-						ChangeArmState(nextState);
-						return false;
-					}
 
-					Logging.Log(WeAreInThisStateForLogs(), "ItemHangar has: [" + WeHaveThisManyOfThoseItemsInItemHangar + "] AmmoHangar has: [" + WeHaveThisManyOfThoseItemsInAmmoHangar + "] LootHangar has: [" + WeHaveThisManyOfThoseItemsInLootHangar + "] [" + itemName + "] we need [" + quantity + "] units)", Logging.Red);
-					ItemsAreBeingMoved = false;
-					Cache.Instance.Paused = true;
-					ChangeArmState(ArmState.NotEnoughAmmo);
-					return true;
-				}
-				
-				_itemsLeftToMoveQuantity = quantity - WeHaveThisManyOfThoseItemsInCargo > 0 ? quantity - WeHaveThisManyOfThoseItemsInCargo : 0 ;
-				
-				//  here we check if we have enough free m3 in our ship hangar
-				
-				if(Cache.Instance.CurrentShipsCargo != null && ItemHangarItem != null)
+                if (string.IsNullOrEmpty(itemName))
+                {
+                    ChangeArmState(nextState);
+                    return false;
+                }
+
+                if (ItemsAreBeingMoved)
+                {
+                    if (!WaitForLockedItems(fromState)) return false;
+                    return false;
+                }
+
+                if (!LookForItem(itemName, Cache.Instance.CurrentShipsCargo)) return false;
+
+
+                if (WeHaveThisManyOfThoseItemsInCargo + WeHaveThisManyOfThoseItemsInItemHangar + WeHaveThisManyOfThoseItemsInAmmoHangar + WeHaveThisManyOfThoseItemsInLootHangar < quantity)
+                {
+                    // Chant 05/03/2016 - if moveToNextStateIfQuantityIsBelowAsk = true and we don't have the requested amount, at least bring what we've got
+                    if (!moveToNextStateIfQuantityIsBelowAsk)
+                    {
+                        Logging.Log(WeAreInThisStateForLogs(), "ItemHangar has: [" + WeHaveThisManyOfThoseItemsInItemHangar + "] AmmoHangar has: [" + WeHaveThisManyOfThoseItemsInAmmoHangar + "] LootHangar has: [" + WeHaveThisManyOfThoseItemsInLootHangar + "] [" + itemName + "] we need [" + quantity + "] units)", Logging.Red);
+                        ItemsAreBeingMoved = false;
+                        Cache.Instance.Paused = true;
+                        ChangeArmState(ArmState.NotEnoughAmmo);
+                        return true;
+                    }
+                }
+
+                _itemsLeftToMoveQuantity = quantity - WeHaveThisManyOfThoseItemsInCargo > 0 ? quantity - WeHaveThisManyOfThoseItemsInCargo : 0;
+
+                //  here we check if we have enough free m3 in our ship hangar
+
+                if (Cache.Instance.CurrentShipsCargo != null && (ItemHangarItem != null || LootHangarItem != null || AmmoHangarItem != null))
 				{
+                    int amount = 0;
 					double freeCapacity = Cache.Instance.CurrentShipsCargo.Capacity - Cache.Instance.CurrentShipsCargo.UsedCapacity;
 					double freeCapacityReduced = freeCapacity * 0.7; // keep some free space for ammo
-					int amount = Convert.ToInt32(freeCapacityReduced / ItemHangarItem.Volume);
-					_itemsLeftToMoveQuantity = Math.Min(amount,_itemsLeftToMoveQuantity);
+                    if (ItemHangarItem != null)
+					    amount = Convert.ToInt32(freeCapacityReduced / ItemHangarItem.Volume);
+                    else if (LootHangarItem != null)
+                        amount = Convert.ToInt32(freeCapacityReduced / LootHangarItem.Volume);
+                    else if (AmmoHangarItem != null)
+                        amount = Convert.ToInt32(freeCapacityReduced / AmmoHangarItem.Volume);
+
+                    _itemsLeftToMoveQuantity = Math.Min(amount,_itemsLeftToMoveQuantity);
 					
 					Logging.Log("Arm.MoveItemsToCargo", "freeCapacity [" + freeCapacity + "] freeCapacityReduced [" + freeCapacityReduced  + "] amount [" + amount + "] _itemsLeftToMoveQuantity [" + _itemsLeftToMoveQuantity + "]" , Logging.White);
 				}
-				else
+				else // we've got none of the item in our hangars, return true to move on
 				{
 					Logging.Log("Arm.MoveItemsToCargo", "Cache.Instance.CurrentShipsCargo == null || ItemHangarItem != null", Logging.White);
 					ChangeArmState(nextState);
-					return false;
+                    ItemsAreBeingMoved = false;
+                    return true;
 				}
 				
 				if (_itemsLeftToMoveQuantity <= 0)
@@ -1320,13 +1340,134 @@ namespace Questor.Modules.Actions
 			return false;
 		} // --> MoveOptionalItems
 
-		private static bool MoveOptionalItems() // --> ArmState.MoveCapBoosters
-		{
-			if (!MoveItemsToCargo(MissionSettings.MoveOptionalMissionItems, MissionSettings.MoveOptionalMissionItemQuantity, ArmState.MoveCapBoosters, ArmState.MoveOptionalItems, true)) return false;
+		private static bool MoveOptionalItems() // --> ArmState.MoveScripts
+        {
+			if (!MoveItemsToCargo(MissionSettings.MoveOptionalMissionItems, MissionSettings.MoveOptionalMissionItemQuantity, ArmState.MoveScripts, ArmState.MoveOptionalItems, true)) return false;
 			return false;
-		} // --> ArmState.MoveCapBoosters
+        } // --> ArmState.MoveScripts
 
-		private static bool MoveCapBoosters() // --> ArmState.MoveAmmo
+        // Chant - 05/02/2016 - need to load sensor manipulation scripts if specified
+        private static bool MoveScripts() // --> ArmState.MoveCapBoosters
+        {
+            if (Cache.Instance.ActiveShip.GivenName != Combat.CombatShipName)
+            {
+                Logging.Log("Arm.MoveScripts", "if (Cache.Instance.ActiveShip.GivenName != Combat.CombatShipName)", Logging.White);
+                ChangeArmState(ArmState.MoveCapBoosters);
+                return false;
+            }
+
+            int TrackingDisruptorScriptsLeft = 0;
+            int TrackingComputerScriptsLeft = 0;
+            int TrackingLinkScriptsLeft = 0;
+            int SensorBoosterScriptsLeft = 0;
+            int SensorDampenerScriptsLeft = 0;
+            int CapacitorInjectorScriptsLeft = 0;
+            int AncillaryShieldBoosterScriptsLeft = 0;
+
+            if (!bWaitingonScripts)
+            {
+                TrackingDisruptorScriptsLeft = TrackingDisruptorScripts = Math.Abs(Cache.Instance.FittedModules.Items.Where(i => i.GroupId == (int)Group.TrackingDisruptor).Sum(i => i.Quantity));
+                TrackingComputerScriptsLeft = TrackingComputerScripts = Math.Abs(Cache.Instance.FittedModules.Items.Where(i => i.GroupId == (int)Group.TrackingComputer).Sum(i => i.Quantity));
+                TrackingLinkScriptsLeft = TrackingLinkScripts = Math.Abs(Cache.Instance.FittedModules.Items.Where(i => i.GroupId == (int)Group.TrackingLink).Sum(i => i.Quantity));
+                SensorBoosterScriptsLeft = SensorBoosterScripts = Math.Abs(Cache.Instance.FittedModules.Items.Where(i => i.GroupId == (int)Group.SensorBooster).Sum(i => i.Quantity));
+                SensorDampenerScriptsLeft = SensorDampenerScripts = Math.Abs(Cache.Instance.FittedModules.Items.Where(i => i.GroupId == (int)Group.SensorDampener).Sum(i => i.Quantity));
+                CapacitorInjectorScriptsLeft = CapacitorInjectorScripts = Math.Abs(Cache.Instance.FittedModules.Items.Where(i => i.GroupId == (int)Group.CapacitorInjector).Sum(i => i.Quantity));
+                AncillaryShieldBoosterScriptsLeft = AncillaryShieldBoosterScripts = Math.Abs(Cache.Instance.FittedModules.Items.Where(i => i.GroupId == (int)Group.AncillaryShieldBooster).Sum(i => i.Quantity));
+
+                bWaitingonScripts = true;
+            }
+            else
+            {
+                TrackingDisruptorScriptsLeft = Math.Max(0, TrackingDisruptorScripts - Math.Abs(Cache.Instance.CurrentShipsCargo.Items.Where(i => i.TypeId == Settings.Instance.TrackingDisruptorScript).Sum(i => i.Quantity)));
+                TrackingComputerScriptsLeft = Math.Max(0, TrackingComputerScripts - Math.Abs(Cache.Instance.CurrentShipsCargo.Items.Where(i => i.TypeId == Settings.Instance.TrackingComputerScript).Sum(i => i.Quantity)));
+                TrackingLinkScriptsLeft = Math.Max(0, TrackingLinkScripts - Math.Abs(Cache.Instance.CurrentShipsCargo.Items.Where(i => i.TypeId == Settings.Instance.TrackingLinkScript).Sum(i => i.Quantity)));
+                SensorBoosterScriptsLeft = Math.Max(0, SensorBoosterScripts - Math.Abs(Cache.Instance.CurrentShipsCargo.Items.Where(i => i.TypeId == Settings.Instance.SensorBoosterScript).Sum(i => i.Quantity)));
+                SensorDampenerScriptsLeft = Math.Max(0, SensorDampenerScripts - Math.Abs(Cache.Instance.CurrentShipsCargo.Items.Where(i => i.TypeId == Settings.Instance.SensorDampenerScript).Sum(i => i.Quantity)));
+                CapacitorInjectorScriptsLeft = Math.Max(0, CapacitorInjectorScripts - Math.Abs(Cache.Instance.CurrentShipsCargo.Items.Where(i => i.TypeId == Settings.Instance.CapacitorInjectorScript).Sum(i => i.Quantity)));
+                AncillaryShieldBoosterScriptsLeft = Math.Max(0, AncillaryShieldBoosterScripts - Math.Abs(Cache.Instance.CurrentShipsCargo.Items.Where(i => i.TypeId == Settings.Instance.AncillaryShieldBoosterScript).Sum(i => i.Quantity)));
+            }
+
+            DirectInvType _ScriptInvTypeItem = null;
+            if ((TrackingDisruptorScriptsLeft >= 1) && Cache.Instance.DirectEve.InvTypes.TryGetValue(Settings.Instance.TrackingDisruptorScript, out _ScriptInvTypeItem))
+            {
+                if (MoveItemsToCargo(_ScriptInvTypeItem.TypeName, TrackingDisruptorScriptsLeft, ArmState.MoveScripts, ArmState.MoveScripts, true) && !ItemsAreBeingMoved)
+                {
+                    Logging.Log("Arm.MoveScripts", "Not enough Tracking Disruptor scripts in hangar", Logging.Orange);
+                    TrackingDisruptorScriptsLeft = 0;
+                    TrackingDisruptorScripts = 0;
+                }
+                return false;
+            }
+            if ((TrackingComputerScriptsLeft >= 1) && Cache.Instance.DirectEve.InvTypes.TryGetValue(Settings.Instance.TrackingComputerScript, out _ScriptInvTypeItem))
+            {
+                if (MoveItemsToCargo(_ScriptInvTypeItem.TypeName, TrackingComputerScriptsLeft, ArmState.MoveScripts, ArmState.MoveScripts, true) && !ItemsAreBeingMoved)
+                {
+                    Logging.Log("Arm.MoveScripts", "Not enough Tracking Computer scripts in hangar", Logging.Orange);
+                    TrackingComputerScriptsLeft = 0;
+                    TrackingComputerScripts = 0;
+                }
+                return false;
+            }
+            if ((TrackingLinkScriptsLeft >= 1) && Cache.Instance.DirectEve.InvTypes.TryGetValue(Settings.Instance.TrackingLinkScript, out _ScriptInvTypeItem))
+            {
+                if (MoveItemsToCargo(_ScriptInvTypeItem.TypeName, TrackingLinkScriptsLeft, ArmState.MoveScripts, ArmState.MoveScripts, true) && !ItemsAreBeingMoved)
+                {
+                    Logging.Log("Arm.MoveScripts", "Not enough Tracking Link scripts in hangar", Logging.Orange);
+                    TrackingLinkScriptsLeft = 0;
+                    TrackingLinkScripts = 0;
+                }
+                return false;
+            }
+            if ((SensorBoosterScriptsLeft >= 1) && Cache.Instance.DirectEve.InvTypes.TryGetValue(Settings.Instance.SensorBoosterScript, out _ScriptInvTypeItem))
+            {
+                Logging.Log("Arm.MoveScripts", "[" + SensorBoosterScriptsLeft + "] SensorBoosterScriptsLeft" , Logging.Orange);
+                if (MoveItemsToCargo(_ScriptInvTypeItem.TypeName, SensorBoosterScripts, ArmState.MoveScripts, ArmState.MoveScripts, true) && !ItemsAreBeingMoved)
+                {
+                    Logging.Log("Arm.MoveScripts", "Not enough Sensor Booster scripts in hangar", Logging.Orange);
+                    SensorBoosterScriptsLeft = 0;
+                    SensorBoosterScripts = 0;
+                }
+                return false;
+            }
+            if ((SensorDampenerScriptsLeft >= 1) && Cache.Instance.DirectEve.InvTypes.TryGetValue(Settings.Instance.SensorDampenerScript, out _ScriptInvTypeItem))
+            {
+                if (MoveItemsToCargo(_ScriptInvTypeItem.TypeName, SensorDampenerScriptsLeft, ArmState.MoveScripts, ArmState.MoveScripts, true) && !ItemsAreBeingMoved)
+                {
+                    Logging.Log("Arm.MoveScripts", "Not enough Sensor Dampener scripts in hangar", Logging.Orange);
+                    SensorDampenerScriptsLeft = 0;
+                    SensorDampenerScripts = 0;
+                }
+                return false;
+            }
+            if ((CapacitorInjectorScriptsLeft >= 1) && Cache.Instance.DirectEve.InvTypes.TryGetValue(Settings.Instance.CapacitorInjectorScript, out _ScriptInvTypeItem))
+            {
+                if (MoveItemsToCargo(_ScriptInvTypeItem.TypeName, CapacitorInjectorScriptsLeft, ArmState.MoveScripts, ArmState.MoveScripts, true) && !ItemsAreBeingMoved)
+                {
+                    Logging.Log("Arm.MoveScripts", "Not enough Capacitor Injector scripts in hangar", Logging.Orange);
+                    CapacitorInjectorScriptsLeft = 0;
+                    CapacitorInjectorScripts = 0;
+                }
+                return false;
+            }
+            if ((AncillaryShieldBoosterScriptsLeft >= 1) && Cache.Instance.DirectEve.InvTypes.TryGetValue(Settings.Instance.AncillaryShieldBoosterScript, out _ScriptInvTypeItem))
+            {
+                if (MoveItemsToCargo(_ScriptInvTypeItem.TypeName, AncillaryShieldBoosterScriptsLeft, ArmState.MoveScripts, ArmState.MoveScripts, true) && !ItemsAreBeingMoved)
+                {
+                    Logging.Log("Arm.MoveScripts", "Not enough Ancillary Shield Booster scripts in hangar", Logging.Orange);
+                    AncillaryShieldBoosterScriptsLeft = 0;
+                    AncillaryShieldBoosterScripts = 0;
+                }
+                return false;
+            }
+
+            Logging.Log("Arm.MoveScripts", "Finished moving scripts", Logging.Orange);
+            bWaitingonScripts = false;
+            ChangeArmState(ArmState.MoveCapBoosters, true);
+            //return successfullyMovedScripts;
+            return false;
+        } // --> ArmState.MoveCapBoosters
+
+        private static bool MoveCapBoosters() // --> ArmState.MoveAmmo
 		{
 			
 			if (Cache.Instance.ActiveShip.GivenName != Combat.CombatShipName)
@@ -1357,8 +1498,7 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
-
-				if (DateTime.UtcNow < _lastArmAction.AddMilliseconds(Cache.Instance.RandomNumber(1500, 2000)))
+                if (DateTime.UtcNow < _lastArmAction.AddMilliseconds(Cache.Instance.RandomNumber(1500, 2000)))
 				{
 					//if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "if (DateTime.UtcNow < Cache.Instance.NextArmAction)) return;", Logging.Teal);
 					return false;
