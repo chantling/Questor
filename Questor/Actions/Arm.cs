@@ -523,7 +523,8 @@ namespace Questor.Modules.Actions
 					List<DirectItem> shipsInShipHangar = Cache.Instance.ShipHangar.Items;
 					if (shipsInShipHangar.Any(s => s.GivenName != null && s.GivenName.ToLower() == shipName.ToLower()))
 					{
-						if (!Cache.Instance.CloseCargoHold(_States.CurrentArmState.ToString())) return false;
+                        // ask duketwo what this is used for and why disabling it was a bad idea
+                        //if (!Cache.Instance.CloseCargoHold(_States.CurrentArmState.ToString())) return false;
 						DirectItem ship = shipsInShipHangar.FirstOrDefault(s => s.GivenName != null && s.GivenName.ToLower() == shipName.ToLower());
 						if (ship != null)
 						{
@@ -1055,8 +1056,14 @@ namespace Questor.Modules.Actions
 		
 		private static bool ActivateCombatShip() // -> ArmState.RepairShop
 		{
+            if (DateTime.UtcNow < _lastArmAction.AddMilliseconds(Cache.Instance.RandomNumber(4000, 5000))) return false;
 			try
 			{
+                Logging.Log(WeAreInThisStateForLogs(), "ActivateCombatShip() Start", Logging.White);
+                UseMissionShip = false;
+                MissionFitting currentMissionFitting = MissionSettings.MissionFittingForThisMission;
+                string MissionShipName = null;
+
 				if (string.IsNullOrEmpty(Combat.CombatShipName))
 				{
 					Logging.Log(WeAreInThisStateForLogs(), "Could not find CombatShipName: " + Combat.CombatShipName + " in settings!", Logging.Orange);
@@ -1064,10 +1071,28 @@ namespace Questor.Modules.Actions
 					return false;
 				}
 
-				if (!ActivateShip(Combat.CombatShipName))
+                if (currentMissionFitting != null)
+                    if (!string.IsNullOrEmpty(currentMissionFitting.Ship))
+                    {
+                        MissionShipName = currentMissionFitting.Ship;
+                        Logging.Log(WeAreInThisStateForLogs(), "Mission ship: [" + MissionShipName + "]", Logging.White);
+                    }
+                else
+                        Logging.Log(WeAreInThisStateForLogs(), "currentMissionFitting is null", Logging.White);
+
+                if (!ActivateShip(MissionShipName) && !switchingShips)
+                {
+                    Logging.Log(WeAreInThisStateForLogs(), "Unable to activate Mission Ship [" + MissionShipName + "]", Logging.White);
+                    if (!ActivateShip(Combat.CombatShipName) && !switchingShips)
 				{
+                        Logging.Log(WeAreInThisStateForLogs(), "Unable to activate Combat Ship [" + Combat.CombatShipName + "]", Logging.White);
 					return false;
 				}
+                    else
+                        UseMissionShip = false;
+                }
+                else
+                    UseMissionShip = true;
 
 				if (SwitchShipsOnly)
 				{
@@ -1187,6 +1212,8 @@ namespace Questor.Modules.Actions
 
 					if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior) //|| _States.CurrentQuestorState == QuestorState.BackgroundBehavior)
 					{
+                        MissionFitting currentMissionFitting = MissionSettings.MissionFittingForThisMission;
+                        
 						if (Logging.DebugFittingMgr) Logging.Log(WeAreInThisStateForLogs(), "if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)", Logging.Teal);
 
 						if (!DoesDefaultFittingExist(WeAreInThisStateForLogs())) return false;
@@ -1198,12 +1225,14 @@ namespace Questor.Modules.Actions
 						if (Logging.DebugFittingMgr) Logging.Log(WeAreInThisStateForLogs(), "if ((!Settings.Instance.UseFittingManager || !DefaultFittingFound) || (UseMissionShip && !Cache.Instance.ChangeMissionShipFittings)) then do not use fitting manager", Logging.Teal);
 						if (Logging.DebugFittingMgr) Logging.Log(WeAreInThisStateForLogs(), "These are the reasons we would use or not use the fitting manager.(above)", Logging.Teal);
 
-						if ((!DefaultFittingFound) || (UseMissionShip && !MissionSettings.ChangeMissionShipFittings))
+						if ((!DefaultFittingFound) || (UseMissionShip && currentMissionFitting.FittingName == null))//!MissionSettings.ChangeMissionShipFittings))
 						{
 							if (Logging.DebugFittingMgr) Logging.Log(WeAreInThisStateForLogs(), "if ((!Settings.Instance.UseFittingManager || !DefaultFittingFound) || (UseMissionShip && !Cache.Instance.ChangeMissionShipFittings))", Logging.Teal);
 							ChangeArmState(ArmState.MoveDrones, true);
 							return false;
 						}
+                        else if (UseMissionShip && currentMissionFitting.FittingName != null)
+                            MissionSettings.FittingToLoad = currentMissionFitting.FittingName;
 
 						//let's check first if we need to change fitting at all
 						Logging.Log(WeAreInThisStateForLogs(), "Fitting: " + MissionSettings.FittingToLoad + " - currentFit: " + MissionSettings.CurrentFit, Logging.White);

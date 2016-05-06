@@ -135,6 +135,8 @@ namespace Questor.Modules.Lookup
 					{
 						if (xmlElementMissionFittingsSection != null)
 						{
+                            // Should clear this at the beginning of each search cycle so we don't continuously increase the count, yah?
+                            MissionSettings._listOfMissionFittings.Clear();
 							if (Logging.DebugFittingMgr) Logging.Log("Settings", "Loading Mission Fittings", Logging.White);
 							int i = 0;
 							foreach (XElement missionfitting in xmlElementMissionFittingsSection.Elements("missionfitting"))
@@ -518,7 +520,58 @@ namespace Questor.Modules.Lookup
 			set { _factionFittingNameForThisMissionsFaction = value; }
 		}
 
-		public static string FactionName { get; set; }
+        public static MissionFitting MissionFittingForThisMission
+        {
+            get
+            {
+                if (_missionFittingForThisMissionName == null)
+                {
+                    if (MissionSettings.ListOfMissionFittings != null)
+                    {
+                        if (MissionSettings.ListOfMissionFittings.Any())
+                        {
+                            if (MissionSettings.ListOfMissionFittings.Any(i => i.MissionName != null && MissionSettings.Mission != null && i.MissionName.ToLower().Equals(Mission.Name.ToLower())))
+                            {
+                                IEnumerable<MissionFitting> tempListOfMissionFittings = MissionSettings.ListOfMissionFittings.Where(i => i.MissionName.ToLower().Equals(Mission.Name.ToLower()));
+                                if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())
+                                {
+                                    MissionFitting fitting = tempListOfMissionFittings.FirstOrDefault();
+                                    if (fitting != null)
+                                    {
+                                        if (fitting.DroneTypeID != null)
+                                        {
+                                            MissionSettings.MissionDroneTypeID = fitting.DroneTypeID;
+                                        }
+
+                                        //_fitting.Ship - this should allow for mission specific ships... if we want to allow for that
+                                        return fitting;
+                                    }
+
+                                    return null;
+                                }
+
+                                Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())", Logging.Debug);
+                                return null;
+                            }
+
+                            Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (!MissionSettings.ListOfMissionFittings.Any(i => i.MissionName != null && Mission != null && i.MissionName.ToLower() == Mission.Name))", Logging.Debug);
+                            return null;
+                        }
+
+                        Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (!MissionSettings.ListOfMissionFittings.Any())", Logging.Debug);
+                        return null;
+                    }
+
+                    Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (MissionSettings.ListOfMissionFittings == null )", Logging.Debug);
+                    return null;
+                }
+
+                return null;
+            }
+
+            set {  }
+        }
+        public static string FactionName { get; set; }
 		public static bool UseMissionShip { get; set; } // flags whether we're using a mission specific ship
 		public static bool ChangeMissionShipFittings { get; set; } // used for situations in which missionShip's specified, but no faction or mission fittings are; prevents default
 		public static  Dictionary<Ammo, DateTime> AmmoTypesToLoad { get; set; }
