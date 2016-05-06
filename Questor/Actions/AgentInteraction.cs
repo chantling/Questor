@@ -47,7 +47,7 @@ namespace Questor.Modules.Actions
 		
 		private static DateTime _agentWindowTimeStamp = DateTime.MinValue;
 		private static DateTime _agentStandingsCheckTimeOut = DateTime.UtcNow.AddDays(1);
-		//private static DateTime _nextAgentAction { get; set; }
+		private static DateTime _nextAgentAction { get; set; }
 		private static DateTime _lastAgentAction;
 		private static DateTime _waitingOnAgentResponseTimer = DateTime.UtcNow;
 		private static DateTime _waitingOnMissionTimer = DateTime.UtcNow;
@@ -129,7 +129,7 @@ namespace Questor.Modules.Actions
 				
 				if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() > 1 && !string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
 				{
-					Cache.Instance.CurrentAgent = string.Empty;
+					Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
 					Logging.Log("MyStandingsAreTooLowSwitchAgents", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
 					_States.CurrentAgentInteractionState = AgentInteractionState.ChangeAgent;
 					return true;
@@ -240,6 +240,7 @@ namespace Questor.Modules.Actions
 				{
 					Logging.Log("AgentInteraction", "Replying to agent", Logging.Yellow);
 					_States.CurrentAgentInteractionState = AgentInteractionState.ReplyToAgent;
+					_nextAgentAction = DateTime.UtcNow.AddSeconds(2);
 				}
 
 				return;
@@ -314,7 +315,7 @@ namespace Questor.Modules.Actions
 
 						if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() > 1 && !string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
 						{
-							Cache.Instance.CurrentAgent = string.Empty;
+							Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
 							Logging.Log("AgentInteraction.ReplyToAgent", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
 							ChangeAgentInteractionState(AgentInteractionState.ChangeAgent, true);
 						}
@@ -814,21 +815,22 @@ namespace Questor.Modules.Actions
 					int secondsToWait = ((hours * 3600) + (minutes * 60) + 60);
 					AgentsList _currentAgent = MissionSettings.ListOfAgents.FirstOrDefault(i => i.Name == Cache.Instance.CurrentAgent);
 
-					//
-					// standings are below the blacklist minimum
-					// (any lower and we might lose access to this agent)
-					// and no other agents are NOT available (or are also in cool-down)
-					//
-					if ((MissionSettings.WaitDecline && Cache.Instance.AllAgentsStillInDeclineCoolDown))
-					{
-						//
-						// if true we ALWAYS wait (or switch agents?!?)
-						//
-						Logging.Log("AgentInteraction.DeclineMission", "Waiting " + (secondsToWait / 60) + " minutes to try decline again because waitDecline setting is set to true", Logging.Yellow);
-						CloseConversation();
-						ChangeAgentInteractionState(AgentInteractionState.StartConversation, true);
-						return;
-					}
+                //
+                // standings are below the blacklist minimum 
+                // (any lower and we might lose access to this agent)
+                // and no other agents are NOT available (or are also in cooldown)
+                //
+               if ((MissionSettings.WaitDecline && Cache.Instance.AllAgentsStillInDeclineCoolDown))
+                {
+                    //
+                    // if true we ALWAYS wait (or switch agents?!?)
+                    //
+                    _nextAgentAction = DateTime.UtcNow.AddSeconds(secondsToWait);
+                    Logging.Log("AgentInteraction", "Waiting " + (secondsToWait / 60) + " minutes to try decline again because waitDecline setting is set to true", Logging.White);
+                    CloseConversation();
+                    _States.CurrentAgentInteractionState = AgentInteractionState.StartConversation;
+                    return;
+                }
 
 					//
 					// if WaitDecline is false we only wait if standings are below our configured minimums
@@ -843,12 +845,19 @@ namespace Questor.Modules.Actions
 							//
 							// wait.
 							//
-							Logging.Log("AgentInteraction.DeclineMission", "Current standings [" + Math.Round(Cache.Instance.StandingUsedToAccessAgent, 2) + "] are below configured minimum of [" + MissionSettings.MinAgentBlackListStandings + "].  Waiting " + (secondsToWait / 60) + " minutes to try decline again because no other agents were avail for use.", Logging.Yellow);
+							_nextAgentAction = DateTime.UtcNow.AddSeconds(secondsToWait);
+							Logging.Log("AgentInteraction.DeclineMission", "Current standings [" + Math.Round(Cache.Instance.StandingUsedToAccessAgent, 2) + "] are below configured minimum of [" + MissionSettings.MinAgentBlackListStandings + "].  Waiting " + (secondsToWait / 60) + " minutes to try decline again because no other agents were avail for use.", Logging.White);
 							CloseConversation();
 							ChangeAgentInteractionState(AgentInteractionState.StartConversation, true);
 							return;
 						}
-					}
+                        //_nextAgentAction = DateTime.UtcNow.AddSeconds(secondsToWait);
+                        //Logging.Log("AgentInteraction.DeclineMission", "Current standings [" + Math.Round(Cache.Instance.StandingUsedToAccessAgent, 2) + "] are below configured minimum of [" + MissionSettings.MinAgentBlackListStandings + "].  Waiting " + (secondsToWait / 60) + " minutes to try decline again because no other agents were avail for use.", Logging.White);
+                        Logging.Log("AgentInteraction.DeclineMission", "Current standings [" + Math.Round(Cache.Instance.StandingUsedToAccessAgent, 2) + "] are below configured minimum of [" + MissionSettings.MinAgentBlackListStandings + "].  Trying to switch to another agent.", Logging.White);
+                        CloseConversation();
+                        //ChangeAgentInteractionState(AgentInteractionState.StartConversation, true);
+                        //return;
+                    }
 
 					if (!Cache.Instance.AllAgentsStillInDeclineCoolDown &&  MissionSettings.ListOfAgents.Count() > 1)
 					{
@@ -856,13 +865,13 @@ namespace Questor.Modules.Actions
 						//
 						//Change Agents
 						//
-						Logging.Log("AgentInteraction.DeclineMission", "Setting DeclineTimer on [" + Cache.Instance.CurrentAgent + "] to [" + secondsToWait + "] seconds from now", Logging.Yellow);
+						Logging.Log("AgentInteraction.DeclineMission", "Setting DeclineTimer on [" + Cache.Instance.CurrentAgent + "] to [" + secondsToWait + "] seconds from now", Logging.White);
 						if (_currentAgent != null) _currentAgent.DeclineTimer = DateTime.UtcNow.AddSeconds(secondsToWait);
 						CloseConversation();
 
 						if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() > 1 && !string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
 						{
-							Cache.Instance.CurrentAgent = string.Empty;
+							Cache.Instance.CurrentAgent = Cache.Instance.SwitchAgent();
 							Logging.Log("AgentInteraction.DeclineMission", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
 							ChangeAgentInteractionState(AgentInteractionState.ChangeAgent, true);
 						}
@@ -962,36 +971,39 @@ namespace Questor.Modules.Actions
 
 		public static void CloseConversation()
 		{
-			try
+			if (DateTime.UtcNow > _nextAgentAction)
 			{
-				if (Agent != null)
+				try
 				{
-					DirectAgentWindow agentWindow = Agent.Window;
-					if (agentWindow == null)
+					if (Agent != null)
 					{
-						Logging.Log("AgentInteraction", "Done", Logging.Yellow);
-						ChangeAgentInteractionState(AgentInteractionState.Done);
-					}
-
-					if (agentWindow != null && agentWindow.IsReady)
-					{
-						if (DateTime.UtcNow < _lastAgentAction.AddMilliseconds(Cache.Instance.RandomNumber(1000,1500))) // was 1500,2000
+						DirectAgentWindow agentWindow = Agent.Window;
+						if (agentWindow == null)
 						{
-							//Logging.Log("AgentInteraction.CloseConversation", "will continue in [" + Math.Round(_nextAgentAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "]sec", Logging.Yellow);
-							return;
+							Logging.Log("AgentInteraction", "Done", Logging.Yellow);
+							ChangeAgentInteractionState(AgentInteractionState.Done);
 						}
 
-						Logging.Log("AgentInteraction", "Attempting to close Agent Window", Logging.Yellow);
-						_lastAgentAction = DateTime.UtcNow;
-						agentWindow.Close();
-					}
+						if (agentWindow != null && agentWindow.IsReady)
+						{
+							if (DateTime.UtcNow < _lastAgentAction.AddMilliseconds(Cache.Instance.RandomNumber(1000,1500))) // was 1500,2000
+							{
+								//Logging.Log("AgentInteraction.CloseConversation", "will continue in [" + Math.Round(_nextAgentAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "]sec", Logging.Yellow);
+								return;
+							}
 
-					MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentId, true);
+							Logging.Log("AgentInteraction", "Attempting to close Agent Window", Logging.Yellow);
+							_lastAgentAction = DateTime.UtcNow;
+							agentWindow.Close();
+						}
+
+						MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentId, true);
+					}
 				}
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("AgentInteraction", "Exception [" + exception + "]", Logging.Teal);
+				catch (Exception exception)
+				{
+					Logging.Log("AgentInteraction", "Exception [" + exception + "]", Logging.Teal);
+				}
 			}
 		}
 
@@ -1203,6 +1215,8 @@ namespace Questor.Modules.Actions
 
 					continue;
 				}
+            if (DateTime.UtcNow < _nextAgentAction)
+                return;
 
 				switch (_States.CurrentAgentInteractionState)
 				{
