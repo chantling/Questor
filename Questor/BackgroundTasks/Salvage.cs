@@ -941,8 +941,8 @@ namespace Questor.Modules.BackgroundTasks
 
 								try
 								{
-									// We are at our max, either make room or skip the item
-									if ((freeCargoCapacity - item.TotalVolume) <= (item.IsMissionItem ? 0 : ReserveCargoCapacity))
+                                    // We are at our max, either make room or skip the item
+                                    if ((freeCargoCapacity - item.TotalVolume) < (item.IsMissionItem ? 0 : ReserveCargoCapacity))
 									{
 										Logging.Log("Salvage.LootWrecks", "We Need More m3: FreeCargoCapacity [" + freeCargoCapacity + "] - [" + item.Name + "][" + item.TotalVolume + "total][" + item.Volume + "each]", Logging.Debug);
 										
