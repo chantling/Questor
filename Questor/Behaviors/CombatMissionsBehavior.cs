@@ -1077,7 +1077,8 @@ namespace Questor.Behaviors
 					}
 					else
 					{
-						_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Idle;
+                        MissionSettings.MissionSpecificShip = null; // Probably a better place to put this?
+                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Idle;
 						_States.CurrentQuestorState = QuestorState.Idle;
 						Logging.Log("CombatMissionsBehavior.Unloadloot", "CharacterMode: [" + Settings.Instance.CharacterMode + "], AfterMissionSalvaging: [" + Salvage.AfterMissionSalvaging + "], CombatMissionsBehaviorState: [" + _States.CurrentCombatMissionBehaviorState + "]", Logging.White);
 						return;

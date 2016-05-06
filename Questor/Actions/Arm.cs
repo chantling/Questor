@@ -1062,7 +1062,6 @@ namespace Questor.Modules.Actions
                 Logging.Log(WeAreInThisStateForLogs(), "ActivateCombatShip() Start", Logging.White);
                 UseMissionShip = false;
                 MissionFitting currentMissionFitting = MissionSettings.MissionFittingForThisMission;
-                string MissionShipName = null;
 
 				if (string.IsNullOrEmpty(Combat.CombatShipName))
 				{
@@ -1074,15 +1073,15 @@ namespace Questor.Modules.Actions
                 if (currentMissionFitting != null)
                     if (!string.IsNullOrEmpty(currentMissionFitting.Ship))
                     {
-                        MissionShipName = currentMissionFitting.Ship;
-                        Logging.Log(WeAreInThisStateForLogs(), "Mission ship: [" + MissionShipName + "]", Logging.White);
+                        MissionSettings.MissionSpecificShip = currentMissionFitting.Ship;
+                        Logging.Log(WeAreInThisStateForLogs(), "Mission ship: [" + MissionSettings.MissionSpecificShip + "]", Logging.White);
                     }
                 else
                         Logging.Log(WeAreInThisStateForLogs(), "currentMissionFitting is null", Logging.White);
 
-                if (!ActivateShip(MissionShipName) && !switchingShips)
+                if (!ActivateShip(MissionSettings.MissionSpecificShip) && !switchingShips)
                 {
-                    Logging.Log(WeAreInThisStateForLogs(), "Unable to activate Mission Ship [" + MissionShipName + "]", Logging.White);
+                    Logging.Log(WeAreInThisStateForLogs(), "Unable to activate Mission Ship [" + MissionSettings.MissionSpecificShip + "]", Logging.White);
                     if (!ActivateShip(Combat.CombatShipName) && !switchingShips)
 				{
                         Logging.Log(WeAreInThisStateForLogs(), "Unable to activate Combat Ship [" + Combat.CombatShipName + "]", Logging.White);
