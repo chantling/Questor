@@ -42,6 +42,7 @@ namespace Questor.Modules.Lookup
 			MissionItems = new List<string>();
 			MissionUseDrones = null;
 			UseMissionShip = false;
+            MissionShipSpecified = false;
 			DamageTypesForThisMission = new Dictionary<DamageType, DateTime>();
 			DamageTypesInMissionXML = new List<DamageType>();
 		}
@@ -349,6 +350,58 @@ namespace Questor.Modules.Lookup
 			}
 		}
 
+        public static MissionFitting FoundMissionFitting(string _Mission = null)
+        {
+            if (_Mission == "return") // Ugly hack to account for the ship switch at startup before a mission is loaded.  Do something
+                return null;          // nicer when less tired
+            string _MissionName = null;
+            if (_Mission == null)               // If we weren't supplied a mission name, assume we're actually loading the fitting; otherwise
+                _MissionName = Mission.Name;    // we're likely just checking to see if we have the ship and fitting listed
+            else
+                _MissionName = _Mission;
+
+            if (MissionSettings.ListOfMissionFittings != null)
+            {
+                if (MissionSettings.ListOfMissionFittings.Any())
+                {
+                    if (MissionSettings.ListOfMissionFittings.Any(i => i.MissionName != null && _MissionName != null && i.MissionName.ToLower().Equals(_MissionName.ToLower())))
+                    {
+                        IEnumerable<MissionFitting> tempListOfMissionFittings = MissionSettings.ListOfMissionFittings.Where(i => i.MissionName.ToLower().Equals(_MissionName.ToLower()));
+                        if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())
+                        {
+                            MissionFitting fitting = tempListOfMissionFittings.FirstOrDefault();
+                            if (fitting != null)
+                            {
+                                if (Mission.Name != null) // Only change dronetypes if we're actually loading the fitting.  Should this really be here?  Or better somewhere else?
+                                {
+                                    if (fitting.DroneTypeID != null)
+                                    {
+                                        MissionSettings.MissionDroneTypeID = fitting.DroneTypeID;
+                                    }
+                                }
+
+                                //_fitting.Ship - this should allow for mission specific ships... if we want to allow for that
+                                return fitting;
+                            }
+
+                            return null;
+                        }
+
+                        Logging.Log("MissionSettings", "FoundMissionFitting: if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())", Logging.Debug);
+                        return null;
+                    }
+
+                    Logging.Log("MissionSettings", "FoundMissionFitting: if (!MissionSettings.ListOfMissionFittings.Any(i => i.MissionName != null && Mission != null && i.MissionName.ToLower() == Mission.Name))", Logging.Debug);
+                    return null;
+                }
+
+                Logging.Log("MissionSettings", "FoundMissionFitting: no mission fittings found", Logging.Debug);
+                return null;
+            }
+            Logging.Log("MissionSettings", "FoundMissionFitting: ListofMissionFittings is null", Logging.Debug);
+            return null;
+        }
+
 		//public XDocument InvTypes;
 		public static XDocument UnloadLootTheseItemsAreLootItems;
 		//public static XDocument InvIgnore;
@@ -571,8 +624,9 @@ namespace Questor.Modules.Lookup
 
             set {  }
         }
-        public static string FactionName { get; set; }
+		public static string FactionName { get; set; }
 		public static bool UseMissionShip { get; set; } // flags whether we're using a mission specific ship
+        public static bool MissionShipSpecified { get; set; } // flags whether we're using a mission specific ship
 		public static bool ChangeMissionShipFittings { get; set; } // used for situations in which missionShip's specified, but no faction or mission fittings are; prevents default
 		public static  Dictionary<Ammo, DateTime> AmmoTypesToLoad { get; set; }
 		//public static List<Ammo> FactionAmmoTypesToLoad { get; set; }

@@ -529,6 +529,34 @@ namespace Questor.Modules.Actions
 						if (Logging.DebugDecline) Logging.Log("AgentInteraction", "[" + MissionSettings.MissionName + "] is not on the GreyList and will likely be run if it is not in lowsec, we have not checked for that yet", Logging.White);
 					}
 
+                    // Check to see if we have a mission specific ship for this mission.  If so, and we can't find it, decline the mission
+                    Logging.Log("AgentInteraction", "Checking for mission specific ship", Logging.White);
+                    MissionFitting _MissionFit = MissionSettings.FoundMissionFitting(MissionSettings.MissionName.ToLower());
+                    if (_MissionFit != null)
+                    {
+                        Logging.Log("AgentInteraction", "Found mission fit", Logging.White);
+                        if (_MissionFit.Ship != null && _MissionFit.Ship != "")
+                        {
+                            Logging.Log("AgentInteraction", "_MissionFit.Ship[" + _MissionFit.Ship + "]", Logging.White);
+                            MissionSettings.MissionShipSpecified = true;
+                            if (Cache.Instance.ShipHangar != null)
+                            {
+                                Logging.Log("AgentInteraction", "Found Ship Hangar", Logging.White);
+                                List<DirectItem> shipsInShipHangar = Cache.Instance.ShipHangar.Items;
+                                if (!shipsInShipHangar.Any(s => s.GivenName != null && s.GivenName.ToLower() == _MissionFit.Ship.ToLower()))
+                                {
+                                    Logging.Log("AgentInteraction", "Mission specific ship [" + _MissionFit.Ship + "] not found in ship hangar; declining mission", Logging.White);
+                                    ChangeAgentInteractionState(AgentInteractionState.DeclineMission);
+                                    return;
+                                }
+                                Logging.Log("AgentInteraction", "!shipsInShipHangar.Any(s => s.GivenName != null && s.GivenName.ToLower() == _MissionFit.Ship.ToLower())", Logging.White);
+                            }
+                            Logging.Log("AgentInteraction", "Ship hangar not found?!", Logging.White);
+                        }
+                        else
+                            MissionSettings.MissionShipSpecified = false;
+                    }
+
 					//public bool RouteIsAllHighSec(long solarSystemId, List<long> currentDestination)
 					//Cache.Instance.RouteIsAllHighSec(Cache.Instance.DirectEve.Session.SolarSystemId, );
 
