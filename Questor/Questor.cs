@@ -141,14 +141,10 @@ namespace Questor
 					_runOnceAfterStartupalreadyProcessed = true;
 
 					Cache.Instance.IterateShipTargetValues("RunOnceAfterStartup");  // populates ship target values from an XML
-					//Cache.Instance.IterateInvTypes("RunOnceAfterStartup");          // populates the prices of items (cant we use prices from the game now?!)
 					Cache.Instance.IterateUnloadLootTheseItemsAreLootItems("RunOnceAfterStartup");       // populates the list of items we never want in our local cargo (used mainly in unloadloot)
 
 					MissionSettings.UpdateMissionName();
 					Logging.MaintainConsoleLogs();
-
-					//var daysLeft = Cache.Instance.DirectEve.Me.DaysLeftOnAccount;
-					//Logging.Log("RunOnceAfterStartup", "Cache.Instance.DirectEve.Me.DaysLeftOnAccount [" + daysLeft + "]", Logging.Debug);
 
 				}
 				else
