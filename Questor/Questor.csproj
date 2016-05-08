@@ -71,20 +71,29 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DirectEve, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DirectEve\DirectEve.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Remoting">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Threading" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Utility">
-      <HintPath>..\DirectEve\Utility.dll</HintPath>
+      <HintPath>..\libs\Utility.dll</HintPath>
       <Aliases>Ut</Aliases>
     </Reference>
     <Reference Include="WindowsBase" />
@@ -134,6 +143,103 @@
     <Compile Include="Caching\ModuleCache.cs" />
     <Compile Include="Combat\Combat.cs" />
     <Compile Include="Combat\Drones.cs" />
+    <Compile Include="DirectEve\D3DDetour\D3D11.cs" />
+    <Compile Include="DirectEve\D3DDetour\D3D9.cs" />
+    <Compile Include="DirectEve\D3DDetour\D3DHook.cs" />
+    <Compile Include="DirectEve\D3DDetour\Pulse.cs" />
+    <Compile Include="DirectEve\D3DDetour\StandAlone.cs" />
+    <Compile Include="DirectEve\DirectActiveShip.cs" />
+    <Compile Include="DirectEve\DirectAgent.cs" />
+    <Compile Include="DirectEve\DirectAgentMission.cs" />
+    <Compile Include="DirectEve\DirectAgentMissionBookmark.cs" />
+    <Compile Include="DirectEve\DirectAgentResponse.cs" />
+    <Compile Include="DirectEve\DirectAgentWindow.cs" />
+    <Compile Include="DirectEve\DirectBookmark.cs" />
+    <Compile Include="DirectEve\DirectBookmarkFolder.cs" />
+    <Compile Include="DirectEve\DirectCharacter.cs" />
+    <Compile Include="DirectEve\DirectChatMessage.cs" />
+    <Compile Include="DirectEve\DirectChatWindow.cs" />
+    <Compile Include="DirectEve\DirectCmd.cs" />
+    <Compile Include="DirectEve\DirectConst.cs" />
+    <Compile Include="DirectEve\DirectConstellation.cs" />
+    <Compile Include="DirectEve\DirectContainer.cs" />
+    <Compile Include="DirectEve\DirectContainerWindow.cs" />
+    <Compile Include="DirectEve\DirectDirectionalScannerWindow.cs" />
+    <Compile Include="DirectEve\DirectDirectionalScanResult.cs" />
+    <Compile Include="DirectEve\DirectEntity.cs" />
+    <Compile Include="DirectEve\DirectEve.cs" />
+    <Compile Include="DirectEve\DirectFitting.cs" />
+    <Compile Include="DirectEve\DirectFittingManagerWindow.cs" />
+    <Compile Include="DirectEve\DirectFleetMember.cs" />
+    <Compile Include="DirectEve\DirectInvType.cs" />
+    <Compile Include="DirectEve\DirectItem.cs" />
+    <Compile Include="DirectEve\DirectItemAttributes.cs" />
+    <Compile Include="DirectEve\DirectLocation.cs" />
+    <Compile Include="DirectEve\DirectLogin.cs" />
+    <Compile Include="DirectEve\DirectLoginSlot.cs" />
+    <Compile Include="DirectEve\DirectLoyaltyPointOffer.cs" />
+    <Compile Include="DirectEve\DirectLoyaltyPointOfferRequiredItem.cs" />
+    <Compile Include="DirectEve\DirectLoyaltyPointStoreWindow.cs" />
+    <Compile Include="DirectEve\DirectMarketActionWindow.cs" />
+    <Compile Include="DirectEve\DirectMarketWindow.cs" />
+    <Compile Include="DirectEve\DirectMe.cs" />
+    <Compile Include="DirectEve\DirectModule.cs" />
+    <Compile Include="DirectEve\DirectNavigation.cs" />
+    <Compile Include="DirectEve\DirectObject.cs" />
+    <Compile Include="DirectEve\DirectOrder.cs" />
+    <Compile Include="DirectEve\DirectOrderRange.cs" />
+    <Compile Include="DirectEve\DirectOwnContainerWindow.cs" />
+    <Compile Include="DirectEve\DirectOwner.cs" />
+    <Compile Include="DirectEve\DirectRegion.cs" />
+    <Compile Include="DirectEve\DirectRepairShopWindow.cs" />
+    <Compile Include="DirectEve\DirectReprocessingQuote.cs" />
+    <Compile Include="DirectEve\DirectReprocessingQuoteRecoverable.cs" />
+    <Compile Include="DirectEve\DirectReprocessingWindow.cs" />
+    <Compile Include="DirectEve\DirectScannerProbe.cs" />
+    <Compile Include="DirectEve\DirectScannerWindow.cs" />
+    <Compile Include="DirectEve\DirectSession.cs" />
+    <Compile Include="DirectEve\DirectSkill.cs" />
+    <Compile Include="DirectEve\DirectSkills.cs" />
+    <Compile Include="DirectEve\DirectSolarSystem.cs" />
+    <Compile Include="DirectEve\DirectStandings.cs" />
+    <Compile Include="DirectEve\DirectStation.cs" />
+    <Compile Include="DirectEve\DirectSystemScanResult.cs" />
+    <Compile Include="DirectEve\DirectTelecomWindow.cs" />
+    <Compile Include="DirectEve\DirectTradeWindow.cs" />
+    <Compile Include="DirectEve\DirectWindow.cs" />
+    <Compile Include="DirectEve\EasyHook\Config.cs" />
+    <Compile Include="DirectEve\EasyHook\Debugging.cs" />
+    <Compile Include="DirectEve\EasyHook\DllImport.cs" />
+    <Compile Include="DirectEve\EasyHook\Domain\DomainIdentifier.cs" />
+    <Compile Include="DirectEve\EasyHook\GACWrap.cs" />
+    <Compile Include="DirectEve\EasyHook\HelperServiceInterface.cs" />
+    <Compile Include="DirectEve\EasyHook\InjectionLoader.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\-DummyCore.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\ChannelProperties.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\ConnectionManager.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\DomainConnectionEndPoint.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\DuplexChannel.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\DuplexChannelEndPointObject.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\DuplexChannelReadyEventHandler.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\DuplexChannelState.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\EndPointConfigurationData.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\EndPointObject.cs" />
+    <Compile Include="DirectEve\EasyHook\IPC\SimplexChannel.cs" />
+    <Compile Include="DirectEve\EasyHook\LocalHook.cs" />
+    <Compile Include="DirectEve\EasyHook\RemoteHook.cs" />
+    <Compile Include="DirectEve\EasyHook\ServiceMgmt.cs" />
+    <Compile Include="DirectEve\EasyHook\WOW64Bypass.cs" />
+    <Compile Include="DirectEve\Frameworks\IFramework.cs" />
+    <Compile Include="DirectEve\Frameworks\InnerSpace.cs" />
+    <Compile Include="DirectEve\Hooking\Hooks.cs" />
+    <Compile Include="DirectEve\PySharp\IntPtrExtension.cs" />
+    <Compile Include="DirectEve\PySharp\Py.cs" />
+    <Compile Include="DirectEve\PySharp\PyDynamic.cs" />
+    <Compile Include="DirectEve\PySharp\PyObject.cs" />
+    <Compile Include="DirectEve\PySharp\PySharp.cs" />
+    <Compile Include="DirectEve\PySharp\PyType.cs" />
+    <Compile Include="DirectEve\PythonBrowser\PythonBrowserFrm.cs" />
+    <Compile Include="DirectEve\PythonBrowser\PythonBrowserFrm.Designer.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Logging\Statistics.cs" />
     <Compile Include="Logging\StatisticsLookupMethods.cs" />
@@ -233,6 +339,9 @@
     <Compile Include="Modules\ValueDump\ValueDumpUI.Designer.cs">
       <DependentUpon>ValueDumpUI.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DirectEve\PythonBrowser\PythonBrowserFrm.resx">
+      <DependentUpon>PythonBrowserFrm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -283,7 +392,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DirectEve\D3DDetour" />
+    <Folder Include="DirectEve\EasyHook" />
+    <Folder Include="DirectEve\EasyHook\Domain" />
+    <Folder Include="DirectEve\EasyHook\IPC" />
+    <Folder Include="DirectEve\Frameworks" />
+    <Folder Include="DirectEve\Hooking" />
+    <Folder Include="DirectEve\PySharp" />
+    <Folder Include="DirectEve\PythonBrowser" />
     <Folder Include="Modules\QuestorManager\Debugging" />
+    <Folder Include="DirectEve" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
