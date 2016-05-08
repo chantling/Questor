@@ -4,19 +4,21 @@
     <pocket id="0">
       <damagetype>Kinetic</damagetype>
       <actions>
+
+        <action name="ClearWithinWeaponsRangeOnly" />
         <action name="ClearPocket" />
         <action name="Activate">
-          <parameter name="target" value="Acceleration Gate" />
+          <parameter name="Target" value="Acceleration Gate" />
         </action>
       </actions>
     </pocket>
     <pocket id="1">
-      <damagetype>Kinetic</damagetype>
       <actions>
         <action name="ClearPocket" />
-        <action name="Loot">
+        <action name="LootItem">
           <parameter name="target" value="Cargo Container" />
           <parameter name="Item" value="Confiscated Viral Agent" />
+          <parameter name="Quantity" value="60" />
         </action>
         <action name="Done" />
       </actions>

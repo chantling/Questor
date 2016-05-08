@@ -1,7 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <mission>
   <pockets>
     <pocket id="0">
+      <damagetype>EM</damagetype>
       <actions>
         <action name="Activate">
           <parameter name="target" value="Acceleration Gate" />
@@ -9,38 +10,39 @@
       </actions>
     </pocket>
     <pocket id="1">
-      <damagetype>EM</damagetype>
       <actions>
-        <action name="WaitUntilTargeted">
-          <parameter name="Timeout" value="15" />
-        </action>
-        <action name="ClearPocket" />
-        <action name="Loot" />
+	  <action name="ClearWithinWeaponsRangeOnly" />
+
+        <action name="ClearWithinWeaponsRangeOnly" />
+
+        <action name="ClearWithinWeaponsRangeOnly" />
         <action name="Kill">
           <parameter name="Target" value="Drone Structure II" />
         </action>
         <action name="Kill">
+		<action name="ClearWithinWeaponsRangeOnly" />
           <parameter name="Target" value="Drone Bunker" />
         </action>
+        <action name="ClearPocket" />
         <action name="Activate">
-          <parameter name="target" value="Acceleration Gate" />
+          <parameter name="Target" value="Acceleration Gate" />
         </action>
       </actions>
     </pocket>
     <pocket id="2">
-      <damagetype>EM</damagetype>
       <actions>
+
+        <action name="ClearWithinWeaponsRangeOnly" />
         <action name="Kill">
           <parameter name="Target" value="Drone Structure II" />
         </action>
         <action name="Kill">
           <parameter name="Target" value="Drone Structure" />
         </action>
-        <action name="ClearPocket" />
-        <action name="Loot" />
         <action name="Kill">
           <parameter name="Target" value="Drone Bunker" />
         </action>
+        <action name="ClearPocket" />
         <action name="Done" />
       </actions>
     </pocket>

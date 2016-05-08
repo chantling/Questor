@@ -4,17 +4,14 @@
     <pocket id="0">
       <damagetype>Thermal</damagetype>
       <actions>
-        <action name="Ignore">
-          <parameter name="Add" value="Mercenary Overlord" />
-        </action>
-        <action name="ClearPocket" />
-        <action name="Ignore">
-          <parameter name="Remove" value="Mercenary Overlord" />
+        <action name="Kill">
+          <parameter name="Target" value="Mercenary Overlord" />
         </action>
         <action name="ClearPocket" />
         <action name="LootItem">
           <parameter name="Target" value="Cargo Container" />
           <parameter name="Item" value="Reports" />
+          <parameter name="Quantity" value="1" />
         </action>
         <action name="Done" />
       </actions>

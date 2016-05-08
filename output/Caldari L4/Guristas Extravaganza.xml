@@ -4,10 +4,58 @@
   <pockets>
     <pocket id="0">
       <damagetype>Kinetic</damagetype>
+	  <actions>
+      <action name="ClearWithinWeaponsRangeOnly" />
+      <action name="ClearPocket" />
+      <action name="Activate">
+        <parameter name="Target" value="Acceleration Gate" />
+      </action>
+	  </actions>
+    </pocket>
+    <pocket id="1">
+      <actions>
+
+        <action name="ClearWithinWeaponsRangeOnly" />
+        <action name="ClearPocket" />
+        <action name="Activate">
+          <parameter name="Target" value="Acceleration Gate" />
+        </action>
+      </actions>
+    </pocket>
+    <pocket id="2">
+      <actions>
+
+        <action name="ClearWithinWeaponsRangeOnly" />
+        <action name="ClearPocket" />
+        <action name="Activate">
+          <parameter name="Target" value="Acceleration Gate" />
+        </action>
+      </actions>
+    </pocket>
+    <pocket id="3">
+      <actions>
+
+        <action name="ClearWithinWeaponsRangeOnly" />
+        <action name="ClearPocket" />
+        <action name="Activate">
+          <parameter name="Target" value="Acceleration Gate" />
+        </action>
+      </actions>
+    </pocket>
+    <pocket id="4">
+      <actions>
+
+        <action name="ClearWithinWeaponsRangeOnly" />
+        <action name="ClearPocket" />
+        <action name="Activate">
+          <parameter name="Target" value="Acceleration Gate" />
+        </action>
+      </actions>
     </pocket>
     <pocket id="5">
-      <damagetype>Kinetic</damagetype>
       <actions>
+
+        <action name="ClearWithinWeaponsRangeOnly" />
         <action name="Ignore">
           <parameter name="Add" value="Guristas War Installation" />
         </action>
@@ -21,7 +69,6 @@
       </actions>
     </pocket>
     <pocket id="6">
-      <damagetype>Kinetic</damagetype>
       <actions>
         <action name="WaitUntilTargeted">
           <parameter name="Timeout" value="15" />
@@ -30,7 +77,6 @@
         <action name="Kill">
           <parameter name="Target" value="Guristas Storage Facility" />
         </action>
-        <action name="Loot" />
         <action name="Done" />
       </actions>
     </pocket>

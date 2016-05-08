@@ -370,13 +370,14 @@ namespace Questor.Modules.Logging
 
 				if (!File.Exists(MissionStats3LogFile))
 				{
-					File.AppendAllText(MissionStats3LogFile, "Date;Mission;Time;Isk;Loot;LP;DroneRecalls;LostDrones;AmmoConsumption;AmmoValue;Panics;LowestShield;LowestArmor;LowestCap;RepairCycles;AfterMissionsalvageTime;TotalMissionTime;MissionXMLAvailable;Faction;SolarSystem;DungeonID;OutOfDronesCount;\r\n");
+					File.AppendAllText(MissionStats3LogFile, "Date;Mission;Time;Isk;IskReward;Loot;LP;DroneRecalls;LostDrones;AmmoConsumption;AmmoValue;Panics;LowestShield;LowestArmor;LowestCap;RepairCycles;AfterMissionsalvageTime;TotalMissionTime;MissionXMLAvailable;Faction;SolarSystem;DungeonID;OutOfDronesCount;\r\n");
 				}
 
 				string line3 = DateTimeForLogs + ";";                                                                                  // Date
 				line3 += MissionSettings.MissionName + ";";                                                                           // Mission
 				line3 += ((int)Statistics.FinishedMission.Subtract(Statistics.StartedMission).TotalMinutes) + ";";        			 // TimeMission
 				line3 += isk + ";";                                           														  // Isk
+				line3 += Statistics.ISKMissionReward + ";";                                           								// ISKMissionReward 
 				line3 += lootVal + ";";                                                                 						     // Loot
 				line3 += LoyaltyPointsForCurrentMission + ";";                           										    // LP
 				line3 += Statistics.DroneRecalls + ";";                                                                             // Lost Drones

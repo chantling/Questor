@@ -226,7 +226,7 @@ namespace QuestorManager
 
 				if (_requiredCom)
 				{
-					Required();
+//					Required();
 				}
 
 				switch (State)

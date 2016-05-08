@@ -1,11 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <mission>
+  <bring>Oura Madusaari</bring>
   <pockets>
     <pocket id="0">
+      <damagetype>Kinetic</damagetype>
       <actions>
         <action name="ClearPocket" />
-        <action name="Loot">
+        <action name="LootItem">
           <parameter name="target" value="Life Pod" />
+          <parameter name="Item" value="Oura Madusaari" />
+        </action>
+        <action name="LootItem">
+          <parameter name="target" value="Cargo Container" />
           <parameter name="Item" value="Oura Madusaari" />
         </action>
         <action name="Activate">
@@ -14,12 +20,15 @@
       </actions>
     </pocket>
     <pocket id="1">
-      <damagetype>Kinetic</damagetype>
       <actions>
         <action name="Kill">
           <parameter name="target" value="Pressure Silo Debris" />
-        </action
-        <action name="Loot">
+        </action>
+        <action name="LootItem">
+          <parameter name="target" value="Paryi Wreck" />
+          <parameter name="Item" value="Fajah Ateshi" />
+        </action>
+        <action name="LootItem">
           <parameter name="target" value="Cargo Container" />
           <parameter name="Item" value="Fajah Ateshi" />
         </action>
