@@ -93,7 +93,7 @@ namespace Questor.Modules.Actions
 			                                                    && i.TypeId != (int)TypeID.TrackingSpeedDisruptionScript
 			                                                    && i.TypeId != (int)TypeID.TrackingSpeedScript
 			                                                    && i.GroupId != (int)Group.CapacitorGroupCharge
-//			                                                    || Cache.Instance.UnloadLootTheseItemsAreLootById.ContainsKey(i.TypeId)
+			                                                    || Cache.Instance.UnloadLootTheseItemsAreLootById.ContainsKey(i.TypeId)
 			                                                   ).ToList();
 			
 		}
