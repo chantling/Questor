@@ -166,8 +166,7 @@ namespace Questor.Behaviors
 					Cache.Instance.QuestorJustStarted = false;
 					Cleanup.SessionState = "Starting Up";
 
-					// write session log
-					Statistics.WriteSessionLogStarting();
+					
 				}
 			}
 

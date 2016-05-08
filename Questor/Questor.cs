@@ -100,9 +100,9 @@ namespace Questor
 			// get the physical mem usage
 			Cache.Instance.TotalMegaBytesOfMemoryUsed = ((currentProcess.WorkingSet64 + 1 / 1024) / 1024);
 			Logging.Log("Questor", "EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB", Logging.White);
-			Statistics.SessionIskGenerated = 0;
-			Statistics.SessionLootGenerated = 0;
-			Statistics.SessionLPGenerated = 0;
+//			Statistics.SessionIskGenerated = 0;
+//			Statistics.SessionLootGenerated = 0;
+//			Statistics.SessionLPGenerated = 0;
 			Settings.Instance.CharacterMode = "none";
 
 			try

@@ -136,6 +136,7 @@
     <Compile Include="Combat\Drones.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Logging\Statistics.cs" />
+    <Compile Include="Logging\StatisticsLookupMethods.cs" />
     <Compile Include="Lookup\AgentInteractionPurpose.cs" />
     <Compile Include="Lookup\Ammo.cs" />
     <Compile Include="Lookup\CategoryID.cs" />

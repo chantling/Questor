@@ -175,7 +175,7 @@ namespace Questor.Modules.Lookup
 
 		public string TravelToBookmarkPrefix { get; set; }
 
-		public string UndockBookmarkPrefix { get; set; }
+		public string UndockBookmarkPrefix { get; set; } 
 		
 		//
 		// EVE Process Memory Ceiling and EVE wallet balance Change settings
@@ -562,7 +562,7 @@ namespace Questor.Modules.Lookup
 				//
 				// Value - Used in calculations
 				//
-				Statistics.IskPerLP = (double?)CharacterSettingsXml.Element("IskPerLP") ?? (double?)CommonSettingsXml.Element("IskPerLP") ?? 600; //used in value calculations
+				Statistics.IskPerLP = (double?)CharacterSettingsXml.Element("IskPerLP") ?? (double?)CommonSettingsXml.Element("IskPerLP") ?? 500; //used in value calculations
 
 				//
 				// Undock settings
@@ -1026,11 +1026,11 @@ namespace Questor.Modules.Lookup
 				Logging.InnerspaceGeneratedConsoleLog = (bool?)CharacterSettingsXml.Element("innerspaceGeneratedConsoleLog") ?? (bool?)CommonSettingsXml.Element("innerspaceGeneratedConsoleLog") ?? false; // save the innerspace generated console log to file
 				//Logging.SaveConsoleLog = (bool?)CharacterSettingsXml.Element("saveLog") ?? (bool?)CommonSettingsXml.Element("saveLog") ?? true; // save the console log to file
 				Logging.SaveLogRedacted = (bool?)CharacterSettingsXml.Element("saveLogRedacted") ?? (bool?)CommonSettingsXml.Element("saveLogRedacted") ?? true; // save the console log redacted to file
-				Statistics.SessionsLog = (bool?)CharacterSettingsXml.Element("SessionsLog") ?? (bool?)CommonSettingsXml.Element("SessionsLog") ?? true;
+//				Statistics.SessionsLog = (bool?)CharacterSettingsXml.Element("SessionsLog") ?? (bool?)CommonSettingsXml.Element("SessionsLog") ?? true;
 				Statistics.DroneStatsLog = (bool?)CharacterSettingsXml.Element("DroneStatsLog") ?? (bool?)CommonSettingsXml.Element("DroneStatsLog") ?? true;
 				Statistics.WreckLootStatistics = (bool?)CharacterSettingsXml.Element("WreckLootStatistics") ?? (bool?)CommonSettingsXml.Element("WreckLootStatistics") ?? true;
-				Statistics.MissionStats1Log = (bool?)CharacterSettingsXml.Element("MissionStats1Log") ?? (bool?)CommonSettingsXml.Element("MissionStats1Log") ?? true;
-				Statistics.MissionStats2Log = (bool?)CharacterSettingsXml.Element("MissionStats2Log") ?? (bool?)CommonSettingsXml.Element("MissionStats2Log") ?? true;
+//				Statistics.MissionStats1Log = (bool?)CharacterSettingsXml.Element("MissionStats1Log") ?? (bool?)CommonSettingsXml.Element("MissionStats1Log") ?? true;
+//				Statistics.MissionStats2Log = (bool?)CharacterSettingsXml.Element("MissionStats2Log") ?? (bool?)CommonSettingsXml.Element("MissionStats2Log") ?? true;
 				Statistics.MissionStats3Log = (bool?)CharacterSettingsXml.Element("MissionStats3Log") ?? (bool?)CommonSettingsXml.Element("MissionStats3Log") ?? true;
 				Statistics.MissionDungeonIdLog = (bool?)CharacterSettingsXml.Element("MissionDungeonIdLog") ?? (bool?)CommonSettingsXml.Element("MissionDungeonIdLog") ?? true;
 				Statistics.PocketStatistics = (bool?)CharacterSettingsXml.Element("PocketStatistics") ?? (bool?)CommonSettingsXml.Element("PocketStatistics") ?? true;
@@ -1340,10 +1340,7 @@ namespace Questor.Modules.Lookup
 				WalletBalanceChangeLogOffDelay = 30;
 				WalletBalanceChangeLogOffDelayLogoffOrExit = "exit";
 				
-				//
-				// Value - Used in calculations
-				//
-				Statistics.IskPerLP = 600; //used in value calculations
+		
 
 				//
 				// Undock settings
@@ -1419,11 +1416,11 @@ namespace Questor.Modules.Lookup
 				//
 				// Enable / Disable the different types of logging that are available
 				//
-				Statistics.SessionsLog = false;
+//				Statistics.SessionsLog = false;
 				Statistics.DroneStatsLog = false;
 				Statistics.WreckLootStatistics = false;
-				Statistics.MissionStats1Log = false;
-				Statistics.MissionStats2Log = false;
+//				Statistics.MissionStats1Log = false;
+//				Statistics.MissionStats2Log = false;
 				Statistics.MissionStats3Log = false;
 				Statistics.PocketStatistics = false;
 				Statistics.PocketStatsUseIndividualFilesPerPocket = false;
@@ -1636,8 +1633,8 @@ namespace Questor.Modules.Lookup
 				}
 			}
 
-			Statistics.SessionsLogPath = Logging.Logpath;
-			Statistics.SessionsLogFile = System.IO.Path.Combine(Statistics.SessionsLogPath, Logging.characterNameForLogs + ".Sessions.log");
+//			Statistics.SessionsLogPath = Logging.Logpath;
+//			Statistics.SessionsLogFile = System.IO.Path.Combine(Statistics.SessionsLogPath, Logging.characterNameForLogs + ".Sessions.log");
 			Statistics.DroneStatsLogPath = Logging.Logpath;
 			Statistics.DroneStatslogFile = System.IO.Path.Combine(Statistics.DroneStatsLogPath, Logging.characterNameForLogs + ".DroneStats.log");
 			
@@ -1645,10 +1642,10 @@ namespace Questor.Modules.Lookup
 			Statistics.WindowStatslogFile = System.IO.Path.Combine(Statistics.WindowStatsLogPath, Logging.characterNameForLogs + ".WindowStats-DayOfYear[" + DateTime.UtcNow.DayOfYear + "].log");
 			Statistics.WreckLootStatisticsPath = Logging.Logpath;
 			Statistics.WreckLootStatisticsFile = System.IO.Path.Combine(Statistics.WreckLootStatisticsPath, Logging.characterNameForLogs + ".WreckLootStatisticsDump.log");
-			Statistics.MissionStats1LogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
-			Statistics.MissionStats1LogFile = System.IO.Path.Combine(Statistics.MissionStats1LogPath, Logging.characterNameForLogs + ".Statistics.log");
-			Statistics.MissionStats2LogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
-			Statistics.MissionStats2LogFile = System.IO.Path.Combine(Statistics.MissionStats2LogPath, Logging.characterNameForLogs + ".DatedStatistics.log");
+//			Statistics.MissionStats1LogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
+//			Statistics.MissionStats1LogFile = System.IO.Path.Combine(Statistics.MissionStats1LogPath, Logging.characterNameForLogs + ".Statistics.log");
+//			Statistics.MissionStats2LogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
+//			Statistics.MissionStats2LogFile = System.IO.Path.Combine(Statistics.MissionStats2LogPath, Logging.characterNameForLogs + ".DatedStatistics.log");
 			Statistics.MissionStats3LogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
 			Statistics.MissionStats3LogFile = System.IO.Path.Combine(Statistics.MissionStats3LogPath, Logging.characterNameForLogs + ".CustomDatedStatistics.csv");
 			Statistics.MissionDungeonIdLogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
@@ -1664,11 +1661,11 @@ namespace Questor.Modules.Lookup
 				Directory.CreateDirectory(Logging.Logpath);
 				Directory.CreateDirectory(Logging.SessionDataCachePath);
 				Directory.CreateDirectory(Logging.ConsoleLogPath);
-				Directory.CreateDirectory(Statistics.SessionsLogPath);
+//				Directory.CreateDirectory(Statistics.SessionsLogPath);
 				Directory.CreateDirectory(Statistics.DroneStatsLogPath);
 				Directory.CreateDirectory(Statistics.WreckLootStatisticsPath);
-				Directory.CreateDirectory(Statistics.MissionStats1LogPath);
-				Directory.CreateDirectory(Statistics.MissionStats2LogPath);
+//				Directory.CreateDirectory(Statistics.MissionStats1LogPath);
+//				Directory.CreateDirectory(Statistics.MissionStats2LogPath);
 				Directory.CreateDirectory(Statistics.MissionStats3LogPath);
 				Directory.CreateDirectory(Statistics.MissionDungeonIdLogPath);
 				Directory.CreateDirectory(Statistics.PocketStatisticsPath);

@@ -738,7 +738,7 @@ namespace Questor.Behaviors
 			Statistics.FinishedMission = DateTime.UtcNow;
 
 			// only attempt to write the mission statistics logs if one of the mission stats logs is enabled in settings
-			if (Statistics.MissionStats1Log || Statistics.MissionStats3Log || Statistics.MissionStats3Log)
+			if (Statistics.MissionStats3Log)
 			{
 				try
 				{
@@ -1589,8 +1589,6 @@ namespace Questor.Behaviors
 					Cache.Instance.QuestorJustStarted = false;
 					Cleanup.SessionState = "Starting Up";
 
-					// write session log
-					Statistics.WriteSessionLogStarting();
 				}
 			}
 
