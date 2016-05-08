@@ -293,6 +293,7 @@ namespace Questor.Modules.Actions
 				DirectAgentResponse quit = Agent.Window.AgentResponses.FirstOrDefault(r => r.Text.Contains(Quit));
 				DirectAgentResponse close = Agent.Window.AgentResponses.FirstOrDefault(r => r.Text.Contains(Close));
 				DirectAgentResponse NoMoreMissionsAvailable = Agent.Window.AgentResponses.FirstOrDefault(r => r.Text.Contains(NoJobsAvailable));
+				string html = Agent.Window.Objective;
 
 				//
 				// Read the possibly responses and make sure we are 'doing the right thing' - set AgentInteractionPurpose to fit the state of the agent window
@@ -375,8 +376,34 @@ namespace Questor.Modules.Actions
 				{
 					if (Purpose == AgentInteractionPurpose.CompleteMission)
 					{
+						
+						// let's try to get the isk and lp value here again
+						
+						int lpCurrentMission = 0;
+						int iskFinishedMission = 0;
+						Statistics.ISKMissionReward = 0;
+						Statistics.LoyaltyPointsForCurrentMission = 0;
+						Regex iskRegex = new Regex(@"([0-9]+)\.([0-9]+)\.([0-9]+) ISK", RegexOptions.Compiled);
+						foreach (Match itemMatch in iskRegex.Matches(html))
+						{
+							int val = 0;
+							int.TryParse(Regex.Match(itemMatch.Value.Replace(".",""), @"\d+").Value, out val);
+							iskFinishedMission += val;
+						}
+
+						Regex lpRegex = new Regex(@"([0-9]+) Loyalty Points", RegexOptions.Compiled);
+						foreach (Match itemMatch in lpRegex.Matches(html))
+						{
+							int val = 0;
+							int.TryParse(Regex.Match(itemMatch.Value, @"\d+").Value, out val);
+							lpCurrentMission += val;
+						}
+						
+						Statistics.LoyaltyPointsForCurrentMission = lpCurrentMission;
+						Statistics.ISKMissionReward = iskFinishedMission;
+						
 						// Complete the mission, close conversation
-						Logging.Log("AgentInteraction", "Saying [Complete Mission]", Logging.Yellow);
+						Logging.Log("AgentInteraction", "Saying [Complete Mission] ISKMissionReward [" + Statistics.ISKMissionReward + "] LoyaltyPointsForCurrentMission [" + Statistics.LoyaltyPointsForCurrentMission + "]" , Logging.Yellow);
 						complete.Say();
 						MissionSettings.FactionName = string.Empty;
 						ChangeAgentInteractionState(AgentInteractionState.CloseConversation, true, "Closing conversation");
@@ -616,6 +643,8 @@ namespace Questor.Modules.Actions
 					
 					int lpCurrentMission = 0;
 					int iskFinishedMission = 0;
+					Statistics.ISKMissionReward = 0;
+					Statistics.LoyaltyPointsForCurrentMission = 0;
 					Regex iskRegex = new Regex(@"([0-9]+)\.([0-9]+)\.([0-9]+) ISK", RegexOptions.Compiled);
 					foreach (Match itemMatch in iskRegex.Matches(html))
 					{
