@@ -416,7 +416,7 @@ namespace Questor.Modules.BackgroundTasks
 			ModuleNumber = 0;
 			foreach (ModuleCache ActivateOncePerSessionModule in Cache.Instance.Modules.Where(i => i.GroupId == (int)Group.CloakingDevice ||
 			                                                                                  i.GroupId == (int)Group.ShieldHardeners ||
-			                                                                                  i.GroupId == (int)Group.DamageControl ||
+//			                                                                                  i.GroupId == (int)Group.DamageControl ||
 			                                                                                  i.GroupId == (int)Group.ArmorHardeners ||
 			                                                                                  i.GroupId == (int)Group.SensorBooster ||
 			                                                                                  i.GroupId == (int)Group.TrackingComputer ||
