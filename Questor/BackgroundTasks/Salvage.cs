@@ -1012,7 +1012,7 @@ namespace Questor.Modules.BackgroundTasks
 											Logging.Log("Salvage","We are full, not enough room for the mission item. Heading back to base to dump loot.",Logging.Debug);
 											//GotoBase and dump loot in the hopes that we can grab what we need on the next run
 											if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior) _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
-											if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior) _States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
+											
 											
 											/**
                                             // jettison loot

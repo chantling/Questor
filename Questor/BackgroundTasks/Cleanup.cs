@@ -605,8 +605,6 @@ namespace Questor.Modules.BackgroundTasks
 
 					if (DateTime.UtcNow > Time.Instance.LastSessionChange.AddSeconds(30) && (
 						_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior ||
-						_States.CurrentQuestorState == QuestorState.CombatHelperBehavior ||
-						_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior ||
 						_States.CurrentQuestorState == QuestorState.Idle ||
 						_States.CurrentQuestorState == QuestorState.Cleanup) &&
 					    string.Compare(Logging.FilterPath(Settings.Instance.CharacterName).ToUpperInvariant(), Logging.FilterPath(Cache.Instance.DirectEve.Me.Name).ToUpperInvariant(), StringComparison.OrdinalIgnoreCase) == 1

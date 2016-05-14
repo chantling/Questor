@@ -191,7 +191,7 @@ namespace Questor.Modules.Activities
 
             DirectSolarSystem solarSystemInRoute = Cache.Instance.DirectEve.SolarSystems[waypoint];
 
-            if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior || _States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
+            if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)
             {
             	if (solarSystemInRoute != null && solarSystemInRoute.Security < 0.45 && (Cache.Instance.ActiveShip.GroupId != (int)Group.Shuttle || Cache.Instance.ActiveShip.GroupId != (int)Group.Frigate || Cache.Instance.ActiveShip.GroupId != (int)Group.Interceptor || Cache.Instance.ActiveShip.GroupId != (int)Group.TransportShip || Cache.Instance.ActiveShip.GroupId != (int)Group.ForceReconShip || Cache.Instance.ActiveShip.GroupId != (int)Group.StealthBomber))
                 {

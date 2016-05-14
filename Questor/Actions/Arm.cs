@@ -1037,12 +1037,6 @@ namespace Questor.Modules.Actions
 				RefreshMissionItems(AgentInteraction.AgentId);
 				_States.CurrentCombatState = CombatState.Idle;
 
-				if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
-				{
-					ChangeArmState(ArmState.ActivateSalvageShip);
-					return true;
-				}
-
 				ChangeArmState(ArmState.ActivateCombatShip);
 				return true;
 			}
@@ -1305,12 +1299,7 @@ namespace Questor.Modules.Actions
 					return false;
 				}
 
-				
-				if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior) {
-					//Logging.Log(WeAreInThisStateForLogs(), "Skipping loading drones for this Questor Behavior", Logging.Orange);
-					ChangeArmState(ArmState.MoveMissionItems);
-					return false;
-				}
+			
 				
 				if (DroneInvTypeItem == null) {
 					Logging.Log("Arm.MoveDrones", "(DroneInvTypeItem == null)", Logging.Orange);

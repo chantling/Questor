@@ -36,8 +36,6 @@ namespace Questor
 
 		private DateTime _lastQuestorPulse;
 		private readonly CombatMissionsBehavior _combatMissionsBehavior;
-		private readonly CombatHelperBehavior _combatHelperBehavior;
-
 		
 		private bool _runOnceAfterStartupalreadyProcessed;
 		private bool _runOnceInStationAfterStartupalreadyProcessed;
@@ -55,7 +53,6 @@ namespace Questor
 			_lastQuestorPulse = DateTime.UtcNow;
 
 			_combatMissionsBehavior = new CombatMissionsBehavior();
-			_combatHelperBehavior = new CombatHelperBehavior();
 			_watch = new Stopwatch();
 			Time.Instance.NextStartupAction = DateTime.UtcNow;
 			_States.CurrentQuestorState = QuestorState.Idle;
@@ -205,14 +202,6 @@ namespace Questor
 
 		public static void WalletCheck()
 		{
-			if (_States.CurrentQuestorState == QuestorState.Mining ||
-			    _States.CurrentQuestorState == QuestorState.CombatHelperBehavior ||
-			    _States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
-				//_States.CurrentQuestorState == QuestorState.BackgroundBehavior)
-			{
-				if (Logging.DebugWalletBalance) Logging.Log("Questor.WalletCheck", "QuestorState is [" + _States.CurrentQuestorState.ToString() + "] which does not use WalletCheck", Logging.White);
-				return;
-			}
 
 			Time.Instance.LastWalletCheck = DateTime.UtcNow;
 
@@ -778,11 +767,6 @@ namespace Questor
 						_combatMissionsBehavior.ProcessState();
 						break;
 
-					case QuestorState.CombatHelperBehavior:
-
-						_combatHelperBehavior.ProcessState();
-						break;
-
 
 					case QuestorState.Start:
 						switch (Settings.Instance.CharacterMode.ToLower())
@@ -792,13 +776,6 @@ namespace Questor
 							case "dps":
 								Logging.Log("Questor", "Start Mission Behavior", Logging.White);
 								_States.CurrentQuestorState = QuestorState.CombatMissionsBehavior;
-								break;
-
-							case "combat helper":
-							case "combat_helper":
-							case "combathelper":
-								Logging.Log("Questor", "Start CombatHelper Behavior", Logging.White);
-								_States.CurrentQuestorState = QuestorState.CombatHelperBehavior;
 								break;
 						}
 						break;

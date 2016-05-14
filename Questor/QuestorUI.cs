@@ -254,14 +254,6 @@ namespace Questor
 						BehaviorComboBox.Items.Add(text);
 					}
 				}
-				if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior)
-				{
-					BehaviorComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(CombatHelperBehaviorState)))
-					{
-						BehaviorComboBox.Items.Add(text);
-					}
-				}
 			}
 			catch (Exception ex)
 			{
@@ -331,15 +323,6 @@ namespace Questor
 					if ((string)BehaviorComboBox.SelectedItem != _States.CurrentCombatMissionBehaviorState.ToString() && !BehaviorComboBox.DroppedDown)
 					{
 						BehaviorComboBox.SelectedItem = _States.CurrentCombatMissionBehaviorState.ToString();
-					}
-				}
-
-
-				if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior)
-				{
-					if ((string)BehaviorComboBox.SelectedItem != _States.CurrentCombatHelperBehaviorState.ToString() && !BehaviorComboBox.DroppedDown)
-					{
-						BehaviorComboBox.SelectedItem = _States.CurrentCombatHelperBehaviorState.ToString();
 					}
 				}
 
@@ -570,12 +553,6 @@ namespace Questor
 			{
 				_States.CurrentCombatMissionBehaviorState = (CombatMissionsBehaviorState)Enum.Parse(typeof(CombatMissionsBehaviorState), BehaviorComboBox.Text);
 			}
-
-			if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior)
-			{
-				_States.CurrentCombatHelperBehaviorState = (CombatHelperBehaviorState)Enum.Parse(typeof(CombatHelperBehaviorState), BehaviorComboBox.Text);
-			}
-
 			try
 			{
 				AgentNameData.Text = Cache.Instance.CurrentAgent;

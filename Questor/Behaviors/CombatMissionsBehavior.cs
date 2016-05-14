@@ -1018,19 +1018,10 @@ namespace Questor.Behaviors
 							//    States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorStateState.Error; //or salvageonly. need to check difference
 							//}
 
-							if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
-							{
-								Logging.Log("CombatMissionsBehavior.UnloadLoot", "Character mode is BookmarkSalvager and no bookmarks salvage.", Logging.White);
-
-								//We just need a NextSalvagerSession timestamp to key off of here to add the delay
-								_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Idle;
-							}
-							else
-							{
-								//Logging.Log("CombatMissionsBehavior: Character mode is not salvage going to next mission.");
-								_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Idle; //add pause here
-								_States.CurrentQuestorState = QuestorState.Idle;
-							}
+							//Logging.Log("CombatMissionsBehavior: Character mode is not salvage going to next mission.");
+							_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Idle; //add pause here
+//							_States.CurrentQuestorState = QuestorState.Idle;
+							
 							Statistics.FinishedSalvaging = DateTime.UtcNow;
 							return;
 						}
@@ -1060,18 +1051,10 @@ namespace Questor.Behaviors
 							}
 							else //begin after mission salvaging now, rather than later
 							{
-								if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
-								{
-									Logging.Log("CombatMissionsBehavior.Unloadloot", "CharacterMode: [" + Settings.Instance.CharacterMode + "], AfterMissionSalvaging: [" + Salvage.AfterMissionSalvaging + "], CombatMissionsBehaviorState: [" + _States.CurrentCombatMissionBehaviorState + "]", Logging.White);
-									_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.CheckBookmarkAge;
-									Statistics.StartedSalvaging = DateTime.UtcNow;
-								}
-								else
-								{
-									Logging.Log("CombatMissionsBehavior.UnloadLoot", "The last after mission salvaging session was [" + Math.Round(DateTime.UtcNow.Subtract(Statistics.FinishedSalvaging).TotalMinutes, 0) + "min] ago ", Logging.White);
-									_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.CheckBookmarkAge;
-									Statistics.StartedSalvaging = DateTime.UtcNow;
-								}
+								
+								Logging.Log("CombatMissionsBehavior.UnloadLoot", "The last after mission salvaging session was [" + Math.Round(DateTime.UtcNow.Subtract(Statistics.FinishedSalvaging).TotalMinutes, 0) + "min] ago ", Logging.White);
+								_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.CheckBookmarkAge;
+								Statistics.StartedSalvaging = DateTime.UtcNow;
 							}
 						}
 					}

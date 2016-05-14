@@ -1318,20 +1318,7 @@ namespace Questor.Modules.Combat
 						return true;
 					}
 				}
-				else if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior && !WarpScrambled)
-				{
-					if (_States.CurrentCombatHelperBehaviorState == CombatHelperBehaviorState.Panic && !WarpScrambled)
-					{
-						Logging.Log("Drones", "Recalling [ " + Drones.ActiveDrones.Count() + " ] drones due to panic state", Logging.Orange);
-						return true;
-					}
-
-					if (_States.CurrentCombatHelperBehaviorState == CombatHelperBehaviorState.GotoBase && !WarpScrambled)
-					{
-						Logging.Log("Drones", "Recalling [ " + Drones.ActiveDrones.Count() + " ] drones due to panic state", Logging.Orange);
-						return true;
-					}
-				}
+				
 				
 
 				return false;
