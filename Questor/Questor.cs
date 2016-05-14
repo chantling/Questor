@@ -119,7 +119,7 @@ namespace Questor
 			}
 
 			
-		Logging.Log("Questor", "Questor.", Logging.White);
+			Logging.Log("Questor", "Questor.", Logging.White);
 		}
 
 		public void RunOnceAfterStartup()
@@ -317,7 +317,7 @@ namespace Questor
 				_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
 				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
 				_States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
-			
+				
 				return;
 			}
 		}
@@ -328,7 +328,7 @@ namespace Questor
 			{
 				// New frame, invalidate old cache
 				Cache.Instance.InvalidateCache();
-			
+				
 
 				if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
 				{
@@ -437,11 +437,11 @@ namespace Questor
 				
 				if (Cache.Instance.Paused)
 				{
-					  // Chant - 05/02/2016 - Reset our timeouts so we don't exit every time we're paused for more than a few seconds
-					 Time.Instance.LastSessionIsReady = DateTime.UtcNow;
-					 Time.Instance.LastFrame = DateTime.UtcNow;
-					 Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-					 NavigateOnGrid.AvoidBumpingThingsTimeStamp = DateTime.UtcNow;
+					// Chant - 05/02/2016 - Reset our timeouts so we don't exit every time we're paused for more than a few seconds
+					Time.Instance.LastSessionIsReady = DateTime.UtcNow;
+					Time.Instance.LastFrame = DateTime.UtcNow;
+					Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
+					NavigateOnGrid.AvoidBumpingThingsTimeStamp = DateTime.UtcNow;
 					return;
 				}
 
@@ -792,8 +792,7 @@ namespace Questor
 				if (!OnframeProcessEveryPulse()) return;
 				if (Logging.DebugOnframe) Logging.Log("Questor", "OnFrame: this is Questor.cs [" + DateTime.UtcNow + "] by default the next InSpace pulse will be in [" + Time.Instance.QuestorPulseInSpace_milliseconds + "]milliseconds", Logging.Teal);
 
-				//if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.EVEOnFrame", "return;", Logging.Debug);
-				//return;
+				
 				RunOnceAfterStartup();
 				RunOnceInStationAfterStartup();
 
@@ -804,37 +803,8 @@ namespace Questor
 						WalletCheck();
 					}
 				}
-
-				// We always check our defense state if we're in space, regardless of questor state
-				// We also always check panic
 				
 				Defense.ProcessState();
-				
-				// temporarily fix
-				if(!Cache.Instance.Paused && Cache.Instance.InSpace &&  Cache.Instance.Modules.Count(m => !m.IsOnline) > 0) {
-					
-					
-					if(Time.Instance.LastOfflineModuleCheck.AddSeconds(45) < DateTime.UtcNow) {
-						
-						Time.Instance.LastOfflineModuleCheck = DateTime.UtcNow;
-						
-						foreach(var mod in Cache.Instance.Modules.Where(m => !m.IsOnline)) {
-							Logging.Log("Questor.ProcessState", "Offline module: " + mod.TypeName, Logging.Debug);
-						}
-						
-						Logging.Log("Questor.ProcessState", "Offline modules found, going back to base trying to fit again", Logging.Debug);
-						MissionSettings.CurrentFit = String.Empty;
-						MissionSettings.OfflineModulesFound = true;
-						_States.CurrentQuestorState = QuestorState.Start;
-						_States.CurrentTravelerState = TravelerState.Idle;
-						_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
-						_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
-						_States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
-						Traveler.Destination = null;
-						Cache.Instance.GotoBaseNow = true;
-						return;
-					}
-				}
 
 				if (Cache.Instance.Paused)
 				{
@@ -887,41 +857,26 @@ namespace Questor
 
 					case QuestorState.CombatMissionsBehavior:
 
-						//
-						// QuestorState will stay here until changed externally by the behavior we just kicked into starting
-						//
 						_combatMissionsBehavior.ProcessState();
 						break;
 
 					case QuestorState.SkillTrainer:
 
-						//
-						// QuestorState will stay here until changed externally by the behavior we just kicked into starting
-						//
 						SkillTrainerClass.ProcessState();
 						break;
 
 					case QuestorState.CombatHelperBehavior:
 
-						//
-						// QuestorState will stay here until changed externally by the behavior we just kicked into starting
-						//
 						_combatHelperBehavior.ProcessState();
 						break;
 
 					case QuestorState.DedicatedBookmarkSalvagerBehavior:
 
-						//
-						// QuestorState will stay here until changed externally by the behavior we just kicked into starting
-						//
 						_dedicatedBookmarkSalvagerBehavior.ProcessState();
 						break;
 
 					case QuestorState.DebugHangarsBehavior:
 
-						//
-						// QuestorState will stay here until changed externally by the behavior we just kicked into starting
-						//
 						_debugHangarsBehavior.ProcessState();
 						break;
 
@@ -929,8 +884,6 @@ namespace Questor
 						if (!Combat.ReloadAll(Cache.Instance.EntitiesNotSelf.OrderBy(t => t.Distance).FirstOrDefault(t => t.Distance < (double)Distances.OnGridWithMe))) return;
 						_States.CurrentQuestorState = QuestorState.Start;
 						break;
-						
-						
 
 
 					case QuestorState.Start:
@@ -957,7 +910,6 @@ namespace Questor
 
 							case "custom":
 								Logging.Log("Questor", "Start Custom Behavior", Logging.White);
-								//_States.CurrentQuestorState = QuestorState.BackgroundBehavior;
 								break;
 
 							case "directionalscanner":
@@ -975,171 +927,6 @@ namespace Questor
 
 						Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
 						return;
-
-					case QuestorState.DebugCloseQuestor:
-
-						Logging.Log("Questor", "CloseQuestorCMDUplinkInnerspaceProfile: " + Settings.Instance.CloseQuestorCMDUplinkInnerspaceProfile, Logging.White);
-						Logging.Log("Questor", "CloseQuestorCMDUplinkISboxerCharacterSet: " + Settings.Instance.CloseQuestorCMDUplinkIsboxerCharacterSet, Logging.White);
-						Logging.Log("Questor", "CloseQuestorArbitraryOSCmd" + Settings.Instance.CloseQuestorArbitraryOSCmd, Logging.White);
-						Logging.Log("Questor", "CloseQuestorOSCmdContents" + Settings.Instance.CloseQuestorOSCmdContents, Logging.White);
-						Logging.Log("Questor", "WalletBalanceChangeLogOffDelay: " + Settings.Instance.WalletBalanceChangeLogOffDelay, Logging.White);
-						Logging.Log("Questor", "WalletBalanceChangeLogOffDelayLogoffOrExit: " + Settings.Instance.WalletBalanceChangeLogOffDelayLogoffOrExit, Logging.White);
-						Logging.Log("Questor", "EVEProcessMemoryCeiling: " + Settings.Instance.EVEProcessMemoryCeiling, Logging.White);
-						Logging.Log("Questor", "Cache.Instance.CloseQuestorCMDExitGame: " + Cache.Instance.CloseQuestorCMDExitGame, Logging.White);
-						Logging.Log("Questor", "Cache.Instance.CloseQuestorCMDLogoff: " + Cache.Instance.CloseQuestorCMDLogoff, Logging.White);
-						Logging.Log("Questor", "Cache.Instance.CloseQuestorEndProcess: " + Cache.Instance.CloseQuestorEndProcess, Logging.White);
-						Logging.Log("Questor", "Time.EnteredCloseQuestor_DateTime: " + Time.EnteredCloseQuestor_DateTime.ToShortTimeString(), Logging.White);
-						_States.CurrentQuestorState = QuestorState.Error;
-						return;
-
-					case QuestorState.DebugWindows:
-						List<DirectWindow> windows = Cache.Instance.Windows;
-
-						if (windows != null && windows.Any())
-						{
-							foreach (DirectWindow window in windows)
-							{
-								Logging.Log("Questor", "--------------------------------------------------", Logging.Orange);
-								Logging.Log("Questor", "Debug_Window.Name: [" + window.Name + "]", Logging.White);
-								Logging.Log("Questor", "Debug_Window.Caption: [" + window.Caption + "]", Logging.White);
-								Logging.Log("Questor", "Debug_Window.Type: [" + window.Type + "]", Logging.White);
-								Logging.Log("Questor", "Debug_Window.IsModal: [" + window.IsModal + "]", Logging.White);
-								Logging.Log("Questor", "Debug_Window.IsDialog: [" + window.IsDialog + "]", Logging.White);
-								Logging.Log("Questor", "Debug_Window.Id: [" + window.Id + "]", Logging.White);
-								Logging.Log("Questor", "Debug_Window.IsKillable: [" + window.IsKillable + "]", Logging.White);
-								Logging.Log("Questor", "Debug_Window.Html: [" + window.Html + "]", Logging.White);
-							}
-							
-						}
-						else
-						{
-							Logging.Log("Questor", "DebugWindows: No Windows Found", Logging.White);
-						}
-						_States.CurrentQuestorState = QuestorState.Error;
-						return;
-
-					case QuestorState.DebugInventoryTree:
-
-						if (Cache.Instance.PrimaryInventoryWindow.ExpandCorpHangarView())
-						{
-							Logging.Log("DebugInventoryTree", "ExpandCorpHangar executed", Logging.Teal);
-						}
-						Logging.Log("DebugInventoryTree", "--------------------------------------------------", Logging.Orange);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.Name: [" + Cache.Instance.PrimaryInventoryWindow.Name + "]", Logging.White);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.Caption: [" + Cache.Instance.PrimaryInventoryWindow.Caption + "]", Logging.White);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.Type: [" + Cache.Instance.PrimaryInventoryWindow.Type + "]", Logging.White);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.IsModal: [" + Cache.Instance.PrimaryInventoryWindow.IsModal + "]", Logging.White);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.IsDialog: [" + Cache.Instance.PrimaryInventoryWindow.IsDialog + "]", Logging.White);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.Id: [" + Cache.Instance.PrimaryInventoryWindow.Id + "]", Logging.White);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.IsKillable: [" + Cache.Instance.PrimaryInventoryWindow.IsKillable + "]", Logging.White);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.IsReady: [" + Cache.Instance.PrimaryInventoryWindow.IsReady + "]", Logging.White);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.LocationFlag: [" + Cache.Instance.PrimaryInventoryWindow.LocationFlag + "]", Logging.White);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.currInvIdName: " + Cache.Instance.PrimaryInventoryWindow.currInvIdName, Logging.Red);
-						Logging.Log("DebugInventoryTree", "InventoryWindow.currInvIdName: " + Cache.Instance.PrimaryInventoryWindow.currInvIdItem, Logging.Red);
-
-						foreach (Int64 itemInTree in Cache.Instance.IDsinInventoryTree)
-						{
-							if (Cache.Instance.PrimaryInventoryWindow.GetIdsFromTree(false).Contains(itemInTree))
-							{
-								Cache.Instance.PrimaryInventoryWindow.SelectTreeEntryByID(itemInTree);
-								Cache.Instance.IDsinInventoryTree.Remove(itemInTree);
-								break;
-							}
-						}
-						break;
-						
-					case QuestorState.DebugMarket:
-						
-						
-						int ammoTypeId = 2456;
-						// Is there a market window?
-						DirectMarketWindow marketWindow = Cache.Instance.DirectEve.Windows.OfType<DirectMarketWindow>().FirstOrDefault();
-
-
-						var daysLeft = Cache.Instance.DirectEve.Me.DaysLeftOnAccount;
-						Logging.Log("RunOnceAfterStartup", "Cache.Instance.DirectEve.Me.DaysLeftOnAccount [" + daysLeft + "]", Logging.Debug);
-						
-						
-						
-						
-						if (Cache.Instance.ItemHangar == null) return;
-						if (Cache.Instance.ItemHangar.Items.Any())
-						{
-							
-							
-							foreach (var ammo in Combat.Ammo)
-							{
-
-								var totalQuantity = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Quantity);
-								var totalStacksize = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammo.TypeId).Sum(i => i.Stacksize);
-								int minQty = ammo.Quantity * 20;
-
-								Logging.Log("BuyAmmo", "Total ammo amount in hangar type [" + ammo.TypeId + "] stacksize [" + totalStacksize + "] Minimum amount [" + minQty + "] We're going to buy ammo.", Logging.White);
-								Logging.Log("BuyAmmo", "Total ammo amount in hangar type [" + ammo.TypeId + "] quantity [" + totalQuantity + "] Minimum amount [" + minQty + "] We're going to buy ammo.", Logging.White);
-								
-								
-								
-
-							}
-							
-							
-							var totalQ = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Quantity);
-							var totalS = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Stacksize);
-							
-
-							Logging.Log("BuyAmmo", "Total ammo amount in hangar type [" + ammoTypeId + "] stacksize [" + totalS + "] Minimum amount [" + "" + "] We're going to buy ammo.", Logging.White);
-							Logging.Log("BuyAmmo", "Total ammo amount in hangar type [" + ammoTypeId + "] quantity [" + totalQ + "] Minimum amount [" + "" + "] We're going to buy ammo.", Logging.White);
-
-							
-						}
-						
-
-						//                        // We do not have enough ammo, open the market window
-						//                        if (marketWindow == null)
-//						{
-//							_nextPulse = DateTime.UtcNow.AddSeconds(10);
-//
-//							Logging.Log("BuyAmmo", "Opening market window", Logging.White);
-//
-//							Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenMarket);
-//							Statistics.LogWindowActionToWindowLog("MarketWindow", "MarketWindow Opened");
-//							return;
-//						}
-//
-//						// Wait for the window to become ready
-//						if (!marketWindow.IsReady)
-//						{
-//							return;
-//						}
-//
-//						// Are we currently viewing the correct ammo orders?
-//						if (marketWindow.DetailTypeId != ammoTypeId)
-//						{
-//							// No, load the ammo orders
-//							marketWindow.LoadTypeId(ammoTypeId);
-//
-//							Logging.Log("BuyAmmo", "Loading market window", Logging.White);
-//
-//							_nextPulse = DateTime.UtcNow.AddSeconds(10);
-//							return;
-//						}
-//
-//						// Get the median sell price
-//						DirectInvType type;
-//						Cache.Instance.DirectEve.InvTypes.TryGetValue(ammoTypeId, out type);
-//
-//						var currentAmmoDirectItem = type;
-//						double maxPrice = 0;
-//
-//						if (currentAmmoDirectItem != null)
-//						{
-//							double avgPrice = currentAmmoDirectItem.GetAverAgePrice;
-//							double basePrice = currentAmmoDirectItem.BasePrice/currentAmmoDirectItem.PortionSize;
-//
-//							Logging.Log("BuyAmmo", "Item [" + currentAmmoDirectItem.TypeName + "] avgPrice [" + avgPrice + "] basePrice [" + basePrice + "]", Logging.Orange);
-//						}
-//
-						break;
 				}
 			}
 			catch (Exception ex)
@@ -1148,7 +935,6 @@ namespace Questor
 				return;
 			}
 		}
-		
 
 		#region IDisposable implementation
 		public void Dispose()

@@ -18,6 +18,7 @@ namespace Questor.Modules.BackgroundTasks
 	using System.Linq;
 	using System.Collections.Generic;
 	using System.Threading;
+	using global::Questor.Modules.Activities;
 	using global::Questor.Modules.Caching;
 	using global::Questor.Modules.Combat;
 	using global::Questor.Modules.Lookup;
@@ -955,6 +956,7 @@ namespace Questor.Modules.BackgroundTasks
 			
 			
 			
+			
 
 			// Thank god stations are safe ! :)
 			if (Cache.Instance.InStation)
@@ -966,6 +968,32 @@ namespace Questor.Modules.BackgroundTasks
 				_trackingDisruptorScriptAttempts = 0;
 				_nextOverloadAttempt = DateTime.UtcNow;
 				return;
+			}
+			
+			// temporarily fix
+			if(!Cache.Instance.Paused && Cache.Instance.InSpace &&  Cache.Instance.Modules.Count(m => !m.IsOnline) > 0) {
+				
+				
+				if(Time.Instance.LastOfflineModuleCheck.AddSeconds(45) < DateTime.UtcNow) {
+					
+					Time.Instance.LastOfflineModuleCheck = DateTime.UtcNow;
+					
+					foreach(var mod in Cache.Instance.Modules.Where(m => !m.IsOnline)) {
+						Logging.Log("Questor.ProcessState", "Offline module: " + mod.TypeName, Logging.Debug);
+					}
+					
+					Logging.Log("Questor.ProcessState", "Offline modules found, going back to base trying to fit again", Logging.Debug);
+					MissionSettings.CurrentFit = String.Empty;
+					MissionSettings.OfflineModulesFound = true;
+					_States.CurrentQuestorState = QuestorState.Start;
+					_States.CurrentTravelerState = TravelerState.Idle;
+					_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
+					_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
+					_States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
+					Traveler.Destination = null;
+					Cache.Instance.GotoBaseNow = true;
+					return;
+				}
 			}
 			
 			
