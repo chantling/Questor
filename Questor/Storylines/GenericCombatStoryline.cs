@@ -180,7 +180,6 @@ namespace Questor.Storylines
                         Logging.Log("GenericCombatStoryline.WarpOut", "Exception: " + ex, Logging.Orange);
                     }
 
-
                     long solarid = Cache.Instance.DirectEve.Session.SolarSystemId ?? -1;
 
                     if (warpOutBookMark == null)

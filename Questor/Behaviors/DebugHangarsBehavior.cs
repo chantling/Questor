@@ -95,8 +95,6 @@ namespace Questor.Behaviors
 				_States.CurrentDebugHangarBehaviorState = DebugHangarsBehaviorState.Idle;
 			}
 			
-
-			//Logging.Log("test");
 			switch (_States.CurrentDebugHangarBehaviorState)
 			{
 				case DebugHangarsBehaviorState.Traveler:
