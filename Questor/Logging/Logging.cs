@@ -62,14 +62,14 @@ namespace Questor.Modules.Logging
 		public static bool EnableVisualStyles { get; set; }
 		public static bool DebugDisableAutoLogin { get; set; }
 		
-		public static string ConsoleLogPath { get; set; } 
-		public static string ConsoleLogFile { get; set; } 
-		public static bool SaveLogRedacted { get; set; } 
+		public static string ConsoleLogPath { get; set; }
+		public static string ConsoleLogFile { get; set; }
+		public static bool SaveLogRedacted { get; set; }
 		
 		public static string redactedPlainLogLine { get; set; }
 		public static string redactedColorLogLine { get; set; }
-		public static string ConsoleLogPathRedacted { get; set; } 
-		public static string ConsoleLogFileRedacted { get; set; } 
+		public static string ConsoleLogPathRedacted { get; set; }
+		public static string ConsoleLogFileRedacted { get; set; }
 		
 		public delegate void Message(string msg);
 		public static event Message OnMessage;
@@ -133,7 +133,9 @@ namespace Questor.Modules.Logging
 				plainLogLine = FilterColorsFromLogs(line);
 				Logging.redactedPlainLogLine = String.Format("{0:HH:mm:ss} {1}", DateTimeForLogs, "[" + DescriptionOfWhere + "] " + FilterSensitiveInfo(plainLogLine) + "\r\n");  //In memory Console Log with sensitive info redacted
 
-				OnMessage(plainLogLine);
+				if(OnMessage != null) {
+					OnMessage(plainLogLine);
+				}
 				// eventlistener here
 				Console.Write(Logging.redactedPlainLogLine);
 

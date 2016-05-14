@@ -637,15 +637,11 @@ namespace Questor
 				var worker = new BackgroundWorker();
 				worker.DoWork += (s, ev) =>
 				{
-					
-					
-					
 					if (logListbox.Items.Count >= 5000)
 					{
 						logListbox.Items.Clear();
 					}
 					
-
 					logListbox.Items.Add(msg);
 					
 					if(logListbox.Items.Count>1)
