@@ -35,17 +35,11 @@ namespace Questor
 		//private readonly Defense _defense;
 
 		private DateTime _lastQuestorPulse;
-		//private static DateTime _nextQuestorAction = DateTime.UtcNow.AddHours(-1);
 		private readonly CombatMissionsBehavior _combatMissionsBehavior;
-		//private readonly MissionSettings _combatMissionSettings;
 		private readonly CombatHelperBehavior _combatHelperBehavior;
 		private readonly DedicatedBookmarkSalvagerBehavior _dedicatedBookmarkSalvagerBehavior;
 		private readonly DebugHangarsBehavior _debugHangarsBehavior;
 		
-		//private readonly Statistics _statistics;
-		//private readonly BackgroundBehavior _backgroundbehavior;
-		//private readonly Cleanup _cleanup;
-
 		private bool _runOnceAfterStartupalreadyProcessed;
 		private bool _runOnceInStationAfterStartupalreadyProcessed;
 		
@@ -61,19 +55,12 @@ namespace Questor
 			
 			_lastQuestorPulse = DateTime.UtcNow;
 
-			//_defense = new Defense();
 			_combatMissionsBehavior = new CombatMissionsBehavior();
-			//_combatMissionSettings = new MissionSettings();
 			_combatHelperBehavior = new CombatHelperBehavior();
 			_dedicatedBookmarkSalvagerBehavior = new DedicatedBookmarkSalvagerBehavior();
 			_debugHangarsBehavior = new DebugHangarsBehavior();
-			//_backgroundbehavior = new BackgroundBehavior();
-			//_cleanup = new Cleanup();
 			_watch = new Stopwatch();
-			//_statistics = new Statistics();
-
 			Time.Instance.NextStartupAction = DateTime.UtcNow;
-			// State fixed on ExecuteMission
 			_States.CurrentQuestorState = QuestorState.Idle;
 
 			if (Cache.Instance.DirectEve == null)
@@ -186,42 +173,6 @@ namespace Questor
 			_watch.Stop();
 			if (Logging.DebugPerformance)
 				Logging.Log(whatWeAreTiming, " took " + _watch.ElapsedMilliseconds + "ms", Logging.White);
-		}
-
-		public static bool SkillQueueCheck()
-		{
-			if (!Cache.Instance.InSpace && Cache.Instance.InStation)
-			{
-				if (DateTime.UtcNow < Time.Instance.NextSkillTrainerAction)
-					return true;
-
-				if (!Cache.Instance.DirectEve.Skills.AreMySkillsReady)
-				{
-					if (Logging.DebugSkillTraining) Logging.Log("SkillQueueCheck", "if (!Cache.Instance.DirectEve.Skills.AreMySkillsReady) - this really should not happen (often?)", Logging.Debug);
-					return true;
-				}
-
-				if (Settings.Instance.ThisToonShouldBeTrainingSkills)
-				{
-					if (Logging.DebugSkillTraining) Logging.Log("Questor.SkillQueueCheck", "Current Training Queue Length is [" + Cache.Instance.DirectEve.Skills.SkillQueueLength.ToString() + "]", Logging.White);
-					if (Cache.Instance.DirectEve.Skills.SkillQueueLength.TotalHours < 24)
-					{
-						Logging.Log("Questor.SkillQueueCheck", "Training Queue currently has room. [" + Math.Round(24 - Cache.Instance.DirectEve.Skills.SkillQueueLength.TotalHours, 2) + " hours free]", Logging.White);
-						//QuestorUI.lblCurrentMissionInfo.Text = "Training Queue currently has room. [" + Math.Round(24 - Cache.Instance.DirectEve.Skills.SkillQueueLength.TotalHours, 2) + " hours free]";
-
-						_States.CurrentQuestorState = QuestorState.SkillTrainer;
-						return false;
-					}
-
-					Logging.Log("Questor.SkillQueueCheck", "Training Queue is full. [" + Math.Round(Cache.Instance.DirectEve.Skills.SkillQueueLength.TotalHours, 2) + " is more than 24 hours]", Logging.White);
-					Time.Instance.NextSkillTrainerAction = DateTime.UtcNow.AddHours(3);
-					return true;
-				}
-
-				if (Logging.DebugSkillTraining) Logging.Log("Questor.SkillQueueCheck", "Settings.Instance.ThisToonShouldBeTrainingSkills [" + Settings.Instance.ThisToonShouldBeTrainingSkills + "]", Logging.White);
-			}
-
-			return true;
 		}
 		
 		protected static int GetRandom(int minValue, int maxValue)
@@ -345,9 +296,6 @@ namespace Questor
 					}
 				}
 
-				//if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.OnframeProcessEveryPulse", "return;", Logging.Debug);
-				//return false;
-				
 				if (!Cache.Instance.InSpace && !Cache.Instance.InStation)
 				{
 					if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (!Cache.Instance.InSpace && !Cache.Instance.InStation)", Logging.Debug);
@@ -358,10 +306,6 @@ namespace Questor
 				{
 					Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
 				}
-
-				// Start _cleanup.ProcessState
-				// Description: Closes Windows, and eventually other things considered 'cleanup' useful to more than just Questor(Missions) but also Anomalies, Mining, etc
-				//
 				
 				// Session is not ready yet, do not continue
 				if (!Cache.Instance.DirectEve.Session.IsReady)
@@ -374,12 +318,6 @@ namespace Questor
 				Cleanup.ProcessState();
 				if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "Statistics.ProcessState();", Logging.Debug);
 				Statistics.ProcessState();
-				
-
-				// Done
-				// Cleanup State: ProcessState
-
-
 
 				if (Cache.Instance.DirectEve.Session.IsReady)
 				{
@@ -631,12 +569,6 @@ namespace Questor
 									//Logging.Log("[Startup] (1) window.Html is: " + window.Html);
 								}
 
-								//if (update)
-								//{
-								//    int secRestart = (400 * 3) + Cache.Instance.RandomNumber(3, 18) * 100 + Cache.Instance.RandomNumber(1, 9) * 10;
-								//    LavishScript.ExecuteCommand("uplink exec Echo [${Time}] timedcommand " + secRestart + " OSExecute taskkill /IM launcher.exe");
-								//}
-
 								if (sayYes)
 								{
 									Logging.Log("Startup", "Found a window that needs 'yes' chosen...", Logging.White);
@@ -829,8 +761,6 @@ namespace Questor
 					case QuestorState.Idle:
 						if (TimeCheck()) return; //Should we close questor due to stoptime or runtime?
 
-						if (!SkillQueueCheck()) return; //if we need to train skills we return here, on the next pass we will be _States.CurrentQuestorState = QuestorSate.SkillTrainer
-
 						if (Cache.Instance.StopBot)
 						{
 							if (Logging.DebugIdle) Logging.Log("Questor", "Cache.Instance.StopBot = true - this is set by the LocalWatch code so that we stay in station when local is unsafe", Logging.Orange);
@@ -850,11 +780,6 @@ namespace Questor
 					case QuestorState.CombatMissionsBehavior:
 
 						_combatMissionsBehavior.ProcessState();
-						break;
-
-					case QuestorState.SkillTrainer:
-
-						SkillTrainerClass.ProcessState();
 						break;
 
 					case QuestorState.CombatHelperBehavior:
@@ -934,14 +859,7 @@ namespace Questor
 			{
 				if (disposing)
 				{
-					//
-					// Close any open files here...
-					//
-
 				}
-				
-				// Unmanaged resources are released here.
-				
 				m_Disposed = true;
 			}
 		}

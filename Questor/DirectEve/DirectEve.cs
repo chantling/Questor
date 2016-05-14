@@ -204,31 +204,7 @@ namespace DirectEve
             {
                 _framework = new InnerSpaceFramework();
             }
-            //#if !NO_DIRECTEVE_SECURITY
-            //            try
-            //            {
-            //                _security = new DirectEveSecurity(this);
 
-            //                Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
-            //                Log("Starting DirectEve v" + _security.Version);
-            //                if (_security.Email != "anonymous")
-            //                {
-            //                    Log("Registered to " + _security.Email);
-            //                    if (_security.ActiveInstances != -1 && _security.SupportInstances != -1)
-            //                        Log("You are currently using " + _security.ActiveInstances + " of " + _security.SupportInstances + " support instances");
-            //                }
-            //                else
-            //                    Log("You are using the anonymous license, please consider upgrading to a support license (http://support.thehackerwithin.com)");
-            //                Log("Copyright (c) 2012 - TheHackerWithin");
-            //                Log("http://www.thehackerwithin.com");
-            //                Log("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
-            //            }
-            //            catch (Exception ex)
-            //            {
-            //                Log("DirectEve: Exception during license check: " + ex.Message);
-            //                throw ex;
-            //            }
-            //#endif
             try
             {
                 _localSvcCache = new Dictionary<string, PyObject>();

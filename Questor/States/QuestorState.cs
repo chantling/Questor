@@ -23,7 +23,7 @@ namespace Questor.Modules.States
         Mining,
         BackgroundBehavior,
         //CheckEVEStatus,
-        SkillTrainer,
+        //SkillTrainer,
         CloseQuestor,
         Error,
         DebugWindows,

@@ -112,7 +112,6 @@
     <Compile Include="Actions\MissionBookmarkDestination.cs" />
     <Compile Include="Actions\ScanInteraction.cs" />
     <Compile Include="Actions\Sell.cs" />
-    <Compile Include="Actions\SkillTrainer.cs" />
     <Compile Include="Actions\SolarSystemDestination.cs" />
     <Compile Include="Actions\StationDestination.cs" />
     <Compile Include="Actions\TravelerDestination.cs" />
@@ -255,7 +254,6 @@
     <Compile Include="Lookup\SelectAgent.cs" />
     <Compile Include="Lookup\Settings.cs" />
     <Compile Include="Lookup\ShipTargetValue.cs" />
-    <Compile Include="Lookup\SkillPlan.cs" />
     <Compile Include="Lookup\Time.cs" />
     <Compile Include="Lookup\TypeID.cs" />
     <Compile Include="States\AgentInteractionState.cs" />
