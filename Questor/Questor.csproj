@@ -110,7 +110,6 @@
     <Compile Include="Actions\Grab.cs" />
     <Compile Include="Actions\Market.cs" />
     <Compile Include="Actions\MissionBookmarkDestination.cs" />
-    <Compile Include="Actions\ScanInteraction.cs" />
     <Compile Include="Actions\Sell.cs" />
     <Compile Include="Actions\SolarSystemDestination.cs" />
     <Compile Include="Actions\StationDestination.cs" />
@@ -273,7 +272,6 @@
     <Compile Include="States\PanicState.cs" />
     <Compile Include="States\QuestorState.cs" />
     <Compile Include="States\SalvageState.cs" />
-    <Compile Include="States\ScanInteractionState.cs" />
     <Compile Include="States\ScoopState.cs" />
     <Compile Include="States\SellState.cs" />
     <Compile Include="States\SlaveState.cs" />

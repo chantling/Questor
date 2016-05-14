@@ -1383,44 +1383,6 @@ namespace Questor.Modules.Combat
 				}
 			}
 
-			/******
-            if (weapon.Charge != null)
-            {
-                IEnumerable<Ammo> areWeMissingAmmo = correctAmmo.Where(a => a.TypeId == weapon.Charge.TypeId);
-                if (!areWeMissingAmmo.Any())
-                {
-                    if (DateTime.UtcNow.Subtract(Time.Instance.LastLoggingAction).TotalSeconds > 4)
-                    {
-                        Logging.Log("Combat", "ReloadNormalAmmo: We have ammo loaded that does not have a full reload available, checking cargo for other ammo", Logging.Orange);
-                        Time.Instance.LastLoggingAction = DateTime.UtcNow;
-                        try
-                        {
-                            if (Settings.Instance.Ammo.Any())
-                            {
-                                DirectItem availableAmmo = cargo.Items.OrderByDescending(i => i.Quantity).Where(a => Settings.Instance.Ammo.Any(i => i.TypeId == a.TypeId)).ToList().FirstOrDefault();
-                                if (availableAmmo != null)
-                                {
-                                    Cache.Instance.DamageType = Settings.Instance.Ammo.ToList().OrderByDescending(i => i.Quantity).Where(a => a.TypeId == availableAmmo.TypeId).ToList().FirstOrDefault().DamageType;
-                                    Logging.Log("Combat", "ReloadNormalAmmo: found [" + availableAmmo.Quantity + "] units of  [" + availableAmmo.TypeName + "] changed DamageType to [" + Cache.Instance.DamageType.ToString() + "]", Logging.Orange);
-                                    return false;
-                                }
-
-                                Logging.Log("Combat", "ReloadNormalAmmo: unable to find any alternate ammo in your cargo", Logging.teal);
-                                _States.CurrentCombatState = CombatState.OutOfAmmo;
-                                return false;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            Logging.Log("Combat", "ReloadNormalAmmo: unable to find any alternate ammo in your cargo", Logging.teal);
-                            _States.CurrentCombatState = CombatState.OutOfAmmo;
-                        }
-                        return false;
-                    }
-                }
-            }
-			 *****/
-
 			// Get the best possible ammo
 			Ammo ammo = correctAmmoInCargo.FirstOrDefault();
 			try
@@ -1503,13 +1465,6 @@ namespace Questor.Modules.Combat
 				if (Logging.DebugReloadAll) Logging.Log("ReloadNormalAmmmo", "We are already changing ammo, wait - weapon.IsReloadingAmmo [" + weapon.IsReloadingAmmo + "]", Logging.Orange);
 				return true;
 			}
-
-			//if (weapon.AutoReload && Settings.Instance.disableAutoreload)
-			//{
-			//    if (Logging.DebugReloadAll) Logging.Log("debug ReloadAll:", "weapon.AutoReload [" + weapon.AutoReload + "] setting it to false", Logging.Orange);
-			//    weapon.SetAutoReload(false);
-			//    return false;
-			//}
 
 			try
 			{

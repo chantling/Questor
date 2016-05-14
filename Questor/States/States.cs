@@ -42,8 +42,6 @@ namespace Questor.Modules.States
 
         public static GrabState CurrentGrabState { get; set; }
 
-        public static ScanInteractionState CurrentScanInteractionState { get; set; }
-
         public static SellState CurrentSellState { get; set; }
 
         public static UnloadLootState CurrentUnloadLootState { get; set; }
