@@ -265,9 +265,7 @@
     <Compile Include="States\CombatMissionCtrlState.cs" />
     <Compile Include="States\CombatMissionsBehaviorState.cs" />
     <Compile Include="States\CombatState.cs" />
-    <Compile Include="States\CourierMissionCtrlState.cs" />
     <Compile Include="States\DedicatedBookmarkSalvagerBehaviorState.cs" />
-    <Compile Include="States\DirectionalScannerBehaviorState.cs" />
     <Compile Include="States\DroneState.cs" />
     <Compile Include="States\DropState.cs" />
     <Compile Include="States\GrabState.cs" />
@@ -282,7 +280,6 @@
     <Compile Include="States\ScanInteractionState.cs" />
     <Compile Include="States\ScoopState.cs" />
     <Compile Include="States\SellState.cs" />
-    <Compile Include="States\SkillTrainerState.cs" />
     <Compile Include="States\SlaveState.cs" />
     <Compile Include="States\States.cs" />
     <Compile Include="States\StatisticsState.cs" />

@@ -32,10 +32,6 @@ namespace Questor.Modules.States
 
         public static CombatHelperBehaviorState CurrentCombatHelperBehaviorState { get; set; }
 
-        public static DirectionalScannerBehaviorState CurrentDirectionalScannerBehaviorState { get; set; }
-
-        public static CourierMissionCtrlState CurrentCourierMissionCtrlState { get; set; }
-
         public static CombatMissionCtrlState CurrentCombatMissionCtrlState { get; set; }
 
         public static AgentInteractionState CurrentAgentInteractionState { get; set; }
@@ -61,8 +57,6 @@ namespace Questor.Modules.States
         public static StorylineState CurrentStorylineState { get; set; }
 
         public static StatisticsState CurrentStatisticsState { get; set; }
-
-        public static SkillTrainerState CurrentSkillTrainerState { get; set; }
 
         public static MasterState CurrentMasterState { get; set; }
 

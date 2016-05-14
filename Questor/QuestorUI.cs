@@ -359,14 +359,6 @@ namespace Questor
 					}
 				}
 
-				if (_States.CurrentQuestorState == QuestorState.DirectionalScannerBehavior)
-				{
-					if ((string)BehaviorComboBox.SelectedItem != _States.CurrentDirectionalScannerBehaviorState.ToString() && !BehaviorComboBox.DroppedDown)
-					{
-						BehaviorComboBox.SelectedItem = _States.CurrentDirectionalScannerBehaviorState.ToString();
-					}
-				}
-
 				// Middle group
 				if ((string)PanicStateComboBox.SelectedItem != _States.CurrentPanicState.ToString() && !PanicStateComboBox.DroppedDown)
 				{
