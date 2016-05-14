@@ -1140,66 +1140,6 @@ namespace Questor
 //						}
 //
 						break;
-						
-						
-					case QuestorState.DebugDirectionalScanner:
-						
-						OpenDirectionalScanner();
-						
-						if(!IsDirectionalScannerReady())
-						{
-							return;
-						}
-						
-						var w = DirectScannerWindow;
-						
-						if(DirectScannerWindow != null) {
-							
-							Logging.Log("DebugBehavior.DebugDirectionalScanner", "if(DirectScannerWindow != null)", Logging.White);
-							
-							Logging.Log("DebugBehavior.DebugDirectionalScanner", " window.UserOverViewPreset [" + w.UserOverViewPreset + "]", Logging.White);
-							Logging.Log("DebugBehavior.DebugDirectionalScanner", " window.Angle [" + w.Angle + "]", Logging.White);
-							Logging.Log("DebugBehavior.DebugDirectionalScanner", " window.Range [" + w.Range + "]", Logging.White);
-
-							
-						}
-						
-						SetUseOverviewPresetFalse();
-						ScanRangeTest();
-						ScanAngleTest();
-						
-						
-						foreach(var ent in w.DirectionalScanResults) {
-							Logging.Log("DebugBehavior.Traveler", " ent.typeId [" + ent.TypeId + "]", Logging.White);
-						}
-						
-						break;
-						
-						
-					case QuestorState.DebugModules:
-						
-						if(!Cache.Instance.InStation) {
-							return;
-						}
-						
-						var offlineModules = Cache.Instance.Modules.Where(m => !m.IsOnline);
-						
-						Console.WriteLine("------------------------------");
-						
-						if(offlineModules.Count() > 0) {
-							foreach(var module in offlineModules) {
-								
-								Console.WriteLine(module.TypeName);
-//								break;
-							}
-						}
-						
-						
-						_nextPulse = DateTime.UtcNow.AddSeconds(10);
-						
-						
-						break;
-						
 				}
 			}
 			catch (Exception ex)
