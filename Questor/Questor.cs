@@ -795,14 +795,6 @@ namespace Questor
 				
 				RunOnceAfterStartup();
 				RunOnceInStationAfterStartup();
-
-				if (!Cache.Instance.Paused)
-				{
-					if (DateTime.UtcNow.Subtract(Time.Instance.LastWalletCheck).TotalMinutes > Time.Instance.WalletCheck_minutes && !Settings.Instance.DefaultSettingsLoaded)
-					{
-						WalletCheck();
-					}
-				}
 				
 				Defense.ProcessState();
 
