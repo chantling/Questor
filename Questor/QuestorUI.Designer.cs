@@ -42,10 +42,9 @@
         	this.label26 = new System.Windows.Forms.Label();
         	this.tabControlMain = new System.Windows.Forms.TabControl();
         	this.tabPage3 = new System.Windows.Forms.TabPage();
-        	this.button1 = new System.Windows.Forms.Button();
         	this.Tabs = new System.Windows.Forms.TabControl();
         	this.tabConsole = new System.Windows.Forms.TabPage();
-        	this.txtExtConsole = new System.Windows.Forms.RichTextBox();
+        	this.logListbox = new System.Windows.Forms.ListBox();
         	this.tabStates = new System.Windows.Forms.TabPage();
         	this.dataStopTimeSpecified = new System.Windows.Forms.Label();
         	this.lblStopTimeSpecified = new System.Windows.Forms.Label();
@@ -182,8 +181,9 @@
         	this.NextOpenJournalWindowActionlbl = new System.Windows.Forms.Label();
         	this.NextOpenContainerInSpaceActionData = new System.Windows.Forms.Label();
         	this.NextOpenContainerInSpaceActionlbl = new System.Windows.Forms.Label();
-        	this.tabPage2 = new System.Windows.Forms.TabPage();
         	this.tabPage1 = new System.Windows.Forms.TabPage();
+        	this.button1 = new System.Windows.Forms.Button();
+        	this.tabPage2 = new System.Windows.Forms.TabPage();
         	this.tabControlMain.SuspendLayout();
         	this.tabPage3.SuspendLayout();
         	this.Tabs.SuspendLayout();
@@ -399,16 +399,6 @@
         	this.tabPage3.Text = "Questor";
         	this.tabPage3.UseVisualStyleBackColor = true;
         	// 
-        	// button1
-        	// 
-        	this.button1.Location = new System.Drawing.Point(230, 109);
-        	this.button1.Name = "button1";
-        	this.button1.Size = new System.Drawing.Size(270, 23);
-        	this.button1.TabIndex = 127;
-        	this.button1.Text = "Open PyBrowser [TRIAL ONLY]";
-        	this.button1.UseVisualStyleBackColor = true;
-        	this.button1.Click += new System.EventHandler(this.Button1Click);
-        	// 
         	// Tabs
         	// 
         	this.Tabs.Controls.Add(this.tabConsole);
@@ -424,7 +414,7 @@
         	// 
         	// tabConsole
         	// 
-        	this.tabConsole.Controls.Add(this.txtExtConsole);
+        	this.tabConsole.Controls.Add(this.logListbox);
         	this.tabConsole.Location = new System.Drawing.Point(4, 22);
         	this.tabConsole.Name = "tabConsole";
         	this.tabConsole.Padding = new System.Windows.Forms.Padding(3);
@@ -433,19 +423,13 @@
         	this.tabConsole.Text = "Console";
         	this.tabConsole.UseVisualStyleBackColor = true;
         	// 
-        	// txtExtConsole
+        	// logListbox
         	// 
-        	this.txtExtConsole.BackColor = System.Drawing.SystemColors.Control;
-        	this.txtExtConsole.Dock = System.Windows.Forms.DockStyle.Top;
-        	this.txtExtConsole.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.txtExtConsole.HideSelection = false;
-        	this.txtExtConsole.Location = new System.Drawing.Point(3, 3);
-        	this.txtExtConsole.Name = "txtExtConsole";
-        	this.txtExtConsole.ReadOnly = true;
-        	this.txtExtConsole.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-        	this.txtExtConsole.Size = new System.Drawing.Size(768, 269);
-        	this.txtExtConsole.TabIndex = 25;
-        	this.txtExtConsole.Text = "";
+        	this.logListbox.FormattingEnabled = true;
+        	this.logListbox.Location = new System.Drawing.Point(3, 0);
+        	this.logListbox.Name = "logListbox";
+        	this.logListbox.Size = new System.Drawing.Size(768, 277);
+        	this.logListbox.TabIndex = 0;
         	// 
         	// tabStates
         	// 
@@ -1826,16 +1810,6 @@
         	this.NextOpenContainerInSpaceActionlbl.TabIndex = 216;
         	this.NextOpenContainerInSpaceActionlbl.Text = "NextOpenContainerInSpaceAction:";
         	// 
-        	// tabPage2
-        	// 
-        	this.tabPage2.Location = new System.Drawing.Point(4, 22);
-        	this.tabPage2.Name = "tabPage2";
-        	this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-        	this.tabPage2.Size = new System.Drawing.Size(791, 399);
-        	this.tabPage2.TabIndex = 2;
-        	this.tabPage2.Text = "QuestorManager";
-        	this.tabPage2.UseVisualStyleBackColor = true;
-        	// 
         	// tabPage1
         	// 
         	this.tabPage1.Controls.Add(this.button1);
@@ -1846,6 +1820,26 @@
         	this.tabPage1.TabIndex = 7;
         	this.tabPage1.Text = "Misc";
         	this.tabPage1.UseVisualStyleBackColor = true;
+        	// 
+        	// button1
+        	// 
+        	this.button1.Location = new System.Drawing.Point(230, 109);
+        	this.button1.Name = "button1";
+        	this.button1.Size = new System.Drawing.Size(270, 23);
+        	this.button1.TabIndex = 127;
+        	this.button1.Text = "Open PyBrowser [TRIAL ONLY]";
+        	this.button1.UseVisualStyleBackColor = true;
+        	this.button1.Click += new System.EventHandler(this.Button1Click);
+        	// 
+        	// tabPage2
+        	// 
+        	this.tabPage2.Location = new System.Drawing.Point(4, 22);
+        	this.tabPage2.Name = "tabPage2";
+        	this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+        	this.tabPage2.Size = new System.Drawing.Size(791, 399);
+        	this.tabPage2.TabIndex = 2;
+        	this.tabPage2.Text = "QuestorManager";
+        	this.tabPage2.UseVisualStyleBackColor = true;
         	// 
         	// QuestorUI
         	// 
@@ -1859,6 +1853,7 @@
         	this.Name = "QuestorUI";
         	this.Text = "Questor";
         	this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.QuestorfrmMainFormClosed);
+        	this.Load += new System.EventHandler(this.QuestorUILoad);
         	this.Shown += new System.EventHandler(this.QuestorUIShown);
         	this.tabControlMain.ResumeLayout(false);
         	this.tabPage3.ResumeLayout(false);
@@ -1903,7 +1898,6 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabControl Tabs;
         private System.Windows.Forms.TabPage tabConsole;
-        private System.Windows.Forms.RichTextBox txtExtConsole;
         private System.Windows.Forms.TabPage tabStates;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Panel panel2;
@@ -2043,5 +2037,6 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.ListBox logListbox;
     }
 }

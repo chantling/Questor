@@ -16,6 +16,7 @@ namespace Questor
 	using global::Questor.Modules.Lookup;
 	using global::Questor.Modules.States;
 	using global::Questor.Modules.BackgroundTasks;
+	using System.ComponentModel;
 	using DirectEve;
 
 	public partial class QuestorUI : Form
@@ -265,21 +266,6 @@ namespace Questor
 		{
 			try
 			{
-				if (!String.IsNullOrEmpty(Logging.ExtConsole))
-				{
-					if (Logging.ExtConsole != _lastLogLine)
-					{
-						if (txtExtConsole.Lines.Count() >= Settings.Instance.MaxLineConsole)
-						{
-							txtExtConsole.Text = "";
-						}
-
-						txtExtConsole.AppendText(Logging.ExtConsole);
-						_lastLogLine = Logging.ExtConsole;
-						Logging.ExtConsole = null;
-					}
-				}
-				
 				// The if's in here stop the UI from flickering
 				string text = "Questor";
 				if (Settings.Instance.CharacterName != string.Empty)
@@ -634,15 +620,47 @@ namespace Questor
 			Settings.Instance.AutoStart = AutoStartCheckBox.Checked;
 		}
 		
-        void QuestorUIShown(object sender, EventArgs e)
-        {
-        	if(Cache.Instance.WCFClient.GetPipeProxy.ShouldHideEveWindows())
-        		this.Hide();
-        }
+		void QuestorUIShown(object sender, EventArgs e)
+		{
+			if(Cache.Instance.WCFClient.GetPipeProxy.ShouldHideEveWindows())
+				this.Hide();
+		}
 		void Button1Click(object sender, EventArgs e)
 		{
 			var frm = new PythonBrowser.PythonBrowserFrm();
 			frm.Show();
+		}
+		void QuestorUILoad(object sender, EventArgs e)
+		{
+			Logging.OnMessage += (msg) => {
+				
+				var worker = new BackgroundWorker();
+				worker.DoWork += (s, ev) =>
+				{
+					
+					
+					
+					if (logListbox.Items.Count >= 5000)
+					{
+						logListbox.Items.Clear();
+					}
+					
+
+					logListbox.Items.Add(msg);
+					
+					if(logListbox.Items.Count>1)
+						logListbox.TopIndex = logListbox.Items.Count - 1;
+					
+				};
+				worker.RunWorkerCompleted += (s, ev) =>
+				{
+
+					var result = ev.Result;
+
+				};
+				worker.RunWorkerAsync();
+				
+			};
 		}
 	}
 }

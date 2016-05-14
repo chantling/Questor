@@ -1023,7 +1023,7 @@ namespace Questor.Modules.Lookup
 				//
 				// Enable / Disable the different types of logging that are available
 				//
-				Logging.InnerspaceGeneratedConsoleLog = (bool?)CharacterSettingsXml.Element("innerspaceGeneratedConsoleLog") ?? (bool?)CommonSettingsXml.Element("innerspaceGeneratedConsoleLog") ?? false; // save the innerspace generated console log to file
+//				Logging.InnerspaceGeneratedConsoleLog = (bool?)CharacterSettingsXml.Element("innerspaceGeneratedConsoleLog") ?? (bool?)CommonSettingsXml.Element("innerspaceGeneratedConsoleLog") ?? false; // save the innerspace generated console log to file
 				//Logging.SaveConsoleLog = (bool?)CharacterSettingsXml.Element("saveLog") ?? (bool?)CommonSettingsXml.Element("saveLog") ?? true; // save the console log to file
 				Logging.SaveLogRedacted = (bool?)CharacterSettingsXml.Element("saveLogRedacted") ?? (bool?)CommonSettingsXml.Element("saveLogRedacted") ?? true; // save the console log redacted to file
 //				Statistics.SessionsLog = (bool?)CharacterSettingsXml.Element("SessionsLog") ?? (bool?)CommonSettingsXml.Element("SessionsLog") ?? true;

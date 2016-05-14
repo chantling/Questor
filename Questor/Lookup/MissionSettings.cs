@@ -1089,17 +1089,6 @@ namespace Questor.Modules.Lookup
 					// Update loyalty points again (the first time might return -1)
 					Statistics.LoyaltyPointsTotal = AgentInteraction.Agent.LoyaltyPoints;
 					MissionSettings.MissionName = MissionSettings.Mission.Name;
-					if (Logging.UseInnerspace)
-					{
-						//                        LavishScript.ExecuteCommand("WindowText EVE - " + Settings.Instance.CharacterName + " - " + MissionSettings.MissionName);
-					}
-				}
-			}
-			else
-			{
-				if (Logging.UseInnerspace)
-				{
-					//                    LavishScript.ExecuteCommand("WindowText EVE - " + Settings.Instance.CharacterName);
 				}
 			}
 		}
