@@ -907,15 +907,6 @@ namespace Questor
 								Logging.Log("Questor", "Start CombatHelper Behavior", Logging.White);
 								_States.CurrentQuestorState = QuestorState.CombatHelperBehavior;
 								break;
-
-							case "custom":
-								Logging.Log("Questor", "Start Custom Behavior", Logging.White);
-								break;
-
-							case "directionalscanner":
-								Logging.Log("Questor", "Start DirectionalScanner Behavior", Logging.White);
-								_States.CurrentQuestorState = QuestorState.DirectionalScannerBehavior;
-								break;
 						}
 						break;
 
