@@ -47,6 +47,20 @@
         	this.tabConsole = new System.Windows.Forms.TabPage();
         	this.txtExtConsole = new System.Windows.Forms.RichTextBox();
         	this.tabStates = new System.Windows.Forms.TabPage();
+        	this.dataStopTimeSpecified = new System.Windows.Forms.Label();
+        	this.lblStopTimeSpecified = new System.Windows.Forms.Label();
+        	this.MissionsThisSessionData = new System.Windows.Forms.Label();
+        	this.MissionsThisSessionlbl = new System.Windows.Forms.Label();
+        	this.lastKnownGoodConnectedTimeData = new System.Windows.Forms.Label();
+        	this.lastKnownGoodConnectedTimeLabel = new System.Windows.Forms.Label();
+        	this.lastInStationData = new System.Windows.Forms.Label();
+        	this.lastInSpaceData = new System.Windows.Forms.Label();
+        	this.lastInStationLabel = new System.Windows.Forms.Label();
+        	this.lastInSpaceLabel = new System.Windows.Forms.Label();
+        	this.LastFrameData = new System.Windows.Forms.Label();
+        	this.lastSessionisreadyData = new System.Windows.Forms.Label();
+        	this.lastSessionIsreadylabel = new System.Windows.Forms.Label();
+        	this.lastFrameLabel = new System.Windows.Forms.Label();
         	this.label19 = new System.Windows.Forms.Label();
         	this.panel2 = new System.Windows.Forms.Panel();
         	this.label18 = new System.Windows.Forms.Label();
@@ -169,20 +183,7 @@
         	this.NextOpenContainerInSpaceActionData = new System.Windows.Forms.Label();
         	this.NextOpenContainerInSpaceActionlbl = new System.Windows.Forms.Label();
         	this.tabPage2 = new System.Windows.Forms.TabPage();
-        	this.dataStopTimeSpecified = new System.Windows.Forms.Label();
-        	this.lblStopTimeSpecified = new System.Windows.Forms.Label();
-        	this.MissionsThisSessionData = new System.Windows.Forms.Label();
-        	this.MissionsThisSessionlbl = new System.Windows.Forms.Label();
-        	this.lastKnownGoodConnectedTimeData = new System.Windows.Forms.Label();
-        	this.lastKnownGoodConnectedTimeLabel = new System.Windows.Forms.Label();
-        	this.lastInStationData = new System.Windows.Forms.Label();
-        	this.lastInSpaceData = new System.Windows.Forms.Label();
-        	this.lastInStationLabel = new System.Windows.Forms.Label();
-        	this.lastInSpaceLabel = new System.Windows.Forms.Label();
-        	this.LastFrameData = new System.Windows.Forms.Label();
-        	this.lastSessionisreadyData = new System.Windows.Forms.Label();
-        	this.lastSessionIsreadylabel = new System.Windows.Forms.Label();
-        	this.lastFrameLabel = new System.Windows.Forms.Label();
+        	this.tabPage1 = new System.Windows.Forms.TabPage();
         	this.tabControlMain.SuspendLayout();
         	this.tabPage3.SuspendLayout();
         	this.Tabs.SuspendLayout();
@@ -193,6 +194,7 @@
         	this.tabMissions.SuspendLayout();
         	this.panel3.SuspendLayout();
         	this.tabTimeStamps.SuspendLayout();
+        	this.tabPage1.SuspendLayout();
         	this.SuspendLayout();
         	// 
         	// AutoStartCheckBox
@@ -372,7 +374,6 @@
         	// 
         	// tabPage3
         	// 
-        	this.tabPage3.Controls.Add(this.button1);
         	this.tabPage3.Controls.Add(this.Tabs);
         	this.tabPage3.Controls.Add(this.label26);
         	this.tabPage3.Controls.Add(this.AutoStartCheckBox);
@@ -400,11 +401,11 @@
         	// 
         	// button1
         	// 
-        	this.button1.Location = new System.Drawing.Point(545, 13);
+        	this.button1.Location = new System.Drawing.Point(230, 109);
         	this.button1.Name = "button1";
-        	this.button1.Size = new System.Drawing.Size(154, 23);
+        	this.button1.Size = new System.Drawing.Size(270, 23);
         	this.button1.TabIndex = 127;
-        	this.button1.Text = "Open PyBrowser";
+        	this.button1.Text = "Open PyBrowser [TRIAL ONLY]";
         	this.button1.UseVisualStyleBackColor = true;
         	this.button1.Click += new System.EventHandler(this.Button1Click);
         	// 
@@ -414,6 +415,7 @@
         	this.Tabs.Controls.Add(this.tabStates);
         	this.Tabs.Controls.Add(this.tabMissions);
         	this.Tabs.Controls.Add(this.tabTimeStamps);
+        	this.Tabs.Controls.Add(this.tabPage1);
         	this.Tabs.Location = new System.Drawing.Point(6, 92);
         	this.Tabs.Name = "Tabs";
         	this.Tabs.SelectedIndex = 0;
@@ -467,10 +469,136 @@
         	this.tabStates.Location = new System.Drawing.Point(4, 22);
         	this.tabStates.Name = "tabStates";
         	this.tabStates.Padding = new System.Windows.Forms.Padding(3);
-        	this.tabStates.Size = new System.Drawing.Size(732, 262);
+        	this.tabStates.Size = new System.Drawing.Size(774, 278);
         	this.tabStates.TabIndex = 1;
         	this.tabStates.Text = "States";
         	this.tabStates.UseVisualStyleBackColor = true;
+        	// 
+        	// dataStopTimeSpecified
+        	// 
+        	this.dataStopTimeSpecified.AutoSize = true;
+        	this.dataStopTimeSpecified.Location = new System.Drawing.Point(691, 195);
+        	this.dataStopTimeSpecified.Name = "dataStopTimeSpecified";
+        	this.dataStopTimeSpecified.Size = new System.Drawing.Size(27, 13);
+        	this.dataStopTimeSpecified.TabIndex = 209;
+        	this.dataStopTimeSpecified.Text = "N/A";
+        	// 
+        	// lblStopTimeSpecified
+        	// 
+        	this.lblStopTimeSpecified.AutoSize = true;
+        	this.lblStopTimeSpecified.Location = new System.Drawing.Point(595, 195);
+        	this.lblStopTimeSpecified.Name = "lblStopTimeSpecified";
+        	this.lblStopTimeSpecified.Size = new System.Drawing.Size(94, 13);
+        	this.lblStopTimeSpecified.TabIndex = 208;
+        	this.lblStopTimeSpecified.Text = "stopTimeSpecified";
+        	// 
+        	// MissionsThisSessionData
+        	// 
+        	this.MissionsThisSessionData.AutoSize = true;
+        	this.MissionsThisSessionData.Location = new System.Drawing.Point(695, 56);
+        	this.MissionsThisSessionData.Name = "MissionsThisSessionData";
+        	this.MissionsThisSessionData.Size = new System.Drawing.Size(24, 13);
+        	this.MissionsThisSessionData.TabIndex = 207;
+        	this.MissionsThisSessionData.Text = "n/a";
+        	// 
+        	// MissionsThisSessionlbl
+        	// 
+        	this.MissionsThisSessionlbl.AutoSize = true;
+        	this.MissionsThisSessionlbl.Location = new System.Drawing.Point(582, 56);
+        	this.MissionsThisSessionlbl.Name = "MissionsThisSessionlbl";
+        	this.MissionsThisSessionlbl.Size = new System.Drawing.Size(107, 13);
+        	this.MissionsThisSessionlbl.TabIndex = 206;
+        	this.MissionsThisSessionlbl.Text = "MissionsThisSession:";
+        	// 
+        	// lastKnownGoodConnectedTimeData
+        	// 
+        	this.lastKnownGoodConnectedTimeData.AutoSize = true;
+        	this.lastKnownGoodConnectedTimeData.Location = new System.Drawing.Point(691, 173);
+        	this.lastKnownGoodConnectedTimeData.Name = "lastKnownGoodConnectedTimeData";
+        	this.lastKnownGoodConnectedTimeData.Size = new System.Drawing.Size(27, 13);
+        	this.lastKnownGoodConnectedTimeData.TabIndex = 205;
+        	this.lastKnownGoodConnectedTimeData.Text = "N/A";
+        	// 
+        	// lastKnownGoodConnectedTimeLabel
+        	// 
+        	this.lastKnownGoodConnectedTimeLabel.AutoSize = true;
+        	this.lastKnownGoodConnectedTimeLabel.Location = new System.Drawing.Point(532, 173);
+        	this.lastKnownGoodConnectedTimeLabel.Name = "lastKnownGoodConnectedTimeLabel";
+        	this.lastKnownGoodConnectedTimeLabel.Size = new System.Drawing.Size(157, 13);
+        	this.lastKnownGoodConnectedTimeLabel.TabIndex = 204;
+        	this.lastKnownGoodConnectedTimeLabel.Text = "lastKnownGoodConnectedTime";
+        	// 
+        	// lastInStationData
+        	// 
+        	this.lastInStationData.AutoSize = true;
+        	this.lastInStationData.Location = new System.Drawing.Point(691, 151);
+        	this.lastInStationData.Name = "lastInStationData";
+        	this.lastInStationData.Size = new System.Drawing.Size(27, 13);
+        	this.lastInStationData.TabIndex = 203;
+        	this.lastInStationData.Text = "N/A";
+        	// 
+        	// lastInSpaceData
+        	// 
+        	this.lastInSpaceData.AutoSize = true;
+        	this.lastInSpaceData.Location = new System.Drawing.Point(691, 125);
+        	this.lastInSpaceData.Name = "lastInSpaceData";
+        	this.lastInSpaceData.Size = new System.Drawing.Size(27, 13);
+        	this.lastInSpaceData.TabIndex = 202;
+        	this.lastInSpaceData.Text = "N/A";
+        	// 
+        	// lastInStationLabel
+        	// 
+        	this.lastInStationLabel.AutoSize = true;
+        	this.lastInStationLabel.Location = new System.Drawing.Point(621, 151);
+        	this.lastInStationLabel.Name = "lastInStationLabel";
+        	this.lastInStationLabel.Size = new System.Drawing.Size(68, 13);
+        	this.lastInStationLabel.TabIndex = 201;
+        	this.lastInStationLabel.Text = "lastInStation:";
+        	// 
+        	// lastInSpaceLabel
+        	// 
+        	this.lastInSpaceLabel.AutoSize = true;
+        	this.lastInSpaceLabel.Location = new System.Drawing.Point(623, 125);
+        	this.lastInSpaceLabel.Name = "lastInSpaceLabel";
+        	this.lastInSpaceLabel.Size = new System.Drawing.Size(66, 13);
+        	this.lastInSpaceLabel.TabIndex = 200;
+        	this.lastInSpaceLabel.Text = "lastInSpace:";
+        	// 
+        	// LastFrameData
+        	// 
+        	this.LastFrameData.AutoSize = true;
+        	this.LastFrameData.Location = new System.Drawing.Point(691, 83);
+        	this.LastFrameData.Name = "LastFrameData";
+        	this.LastFrameData.Size = new System.Drawing.Size(27, 13);
+        	this.LastFrameData.TabIndex = 199;
+        	this.LastFrameData.Text = "N/A";
+        	// 
+        	// lastSessionisreadyData
+        	// 
+        	this.lastSessionisreadyData.AutoSize = true;
+        	this.lastSessionisreadyData.Location = new System.Drawing.Point(691, 104);
+        	this.lastSessionisreadyData.Name = "lastSessionisreadyData";
+        	this.lastSessionisreadyData.Size = new System.Drawing.Size(27, 13);
+        	this.lastSessionisreadyData.TabIndex = 198;
+        	this.lastSessionisreadyData.Text = "N/A";
+        	// 
+        	// lastSessionIsreadylabel
+        	// 
+        	this.lastSessionIsreadylabel.AutoSize = true;
+        	this.lastSessionIsreadylabel.Location = new System.Drawing.Point(587, 104);
+        	this.lastSessionIsreadylabel.Name = "lastSessionIsreadylabel";
+        	this.lastSessionIsreadylabel.Size = new System.Drawing.Size(102, 13);
+        	this.lastSessionIsreadylabel.TabIndex = 197;
+        	this.lastSessionIsreadylabel.Text = "lastSessionIsReady:";
+        	// 
+        	// lastFrameLabel
+        	// 
+        	this.lastFrameLabel.AutoSize = true;
+        	this.lastFrameLabel.Location = new System.Drawing.Point(634, 83);
+        	this.lastFrameLabel.Name = "lastFrameLabel";
+        	this.lastFrameLabel.Size = new System.Drawing.Size(55, 13);
+        	this.lastFrameLabel.TabIndex = 196;
+        	this.lastFrameLabel.Text = "lastFrame:";
         	// 
         	// label19
         	// 
@@ -479,7 +607,8 @@
         	this.label19.Name = "label19";
         	this.label19.Size = new System.Drawing.Size(400, 13);
         	this.label19.TabIndex = 168;
-        	this.label19.Text = "it is a very bad idea to change these states unless you understand what will happ" + "en";
+        	this.label19.Text = "it is a very bad idea to change these states unless you understand what will happ" +
+	"en";
         	// 
         	// panel2
         	// 
@@ -791,7 +920,7 @@
         	this.tabMissions.Location = new System.Drawing.Point(4, 22);
         	this.tabMissions.Name = "tabMissions";
         	this.tabMissions.Padding = new System.Windows.Forms.Padding(3);
-        	this.tabMissions.Size = new System.Drawing.Size(732, 262);
+        	this.tabMissions.Size = new System.Drawing.Size(774, 278);
         	this.tabMissions.TabIndex = 5;
         	this.tabMissions.Text = "Missions";
         	this.tabMissions.UseVisualStyleBackColor = true;
@@ -1080,7 +1209,7 @@
         	this.tabTimeStamps.Location = new System.Drawing.Point(4, 22);
         	this.tabTimeStamps.Name = "tabTimeStamps";
         	this.tabTimeStamps.Padding = new System.Windows.Forms.Padding(3);
-        	this.tabTimeStamps.Size = new System.Drawing.Size(732, 262);
+        	this.tabTimeStamps.Size = new System.Drawing.Size(774, 278);
         	this.tabTimeStamps.TabIndex = 6;
         	this.tabTimeStamps.Text = "TimeStamps";
         	this.tabTimeStamps.UseVisualStyleBackColor = true;
@@ -1707,131 +1836,16 @@
         	this.tabPage2.Text = "QuestorManager";
         	this.tabPage2.UseVisualStyleBackColor = true;
         	// 
-        	// dataStopTimeSpecified
+        	// tabPage1
         	// 
-        	this.dataStopTimeSpecified.AutoSize = true;
-        	this.dataStopTimeSpecified.Location = new System.Drawing.Point(691, 195);
-        	this.dataStopTimeSpecified.Name = "dataStopTimeSpecified";
-        	this.dataStopTimeSpecified.Size = new System.Drawing.Size(27, 13);
-        	this.dataStopTimeSpecified.TabIndex = 209;
-        	this.dataStopTimeSpecified.Text = "N/A";
-        	// 
-        	// lblStopTimeSpecified
-        	// 
-        	this.lblStopTimeSpecified.AutoSize = true;
-        	this.lblStopTimeSpecified.Location = new System.Drawing.Point(595, 195);
-        	this.lblStopTimeSpecified.Name = "lblStopTimeSpecified";
-        	this.lblStopTimeSpecified.Size = new System.Drawing.Size(94, 13);
-        	this.lblStopTimeSpecified.TabIndex = 208;
-        	this.lblStopTimeSpecified.Text = "stopTimeSpecified";
-        	// 
-        	// MissionsThisSessionData
-        	// 
-        	this.MissionsThisSessionData.AutoSize = true;
-        	this.MissionsThisSessionData.Location = new System.Drawing.Point(695, 56);
-        	this.MissionsThisSessionData.Name = "MissionsThisSessionData";
-        	this.MissionsThisSessionData.Size = new System.Drawing.Size(24, 13);
-        	this.MissionsThisSessionData.TabIndex = 207;
-        	this.MissionsThisSessionData.Text = "n/a";
-        	// 
-        	// MissionsThisSessionlbl
-        	// 
-        	this.MissionsThisSessionlbl.AutoSize = true;
-        	this.MissionsThisSessionlbl.Location = new System.Drawing.Point(582, 56);
-        	this.MissionsThisSessionlbl.Name = "MissionsThisSessionlbl";
-        	this.MissionsThisSessionlbl.Size = new System.Drawing.Size(107, 13);
-        	this.MissionsThisSessionlbl.TabIndex = 206;
-        	this.MissionsThisSessionlbl.Text = "MissionsThisSession:";
-        	// 
-        	// lastKnownGoodConnectedTimeData
-        	// 
-        	this.lastKnownGoodConnectedTimeData.AutoSize = true;
-        	this.lastKnownGoodConnectedTimeData.Location = new System.Drawing.Point(691, 173);
-        	this.lastKnownGoodConnectedTimeData.Name = "lastKnownGoodConnectedTimeData";
-        	this.lastKnownGoodConnectedTimeData.Size = new System.Drawing.Size(27, 13);
-        	this.lastKnownGoodConnectedTimeData.TabIndex = 205;
-        	this.lastKnownGoodConnectedTimeData.Text = "N/A";
-        	// 
-        	// lastKnownGoodConnectedTimeLabel
-        	// 
-        	this.lastKnownGoodConnectedTimeLabel.AutoSize = true;
-        	this.lastKnownGoodConnectedTimeLabel.Location = new System.Drawing.Point(532, 173);
-        	this.lastKnownGoodConnectedTimeLabel.Name = "lastKnownGoodConnectedTimeLabel";
-        	this.lastKnownGoodConnectedTimeLabel.Size = new System.Drawing.Size(157, 13);
-        	this.lastKnownGoodConnectedTimeLabel.TabIndex = 204;
-        	this.lastKnownGoodConnectedTimeLabel.Text = "lastKnownGoodConnectedTime";
-        	// 
-        	// lastInStationData
-        	// 
-        	this.lastInStationData.AutoSize = true;
-        	this.lastInStationData.Location = new System.Drawing.Point(691, 151);
-        	this.lastInStationData.Name = "lastInStationData";
-        	this.lastInStationData.Size = new System.Drawing.Size(27, 13);
-        	this.lastInStationData.TabIndex = 203;
-        	this.lastInStationData.Text = "N/A";
-        	// 
-        	// lastInSpaceData
-        	// 
-        	this.lastInSpaceData.AutoSize = true;
-        	this.lastInSpaceData.Location = new System.Drawing.Point(691, 125);
-        	this.lastInSpaceData.Name = "lastInSpaceData";
-        	this.lastInSpaceData.Size = new System.Drawing.Size(27, 13);
-        	this.lastInSpaceData.TabIndex = 202;
-        	this.lastInSpaceData.Text = "N/A";
-        	// 
-        	// lastInStationLabel
-        	// 
-        	this.lastInStationLabel.AutoSize = true;
-        	this.lastInStationLabel.Location = new System.Drawing.Point(621, 151);
-        	this.lastInStationLabel.Name = "lastInStationLabel";
-        	this.lastInStationLabel.Size = new System.Drawing.Size(68, 13);
-        	this.lastInStationLabel.TabIndex = 201;
-        	this.lastInStationLabel.Text = "lastInStation:";
-        	// 
-        	// lastInSpaceLabel
-        	// 
-        	this.lastInSpaceLabel.AutoSize = true;
-        	this.lastInSpaceLabel.Location = new System.Drawing.Point(623, 125);
-        	this.lastInSpaceLabel.Name = "lastInSpaceLabel";
-        	this.lastInSpaceLabel.Size = new System.Drawing.Size(66, 13);
-        	this.lastInSpaceLabel.TabIndex = 200;
-        	this.lastInSpaceLabel.Text = "lastInSpace:";
-        	// 
-        	// LastFrameData
-        	// 
-        	this.LastFrameData.AutoSize = true;
-        	this.LastFrameData.Location = new System.Drawing.Point(691, 83);
-        	this.LastFrameData.Name = "LastFrameData";
-        	this.LastFrameData.Size = new System.Drawing.Size(27, 13);
-        	this.LastFrameData.TabIndex = 199;
-        	this.LastFrameData.Text = "N/A";
-        	// 
-        	// lastSessionisreadyData
-        	// 
-        	this.lastSessionisreadyData.AutoSize = true;
-        	this.lastSessionisreadyData.Location = new System.Drawing.Point(691, 104);
-        	this.lastSessionisreadyData.Name = "lastSessionisreadyData";
-        	this.lastSessionisreadyData.Size = new System.Drawing.Size(27, 13);
-        	this.lastSessionisreadyData.TabIndex = 198;
-        	this.lastSessionisreadyData.Text = "N/A";
-        	// 
-        	// lastSessionIsreadylabel
-        	// 
-        	this.lastSessionIsreadylabel.AutoSize = true;
-        	this.lastSessionIsreadylabel.Location = new System.Drawing.Point(587, 104);
-        	this.lastSessionIsreadylabel.Name = "lastSessionIsreadylabel";
-        	this.lastSessionIsreadylabel.Size = new System.Drawing.Size(102, 13);
-        	this.lastSessionIsreadylabel.TabIndex = 197;
-        	this.lastSessionIsreadylabel.Text = "lastSessionIsReady:";
-        	// 
-        	// lastFrameLabel
-        	// 
-        	this.lastFrameLabel.AutoSize = true;
-        	this.lastFrameLabel.Location = new System.Drawing.Point(634, 83);
-        	this.lastFrameLabel.Name = "lastFrameLabel";
-        	this.lastFrameLabel.Size = new System.Drawing.Size(55, 13);
-        	this.lastFrameLabel.TabIndex = 196;
-        	this.lastFrameLabel.Text = "lastFrame:";
+        	this.tabPage1.Controls.Add(this.button1);
+        	this.tabPage1.Location = new System.Drawing.Point(4, 22);
+        	this.tabPage1.Name = "tabPage1";
+        	this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+        	this.tabPage1.Size = new System.Drawing.Size(774, 278);
+        	this.tabPage1.TabIndex = 7;
+        	this.tabPage1.Text = "Misc";
+        	this.tabPage1.UseVisualStyleBackColor = true;
         	// 
         	// QuestorUI
         	// 
@@ -1863,6 +1877,7 @@
         	this.panel3.PerformLayout();
         	this.tabTimeStamps.ResumeLayout(false);
         	this.tabTimeStamps.PerformLayout();
+        	this.tabPage1.ResumeLayout(false);
         	this.ResumeLayout(false);
 
         }
@@ -2027,5 +2042,6 @@
         private System.Windows.Forms.Label NextOpenContainerInSpaceActionlbl;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TabPage tabPage1;
     }
 }
