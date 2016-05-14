@@ -59,7 +59,6 @@ namespace Questor
 		public Questor()
 		{
 			
-			//Logging.tryToLogToFile = true;
 			_lastQuestorPulse = DateTime.UtcNow;
 
 			//_defense = new Defense();
@@ -71,7 +70,6 @@ namespace Questor
 			//_backgroundbehavior = new BackgroundBehavior();
 			//_cleanup = new Cleanup();
 			_watch = new Stopwatch();
-			
 			//_statistics = new Statistics();
 
 			Time.Instance.NextStartupAction = DateTime.UtcNow;
@@ -100,17 +98,12 @@ namespace Questor
 			// get the physical mem usage
 			Cache.Instance.TotalMegaBytesOfMemoryUsed = ((currentProcess.WorkingSet64 + 1 / 1024) / 1024);
 			Logging.Log("Questor", "EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB", Logging.White);
-//			Statistics.SessionIskGenerated = 0;
-//			Statistics.SessionLootGenerated = 0;
-//			Statistics.SessionLPGenerated = 0;
+
 			Settings.Instance.CharacterMode = "none";
 
 			try
 			{
 				Logging.Log("Questor", "Register EVEOnFrame Event", Logging.White);
-				//
-				// setup the [ Cache.Instance.DirectEve.OnFrame ] Event triggered on every new frame to call EVEOnFrame()
-				//
 				Cache.Instance.DirectEve.OnFrame += EVEOnFrame;
 			}
 			catch (Exception ex)
@@ -126,9 +119,7 @@ namespace Questor
 			}
 
 			
-			//new SubModules.Debug();
-			
-			Logging.Log("Questor", "Questor.", Logging.White);
+		Logging.Log("Questor", "Questor.", Logging.White);
 		}
 
 		public void RunOnceAfterStartup()
@@ -819,8 +810,6 @@ namespace Questor
 				
 				Defense.ProcessState();
 				
-				
-				
 				// temporarily fix
 				if(!Cache.Instance.Paused && Cache.Instance.InSpace &&  Cache.Instance.Modules.Count(m => !m.IsOnline) > 0) {
 					
@@ -836,9 +825,6 @@ namespace Questor
 						Logging.Log("Questor.ProcessState", "Offline modules found, going back to base trying to fit again", Logging.Debug);
 						MissionSettings.CurrentFit = String.Empty;
 						MissionSettings.OfflineModulesFound = true;
-						//Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
-						//Cleanup.SignalToQuitQuestor = true;
-//					_States.CurrentQuestorState = QuestorState.Error;
 						_States.CurrentQuestorState = QuestorState.Start;
 						_States.CurrentTravelerState = TravelerState.Idle;
 						_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
@@ -850,7 +836,7 @@ namespace Questor
 					}
 				}
 
-				if (Cache.Instance.Paused) //|| DateTime.UtcNow < _nextQuestorAction)
+				if (Cache.Instance.Paused)
 				{
 					if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (Cache.Instance.Paused)", Logging.Debug);
 					Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
@@ -1223,90 +1209,6 @@ namespace Questor
 			}
 		}
 		
-		
-		#region Scanner Functions
-
-		private void OpenDirectionalScanner()
-		{
-			
-			DirectDirectionalScannerWindow scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
-			if (scanner == null)
-			{
-				Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenDirectionalScanner);
-			}
-		}
-
-		private bool IsDirectionalScannerReady()
-		{
-			DirectDirectionalScannerWindow scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
-			if (scanner != null && scanner.IsReady)
-			{
-				Logging.Log("IsScannerReady", "scanner: [" + scanner + "]", Logging.Debug);
-				return true;
-			}
-			else
-			{
-				Logging.Log("IsScannerReady", "scanner is not yet ready", Logging.Debug);
-				return false;
-			}
-		}
-		
-		private DirectDirectionalScannerWindow DirectScannerWindow {
-			get {
-				return Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
-			}
-		}
-		
-		private void SetUseOverviewPresetFalse() {
-			
-			DirectDirectionalScannerWindow scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
-			if (scanner != null && scanner.IsReady && scanner.UserOverViewPreset)
-			{
-				scanner.UserOverViewPreset = false;
-			}
-		}
-
-		private void ScanRangeTest()
-		{
-			DirectDirectionalScannerWindow scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
-			if (scanner != null && scanner.IsReady && scanner.Range != scanner.MAX_SCANNER_RANGE)
-			{
-				scanner.Range = scanner.MAX_SCANNER_RANGE;
-			}
-		}
-		
-		private void ScanAngleTest()
-		{
-			DirectDirectionalScannerWindow scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
-			if (scanner != null && scanner.IsReady && scanner.Angle != 360)
-			{
-				scanner.Angle = 360;
-			}
-		}
-
-
-		private void DumpDirectionalScanResults()
-		{
-			
-			var scanner = Cache.Instance.DirectEve.Windows.OfType<DirectDirectionalScannerWindow>().FirstOrDefault();
-			if (scanner != null && scanner.IsReady)
-			{
-				foreach (DirectDirectionalScanResult result in scanner.DirectionalScanResults)
-				{
-					var entity = result.Entity;
-					if (entity != null && entity.IsValid)
-					{
-						Logging.Log("DumpScanResults", "SR: name [" + result.Name + "] TypeName [" + result.TypeName + "] Distance [" + Math.Round(entity.Distance / 1000, 2) + "k]", Logging.Debug);
-					}
-					else
-					{
-						Logging.Log("DumpScanResults", "SR: name [" + result.Name + "] TypeName [" + result.TypeName + "]", Logging.Debug);
-					}
-				}
-			}
-		}
-
-		#endregion Old Scanner Functions
 
 		#region IDisposable implementation
 		public void Dispose()

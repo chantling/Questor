@@ -24,7 +24,6 @@ namespace Questor
 	{
 
 		private static Questor _questor;
-		
 		private static DateTime _lastServerStatusCheckWasNotOK = DateTime.MinValue;
 		
 		public static QuestorUI questorUI { get; set; }
@@ -73,8 +72,6 @@ namespace Questor
 			
 			try
 			{
-				
-				//new SubModules.Debug();
 				
 				questorUI = new QuestorUI();
 				
