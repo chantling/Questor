@@ -1332,26 +1332,7 @@ namespace Questor.Modules.Combat
 						return true;
 					}
 				}
-				else if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior && !WarpScrambled)
-				{
-					if (_States.CurrentDedicatedBookmarkSalvagerBehaviorState == DedicatedBookmarkSalvagerBehaviorState.GotoBase && !WarpScrambled)
-					{
-						Logging.Log("Drones", "Recalling [ " + Drones.ActiveDrones.Count() + " ] drones due to gotobase state", Logging.Orange);
-						return true;
-					}
-
-					if (_States.CurrentDedicatedBookmarkSalvagerBehaviorState == DedicatedBookmarkSalvagerBehaviorState.Panic && !WarpScrambled)
-					{
-						Logging.Log("Drones", "Recalling [ " + Drones.ActiveDrones.Count() + " ] drones due to panic state", Logging.Orange);
-						return true;
-					}
-
-					if (_States.CurrentDedicatedBookmarkSalvagerBehaviorState == DedicatedBookmarkSalvagerBehaviorState.GotoNearestStation && !WarpScrambled)
-					{
-						Logging.Log("Drones", "Recalling [ " + Drones.ActiveDrones.Count() + " ] drones due to GotoNearestStation state", Logging.Orange);
-						return true;
-					}
-				}
+				
 
 				return false;
 			}

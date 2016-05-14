@@ -254,14 +254,6 @@ namespace Questor
 						BehaviorComboBox.Items.Add(text);
 					}
 				}
-				if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
-				{
-					BehaviorComboBox.Items.Clear();
-					foreach (string text in Enum.GetNames(typeof(DedicatedBookmarkSalvagerBehaviorState)))
-					{
-						BehaviorComboBox.Items.Add(text);
-					}
-				}
 				if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior)
 				{
 					BehaviorComboBox.Items.Clear();
@@ -342,14 +334,6 @@ namespace Questor
 					}
 				}
 
-				
-				if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
-				{
-					if ((string)BehaviorComboBox.SelectedItem != _States.CurrentDedicatedBookmarkSalvagerBehaviorState.ToString() && !BehaviorComboBox.DroppedDown)
-					{
-						BehaviorComboBox.SelectedItem = _States.CurrentDedicatedBookmarkSalvagerBehaviorState.ToString();
-					}
-				}
 
 				if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior)
 				{
@@ -585,11 +569,6 @@ namespace Questor
 			if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)
 			{
 				_States.CurrentCombatMissionBehaviorState = (CombatMissionsBehaviorState)Enum.Parse(typeof(CombatMissionsBehaviorState), BehaviorComboBox.Text);
-			}
-
-			if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
-			{
-				_States.CurrentDedicatedBookmarkSalvagerBehaviorState = (DedicatedBookmarkSalvagerBehaviorState)Enum.Parse(typeof(DedicatedBookmarkSalvagerBehaviorState), BehaviorComboBox.Text);
 			}
 
 			if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior)

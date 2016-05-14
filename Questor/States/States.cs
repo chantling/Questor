@@ -28,8 +28,6 @@ namespace Questor.Modules.States
 
         public static CombatMissionsBehaviorState CurrentCombatMissionBehaviorState { get; set; }
 
-        public static DedicatedBookmarkSalvagerBehaviorState CurrentDedicatedBookmarkSalvagerBehaviorState { get; set; }
-
         public static CombatHelperBehaviorState CurrentCombatHelperBehaviorState { get; set; }
 
         public static CombatMissionCtrlState CurrentCombatMissionCtrlState { get; set; }

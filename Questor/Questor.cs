@@ -37,7 +37,6 @@ namespace Questor
 		private DateTime _lastQuestorPulse;
 		private readonly CombatMissionsBehavior _combatMissionsBehavior;
 		private readonly CombatHelperBehavior _combatHelperBehavior;
-		private readonly DedicatedBookmarkSalvagerBehavior _dedicatedBookmarkSalvagerBehavior;
 
 		
 		private bool _runOnceAfterStartupalreadyProcessed;
@@ -57,7 +56,6 @@ namespace Questor
 
 			_combatMissionsBehavior = new CombatMissionsBehavior();
 			_combatHelperBehavior = new CombatHelperBehavior();
-			_dedicatedBookmarkSalvagerBehavior = new DedicatedBookmarkSalvagerBehavior();
 			_watch = new Stopwatch();
 			Time.Instance.NextStartupAction = DateTime.UtcNow;
 			_States.CurrentQuestorState = QuestorState.Idle;
@@ -264,7 +262,6 @@ namespace Questor
 				//
 				// it is assumed if you got this far that you are in space. If you are 'stuck' in a session change then you'll be stuck another 5 min until the timeout above.
 				//
-				_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
 				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
 				_States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
 				
@@ -786,11 +783,6 @@ namespace Questor
 						_combatHelperBehavior.ProcessState();
 						break;
 
-					case QuestorState.DedicatedBookmarkSalvagerBehavior:
-
-						_dedicatedBookmarkSalvagerBehavior.ProcessState();
-						break;
-
 
 					case QuestorState.Start:
 						switch (Settings.Instance.CharacterMode.ToLower())
@@ -800,11 +792,6 @@ namespace Questor
 							case "dps":
 								Logging.Log("Questor", "Start Mission Behavior", Logging.White);
 								_States.CurrentQuestorState = QuestorState.CombatMissionsBehavior;
-								break;
-
-							case "salvage":
-								Logging.Log("Questor", "Start Salvaging Behavior", Logging.White);
-								_States.CurrentQuestorState = QuestorState.DedicatedBookmarkSalvagerBehavior;
 								break;
 
 							case "combat helper":

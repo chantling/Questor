@@ -753,14 +753,6 @@ namespace Questor.Modules.BackgroundTasks
 						return;
 					}
 
-					if (_States.CurrentDedicatedBookmarkSalvagerBehaviorState == States.DedicatedBookmarkSalvagerBehaviorState.Salvage)
-					{
-						if (Logging.DebugLootWrecks) Logging.Log("Salvage.LootWrecks", "(salvage) We are full, heading back to base to dump loot ", Logging.Teal);
-						_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
-						Time.Instance.NextSalvageTrip = DateTime.UtcNow;
-						return;
-					}
-
 					Logging.Log("Salvage.LootWrecks", "We are full: we are using a behavior that does not have a supported place to auto dump loot: error!", Logging.Orange);
 					return;
 				}
@@ -1021,7 +1013,7 @@ namespace Questor.Modules.BackgroundTasks
 											//GotoBase and dump loot in the hopes that we can grab what we need on the next run
 											if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior) _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
 											if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior) _States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
-											if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior) _States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
+											
 											/**
                                             // jettison loot
                                             if (DateTime.UtcNow.Subtract(Time.Instance.LastJettison).TotalSeconds < Time.Instance.DelayBetweenJetcans_seconds)

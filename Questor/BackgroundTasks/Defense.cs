@@ -987,7 +987,6 @@ namespace Questor.Modules.BackgroundTasks
 					MissionSettings.OfflineModulesFound = true;
 					_States.CurrentQuestorState = QuestorState.Start;
 					_States.CurrentTravelerState = TravelerState.Idle;
-					_States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
 					_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
 					_States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
 					Traveler.Destination = null;

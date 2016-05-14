@@ -127,7 +127,6 @@
     <Compile Include="BackgroundTasks\Scoop.cs" />
     <Compile Include="Behaviors\CombatHelperBehavior.cs" />
     <Compile Include="Behaviors\CombatMissionsBehavior.cs" />
-    <Compile Include="Behaviors\DedicatedBookmarkSalvagerBehavior.cs" />
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\CacheBookmarks.cs" />
     <Compile Include="Caching\CacheEntities.cs" />
@@ -265,7 +264,6 @@
     <Compile Include="States\CombatMissionCtrlState.cs" />
     <Compile Include="States\CombatMissionsBehaviorState.cs" />
     <Compile Include="States\CombatState.cs" />
-    <Compile Include="States\DedicatedBookmarkSalvagerBehaviorState.cs" />
     <Compile Include="States\DroneState.cs" />
     <Compile Include="States\DropState.cs" />
     <Compile Include="States\GrabState.cs" />

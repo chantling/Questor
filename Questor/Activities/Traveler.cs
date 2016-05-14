@@ -201,14 +201,6 @@ namespace Questor.Modules.Activities
                     {
                         _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
                     }
-                    if (_States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
-                    {
-                        _States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.GotoBase;
-                    }
-                    //if (_States.CurrentQuestorState == QuestorState.CombatHelperBehavior)
-                    //{
-                    //    _States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
-                    //}
                     return;
                 }
             }
@@ -486,13 +478,6 @@ namespace Questor.Modules.Activities
                 if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.Traveler)
                 {
                     _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Idle;
-                    _lastTravelerPulse = DateTime.UtcNow;
-                    return;
-                }
-
-                if (_States.CurrentDedicatedBookmarkSalvagerBehaviorState == DedicatedBookmarkSalvagerBehaviorState.Traveler)
-                {
-                    _States.CurrentDedicatedBookmarkSalvagerBehaviorState = DedicatedBookmarkSalvagerBehaviorState.Idle;
                     _lastTravelerPulse = DateTime.UtcNow;
                     return;
                 }
