@@ -34,15 +34,10 @@ namespace Questor.Modules.States
 
         public static DirectionalScannerBehaviorState CurrentDirectionalScannerBehaviorState { get; set; }
 
-        public static DebugBehaviorState CurrentDebugBehaviorState { get; set; }
-
-        public static DebugHangarsBehaviorState CurrentDebugHangarBehaviorState { get; set; }
-
         public static CourierMissionCtrlState CurrentCourierMissionCtrlState { get; set; }
 
         public static CombatMissionCtrlState CurrentCombatMissionCtrlState { get; set; }
 
-        //public static ActionState CurrentActionState { get; set; }
         public static AgentInteractionState CurrentAgentInteractionState { get; set; }
 
         public static ArmState CurrentArmState { get; set; }
@@ -51,8 +46,6 @@ namespace Questor.Modules.States
 
         public static BuyLPIState CurrentBuyLPIState { get; set; }
 
-        public static DebugModuleState CurrentDebugModuleState { get; set; }
-
         public static DropState CurrentDropState { get; set; }
 
         public static GrabState CurrentGrabState { get; set; }
@@ -60,8 +53,6 @@ namespace Questor.Modules.States
         public static ScanInteractionState CurrentScanInteractionState { get; set; }
 
         public static SellState CurrentSellState { get; set; }
-
-         // public static SwitchShipState CurrentSwitchShipState { get; set; }
 
         public static UnloadLootState CurrentUnloadLootState { get; set; }
 

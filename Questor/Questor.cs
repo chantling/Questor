@@ -38,7 +38,7 @@ namespace Questor
 		private readonly CombatMissionsBehavior _combatMissionsBehavior;
 		private readonly CombatHelperBehavior _combatHelperBehavior;
 		private readonly DedicatedBookmarkSalvagerBehavior _dedicatedBookmarkSalvagerBehavior;
-		private readonly DebugHangarsBehavior _debugHangarsBehavior;
+
 		
 		private bool _runOnceAfterStartupalreadyProcessed;
 		private bool _runOnceInStationAfterStartupalreadyProcessed;
@@ -58,7 +58,6 @@ namespace Questor
 			_combatMissionsBehavior = new CombatMissionsBehavior();
 			_combatHelperBehavior = new CombatHelperBehavior();
 			_dedicatedBookmarkSalvagerBehavior = new DedicatedBookmarkSalvagerBehavior();
-			_debugHangarsBehavior = new DebugHangarsBehavior();
 			_watch = new Stopwatch();
 			Time.Instance.NextStartupAction = DateTime.UtcNow;
 			_States.CurrentQuestorState = QuestorState.Idle;
@@ -790,16 +789,6 @@ namespace Questor
 					case QuestorState.DedicatedBookmarkSalvagerBehavior:
 
 						_dedicatedBookmarkSalvagerBehavior.ProcessState();
-						break;
-
-					case QuestorState.DebugHangarsBehavior:
-
-						_debugHangarsBehavior.ProcessState();
-						break;
-
-					case QuestorState.DebugReloadAll:
-						if (!Combat.ReloadAll(Cache.Instance.EntitiesNotSelf.OrderBy(t => t.Distance).FirstOrDefault(t => t.Distance < (double)Distances.OnGridWithMe))) return;
-						_States.CurrentQuestorState = QuestorState.Start;
 						break;
 
 

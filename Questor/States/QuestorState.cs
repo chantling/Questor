@@ -26,13 +26,13 @@ namespace Questor.Modules.States
         //SkillTrainer,
         CloseQuestor,
         Error,
-        DebugWindows,
-        DebugHangarsBehavior,
-        DebugInventoryTree,
-        DebugCloseQuestor,
-        DebugReloadAll,
-        DebugDirectionalScanner,
-        DebugMarket,
-        DebugModules
+//        DebugWindows,
+//        DebugHangarsBehavior,
+//        DebugInventoryTree,
+//        DebugCloseQuestor,
+//        DebugReloadAll,
+//        DebugDirectionalScanner,
+//        DebugMarket,
+//        DebugModules
     }
 }
