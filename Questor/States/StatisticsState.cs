@@ -20,10 +20,6 @@
         ListLootHangarItems,
         ListLootContainerItems,
         PocketObjectStatistics,
-        //AnomolyLog,
-        //GateCampLog,
-        //HourlyGridReportLog,
-        //DailyGridReportLog,
         LocalStatistics,
         Done
     }
