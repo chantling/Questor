@@ -749,7 +749,8 @@ namespace Questor.Modules.BackgroundTasks
 					if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.ExecuteMission)
 					{
 						if (Logging.DebugLootWrecks) Logging.Log("Salvage.LootWrecks", "(mission) We are full, heading back to base to dump loot ", Logging.Teal);
-						_States.CurrentCombatHelperBehaviorState = States.CombatHelperBehaviorState.GotoBase;
+//						_States.CurrentCombatHelperBehaviorState = States.CombatHelperBehaviorState.GotoBase;
+//						_States.CurrentCombatMissionBehaviorState = States.CombatMissionsBehaviorState.GotoBase;
 						return;
 					}
 

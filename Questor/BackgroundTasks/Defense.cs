@@ -988,7 +988,6 @@ namespace Questor.Modules.BackgroundTasks
 					_States.CurrentQuestorState = QuestorState.Start;
 					_States.CurrentTravelerState = TravelerState.Idle;
 					_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
-					_States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
 					Traveler.Destination = null;
 					Cache.Instance.GotoBaseNow = true;
 					return;

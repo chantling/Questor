@@ -252,7 +252,6 @@ namespace Questor
 				// it is assumed if you got this far that you are in space. If you are 'stuck' in a session change then you'll be stuck another 5 min until the timeout above.
 				//
 				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
-				_States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.GotoBase;
 				
 				return;
 			}

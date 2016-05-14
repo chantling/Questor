@@ -259,7 +259,6 @@
     <Compile Include="States\BuyLPIState.cs" />
     <Compile Include="States\BuyState.cs" />
     <Compile Include="States\CleanupState.cs" />
-    <Compile Include="States\CombatHelperBehaviorState.cs" />
     <Compile Include="States\CombatMissionCtrlState.cs" />
     <Compile Include="States\CombatMissionsBehaviorState.cs" />
     <Compile Include="States\CombatState.cs" />

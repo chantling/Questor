@@ -482,13 +482,6 @@ namespace Questor.Modules.Activities
                     return;
                 }
 
-                if (_States.CurrentCombatHelperBehaviorState == CombatHelperBehaviorState.Traveler)
-                {
-                    _States.CurrentCombatHelperBehaviorState = CombatHelperBehaviorState.Idle;
-                    _lastTravelerPulse = DateTime.UtcNow;
-                    return;
-                }
-
                 return;
             }
         }
