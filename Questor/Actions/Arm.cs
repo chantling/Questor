@@ -416,14 +416,19 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
-				if (string.IsNullOrEmpty(Settings.Instance.SalvageShipName))
+                Logging.Log("Arm.ActivateSalvageShip", "SalvageShipName: " + Settings.Instance.SalvageShipName, Logging.White);
+                if (string.IsNullOrEmpty(Settings.Instance.SalvageShipName))
 				{
 					Logging.Log(WeAreInThisStateForLogs(), "Could not find salvageshipName: " + Settings.Instance.SalvageShipName + " in settings!", Logging.Orange);
 					ChangeArmState(ArmState.NotEnoughAmmo);
 					return false;
 				}
 
-				if (!ActivateShip(Settings.Instance.SalvageShipName)) return false;
+                if (!ActivateShip(Settings.Instance.SalvageShipName))
+                {
+                    Logging.Log("Arm.ActivateSalvageShip", "Unable to activate salvage ship [" + Settings.Instance.SalvageShipName + "]", Logging.White);
+                    return false;
+                }
 
 				Logging.Log(WeAreInThisStateForLogs(), "Done", Logging.White);
 				ChangeArmState(ArmState.Cleanup);
@@ -517,7 +522,11 @@ namespace Questor.Modules.Actions
 				// 
 				if (!string.IsNullOrEmpty(shipName))
 				{
-					if (Cache.Instance.ShipHangar == null) return false;
+                    if (Cache.Instance.ShipHangar == null)
+                    {
+                        Logging.Log("Arm.ActivateShip", "Error: could not find shiphangar", Logging.White);
+                        return false;
+                    }
 
 					List<DirectItem> shipsInShipHangar = Cache.Instance.ShipHangar.Items;
 					if (shipsInShipHangar.Any(s => s.GivenName != null && s.GivenName.ToLower() == shipName.ToLower()))
