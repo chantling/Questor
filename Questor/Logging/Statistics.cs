@@ -304,7 +304,7 @@ namespace Questor.Modules.Logging
 			}
 
 			// Seeing as we completed a mission, we will have loyalty points for this agent
-			if (AgentInteraction.Agent.LoyaltyPoints == -1)
+			if (Cache.Instance.Agent.LoyaltyPoints == -1)
 			{
 				AgentLPRetrievalAttempts++;
 				Logging.Log("Statistics", "WriteMissionStatistics: We do not have loyalty points with the current agent yet, still -1, attempt # [" + AgentLPRetrievalAttempts + "] retrying...", Logging.White);
@@ -331,7 +331,7 @@ namespace Questor.Modules.Logging
 			Logging.Log("Statistics", "Wealth before mission: [ " + Cache.Instance.Wealth + "]", Logging.White);
 			Logging.Log("Statistics", "Wealth after mission: [ " + Cache.Instance.MyWalletBalance + "]", Logging.White);
 			Logging.Log("Statistics", "Value of Loot from the mission: [" + lootVal + "]", Logging.White);
-			Logging.Log("Statistics", "Total LP after mission:  [" + AgentInteraction.Agent.LoyaltyPoints + "]", Logging.White);
+			Logging.Log("Statistics", "Total LP after mission:  [" + Cache.Instance.Agent.LoyaltyPoints + "]", Logging.White);
 			Logging.Log("Statistics", "Total LP before mission: [" + Statistics.LoyaltyPointsTotal + "]", Logging.White);
 			Logging.Log("Statistics", "LP from this mission: [" + Statistics.LoyaltyPointsForCurrentMission + "]", Logging.White);
 			Logging.Log("Statistics", "ISKBounty from this mission: [" + isk + "]", Logging.White);
@@ -429,7 +429,7 @@ namespace Questor.Modules.Logging
 
 			Statistics.MissionLoggingCompleted = true;
 			Statistics.LootValue = 0;
-			Statistics.LoyaltyPointsTotal = AgentInteraction.Agent.LoyaltyPoints;
+			Statistics.LoyaltyPointsTotal = Cache.Instance.Agent.LoyaltyPoints;
 			Statistics.StartedMission = DateTime.UtcNow;
 			Statistics.FinishedMission = DateTime.UtcNow; //this may need to be reset to DateTime.MinValue, but that was causing other issues...
 			MissionSettings.MissionName = string.Empty;

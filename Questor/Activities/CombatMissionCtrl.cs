@@ -2422,7 +2422,7 @@ namespace Questor.Modules.Activities
 			// Clear the Pocket
 			_pocketActions.Add(new Actions.Action { State = ActionState.ClearPocket });
 			_pocketActions.Add(new Actions.Action { State = ActionState.ClearPocket });
-			_pocketActions.AddRange(LoadMissionActions(AgentInteraction.AgentId, PocketNumber, true));
+			_pocketActions.AddRange(LoadMissionActions(Cache.Instance.Agent.AgentId, PocketNumber, true));
 
 			//we manually add 2 ClearPockets above, then we try to load other mission XMLs for this pocket, if we fail Count will be 2 and we know we need to add an activate and/or a done action.
 			if (_pocketActions.Count() == 2)
@@ -2501,7 +2501,7 @@ namespace Questor.Modules.Activities
 
 				case CombatMissionCtrlState.LoadPocket:
 					_pocketActions.Clear();
-					_pocketActions.AddRange(LoadMissionActions(AgentInteraction.AgentId, PocketNumber, true));
+					_pocketActions.AddRange(LoadMissionActions(Cache.Instance.Agent.AgentId, PocketNumber, true));
 
 					//
 					// LogStatistics();

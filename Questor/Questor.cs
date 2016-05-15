@@ -704,8 +704,6 @@ namespace Questor
 				if (Cache.Instance.InSpace) pulseDelay = Time.Instance.QuestorPulseInSpace_milliseconds;
 				if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
 				
-				Cache.Instance.InvalidateCache();
-				
 				
 				
 				if (!OnframeProcessEveryPulse()) return;

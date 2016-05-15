@@ -1034,7 +1034,7 @@ namespace Questor.Modules.Actions
 				if (Logging.DebugArm) Logging.Log(WeAreInThisStateForLogs(), "Cache.Instance.BringOptionalMissionItemQuantity is [" + MissionSettings.MoveOptionalMissionItemQuantity + "]", Logging.Debug);
 				ItemHangarRetries = 0;
 				DroneBayRetries = 0;
-				RefreshMissionItems(AgentInteraction.AgentId);
+				RefreshMissionItems(Cache.Instance.Agent.AgentId);
 				_States.CurrentCombatState = CombatState.Idle;
 
 				ChangeArmState(ArmState.ActivateCombatShip);

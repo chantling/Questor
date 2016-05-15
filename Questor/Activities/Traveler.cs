@@ -282,6 +282,11 @@ namespace Questor.Modules.Activities
             // if we can't warp because we are scrambled, prevent next actions
             if (!_defendOnTravel(module))
                 return;
+            
+            if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
+            	Logging.Log("TravelToAgentsStation", "Agent not ready yet.. waiting...");
+            	return;
+            }
 
             if (Logging.DebugGotobase) Logging.Log(module, "TravelToAgentsStation:      Cache.Instance.AgentStationId [" + Cache.Instance.AgentStationID + "]", Logging.White);
             if (Logging.DebugGotobase) Logging.Log(module, "TravelToAgentsStation:  Cache.Instance.AgentSolarSystemId [" + Cache.Instance.AgentSolarSystemID + "]", Logging.White);

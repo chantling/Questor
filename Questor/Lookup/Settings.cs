@@ -1053,7 +1053,7 @@ namespace Questor.Modules.Lookup
 						if (Settings.Instance.CommonXMLExists) Logging.Log("Settings", "[" + SettingsLoadedICount + "] Done Loading Settings from [" + Settings.Instance.CommonSettingsPath + "] and", Logging.Green);
 						Logging.Log("Settings", "[" + SettingsLoadedICount + "] Done Loading Settings from [" + Logging.CharacterSettingsPath + "]", Logging.Green);
 
-						SettingsLoaded(this, new EventArgs());
+						//SettingsLoaded(this, new EventArgs());
 					}
 				}
 			} catch (Exception ex) {

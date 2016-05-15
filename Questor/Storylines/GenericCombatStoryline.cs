@@ -106,7 +106,7 @@ namespace Questor.Storylines
             if (_States.CurrentAgentInteractionState == AgentInteractionState.Done)
                 return true;
 
-            if (AgentInteraction.Agent == null)
+            if (Cache.Instance.Agent == null)
                 throw new Exception("Invalid agent");
 
             // Start the conversation
@@ -118,8 +118,8 @@ namespace Questor.Storylines
 
             if (_States.CurrentAgentInteractionState == AgentInteractionState.DeclineMission)
             {
-                if (AgentInteraction.Agent.Window != null)
-                    AgentInteraction.Agent.Window.Close();
+                if (Cache.Instance.Agent.Window != null)
+                    Cache.Instance.Agent.Window.Close();
                 Logging.Log("GenericCombatStoryline", "Mission offer is in a Low Security System or faction blacklisted.", Logging.Orange); //do storyline missions in lowsec get blacklisted by: "public StorylineState Arm(Storyline storyline)"?
                 throw new Exception("Low security systems");
             }

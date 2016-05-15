@@ -69,43 +69,6 @@ namespace Questor.Modules.Actions
 		}
 
 		public static bool UseStorylineAgentAsActiveAgent { get; set; }
-		private static long _agentId { get; set; }
-
-		public static long AgentId
-		{
-			get
-			{
-				if (UseStorylineAgentAsActiveAgent && Cache.Instance.CurrentStorylineAgentId != 0)
-				{
-					return Cache.Instance.CurrentStorylineAgentId;
-				}
-				
-				if(Cache.Instance.Agent != null && Cache.Instance.Agent.IsValid) {
-					_agentId = Cache.Instance.Agent.AgentId;
-				}
-				
-				return _agentId;
-			}
-			set
-			{
-				_agentId = value;
-			}
-		}
-
-		public static DirectAgent Agent
-		{
-			get
-			{
-				if(AgentId <= 0) return null;
-				DirectAgent _agent = Cache.Instance.DirectEve.GetAgentById(AgentId);
-				if(_agent != null && _agent.IsValid) {
-					Cache.Instance.AgentStationName = Cache.Instance.DirectEve.GetLocationName(_agent.StationId);
-					Cache.Instance.AgentStationID = _agent.StationId;
-					Cache.Instance.AgentSolarSystemID = _agent.SolarSystemId;
-				}
-				return _agent;
-			}
-		}
 
 		public static bool ForceAccept { get; set; }
 
@@ -115,6 +78,15 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
+					Logging.Log("Agent", "if(Cache.Instance.Agent == null || Cache.Instance.Agent.IsValid)");
+					return;
+				}
+				
+				var Agent = Cache.Instance.Agent;
+				var AgentId = Agent.AgentId;
+				
 				Cache.Instance.AgentEffectiveStandingtoMe = Cache.Instance.DirectEve.Standings.EffectiveStanding(AgentId, Cache.Instance.DirectEve.Session.CharacterId ?? -1);
 				Cache.Instance.AgentCorpEffectiveStandingtoMe = Cache.Instance.DirectEve.Standings.EffectiveStanding(Agent.CorpId, Cache.Instance.DirectEve.Session.CharacterId ?? -1);
 				Cache.Instance.AgentFactionEffectiveStandingtoMe = Cache.Instance.DirectEve.Standings.EffectiveStanding(Agent.FactionId, Cache.Instance.DirectEve.Session.CharacterId ?? -1);
@@ -129,7 +101,7 @@ namespace Questor.Modules.Actions
 				//
 				if (DateTime.UtcNow < _agentStandingsCheckTimeOut)
 				{
-					if (((float)Cache.Instance.StandingUsedToAccessAgent == (float)0.00) && (AgentId == AgentInteraction.AgentId))
+					if (((float)Cache.Instance.StandingUsedToAccessAgent == (float)0.00))
 					{
 						if (!_agentStandingsCheckFlag)
 						{
@@ -216,6 +188,17 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				
+				if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
+					Logging.Log("Agent", "if(Cache.Instance.Agent == null || Cache.Instance.Agent.IsValid)");
+					return;
+				}
+				
+				var Agent = Cache.Instance.Agent;
+				var AgentId = Agent.AgentId;
+				
+				
 				if (!OpenAgentWindow(module)) return;
 
 				if (DateTime.UtcNow < _lastAgentActionStateChange.AddMilliseconds(Cache.Instance.RandomNumber(800,1200))) return; //enforce a 4 sec wait after each state change
@@ -420,6 +403,17 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				
+				
+				if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
+					Logging.Log("Agent", "if(Cache.Instance.Agent == null || Cache.Instance.Agent.IsValid)");
+					return;
+				}
+				
+				var Agent = Cache.Instance.Agent;
+				var AgentId = Agent.AgentId;
+				
 				if (!OpenAgentWindow(module)) return;
 
 				if (!OpenJournalWindow(module)) return;
@@ -434,7 +428,7 @@ namespace Questor.Modules.Actions
 					}
 					if (DateTime.UtcNow.Subtract(_waitingOnMissionTimer).TotalSeconds > 30)
 					{
-						Logging.Log("AgentInteraction", "WaitForMission: Unable to find mission from that agent (yet?) : AgentInteraction.AgentId [" + AgentId + "] regular Mission AgentID [" + AgentInteraction._agentId + "]", Logging.Yellow);
+						Logging.Log("AgentInteraction", "WaitForMission: Unable to find mission from that agent (yet?) : AgentInteraction.AgentId [" + AgentId + "]", Logging.Yellow);
 						JournalWindow.Close();
 						if (DateTime.UtcNow.Subtract(_waitingOnMissionTimer).TotalSeconds > 120)
 						{
@@ -463,6 +457,16 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				
+				if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
+					Logging.Log("Agent", "if(Cache.Instance.Agent == null || Cache.Instance.Agent.IsValid)");
+					return;
+				}
+				
+				var Agent = Cache.Instance.Agent;
+				var AgentId = Agent.AgentId;
+				
 				if (MissionSettings.Mission != null)
 				{
 					MissionSettings.MissionName = Logging.FilterPath(MissionSettings.Mission.Name);
@@ -616,7 +620,7 @@ namespace Questor.Modules.Actions
 						lpCurrentMission += val;
 					}
 					
-					Statistics.LoyaltyPointsTotal = AgentInteraction.Agent.LoyaltyPoints;
+					Statistics.LoyaltyPointsTotal = Cache.Instance.Agent.LoyaltyPoints;
 					Statistics.LoyaltyPointsForCurrentMission = lpCurrentMission;
 					Statistics.ISKMissionReward = iskFinishedMission;
 					Cache.Instance.Wealth = Cache.Instance.DirectEve.Me.Wealth;
@@ -690,6 +694,16 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				
+				if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
+					Logging.Log("Agent", "if(Cache.Instance.Agent == null || Cache.Instance.Agent.IsValid)");
+					return;
+				}
+				
+				var Agent = Cache.Instance.Agent;
+				var AgentId = Agent.AgentId;
+				
 				if (!OpenAgentWindow(module)) return;
 
 				if (DateTime.UtcNow < _lastAgentActionStateChange.AddMilliseconds(Cache.Instance.RandomNumber(800,1200))) return; // was 4000
@@ -706,7 +720,7 @@ namespace Questor.Modules.Actions
 
 				if (DateTime.UtcNow < _lastAgentAction.AddMilliseconds(Cache.Instance.RandomNumber(500,700))) return; // was 1000
 
-				if (AgentInteraction.Agent.LoyaltyPoints == -1 && Agent.Level > 1)
+				if (Agent.LoyaltyPoints == -1 && Agent.Level > 1)
 				{
 					if (LoyaltyPointCounter < 3)
 					{
@@ -737,6 +751,16 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				
+				if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
+					Logging.Log("Agent", "if(Cache.Instance.Agent == null || Cache.Instance.Agent.IsValid)");
+					return;
+				}
+				
+				var Agent = Cache.Instance.Agent;
+				var AgentId = Agent.AgentId;
+				
 				if (!OpenAgentWindow(module)) return;
 
 				if (DateTime.UtcNow < _lastAgentActionStateChange.AddMilliseconds(Cache.Instance.RandomNumber(800,1200))) return; //enforce a 4 sec wait after each state change
@@ -879,6 +903,16 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				
+				if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
+					Logging.Log("Agent", "if(Cache.Instance.Agent == null || Cache.Instance.Agent.IsValid)");
+					return false;
+				}
+				
+				var Agent = Cache.Instance.Agent;
+				var AgentId = Agent.AgentId;
+				
 				MissionSettings.ClearFactionSpecificSettings();
 				DirectAgentWindow agentWindow = Agent.Window;
 				string html = agentWindow.Objective;
@@ -928,6 +962,16 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+				
+				
+				if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
+					Logging.Log("Agent", "if(Cache.Instance.Agent == null || Cache.Instance.Agent.IsValid)");
+					return;
+				}
+				
+				var Agent = Cache.Instance.Agent;
+				var AgentId = Agent.AgentId;
+				
 				if (Agent != null)
 				{
 					DirectAgentWindow agentWindow = Agent.Window;
@@ -961,13 +1005,24 @@ namespace Questor.Modules.Actions
 
 		public static bool OpenAgentWindow(string module)
 		{
+			
+			
+			
+			if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
+				Logging.Log("Agent", "if(Cache.Instance.Agent == null || Cache.Instance.Agent.IsValid)");
+				return false;
+			}
+			
+			var Agent = Cache.Instance.Agent;
+			var AgentId = Agent.AgentId;
+			
 			int _delayInSeconds = 0;
 			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(10) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
 			{
 				return false;
 			}
 
-			if (AgentInteraction.Agent.Window == null)
+			if (Agent.Window == null)
 			{
 				if (DateTime.UtcNow < _lastAgentAction.AddMilliseconds(Cache.GetRandom(1500,1700))) // was 3000 ms
 				{
@@ -975,20 +1030,20 @@ namespace Questor.Modules.Actions
 					return false;
 				}
 
-				if (Logging.DebugAgentInteractionReplyToAgent) Logging.Log(module, "Attempting to Interact with the agent named [" + AgentInteraction.Agent.Name + "] in [" + Cache.Instance.DirectEve.GetLocationName(AgentInteraction.Agent.SolarSystemId) + "]", Logging.Yellow);
-				AgentInteraction.Agent.InteractWith();
+				if (Logging.DebugAgentInteractionReplyToAgent) Logging.Log(module, "Attempting to Interact with the agent named [" + Agent.Name + "] in [" + Cache.Instance.DirectEve.GetLocationName(Agent.SolarSystemId) + "]", Logging.Yellow);
+				Agent.InteractWith();
 				_delayInSeconds = 4;
 				_lastAgentAction = DateTime.UtcNow;
 				Statistics.LogWindowActionToWindowLog("AgentWindow", "Opening AgentWindow");
 				return false;
 			}
 
-			if (!AgentInteraction.Agent.Window.IsReady)
+			if (!Agent.Window.IsReady)
 			{
 				return false;
 			}
 
-			if (AgentInteraction.Agent.Window.IsReady && AgentInteraction.AgentId == AgentInteraction.Agent.AgentId && DateTime.UtcNow > _agentWindowLastReady.AddSeconds(_delayInSeconds + 2))
+			if (Agent.Window.IsReady && AgentId ==  Agent.AgentId && DateTime.UtcNow > _agentWindowLastReady.AddSeconds(_delayInSeconds + 2))
 			{
 				_agentWindowLastReady = DateTime.UtcNow;
 				if (Logging.DebugAgentInteractionReplyToAgent) Logging.Log(module, "AgentWindow is ready: set _agentWindowLastReady = DateTime.UtcNow;", Logging.Yellow);

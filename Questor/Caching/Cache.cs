@@ -253,6 +253,10 @@ namespace Questor.Modules.Caching
 				_weapons = null;
 				_windows = null;
 				_wrecks = null;
+				
+				
+//				Logging.Log("Cache.InvalidateCache", "Cache invalidated.", Logging.Debug);
+				
 			}
 			catch (Exception exception)
 			{
@@ -640,41 +644,43 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		private static DateTime _lastAgentRetrievel = DateTime.MinValue;
+		
+		// save the last used agentname/id to be able to retrieve the current agent by id
+		private static String _agentName = String.Empty;
+		private static long _agentId = 0;
+		
 		public DirectAgent Agent
 		{
 			get
 			{
 				try
 				{
-					
-					if(_lastAgentRetrievel.AddSeconds(5) > DateTime.UtcNow && _agent == null) {
-						Logging.Log("Cache.Agent", "if(_lastAgentRetrievel.AddSeconds(5) > DateTime.UtcNow)");
-						return _agent;
-					}
-					
-					_lastAgentRetrievel = DateTime.UtcNow;
-					
 					if (Settings.Instance.CharacterXMLExists)
 					{
 						try
 						{
-							if (_agent == null)
+							if (_agent == null && (!CurrentAgent.Equals(_agentName) || _agentId <= 0))
 							{
 								Logging.Log("Cache.Agent","Trying to GetAgentByName", Logging.White);
 								_agent = Cache.Instance.DirectEve.GetAgentByName(CurrentAgent);
+								
+							}
+							
+							// if the agent hasn't been changed we can retrieve it by id, which is a lot faster
+							if(_agent == null && CurrentAgent.Equals(_agentName) && _agentId > 0) {
+								_agent = Cache.Instance.DirectEve.GetAgentById(_agentId);
 							}
 
 							if (_agent != null)
 							{
-								Logging.Log("Cache: CurrentAgent", "Processing Agent Info...", Logging.White);
+								Logging.Log("Cache: CurrentAgent", "AgentId [" + _agent.AgentId + "]", Logging.White);
 								Cache.Instance.AgentStationName = Cache.Instance.DirectEve.GetLocationName(Cache.Instance._agent.StationId);
 								Cache.Instance.AgentStationID = Cache.Instance._agent.StationId;
-
 								Cache.Instance.AgentSolarSystemID = Cache.Instance._agent.SolarSystemId;
-//								Logging.Log("Cache: CurrentAgent", "AgentStationName [" + Cache.Instance.AgentStationName + "]", Logging.White);
-//								Logging.Log("Cache: CurrentAgent", "AgentStationID [" + Cache.Instance.AgentStationID + "]", Logging.White);
-//								Logging.Log("Cache: CurrentAgent", "AgentSolarSystemID [" + Cache.Instance.AgentSolarSystemID + "]", Logging.White);
+								
+								
+								_agentName = CurrentAgent;
+								_agentId = _agent.AgentId;
 								
 								return _agent;
 							} else {
@@ -696,6 +702,9 @@ namespace Questor.Modules.Caching
 					Logging.Log("Cache.Agent", "Exception [" + exception + "]", Logging.Debug);
 					return null;
 				}
+			}
+			set {
+				_agent = null;
 			}
 		}
 		

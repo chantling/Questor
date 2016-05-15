@@ -102,16 +102,14 @@ namespace Questor.Behaviors
 				return false;
 			}
 
-			if (AgentInteraction.Agent == null || !AgentInteraction.Agent.IsValid)
+			if (Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid)
 			{
 				
 				if (Cache.Instance.Agent != null)
 				{
 					Logging.Log("Agent", "if (Cache.Instance.Agent != null) - AgentInteraction.AgentId = (long)Cache.Instance.Agent.AgentId", Logging.White);
 					
-					AgentInteraction.AgentId = (long)Cache.Instance.Agent.AgentId;
-					
-					if(AgentInteraction.Agent == null || !AgentInteraction.Agent.IsValid) {
+					if(Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid) {
 						
 						Logging.Log("Agent", "AgentInteraction.Agent == null || !AgentInteraction.Agent.IsValid", Logging.White);
 						ValidSettings = false;
@@ -397,7 +395,7 @@ namespace Questor.Behaviors
 
 			if (_States.CurrentAgentInteractionState == AgentInteractionState.Done)
 			{
-				MissionSettings.UpdateMissionName(AgentInteraction.AgentId);
+				MissionSettings.UpdateMissionName(Cache.Instance.Agent.AgentId);
 				_States.CurrentAgentInteractionState = AgentInteractionState.Idle;
 				ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState.Arm);
 				return;
@@ -643,11 +641,11 @@ namespace Questor.Behaviors
 			{
 				if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "GotoBase: We are at destination", Logging.White);
 				Cache.Instance.GotoBaseNow = false; //we are there - turn off the 'forced' gotobase
-				if (AgentInteraction.AgentId != 0)
+				if (Cache.Instance.Agent.AgentId != 0)
 				{
 					try
 					{
-						MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentInteraction.AgentId, true);
+						MissionSettings.Mission = Cache.Instance.GetAgentMission(Cache.Instance.Agent.AgentId, true);
 					}
 					catch (Exception exception)
 					{
@@ -757,7 +755,7 @@ namespace Questor.Behaviors
 					if (!Statistics.MissionLoggingCompleted)
 					{
 						if (Logging.DebugStatistics) Logging.Log("CombatMissionsBehavior.Idle", "Statistics.WriteMissionStatistics(AgentID);", Logging.Teal);
-						Statistics.WriteMissionStatistics(AgentInteraction.AgentId);
+						Statistics.WriteMissionStatistics(Cache.Instance.Agent.AgentId);
 						if (Logging.DebugStatistics) Logging.Log("CombatMissionsBehavior.Idle", "Done w Statistics.WriteMissionStatistics(AgentID);", Logging.Teal);
 						return;
 					}
@@ -926,16 +924,16 @@ namespace Questor.Behaviors
 
 				MissionBookmarkDestination missionDestination = Traveler.Destination as MissionBookmarkDestination;
 
-				if (missionDestination == null || missionDestination.AgentId != AgentInteraction.AgentId) // We assume that this will always work "correctly" (tm)
+				if (missionDestination == null || missionDestination.AgentId != Cache.Instance.Agent.AgentId) // We assume that this will always work "correctly" (tm)
 				{
 					string nameOfBookmark = "";
 					if (Settings.Instance.EveServerName == "Tranquility") nameOfBookmark = "Encounter";
 					if (Settings.Instance.EveServerName == "Serenity") nameOfBookmark = "遭遇战";
 					if (nameOfBookmark == "") nameOfBookmark = "Encounter";
-					if (MissionSettings.GetMissionBookmark(AgentInteraction.AgentId, nameOfBookmark) != null)
+					if (MissionSettings.GetMissionBookmark(Cache.Instance.Agent.AgentId, nameOfBookmark) != null)
 					{
-						Logging.Log("CombatMissionsBehavior", "Setting Destination to 1st bookmark from AgentID: " + AgentInteraction.AgentId + " with [" + nameOfBookmark + "] in the title", Logging.White);
-						Traveler.Destination = new MissionBookmarkDestination(MissionSettings.GetMissionBookmark(AgentInteraction.AgentId, nameOfBookmark));
+						Logging.Log("CombatMissionsBehavior", "Setting Destination to 1st bookmark from AgentID: " + Cache.Instance.Agent.AgentId + " with [" + nameOfBookmark + "] in the title", Logging.White);
+						Traveler.Destination = new MissionBookmarkDestination(MissionSettings.GetMissionBookmark(Cache.Instance.Agent.AgentId, nameOfBookmark));
 						if (Cache.Instance.DirectEve.Navigation.GetLocation(Traveler.Destination.SolarSystemId) != null)
 						{
 							Cache.Instance.MissionSolarSystem = Cache.Instance.DirectEve.Navigation.GetLocation(Traveler.Destination.SolarSystemId);
@@ -993,7 +991,7 @@ namespace Questor.Behaviors
 				{
 					Cache.LootAlreadyUnloaded = true;
 					_States.CurrentUnloadLootState = UnloadLootState.Idle;
-					MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentInteraction.AgentId, true);
+					MissionSettings.Mission = Cache.Instance.GetAgentMission(Cache.Instance.Agent.AgentId, true);
 
 					//if (Cache.Instance.Mission == null)
 					//{
@@ -1412,11 +1410,11 @@ namespace Questor.Behaviors
 			{
 				if (Logging.DebugGotobase) Logging.Log("CombatMissionsBehavior", "PrepareStorylineGotoBase: We are at destination", Logging.White);
 				Cache.Instance.GotoBaseNow = false; //we are there - turn off the 'forced' gotobase
-				if (AgentInteraction.AgentId != 0)
+				if (Cache.Instance.Agent.AgentId != 0)
 				{
 					try
 					{
-						MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentInteraction.AgentId, true);
+						MissionSettings.Mission = Cache.Instance.GetAgentMission(Cache.Instance.Agent.AgentId, true);
 					}
 					catch (Exception exception)
 					{
@@ -1772,6 +1770,7 @@ namespace Questor.Behaviors
 							Cache.Instance.CurrentAgent = agent.Name;
 							Cache.Instance.CurrentStorylineAgentId = agent.AgentId;
 							Cache.Instance.AgentStationID = agent.StationId;
+							Cache.Instance.Agent = null;
 							var a = Cache.Instance.Agent; // Update agent relevant attributes. The agent related redundancy needs to be recuded a lot.
 							
 							Logging.Log("CombatMissionsBehaviorState.PrepareStorylineSwitchAgents", "new agent is " + Cache.Instance.CurrentAgent, Logging.White);
@@ -1783,7 +1782,6 @@ namespace Questor.Behaviors
 							Logging.Log("CombatMissionsBehaviorState.PrepareStorylineSwitchAgents", "Storyline agent  error.", Logging.White);
 							_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;
 						}
-						
 						
 						break;
 
@@ -1801,7 +1799,7 @@ namespace Questor.Behaviors
 							DirectAgent a = Cache.Instance.Agent;
 							
 							if(a != null) {
-								AgentInteraction.AgentId = a.AgentId;
+								//AgentInteraction.AgentId = a.AgentId;
 							} else {
 								Logging.Log("CombatMissionsBehaviorState.PrepareStorylineSwitchAgents", "Storyline agent  error: agent == null", Logging.White);
 								_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;

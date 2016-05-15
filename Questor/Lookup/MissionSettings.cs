@@ -1079,10 +1079,10 @@ namespace Questor.Modules.Lookup
 			if (AgentID != 0)
 			{
 				MissionSettings.Mission = Cache.Instance.GetAgentMission(AgentID, true);
-				if (MissionSettings.Mission != null && AgentInteraction.Agent != null)
+				if (MissionSettings.Mission != null && Cache.Instance.Agent != null)
 				{
 					// Update loyalty points again (the first time might return -1)
-					Statistics.LoyaltyPointsTotal = AgentInteraction.Agent.LoyaltyPoints;
+					Statistics.LoyaltyPointsTotal = Cache.Instance.Agent.LoyaltyPoints;
 					MissionSettings.MissionName = MissionSettings.Mission.Name;
 				}
 			}
