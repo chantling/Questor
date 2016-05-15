@@ -568,6 +568,7 @@ namespace Questor.Modules.Caching
 			{
 				try
 				{
+					
 					if (Settings.Instance.CharacterXMLExists)
 					{
 						if (string.IsNullOrEmpty(_currentAgent))
@@ -575,40 +576,14 @@ namespace Questor.Modules.Caching
 							try
 							{
 								
-
-								// TODO: to use this, Unload & Arm needs to be modified to NOT arm/unload/load on the storyline agent station
-								//if(storyline != null && storyline.HasStoryline()) {
-								//	var agentId = storyline.StorylineMission.AgentId;
-								
-								//	if(agentId > 0) {
-								//		var agent = Cache.Instance.DirectEve.GetAgentById(agentId);
-								//		if(agent != null) {
-								//			Logging.Log("CurrentAgent","We got an open storyline mission, going to that agent.", Logging.White);
-								//			_currentAgent = agent.Name;
-								//			return agent.Name;
-								//		}
-								//	}
-								
-								//}
-								
-								if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1 && (!string.IsNullOrEmpty(SwitchAgent())))
-								{
-									_currentAgent = SwitchAgent();
+								if(MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1) {
+									
+									_currentAgent = SelectFirstAgent(true);
 									
 								} else
 								{
-									
-									if(MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1) {
-										
-										_currentAgent = SelectFirstAgent(true);
-										
-									} else
-									{
-										Logging.Log("Cache.CurrentAgent", "MissionSettings.ListOfAgents == null || MissionSettings.ListOfAgents.Count() < 1", Logging.White);
-									}
+									Logging.Log("Cache.CurrentAgent", "MissionSettings.ListOfAgents == null ", Logging.White);
 								}
-								
-								Logging.Log("Cache.CurrentAgent", "[ " + _currentAgent + " ] AgentID [ " + Agent.AgentId + " ]", Logging.White);
 								
 							}
 							catch (Exception ex)
@@ -642,77 +617,13 @@ namespace Questor.Modules.Caching
 			}
 		}
 		
-		private string SelectNearestAgent(bool requireValidDeclineTimer )
-		{
-			string agentName = null;
-
-			try
-			{
-				DirectAgentMission mission = null;
-
-				if (!MissionSettings.ListOfAgents.Any()) return string.Empty;
-				
-				// first we try to find if we accepted a mission (not important) given by an agent in settings agents list
-				foreach (AgentsList potentialAgent in MissionSettings.ListOfAgents)
-				{
-					if (Cache.Instance.DirectEve.AgentMissions.Any(m => m.State == (int)MissionState.Accepted && !m.Important && DirectEve.GetAgentById(m.AgentId).Name == potentialAgent.Name))
-					{
-						mission = Cache.Instance.DirectEve.AgentMissions.FirstOrDefault(m => m.State == (int)MissionState.Accepted && !m.Important && DirectEve.GetAgentById(m.AgentId).Name == potentialAgent.Name);
-
-						// break on first accepted (not important) mission found
-						break;
-					}
-				}
-
-				if (mission != null)
-				{
-					agentName = DirectEve.GetAgentById(mission.AgentId).Name;
-				}
-				// no accepted (not important) mission found, so we need to find the nearest agent in our settings agents list
-				else if (Cache.Instance.DirectEve.Session.IsReady)
-				{
-					try
-					{
-						Func<DirectAgent, DirectSession, bool> selector = DirectEve.Session.IsInSpace ? AgentInThisSolarSystemSelector : AgentInThisStationSelector;
-						var nearestAgent = MissionSettings.ListOfAgents
-							.Where(x => !requireValidDeclineTimer || DateTime.UtcNow >= x.DeclineTimer)
-							.OrderBy(x => x.Priorit)
-							.Select(x => new { Agent = x, DirectAgent = DirectEve.GetAgentByName(x.Name) })
-							.FirstOrDefault(x => selector(x.DirectAgent, DirectEve.Session));
-
-						if (nearestAgent != null)
-						{
-							agentName = nearestAgent.Agent.Name;
-						}
-						else if (MissionSettings.ListOfAgents.OrderBy(j => j.Priorit).Any())
-						{
-							AgentsList __HighestPriorityAgentInList = MissionSettings.ListOfAgents
-								.Where(x => !requireValidDeclineTimer || DateTime.UtcNow >= x.DeclineTimer)
-								.OrderBy(x => x.Priorit)
-								.FirstOrDefault();
-							if (__HighestPriorityAgentInList != null)
-							{
-								agentName = __HighestPriorityAgentInList.Name;
-							}
-						}
-					}
-					catch (NullReferenceException) {}
-				}
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("SelectNearestAgent", "Exception [" + ex + "]", Logging.Debug);
-			}
-
-			return agentName ?? null;
-		}
-
 		public string SelectFirstAgent(bool returnFirstOneIfNoneFound = false)
 		{
 			try
 			{
 				
-				AgentsList FirstAgent = MissionSettings.ListOfAgents.OrderBy(j => j.Priorit).FirstOrDefault();
+				if (!MissionSettings.ListOfAgents.Any()) return string.Empty;
+				AgentsList FirstAgent = MissionSettings.ListOfAgents.FirstOrDefault();
 
 				if (FirstAgent != null)
 				{
@@ -729,80 +640,21 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		public string SwitchAgent()
-		{
-			try
-			{
-				string agentNameToSwitchTo = null;
-
-//				if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.PrepareStorylineSwitchAgents)
-//				{
-//					//TODO: must be a better way to achieve this
-//
-//					var storyLineMissions = Cache.Instance.DirectEve.AgentMissions.Where(m => m.Important);
-//					if(storyLineMissions.Any()) {
-//
-//					}
-//
-//					return string.Empty;
-//				}
-				
-				if (string.IsNullOrEmpty(_currentAgent))
-				{
-					// it means that this is first switch for Questor, so we'll check missions, then station or system for agents.
-					AllAgentsStillInDeclineCoolDown = false;
-					if (!string.IsNullOrEmpty(SelectNearestAgent(true)))
-					{
-						agentNameToSwitchTo = SelectNearestAgent(true);
-						return agentNameToSwitchTo;
-					}
-
-					if (!string.IsNullOrEmpty(SelectNearestAgent(false)))
-					{
-						agentNameToSwitchTo = SelectNearestAgent(false);
-						return agentNameToSwitchTo;
-					}
-
-					return string.Empty;
-				}
-				
-				// find agent by priority and with ok declineTimer
-				AgentsList agentToUseByPriority = MissionSettings.ListOfAgents.OrderBy(j => j.Priorit).FirstOrDefault(i => DateTime.UtcNow >= i.DeclineTimer);
-
-				if (agentToUseByPriority != null)
-				{
-					AllAgentsStillInDeclineCoolDown = false; //this literally means we DO have agents available (at least one agents decline timer has expired and is clear to use)
-					return agentToUseByPriority.Name;
-				}
-				
-				// Why try to find an agent at this point ?
-				/*
-                try
-                {
-                    agent = Settings.Instance.ListOfAgents.OrderBy(j => j.Priorit).FirstOrDefault();
-                }
-                catch (Exception ex)
-                {
-                    Logging.Log("Cache.SwitchAgent", "Unable to process agent section of [" + Settings.Instance.CharacterSettingsPath + "] make sure you have a valid agent listed! Pausing so you can fix it. [" + ex.Message + "]", Logging.Debug);
-                    Cache.Instance.Paused = true;
-                }
-				 */
-				AllAgentsStillInDeclineCoolDown = true; //this literally means we have no agents available at the moment (decline timer likely)
-				return null;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.SwitchAgent", "Exception [" + exception + "]", Logging.Debug);
-				return null;
-			}
-		}
-
+		private static DateTime _lastAgentRetrievel = DateTime.MinValue;
 		public DirectAgent Agent
 		{
 			get
 			{
 				try
 				{
+					
+					if(_lastAgentRetrievel.AddSeconds(5) > DateTime.UtcNow && _agent == null) {
+						Logging.Log("Cache.Agent", "if(_lastAgentRetrievel.AddSeconds(5) > DateTime.UtcNow)");
+						return _agent;
+					}
+					
+					_lastAgentRetrievel = DateTime.UtcNow;
+					
 					if (Settings.Instance.CharacterXMLExists)
 					{
 						try
@@ -815,7 +667,7 @@ namespace Questor.Modules.Caching
 
 							if (_agent != null)
 							{
-//								Logging.Log("Cache: CurrentAgent", "Processing Agent Info...", Logging.White);
+								Logging.Log("Cache: CurrentAgent", "Processing Agent Info...", Logging.White);
 								Cache.Instance.AgentStationName = Cache.Instance.DirectEve.GetLocationName(Cache.Instance._agent.StationId);
 								Cache.Instance.AgentStationID = Cache.Instance._agent.StationId;
 

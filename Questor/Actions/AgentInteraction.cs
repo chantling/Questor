@@ -80,6 +80,10 @@ namespace Questor.Modules.Actions
 					return Cache.Instance.CurrentStorylineAgentId;
 				}
 				
+				if(Cache.Instance.Agent != null && Cache.Instance.Agent.IsValid) {
+					_agentId = Cache.Instance.Agent.AgentId;
+				}
+				
 				return _agentId;
 			}
 			set
@@ -92,6 +96,7 @@ namespace Questor.Modules.Actions
 		{
 			get
 			{
+				if(AgentId <= 0) return null;
 				DirectAgent _agent = Cache.Instance.DirectEve.GetAgentById(AgentId);
 				if(_agent != null && _agent.IsValid) {
 					Cache.Instance.AgentStationName = Cache.Instance.DirectEve.GetLocationName(_agent.StationId);
@@ -105,44 +110,6 @@ namespace Questor.Modules.Actions
 		public static bool ForceAccept { get; set; }
 
 		public static AgentInteractionPurpose Purpose { get; set; }
-
-		private static bool MyStandingsAreTooLowSwitchAgents()
-		{
-			try
-			{
-				Cache.Instance.AgentEffectiveStandingtoMe = Cache.Instance.DirectEve.Standings.EffectiveStanding(AgentId, Cache.Instance.DirectEve.Session.CharacterId ?? -1);
-				Cache.Instance.AgentCorpEffectiveStandingtoMe = Cache.Instance.DirectEve.Standings.EffectiveStanding(Agent.CorpId, Cache.Instance.DirectEve.Session.CharacterId ?? -1);
-				Cache.Instance.AgentFactionEffectiveStandingtoMe = Cache.Instance.DirectEve.Standings.EffectiveStanding(Agent.FactionId, Cache.Instance.DirectEve.Session.CharacterId ?? -1);
-
-				Cache.Instance.StandingUsedToAccessAgent = Math.Max(Cache.Instance.AgentEffectiveStandingtoMe, Math.Max(Cache.Instance.AgentCorpEffectiveStandingtoMe, Cache.Instance.AgentFactionEffectiveStandingtoMe));
-				AgentsList currentAgent = MissionSettings.ListOfAgents.FirstOrDefault(i => i.Name == Cache.Instance.CurrentAgent);
-
-				//
-				//Change Agents
-				//
-				if (currentAgent != null)
-				{
-					Logging.Log("MyStandingsAreTooLowSwitchAgents", "Setting DeclineTimer on [" + Cache.Instance.CurrentAgent + "] to 16 hours", Logging.Yellow);
-					currentAgent.DeclineTimer = DateTime.UtcNow.AddHours(16);
-					CloseConversation();
-				}
-				
-				if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() > 1 && !string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
-				{
-					Cache.Instance.CurrentAgent = string.Empty;
-					Logging.Log("MyStandingsAreTooLowSwitchAgents", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
-					_States.CurrentAgentInteractionState = AgentInteractionState.ChangeAgent;
-					return true;
-				}
-				
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("MyStandingsAreTooLowSwitchAgents", "Exception [" + exception + "]", Logging.Teal);
-				return false;
-			}
-		}
 
 		private static void StartConversation(string module)
 		{
@@ -185,7 +152,6 @@ namespace Questor.Modules.Actions
 						if (Cache.Instance.StandingUsedToAccessAgent < StandingsNeededToAccessLevel1Agent)
 						{
 							Logging.Log("AgentInteraction.StartConversation", "Our Standings to [" + Agent.Name + "] are [" + Cache.Instance.StandingUsedToAccessAgent + "] < [" + StandingsNeededToAccessLevel1Agent + "]", Logging.Orange);
-							if (!MyStandingsAreTooLowSwitchAgents()) return;
 							return;
 						}
 						break;
@@ -194,7 +160,6 @@ namespace Questor.Modules.Actions
 						if (Cache.Instance.StandingUsedToAccessAgent < StandingsNeededToAccessLevel2Agent)
 						{
 							Logging.Log("AgentInteraction.StartConversation", "Our Standings to [" + Agent.Name + "] are [" + Cache.Instance.StandingUsedToAccessAgent + "] < [" + StandingsNeededToAccessLevel2Agent + "]", Logging.Orange);
-							if (!MyStandingsAreTooLowSwitchAgents()) return;
 							return;
 						}
 						break;
@@ -203,7 +168,6 @@ namespace Questor.Modules.Actions
 						if (Cache.Instance.StandingUsedToAccessAgent < StandingsNeededToAccessLevel3Agent)
 						{
 							Logging.Log("AgentInteraction.StartConversation", "Our Standings to [" + Agent.Name + "] are [" + Cache.Instance.StandingUsedToAccessAgent + "] < [" + StandingsNeededToAccessLevel3Agent + "]", Logging.Orange);
-							if (!MyStandingsAreTooLowSwitchAgents()) return;
 							return;
 						}
 						break;
@@ -212,7 +176,6 @@ namespace Questor.Modules.Actions
 						if (Cache.Instance.StandingUsedToAccessAgent < StandingsNeededToAccessLevel4Agent)
 						{
 							Logging.Log("AgentInteraction.StartConversation", "Our Standings to [" + Agent.Name + "] are [" + Cache.Instance.StandingUsedToAccessAgent + "] < [" + StandingsNeededToAccessLevel4Agent + "]", Logging.Orange);
-							if (!MyStandingsAreTooLowSwitchAgents()) return;
 							return;
 						}
 						break;
@@ -221,7 +184,6 @@ namespace Questor.Modules.Actions
 						if (Cache.Instance.StandingUsedToAccessAgent < StandingsNeededToAccessLevel5Agent)
 						{
 							Logging.Log("AgentInteraction.StartConversation", "Our Standings to [" + Agent.Name + "] are [" + Cache.Instance.StandingUsedToAccessAgent + "] < [" + StandingsNeededToAccessLevel5Agent + "]", Logging.Orange);
-							if (!MyStandingsAreTooLowSwitchAgents()) return;
 							return;
 						}
 						break;
@@ -312,13 +274,6 @@ namespace Questor.Modules.Actions
 							_currentAgent.DeclineTimer = DateTime.UtcNow.AddDays(5);
 						}
 						CloseConversation();
-
-						if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() > 1 && !string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
-						{
-							Cache.Instance.CurrentAgent = string.Empty;
-							Logging.Log("AgentInteraction.ReplyToAgent", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
-							ChangeAgentInteractionState(AgentInteractionState.ChangeAgent, true);
-						}
 						
 						return;
 					}
@@ -877,26 +832,6 @@ namespace Questor.Modules.Actions
 							ChangeAgentInteractionState(AgentInteractionState.StartConversation, true);
 							return;
 						}
-					}
-
-					if (!Cache.Instance.AllAgentsStillInDeclineCoolDown &&  MissionSettings.ListOfAgents.Count() > 1)
-					{
-						
-						//
-						//Change Agents
-						//
-						Logging.Log("AgentInteraction.DeclineMission", "Setting DeclineTimer on [" + Cache.Instance.CurrentAgent + "] to [" + secondsToWait + "] seconds from now", Logging.Yellow);
-						if (_currentAgent != null) _currentAgent.DeclineTimer = DateTime.UtcNow.AddSeconds(secondsToWait);
-						CloseConversation();
-
-						if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() > 1 && !string.IsNullOrEmpty(Cache.Instance.SwitchAgent()))
-						{
-							Cache.Instance.CurrentAgent = string.Empty;
-							Logging.Log("AgentInteraction.DeclineMission", "new agent is " + Cache.Instance.CurrentAgent, Logging.Yellow);
-							ChangeAgentInteractionState(AgentInteractionState.ChangeAgent, true);
-						}
-						
-						return;
 					}
 
 					Logging.Log("AgentInteraction.DeclineMission", "Current standings [" + Math.Round(Cache.Instance.StandingUsedToAccessAgent, 2) + "] is above our configured minimum [" + MissionSettings.MinAgentBlackListStandings + "].  Declining [" + MissionSettings.Mission.Name + "] note: WaitDecline is false", Logging.Yellow);

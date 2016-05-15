@@ -643,7 +643,7 @@ namespace Questor
 			try {
 				
 				lock(Lock) {
-					if (logListbox.Items.Count >= 100)
+					if (logListbox.Items.Count >= 1000)
 					{
 						logListbox.Items.Clear();
 					}

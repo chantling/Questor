@@ -175,7 +175,7 @@ namespace Questor.Modules.Lookup
 
 		public string TravelToBookmarkPrefix { get; set; }
 
-		public string UndockBookmarkPrefix { get; set; } 
+		public string UndockBookmarkPrefix { get; set; }
 		
 		//
 		// EVE Process Memory Ceiling and EVE wallet balance Change settings
@@ -185,20 +185,6 @@ namespace Questor.Modules.Lookup
 		public string WalletBalanceChangeLogOffDelayLogoffOrExit { get; set; }
 
 		public Int64 EVEProcessMemoryCeiling { get; set; }
-		public bool CloseQuestorCMDUplinkInnerspaceProfile { get; set; }
-		public bool CloseQuestorCMDUplinkIsboxerCharacterSet { get; set; }
-		public bool CloseQuestorAllowRestart { get; set; }
-		public bool CloseQuestorArbitraryOSCmd { get; set; }
-		public string CloseQuestorOSCmdContents { get; set; }
-		public bool LoginQuestorArbitraryOSCmd { get; set; }
-		public string LoginQuestorOSCmdContents { get; set; }
-		public bool LoginQuestorLavishScriptCmd { get; set; }
-		public string LoginQuestorLavishScriptContents { get; set; }
-		public bool MinimizeEveAfterStartingUp { get; set; }
-		
-		public string LavishIsBoxerCharacterSet { get; set; }
-		public string LavishInnerspaceProfile { get; set; }
-		public string LavishGame { get; set; }
 
 		//
 		// Script Settings - TypeIDs for the scripts you would like to use in these modules
@@ -208,7 +194,7 @@ namespace Questor.Modules.Lookup
 		public int TrackingLinkScript { get; private set; }
 		public int SensorBoosterScript { get; private set; }
 		public int SensorDampenerScript { get; private set; }
-		public int AncillaryShieldBoosterScript { get; private set; } //they are not scripts, but they work the same, but are consumable for our purposes that does not matter
+		public int AncillaryShieldBoosterScript { get; private set; }
 		public int CapacitorInjectorScript { get; private set; }      //they are not scripts, but they work the same, but are consumable for our purposes that does not matter
 		public int NumberOfCapBoostersToLoad { get; private set; }
 		//
@@ -217,46 +203,6 @@ namespace Questor.Modules.Lookup
 		//
 		public bool OverloadWeapons { get; set; }
 		
-		//
-		// Questor GUI location settings
-		//
-		public int? WindowXPosition { get; set; }
-		public int? WindowYPosition { get; set; }
-		public int? EVEWindowXPosition { get; set; }
-		public int? EVEWindowYPosition { get; set; }
-		public int? EVEWindowXSize { get; set; }
-		public int? EVEWindowYSize { get; set; }
-
-		//
-		// Email SMTP settings
-		//
-		public bool EmailSupport { get; private set; }
-		public string EmailAddress { get; private set; }
-		public string EmailPassword { get; private set; }
-		public string EmailSMTPServer { get; private set; }
-		public int EmailSMTPPort { get; private set; }
-		public string EmailAddressToSendAlerts { get; set; }
-		public bool? EmailEnableSSL { get; private set; }
-
-		//
-		// Skill Training Settings
-		//
-		public bool ThisToonShouldBeTrainingSkills { get; set; } //as opposed to another toon on the same account
-
-		public string UserDefinedLavishScriptScript1 { get; set; }
-		public string UserDefinedLavishScriptScript1Description { get; set; }
-		public string UserDefinedLavishScriptScript2 { get; set; }
-		public string UserDefinedLavishScriptScript2Description { get; set; }
-		public string UserDefinedLavishScriptScript3 { get; set; }
-		public string UserDefinedLavishScriptScript3Description { get; set; }
-		public string UserDefinedLavishScriptScript4 { get; set; }
-		public string UserDefinedLavishScriptScript4Description { get; set; }
-
-		public string LoadQuestorDebugInnerspaceCommandAlias { get; set; }
-		public string LoadQuestorDebugInnerspaceCommand { get; set; }
-		public string UnLoadQuestorDebugInnerspaceCommandAlias { get; set; }
-		public string UnLoadQuestorDebugInnerspaceCommand { get; set; }
-
 		//
 		// path information - used to load the XML and used in other modules
 		//
@@ -411,13 +357,13 @@ namespace Questor.Modules.Lookup
 				DetailedCurrentTargetHealthLogging = (bool?)CharacterSettingsXml.Element("detailedCurrentTargetHealthLogging") ?? (bool?)CommonSettingsXml.Element("detailedCurrentTargetHealthLogging") ?? true;
 				
 				
+				
+				
+				
 				BuyAmmo = (bool?)CharacterSettingsXml.Element("buyAmmo") ?? (bool?)CommonSettingsXml.Element("buyAmmo") ?? false;
 				BuyAmmoStationID = (int?)CharacterSettingsXml.Element("buyAmmoStationID") ?? (int?)CommonSettingsXml.Element("buyAmmoStationID") ?? 60003760;
 				
 				DefendWhileTraveling = (bool?)CharacterSettingsXml.Element("defendWhileTraveling") ?? (bool?)CommonSettingsXml.Element("defendWhileTraveling") ?? true;
-				//DisableAutoBackgroundMoveToGate = (bool?)CharacterSettingsXml.Element("disableAutoBackgroundMoveToGate") ?? (bool?)CommonSettingsXml.Element("disableAutoBackgroundMoveToGate") ?? false;
-				//Logging.UseInnerspace = (bool?)CharacterSettingsXml.Element("useInnerspace") ?? (bool?)CommonSettingsXml.Element("useInnerspace") ?? true;
-				//setEveClientDestinationWhenTraveling = (bool?)CharacterSettingsXml.Element("setEveClientDestinationWhenTraveling") ?? (bool?)CommonSettingsXml.Element("setEveClientDestinationWhenTraveling") ?? false;
 				TargetSelectionMethod = (string)CharacterSettingsXml.Element("targetSelectionMethod") ?? (string)CommonSettingsXml.Element("targetSelectionMethod") ?? "isdp"; //other choice is "old"
 				CharacterToAcceptInvitesFrom = (string)CharacterSettingsXml.Element("characterToAcceptInvitesFrom") ?? (string)CommonSettingsXml.Element("characterToAcceptInvitesFrom") ?? Settings.Instance.CharacterName;
 				MemoryManagerTrimThreshold = (long?)CharacterSettingsXml.Element("memoryManagerTrimThreshold") ?? (long?)CommonSettingsXml.Element("memoryManagerTrimThreshold") ?? 524288000;
@@ -447,12 +393,7 @@ namespace Questor.Modules.Lookup
 				Disable3D = (bool?)CharacterSettingsXml.Element("disable3D") ?? (bool?)CommonSettingsXml.Element("disable3D") ?? false; // Disable3d graphics while in space
 				RandomDelay = (int?)CharacterSettingsXml.Element("randomDelay") ?? (int?)CommonSettingsXml.Element("randomDelay") ?? 0;
 				MinimumDelay = (int?)CharacterSettingsXml.Element("minimumDelay") ?? (int?)CommonSettingsXml.Element("minimumDelay") ?? 0;
-
-				//if (!Cache.Instance.DirectEve.Login.AtLogin || DateTime.UtcNow > Time.Instance.QuestorStarted_DateTime.AddMinutes(1))
-				//{
-				//
-				// Enable / Disable Major Features that do not have categories of their own below
-				//
+				
 				try
 				{
 					UseFittingManager = (bool?)CharacterSettingsXml.Element("UseFittingManager") ?? (bool?)CommonSettingsXml.Element("UseFittingManager") ?? true;
@@ -644,7 +585,7 @@ namespace Questor.Modules.Lookup
 				//
 				try
 				{
-
+					
 					Salvage.LootEverything = (bool?)CharacterSettingsXml.Element("lootEverything") ?? (bool?)CommonSettingsXml.Element("lootEverything") ?? true;
 					Salvage.UseGatesInSalvage = (bool?)CharacterSettingsXml.Element("useGatesInSalvage") ?? (bool?)CommonSettingsXml.Element("useGatesInSalvage") ?? false;
 
@@ -652,8 +593,6 @@ namespace Questor.Modules.Lookup
 					Salvage.CreateSalvageBookmarks = (bool?)CharacterSettingsXml.Element("createSalvageBookmarks") ?? (bool?)CommonSettingsXml.Element("createSalvageBookmarks") ?? false;
 					Salvage.CreateSalvageBookmarksIn = (string)CharacterSettingsXml.Element("createSalvageBookmarksIn") ?? (string)CommonSettingsXml.Element("createSalvageBookmarksIn") ?? "Player";
 
-					//Player or Corp
-					//other setting is "Corp"
 					BookmarkPrefix = (string)CharacterSettingsXml.Element("bookmarkPrefix") ?? (string)CommonSettingsXml.Element("bookmarkPrefix") ?? "Salvage:";
 					SafeSpotBookmarkPrefix = (string)CharacterSettingsXml.Element("safeSpotBookmarkPrefix") ?? (string)CommonSettingsXml.Element("safeSpotBookmarkPrefix") ?? "safespot";
 					BookmarkFolder = (string)CharacterSettingsXml.Element("bookmarkFolder") ?? (string)CommonSettingsXml.Element("bookmarkFolder") ?? "Salvage:";
@@ -724,37 +663,13 @@ namespace Questor.Modules.Lookup
 				{
 					Logging.Log("Settings", "Error Loading Weapon and targeting Settings [" + exception + "]", Logging.Teal);
 				}
+				// ------------------
 
 				//
 				// Script and Booster Settings - TypeIDs for the scripts you would like to use in these modules
 				//
 				try
 				{
-					// 29003 Focused Warp Disruption Script   // hictor and InfiniPoint
-					//
-					// 29007 Tracking Speed Disruption Script // tracking disruptor
-					// 29005 Optimal Range Disruption Script  // tracking disruptor
-					// 29011 Scan Resolution Script           // sensor booster
-					// 29009 Targeting Range Script           // sensor booster
-					// 29015 Targeting Range Dampening Script // sensor dampener
-					// 29013 Scan Resolution Dampening Script // sensor dampener
-					// 29001 Tracking Speed Script            // tracking enhancer and tracking computer
-					// 28999 Optimal Range Script             // tracking enhancer and tracking computer
-
-					// 3554  Cap Booster 100
-					// 11283 Cap Booster 150
-					// 11285 Cap Booster 200
-					// 263   Cap Booster 25
-					// 11287 Cap Booster 400
-					// 264   Cap Booster 50
-					// 3552  Cap Booster 75
-					// 11289 Cap Booster 800
-					// 31982 Navy Cap Booster 100
-					// 31990 Navy Cap Booster 150
-					// 31998 Navy Cap Booster 200
-					// 32006 Navy Cap Booster 400
-					// 32014 Navy Cap Booster 800
-
 					TrackingDisruptorScript = (int?)CharacterSettingsXml.Element("trackingDisruptorScript") ?? (int?)CommonSettingsXml.Element("trackingDisruptorScript") ?? (int)TypeID.TrackingSpeedDisruptionScript;
 					TrackingComputerScript = (int?)CharacterSettingsXml.Element("trackingComputerScript") ?? (int?)CommonSettingsXml.Element("trackingComputerScript") ?? (int)TypeID.TrackingSpeedScript;
 					TrackingLinkScript = (int?)CharacterSettingsXml.Element("trackingLinkScript") ?? (int?)CommonSettingsXml.Element("trackingLinkScript") ?? (int)TypeID.TrackingSpeedScript;
@@ -763,11 +678,7 @@ namespace Questor.Modules.Lookup
 					AncillaryShieldBoosterScript = (int?)CharacterSettingsXml.Element("ancillaryShieldBoosterScript") ?? (int?)CommonSettingsXml.Element("ancillaryShieldBoosterScript") ?? (int)TypeID.AncillaryShieldBoosterScript;
 					CapacitorInjectorScript = (int?)CharacterSettingsXml.Element("capacitorInjectorScript") ?? (int?)CommonSettingsXml.Element("capacitorInjectorScript") ?? (int)TypeID.CapacitorInjectorScript;
 					NumberOfCapBoostersToLoad = (int?)CharacterSettingsXml.Element("capacitorInjectorToLoad") ?? (int?)CommonSettingsXml.Element("capacitorInjectorToLoad") ?? (int?)CharacterSettingsXml.Element("capBoosterToLoad") ?? (int?)CommonSettingsXml.Element("capBoosterToLoad") ?? 15;
-
-					//
-					// OverLoad Settings (this WILL burn out modules, likely very quickly!
-					// If you enable the overloading of a slot it is HIGHLY recommended you actually have something overloadable in that slot =/
-					//
+					
 					OverloadWeapons = (bool?)CharacterSettingsXml.Element("overloadWeapons") ?? (bool?)CommonSettingsXml.Element("overloadWeapons") ?? false;
 
 				}
@@ -828,6 +739,8 @@ namespace Questor.Modules.Lookup
 				{
 					Logging.Log("Settings", "Error Loading Panic Settings [" + exception + "]", Logging.Teal);
 				}
+				// ------------------
+				
 
 				//
 				// Drone Settings
@@ -856,7 +769,9 @@ namespace Questor.Modules.Lookup
 				{
 					Logging.Log("Settings", "Error Loading Drone Settings [" + exception + "]", Logging.Teal);
 				}
-
+				
+				
+				// ------------------ fine until here
 				//
 				// Ammo settings
 				//
@@ -881,6 +796,10 @@ namespace Questor.Modules.Lookup
 				{
 					Logging.Log("Settings", "Error Loading Ammo Settings [" + exception + "]", Logging.Teal);
 				}
+				
+				
+				// ------------------ fine until here without the even listener
+			
 
 				//
 				// List of Agents we should use
@@ -917,6 +836,8 @@ namespace Questor.Modules.Lookup
 				{
 					Logging.Log("Settings", "Error Loading Agent Settings [" + exception + "]", Logging.Teal);
 				}
+				
+				//return;
 
 				//
 				// Loading Mission Blacklists/GreyLists
@@ -949,71 +870,9 @@ namespace Questor.Modules.Lookup
 					Logging.Log("Settings", "Error Loading AgentStandings requirements [" + exception + "]", Logging.Teal);
 				}
 
-				//
-				// Skill Training Settings
-				//
-				ThisToonShouldBeTrainingSkills = (bool?)CharacterSettingsXml.Element("thisToonShouldBeTrainingSkills") ?? (bool?)CommonSettingsXml.Element("thisToonShouldBeTrainingSkills") ?? true;
-				//}
-
-				//
-				// Location of the Questor GUI on startup (default is off the screen)
-				//
-				//X Questor GUI window position (needs to be changed, default is off screen)
-				WindowXPosition = (int?)CharacterSettingsXml.Element("windowXPosition") ?? (int?)CommonSettingsXml.Element("windowXPosition") ?? 1;
-
-				//Y Questor GUI window position (needs to be changed, default is off screen)
-				WindowYPosition = (int?)CharacterSettingsXml.Element("windowYPosition") ?? (int?)CommonSettingsXml.Element("windowYPosition") ?? 1;
-
-				//
-				// Location of the EVE Window on startup (default is to leave the window alone)
-				//
-				try
-				{
-					//EVE Client window position
-					EVEWindowXPosition = (int?)CharacterSettingsXml.Element("eveWindowXPosition") ?? (int?)CommonSettingsXml.Element("eveWindowXPosition") ?? 0;
-
-					//EVE Client window position
-					EVEWindowYPosition = (int?)CharacterSettingsXml.Element("eveWindowYPosition") ?? (int?)CommonSettingsXml.Element("eveWindowYPosition") ?? 0;
-
-					//
-					// Size of the EVE Window on startup (default is to leave the window alone)
-					// This CAN and WILL distort the proportions of the EVE client if you configure it to do so.
-					// ISBOXER arguably does this with more elegance...
-					//
-					//EVE Client window position
-					EVEWindowXSize = (int?)CharacterSettingsXml.Element("eveWindowXSize") ?? (int?)CommonSettingsXml.Element("eveWindowXSize") ?? 0;
-
-					//EVE Client window position
-					EVEWindowYSize = (int?)CharacterSettingsXml.Element("eveWindowYSize") ?? (int?)CommonSettingsXml.Element("eveWindowYSize") ?? 0;
-				}
-				catch
-				{
-					Logging.Log("Settings", "Invalid Format for eveWindow Settings - skipping", Logging.Teal);
-				}
-
-				//
 				// at what memory usage do we need to restart this session?
 				//
 				EVEProcessMemoryCeiling = (int?)CharacterSettingsXml.Element("EVEProcessMemoryCeiling") ?? (int?)CommonSettingsXml.Element("EVEProcessMemoryCeiling") ?? 2048;
-
-				CloseQuestorCMDUplinkInnerspaceProfile = (bool?)CharacterSettingsXml.Element("CloseQuestorCMDUplinkInnerspaceProfile") ?? (bool?)CommonSettingsXml.Element("CloseQuestorCMDUplinkInnerspaceProfile") ?? true;
-				CloseQuestorCMDUplinkIsboxerCharacterSet = (bool?)CharacterSettingsXml.Element("CloseQuestorCMDUplinkIsboxerCharacterSet") ?? (bool?)CommonSettingsXml.Element("CloseQuestorCMDUplinkIsboxerCharacterSet") ?? false;
-				CloseQuestorAllowRestart = (bool?)CharacterSettingsXml.Element("CloseQuestorAllowRestart") ?? (bool?)CommonSettingsXml.Element("CloseQuestorAllowRestart") ?? true;
-				CloseQuestorArbitraryOSCmd = (bool?)CharacterSettingsXml.Element("CloseQuestorArbitraryOSCmd") ?? (bool?)CommonSettingsXml.Element("CloseQuestorArbitraryOSCmd") ?? false;
-
-				//true or false
-				CloseQuestorOSCmdContents = (string)CharacterSettingsXml.Element("CloseQuestorOSCmdContents") ?? (string)CommonSettingsXml.Element("CloseQuestorOSCmdContents") ?? "cmd /k (date /t && time /t && echo. && echo. && echo Questor is configured to use the feature: CloseQuestorArbitraryOSCmd && echo But No actual command was specified in your characters settings xml! && pause)";
-
-				LoginQuestorArbitraryOSCmd = (bool?)CharacterSettingsXml.Element("LoginQuestorArbitraryOSCmd") ?? (bool?)CommonSettingsXml.Element("LoginQuestorArbitraryOSCmd") ?? false;
-
-				//true or false
-				LoginQuestorOSCmdContents = (string)CharacterSettingsXml.Element("LoginQuestorOSCmdContents") ?? (string)CommonSettingsXml.Element("LoginQuestorOSCmdContents") ?? "cmd /k (date /t && time /t && echo. && echo. && echo Questor is configured to use the feature: LoginQuestorArbitraryOSCmd && echo But No actual command was specified in your characters settings xml! && pause)";
-				LoginQuestorLavishScriptCmd = (bool?)CharacterSettingsXml.Element("LoginQuestorLavishScriptCmd") ?? (bool?)CommonSettingsXml.Element("LoginQuestorLavishScriptCmd") ?? false;
-
-				//true or false
-				LoginQuestorLavishScriptContents = (string)CharacterSettingsXml.Element("LoginQuestorLavishScriptContents") ?? (string)CommonSettingsXml.Element("LoginQuestorLavishScriptContents") ?? "echo Questor is configured to use the feature: LoginQuestorLavishScriptCmd && echo But No actual command was specified in your characters settings xml! && pause)";
-
-				MinimizeEveAfterStartingUp = (bool?)CharacterSettingsXml.Element("MinimizeEveAfterStartingUp") ?? (bool?)CommonSettingsXml.Element("MinimizeEveAfterStartingUp") ?? false;
 
 				//the above setting can be set to any script or commands available on the system. make sure you test it from a command prompt while in your .net programs directory
 
@@ -1023,62 +882,21 @@ namespace Questor.Modules.Lookup
 				//
 				// Enable / Disable the different types of logging that are available
 				//
-//				Logging.InnerspaceGeneratedConsoleLog = (bool?)CharacterSettingsXml.Element("innerspaceGeneratedConsoleLog") ?? (bool?)CommonSettingsXml.Element("innerspaceGeneratedConsoleLog") ?? false; // save the innerspace generated console log to file
-				//Logging.SaveConsoleLog = (bool?)CharacterSettingsXml.Element("saveLog") ?? (bool?)CommonSettingsXml.Element("saveLog") ?? true; // save the console log to file
 				Logging.SaveLogRedacted = (bool?)CharacterSettingsXml.Element("saveLogRedacted") ?? (bool?)CommonSettingsXml.Element("saveLogRedacted") ?? true; // save the console log redacted to file
-//				Statistics.SessionsLog = (bool?)CharacterSettingsXml.Element("SessionsLog") ?? (bool?)CommonSettingsXml.Element("SessionsLog") ?? true;
 				Statistics.DroneStatsLog = (bool?)CharacterSettingsXml.Element("DroneStatsLog") ?? (bool?)CommonSettingsXml.Element("DroneStatsLog") ?? true;
 				Statistics.WreckLootStatistics = (bool?)CharacterSettingsXml.Element("WreckLootStatistics") ?? (bool?)CommonSettingsXml.Element("WreckLootStatistics") ?? true;
-//				Statistics.MissionStats1Log = (bool?)CharacterSettingsXml.Element("MissionStats1Log") ?? (bool?)CommonSettingsXml.Element("MissionStats1Log") ?? true;
-//				Statistics.MissionStats2Log = (bool?)CharacterSettingsXml.Element("MissionStats2Log") ?? (bool?)CommonSettingsXml.Element("MissionStats2Log") ?? true;
 				Statistics.MissionStats3Log = (bool?)CharacterSettingsXml.Element("MissionStats3Log") ?? (bool?)CommonSettingsXml.Element("MissionStats3Log") ?? true;
 				Statistics.MissionDungeonIdLog = (bool?)CharacterSettingsXml.Element("MissionDungeonIdLog") ?? (bool?)CommonSettingsXml.Element("MissionDungeonIdLog") ?? true;
 				Statistics.PocketStatistics = (bool?)CharacterSettingsXml.Element("PocketStatistics") ?? (bool?)CommonSettingsXml.Element("PocketStatistics") ?? true;
 				Statistics.PocketStatsUseIndividualFilesPerPocket = (bool?)CharacterSettingsXml.Element("PocketStatsUseIndividualFilesPerPocket") ?? (bool?)CommonSettingsXml.Element("PocketStatsUseIndividualFilesPerPocket") ?? true;
 				Statistics.PocketObjectStatisticsLog = (bool?)CharacterSettingsXml.Element("PocketObjectStatisticsLog") ?? (bool?)CommonSettingsXml.Element("PocketObjectStatisticsLog") ?? true;
-				//Statistics.VolleyStatsLog = (bool?)CharacterSettingsXml.Element("VolleyStatsLog") ?? (bool?)CommonSettingsXml.Element("VolleyStatsLog") ?? true;
 				Statistics.WindowStatsLog = (bool?)CharacterSettingsXml.Element("WindowStatsLog") ?? (bool?)CommonSettingsXml.Element("WindowStatsLog") ?? true;
-
-				//
-				// Email Settings
-				//
-				EmailSupport = (bool?)CharacterSettingsXml.Element("emailSupport") ?? (bool?)CommonSettingsXml.Element("emailSupport") ?? false;
-				EmailAddress = (string)CharacterSettingsXml.Element("emailAddress") ?? (string)CommonSettingsXml.Element("emailAddress") ?? "";
-				EmailPassword = (string)CharacterSettingsXml.Element("emailPassword") ?? (string)CommonSettingsXml.Element("emailPassword") ?? "";
-				EmailSMTPServer = (string)CharacterSettingsXml.Element("emailSMTPServer") ?? (string)CommonSettingsXml.Element("emailSMTPServer") ?? "";
-				EmailSMTPPort = (int?)CharacterSettingsXml.Element("emailSMTPPort") ?? (int?)CommonSettingsXml.Element("emailSMTPPort") ?? 25;
-				EmailAddressToSendAlerts = (string)CharacterSettingsXml.Element("emailAddressToSendAlerts") ?? (string)CommonSettingsXml.Element("emailAddressToSendAlerts") ?? "";
-				EmailEnableSSL = (bool?)CharacterSettingsXml.Element("emailEnableSSL") ?? (bool?)CommonSettingsXml.Element("emailEnableSSL") ?? false;
-
-				//
-				// User Defined LavishScript Scripts that tie to buttons in the UI
-				//
-				UserDefinedLavishScriptScript1 = (string)CharacterSettingsXml.Element("userDefinedLavishScriptScript1") ?? (string)CommonSettingsXml.Element("userDefinedLavishScriptScript1") ?? "";
-				UserDefinedLavishScriptScript1Description = (string)CharacterSettingsXml.Element("userDefinedLavishScriptScript1Description") ?? (string)CommonSettingsXml.Element("userDefinedLavishScriptScript1Description") ?? "";
-				UserDefinedLavishScriptScript2 = (string)CharacterSettingsXml.Element("userDefinedLavishScriptScript2") ?? (string)CommonSettingsXml.Element("userDefinedLavishScriptScript2") ?? "";
-				UserDefinedLavishScriptScript2Description = (string)CharacterSettingsXml.Element("userDefinedLavishScriptScript2Description") ?? (string)CommonSettingsXml.Element("userDefinedLavishScriptScript2Description") ?? "";
-				UserDefinedLavishScriptScript3 = (string)CharacterSettingsXml.Element("userDefinedLavishScriptScript3") ?? (string)CommonSettingsXml.Element("userDefinedLavishScriptScript3") ?? "";
-				UserDefinedLavishScriptScript3Description = (string)CharacterSettingsXml.Element("userDefinedLavishScriptScript3Description") ?? (string)CommonSettingsXml.Element("userDefinedLavishScriptScript3Description") ?? "";
-				UserDefinedLavishScriptScript4 = (string)CharacterSettingsXml.Element("userDefinedLavishScriptScript4") ?? (string)CommonSettingsXml.Element("userDefinedLavishScriptScript4") ?? "";
-				UserDefinedLavishScriptScript4Description = (string)CharacterSettingsXml.Element("userDefinedLavishScriptScript4Description") ?? (string)CommonSettingsXml.Element("userDefinedLavishScriptScript4Description") ?? "";
-
-				LoadQuestorDebugInnerspaceCommandAlias = (string)CharacterSettingsXml.Element("loadQuestorDebugInnerspaceCommandAlias") ?? (string)CommonSettingsXml.Element("loadQuestorDebugInnerspaceCommandAlias") ?? "1";
-				LoadQuestorDebugInnerspaceCommand = (string)CharacterSettingsXml.Element("loadQuestorDebugInnerspaceCommand") ?? (string)CommonSettingsXml.Element("loadQuestorDebugInnerspaceCommand") ?? "dotnet q1 questor.exe";
-				UnLoadQuestorDebugInnerspaceCommandAlias = (string)CharacterSettingsXml.Element("unLoadQuestorDebugInnerspaceCommandAlias") ?? (string)CommonSettingsXml.Element("unLoadQuestorDebugInnerspaceCommandAlias") ?? "2";
-				UnLoadQuestorDebugInnerspaceCommand = (string)CharacterSettingsXml.Element("unLoadQuestorDebugInnerspaceCommand") ?? (string)CommonSettingsXml.Element("unLoadQuestorDebugInnerspaceCommand") ?? "dotnet -unload q1";
-
+				
 				//
 				// number of days of console logs to keep (anything older will be deleted on startup)
 				//
 				Logging.ConsoleLogDaysOfLogsToKeep = (int?)CharacterSettingsXml.Element("consoleLogDaysOfLogsToKeep") ?? (int?)CommonSettingsXml.Element("consoleLogDaysOfLogsToKeep") ?? 14;
 				//Logging.tryToLogToFile = (bool?)CharacterSettingsXml.Element("tryToLogToFile") ?? (bool?)CommonSettingsXml.Element("tryToLogToFile") ?? true;
-
-				Settings.Instance.EVEMemoryManager = File.Exists(System.IO.Path.Combine(Settings.Instance.Path, "MemManager.exe")); //https://github.com/VendanAndrews/EveMemManager
-				Settings.Instance.FactionXMLExists = File.Exists(System.IO.Path.Combine(Settings.Instance.Path, "faction.XML"));
-				Settings.Instance.SchedulesXMLExists = File.Exists(System.IO.Path.Combine(Settings.Instance.Path, "schedules.XML"));
-				Settings.Instance.QuestorManagerExists = File.Exists(System.IO.Path.Combine(Settings.Instance.Path, "QuestorManager.exe"));
-				Settings.Instance.QuestorSettingsExists = File.Exists(System.IO.Path.Combine(Settings.Instance.Path, "QuestorSettings.exe"));
-				Settings.Instance.QuestorStatisticsExists = File.Exists(System.IO.Path.Combine(Settings.Instance.Path, "QuestorStatistics.exe"));
 			}
 			catch(Exception exception)
 			{
@@ -1088,607 +906,159 @@ namespace Questor.Modules.Lookup
 
 		public void LoadSettings(bool forcereload = false)
 		{
-			if (DateTime.UtcNow < Time.Instance.NextLoadSettings)
-			{
-				return;
-			}
-
-			Time.Instance.NextLoadSettings = DateTime.UtcNow.AddSeconds(15);
 			
-			try
-			{
-				if (Logging.MyCharacterName != null)
+			try {
+				
+				
+				if (DateTime.UtcNow < Time.Instance.NextLoadSettings)
 				{
-					Settings.Instance.CharacterName = Logging.MyCharacterName;
-					//Logging.Log("Settings", "CharacterName was pulled from the Scheduler: [" + Settings.Instance.CharacterName + "]", Logging.White);
-				}
-				else
-				{
-					Settings.Instance.CharacterName = Cache.Instance.DirectEve.Me.Name;
-					//Logging.Log("Settings", "CharacterName was pulled from your live EVE session: [" + Settings.Instance.CharacterName + "]", Logging.White);
-				}
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("Settings", "Exception trying to find CharacterName [" + ex + "]", Logging.White);
-				Settings.Instance.CharacterName = "AtLoginScreenNoCharactersLoggedInYet";
-			}
-
-			Logging.CharacterSettingsPath = System.IO.Path.Combine(Settings.Instance.Path, Logging.FilterPath(Settings.Instance.CharacterName) + ".xml");
-			//Settings.Instance.CommonSettingsPath = System.IO.Path.Combine(Settings.Instance.Path, Settings.Instance.CommonSettingsFileName);
-
-			if (Logging.CharacterSettingsPath == System.IO.Path.Combine(Settings.Instance.Path, ".xml"))
-			{
-				if (DateTime.UtcNow > Time.Instance.LastSessionChange.AddSeconds(30))
-				{
-					Cleanup.ReasonToStopQuestor = "CharacterName not defined! - Are we still logged in? Did we lose connection to eve? Questor should be restarting here.";
-					Logging.Log("Settings", "CharacterName not defined! - Are we still logged in? Did we lose connection to eve? Questor should be restarting here.", Logging.White);
-					Settings.Instance.CharacterName = "NoCharactersLoggedInAnymore";
-					Time.EnteredCloseQuestor_DateTime = DateTime.UtcNow;
-					Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
-					_States.CurrentQuestorState = QuestorState.CloseQuestor;
-					Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
 					return;
 				}
 
-				Logging.Log("Settings", "CharacterName not defined! - Are we logged in yet? Did we lose connection to eve?", Logging.White);
-				Settings.Instance.CharacterName = "AtLoginScreenNoCharactersLoggedInYet";
-				//Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
-			}
-
-			try
-			{
-				bool reloadSettings = false;
-				if (File.Exists(Logging.CharacterSettingsPath))
+				Time.Instance.NextLoadSettings = DateTime.UtcNow.AddSeconds(15);
+				
+				try
 				{
-					reloadSettings = _lastModifiedDateOfMySettingsFile != File.GetLastWriteTime(Logging.CharacterSettingsPath);
-					if (!reloadSettings)
+					if (Logging.MyCharacterName != null)
 					{
-						if (File.Exists(Settings.Instance.CommonSettingsPath)) reloadSettings = _lastModifiedDateOfMyCommonSettingsFile != File.GetLastWriteTime(CommonSettingsPath);
+						Settings.Instance.CharacterName = Logging.MyCharacterName;
+						//Logging.Log("Settings", "CharacterName was pulled from the Scheduler: [" + Settings.Instance.CharacterName + "]", Logging.White);
 					}
-					if (!reloadSettings && forcereload) reloadSettings = true;
+					else
+					{
+						Settings.Instance.CharacterName = Cache.Instance.DirectEve.Me.Name;
+						//Logging.Log("Settings", "CharacterName was pulled from your live EVE session: [" + Settings.Instance.CharacterName + "]", Logging.White);
+					}
+				}
+				catch (Exception ex)
+				{
+					Logging.Log("Settings", "Exception trying to find CharacterName [" + ex + "]", Logging.White);
+					Settings.Instance.CharacterName = "AtLoginScreenNoCharactersLoggedInYet";
+				}
 
-					if (!reloadSettings)
+				Logging.CharacterSettingsPath = System.IO.Path.Combine(Settings.Instance.Path, Logging.FilterPath(Settings.Instance.CharacterName) + ".xml");
+				//Settings.Instance.CommonSettingsPath = System.IO.Path.Combine(Settings.Instance.Path, Settings.Instance.CommonSettingsFileName);
+
+				if (Logging.CharacterSettingsPath == System.IO.Path.Combine(Settings.Instance.Path, ".xml"))
+				{
+					if (DateTime.UtcNow > Time.Instance.LastSessionChange.AddSeconds(30))
+					{
+						Cleanup.ReasonToStopQuestor = "CharacterName not defined! - Are we still logged in? Did we lose connection to eve? Questor should be restarting here.";
+						Logging.Log("Settings", "CharacterName not defined! - Are we still logged in? Did we lose connection to eve? Questor should be restarting here.", Logging.White);
+						Settings.Instance.CharacterName = "NoCharactersLoggedInAnymore";
+						Time.EnteredCloseQuestor_DateTime = DateTime.UtcNow;
+						Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
+						_States.CurrentQuestorState = QuestorState.CloseQuestor;
+						Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
 						return;
+					}
+
+					Logging.Log("Settings", "CharacterName not defined! - Are we logged in yet? Did we lose connection to eve?", Logging.White);
+					Settings.Instance.CharacterName = "AtLoginScreenNoCharactersLoggedInYet";
+					//Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
 				}
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("Settings", "Exception [" + ex + "]", Logging.White);
-			}
-			
-			if (!File.Exists(Logging.CharacterSettingsPath) && !Settings.Instance.DefaultSettingsLoaded) //if the settings file does not exist initialize these values. Should we not halt when missing the settings XML?
-			{
-				Settings.Instance.CharacterXMLExists = false;
-				DefaultSettingsLoaded = true;
-				//LavishScript.ExecuteCommand("log " + Cache.Instance.DirectEve.Me.Name + ".log");
-				//LavishScript.ExecuteCommand("uplink echo Settings: unable to find [" + Settings.Instance.SettingsPath + "] loading default (bad! bad! bad!) settings: you should fix this! NOW.");
-				Logging.Log("Settings", "WARNING! unable to find [" + Logging.CharacterSettingsPath + "] loading default generic, and likely incorrect, settings: WARNING!", Logging.Orange);
-				Logging.DebugActivateGate = false;
-				Logging.DebugActivateWeapons = false;
-				Logging.DebugAddDronePriorityTarget = false;
-				Logging.DebugAddPrimaryWeaponPriorityTarget = false;
-				Logging.DebugAgentInteractionReplyToAgent = false;
-				Logging.DebugAllMissionsOnBlackList = false;
-				Logging.DebugAllMissionsOnGreyList = false;
-				Logging.DebugArm = false;
-				Logging.DebugAttachVSDebugger = false;
-				Logging.DebugAutoStart = false;
-				Logging.DebugBlackList = false;
-				Logging.DebugCargoHold = false;
-				Logging.DebugChat = false;
-				Logging.DebugCleanup = false;
-				Logging.DebugClearPocket = false;
-				Logging.DebugCourierMissions = false;
-				Logging.DebugDecline = false;
-				Logging.DebugDefense = false;
-				Logging.DebugDisableCleanup = false;
-				Logging.DebugDisableCombatMissionsBehavior = false;
-				Logging.DebugDisableCombatMissionCtrl = false;
-				Logging.DebugDisableCombat = false;
-				Logging.DebugDisableDrones = false;
-				Logging.DebugDisablePanic = false;
-				Logging.DebugDisableSalvage = false;
-				Logging.DebugDisableGetBestTarget = false;
-				Logging.DebugDisableTargetCombatants = false;
-				Logging.DebugDisableNavigateIntoRange = false;
-				Logging.DebugDrones = false;
-				Logging.DebugDroneHealth = false;
-				Logging.DebugExceptions = false;
-				Logging.DebugFittingMgr = false;
-				Logging.DebugFleetSupportSlave = false;
-				Logging.DebugFleetSupportMaster = false;
-				Logging.DebugGetBestTarget = false;
-				Logging.DebugGetBestDroneTarget = false;
-				Logging.DebugGotobase = false;
-				Logging.DebugGreyList = false;
-				Logging.DebugHangars = false;
-				Logging.DebugIdle = false;
-				Logging.DebugInWarp = false;
-				Logging.DebugItemHangar = false;
-				Logging.DebugKillTargets = false;
-				Logging.DebugKillAction = false;
-				Logging.DebugLoadScripts = false;
-				Logging.DebugLogging = false;
-				Logging.DebugLootWrecks = false;
-				Logging.DebugLootValue = false;
-				Logging.DebugMaintainConsoleLogs = false;
-				Logging.DebugMiningBehavior = false;
-				Logging.DebugMissionFittings = false;
-				Logging.DebugMoveTo = false;
-				Logging.DebugNavigateOnGrid = false;
-				Logging.DebugOnframe = false;
-				Logging.DebugOverLoadWeapons = false;
-				Logging.DebugPerformance = false;
-				Logging.DebugPotentialCombatTargets = false;
-				Logging.DebugQuestorManager = false;
-				Logging.DebugReloadAll = false;
-				Logging.DebugReloadorChangeAmmo = false;
-				Logging.DebugRemoteRepair = false;
-				Logging.DebugSalvage = false;
-				Logging.DebugScheduler = false;
-				Logging.DebugSettings = false;
-				Logging.DebugShipTargetValues = false;
-				Logging.DebugSkillTraining = true;
-				Logging.DebugStatistics = false;
-				Logging.DebugStorylineMissions = false;
-				Logging.DebugTargetCombatants = false;
-				Logging.DebugTargetWrecks = false;
-				Logging.DebugTractorBeams = false;
-				Logging.DebugTraveler = false;
-				Logging.DebugUI = false;
-				Logging.DebugUnloadLoot = false;
-				Logging.DebugValuedump = false;
-				Logging.DebugWalletBalance = false;
-				Logging.DebugWatchForActiveWars = true;
-				DetailedCurrentTargetHealthLogging = false;
-				DefendWhileTraveling = true;
-				//Logging.UseInnerspace = true;
-				// setEveClientDestinationWhenTraveling = false;
 
-				CharacterToAcceptInvitesFrom = Settings.Instance.CharacterName;
-				//
-				// Misc Settings
-				//
-				CharacterMode = "none";
-				AutoStart = false; // auto Start enabled or disabled by default
-				// maximum console log lines to show in the GUI
-				Disable3D = false; // Disable3d graphics while in space
-				RandomDelay = 15;
-				MinimumDelay = 20;
-				//
-				// Enable / Disable Major Features that do not have categories of their own below
-				//
-				UseFittingManager = false;
-				EnableStorylines = false;
-				DeclineStorylinesInsteadofBlacklistingfortheSession = false;
-				UseLocalWatch = false;
-				WatchForActiveWars = true;
+				try
+				{
+					bool reloadSettings = false;
+					if (File.Exists(Logging.CharacterSettingsPath))
+					{
+						reloadSettings = _lastModifiedDateOfMySettingsFile != File.GetLastWriteTime(Logging.CharacterSettingsPath);
+						if (!reloadSettings)
+						{
+							if (File.Exists(Settings.Instance.CommonSettingsPath)) reloadSettings = _lastModifiedDateOfMyCommonSettingsFile != File.GetLastWriteTime(CommonSettingsPath);
+						}
+						if (!reloadSettings && forcereload) reloadSettings = true;
 
-				FleetSupportSlave = false;
-				FleetSupportMaster = false;
-				FleetName = "Fleet1";
-				CharacterNamesForMasterToInviteToFleet.Clear();
-
-				// Console Log Settings
-				//
-				//Logging.SaveConsoleLog = true; // save the console log to file
-				MaxLineConsole = 1000;
-				//
-				// Agent Standings and Mission Settings
-				//
-				MissionSettings.MinAgentBlackListStandings = 1;
-				MissionSettings.MinAgentGreyListStandings = (float)-1.7;
-				MissionSettings.WaitDecline = false;
-				const string relativeMissionsPath = "Missions";
-				MissionSettings.MissionsPath = System.IO.Path.Combine(Settings.Instance.Path, relativeMissionsPath);
-				//Logging.Log("Settings","Default MissionXMLPath is: [" + MissionsPath + "]",Logging.White);
-				MissionSettings.RequireMissionXML = false;
-				MissionSettings.AllowNonStorylineCourierMissionsInLowSec = false;
-				MissionSettings.MaterialsForWarOreID = 20;
-				MissionSettings.MaterialsForWarOreQty = 8000;
-				Combat.KillSentries = false;
-				//
-				// Local Watch Settings - if enabled
-				//
-				LocalBadStandingPilotsToTolerate = 1;
-				LocalBadStandingLevelToConsiderBad = -0.1;
-				//
-				// Invasion Settings
-				//
-				BattleshipInvasionLimit = 2;
-				// if this number of BattleShips lands on grid while in a mission we will enter panic
-				BattlecruiserInvasionLimit = 2;
-				// if this number of BattleCruisers lands on grid while in a mission we will enter panic
-				CruiserInvasionLimit = 2;
-				// if this number of cruisers lands on grid while in a mission we will enter panic
-				FrigateInvasionLimit = 2;
-				// if this number of frigates lands on grid while in a mission we will enter panic
-				InvasionRandomDelay = 30; // random relay to stay docked
-				InvasionMinimumDelay = 30; // minimum delay to stay docked
-
-				//
-				// Questor GUI Window Position
-				//
-				WindowXPosition = 400;
-				WindowYPosition = 600;
-				//
-				// Salvage and loot settings
-				//
-				Salvage.ReserveCargoCapacity = 0;
-				Salvage.MaximumWreckTargets = 0;
-
-				//
-				// at what memory usage do we need to restart this session?
-				//
-				EVEProcessMemoryCeiling = 2048;
+						if (!reloadSettings)
+							return;
+					}
+				}
+				catch (Exception ex)
+				{
+					Logging.Log("Settings", "Exception [" + ex + "]", Logging.White);
+				}
 				
-				CloseQuestorCMDUplinkInnerspaceProfile = true;
-				CloseQuestorCMDUplinkIsboxerCharacterSet = false;
-				CloseQuestorAllowRestart = true;
+				if (!File.Exists(Logging.CharacterSettingsPath) && !Settings.Instance.DefaultSettingsLoaded) //if the settings file does not exist initialize these values. Should we not halt when missing the settings XML?
+				{
+					_States.CurrentQuestorState = QuestorState.Error;
+					_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;
+					_States.CurrentCombatMissionCtrlState = CombatMissionCtrlState.Error;
+					Logging.Log("Settings","ERROR: if (!File.Exists(Logging.CharacterSettingsPath) && !Settings.Instance.DefaultSettingsLoaded)", Logging.White);
+				}
+				else //if the settings file exists - load the characters settings XML
+				{
+					Settings.Instance.CharacterXMLExists = true;
+					;
+					using (XmlTextReader reader = new XmlTextReader(Logging.CharacterSettingsPath))
+					{
+						reader.EntityHandling = EntityHandling.ExpandEntities;
+						CharacterSettingsXml = XDocument.Load(reader).Root;
+					}
 
-				CloseQuestorArbitraryOSCmd = false; //true or false
-				CloseQuestorOSCmdContents = string.Empty;
-				//the above setting can be set to any script or commands available on the system. make sure you test it from a command prompt while in your .net programs directory
+					if (CharacterSettingsXml == null)
+					{
+						Logging.Log("Settings", "unable to find [" + Logging.CharacterSettingsPath + "] FATAL ERROR - use the provided settings.xml to create that file.", Logging.Red);
+					}
+					else
+					{
+						if (File.Exists(Logging.CharacterSettingsPath)) _lastModifiedDateOfMySettingsFile = File.GetLastWriteTime(Logging.CharacterSettingsPath);
+						if (File.Exists(Settings.Instance.CommonSettingsPath)) _lastModifiedDateOfMyCommonSettingsFile = File.GetLastWriteTime(CommonSettingsPath);
+						ReadSettingsFromXML();
+					}
+				}
 
-				LoginQuestorArbitraryOSCmd = false;
-				LoginQuestorOSCmdContents = String.Empty;
-				LoginQuestorLavishScriptCmd = false;
-				LoginQuestorLavishScriptContents = string.Empty;
-				MinimizeEveAfterStartingUp = false;
-
-				WalletBalanceChangeLogOffDelay = 30;
-				WalletBalanceChangeLogOffDelayLogoffOrExit = "exit";
+				Statistics.DroneStatsLogPath = Logging.Logpath;
+				Statistics.DroneStatslogFile = System.IO.Path.Combine(Statistics.DroneStatsLogPath, Logging.characterNameForLogs + ".DroneStats.log");
 				
-		
+				Statistics.WindowStatsLogPath = System.IO.Path.Combine(Logging.Logpath, "WindowStats\\");
+				Statistics.WindowStatslogFile = System.IO.Path.Combine(Statistics.WindowStatsLogPath, Logging.characterNameForLogs + ".WindowStats-DayOfYear[" + DateTime.UtcNow.DayOfYear + "].log");
+				Statistics.WreckLootStatisticsPath = Logging.Logpath;
+				Statistics.WreckLootStatisticsFile = System.IO.Path.Combine(Statistics.WreckLootStatisticsPath, Logging.characterNameForLogs + ".WreckLootStatisticsDump.log");
 
-				//
-				// Undock settings
-				//
-				UndockBookmarkPrefix = "Insta";
+				Statistics.MissionStats3LogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
+				Statistics.MissionStats3LogFile = System.IO.Path.Combine(Statistics.MissionStats3LogPath, Logging.characterNameForLogs + ".CustomDatedStatistics.csv");
+				Statistics.MissionDungeonIdLogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
+				Statistics.MissionDungeonIdLogFile = System.IO.Path.Combine(Statistics.MissionDungeonIdLogPath, Logging.characterNameForLogs + "Mission-DungeonId-list.csv");
+				Statistics.PocketStatisticsPath = System.IO.Path.Combine(Logging.Logpath, "PocketStats\\");
+				Statistics.PocketStatisticsFile = System.IO.Path.Combine(Statistics.PocketStatisticsPath, Logging.characterNameForLogs + "pocketstats-combined.csv");
+				Statistics.PocketObjectStatisticsPath = System.IO.Path.Combine(Logging.Logpath, "PocketObjectStats\\");
+				Statistics.PocketObjectStatisticsFile = System.IO.Path.Combine(Statistics.PocketObjectStatisticsPath, Logging.characterNameForLogs + "PocketObjectStats-combined.csv");
+				Statistics.MissionDetailsHtmlPath = System.IO.Path.Combine(Logging.Logpath, "MissionDetailsHTML\\");
 
-				//
-				// Location of the Questor GUI on startup (default is off the screen)
-				//
-				WindowXPosition = 0;
-
-				//windows position (needs to be changed, default is off screen)
-				WindowYPosition = 0;
-
-				//windows position (needs to be changed, default is off screen)
-				EVEWindowXPosition = 0;
-				EVEWindowYPosition = 0;
-				EVEWindowXSize = 0;
-				EVEWindowYSize = 0;
-
-				//
-				// Ship Names
-				//
-				Combat.CombatShipName = "Raven";
-				SalvageShipName = "Noctis";
-				TransportShipName = "Transport";
-				TravelShipName = "Travel";
-				MiningShipName = "Hulk";
-
-				//
-				// Usage of HomeBookmark @ dedicated salvager
-				UseHomebookmark = false;
-				//
-				// Storage Location for Loot, Ammo, Bookmarks
-				//
-				HomeBookmarkName = "myHomeBookmark";
-				LootHangarTabName = String.Empty;
-				AmmoHangarTabName = String.Empty;
-				BookmarkHangar = String.Empty;
-				LootContainerName = String.Empty;
-
-				//
-				// Loot and Salvage Settings
-				//
-				Salvage.LootEverything = true;
-				Salvage.UseGatesInSalvage = false;
-				// if our mission does not DeSpawn (likely someone in the mission looting our stuff?) use the gates when salvaging to get to our bookmarks
-				Salvage.CreateSalvageBookmarks = false;
-				Salvage.CreateSalvageBookmarksIn = "Player"; //Player or Corp
-				//other setting is "Corp"
-				BookmarkPrefix = "Salvage:";
-				SafeSpotBookmarkPrefix = "safespot";
-				BookmarkFolder = "Salvage";
-				TravelToBookmarkPrefix = "MeetHere:";
-				Salvage.MinimumWreckCount = 1;
-				Salvage.AfterMissionSalvaging = false;
-				Salvage.FirstSalvageBookmarksInSystem = false;
-				Salvage.SalvageMultipleMissionsinOnePass = false;
-				Salvage.UnloadLootAtStation = false;
-				Salvage.ReserveCargoCapacity = 100;
-				Salvage.MaximumWreckTargets = 0;
-				Salvage.WreckBlackListSmallWrecks = false;
-				Salvage.WreckBlackListMediumWrecks = false;
-				Salvage.AgeofBookmarksForSalvageBehavior = 60;
-				Salvage.AgeofSalvageBookmarksToExpire = 120;
-				Salvage.DeleteBookmarksWithNPC = false;
-				Salvage.LootOnlyWhatYouCanWithoutSlowingDownMissionCompletion = false;
-				Salvage.TractorBeamMinimumCapacitor = 0;
-				Salvage.SalvagerMinimumCapacitor = 0;
-				Salvage.DoNotDoANYSalvagingOutsideMissionActions = false;
-				Salvage.LootItemRequiresTarget = false;
-
-				//
-				// Enable / Disable the different types of logging that are available
-				//
-//				Statistics.SessionsLog = false;
-				Statistics.DroneStatsLog = false;
-				Statistics.WreckLootStatistics = false;
-//				Statistics.MissionStats1Log = false;
-//				Statistics.MissionStats2Log = false;
-				Statistics.MissionStats3Log = false;
-				Statistics.PocketStatistics = false;
-				Statistics.PocketStatsUseIndividualFilesPerPocket = false;
-				Statistics.PocketObjectStatisticsLog = false;
-
-				//
-				// Weapon and targeting Settings
-				//
-				Combat.WeaponGroupId = 506; //cruise
-				Combat.DontShootFrigatesWithSiegeorAutoCannons = false;
-				Combat.maxHighValueTargets = 2;
-				Combat.maxLowValueTargets = 2;
-				Combat.DoNotSwitchTargetsIfTargetHasMoreThanThisArmorDamagePercentage = 60;
-				Combat.DistanceNPCFrigatesShouldBeIgnoredByPrimaryWeapons = 7000; //also requires SpeedFrigatesShouldBeIgnoredByMainWeapons
-				Combat.SpeedNPCFrigatesShouldBeIgnoredByPrimaryWeapons = 300; //also requires DistanceFrigatesShouldBeIgnoredByMainWeapons
-
-
-				// (IsNPCBattleship) return 4;
-				// (IsNPCBattlecruiser) return 3;
-				// (IsNPCCruiser) return 2;
-				// (IsNPCFrigate) return 0;
-				Combat.MinimumTargetValueToConsiderTargetAHighValueTarget = 2;
-				Combat.MaximumTargetValueToConsiderTargetALowValueTarget = 1;
-
-				Combat.AddDampenersToPrimaryWeaponsPriorityTargetList = true;
-				Combat.AddNeutralizersToPrimaryWeaponsPriorityTargetList = true;
-				Combat.AddWarpScramblersToPrimaryWeaponsPriorityTargetList = true;
-				Combat.AddWebifiersToPrimaryWeaponsPriorityTargetList = true;
-				Combat.AddTargetPaintersToPrimaryWeaponsPriorityTargetList = true;
-				Combat.AddECMsToPrimaryWeaponsPriorityTargetList = true;
-				Combat.AddTrackingDisruptorsToPrimaryWeaponsPriorityTargetList = true;
-
-				Drones.AddDampenersToDronePriorityTargetList = true;
-				Drones.AddNeutralizersToDronePriorityTargetList = true;
-				Drones.AddWarpScramblersToDronePriorityTargetList = true;
-				Drones.AddWebifiersToDronePriorityTargetList = true;
-				Drones.AddTargetPaintersToDronePriorityTargetList = true;
-				Drones.AddECMsToDroneTargetList = true;
-				Drones.AddTrackingDisruptorsToDronePriorityTargetList = true;
-
-				Combat.InsideThisRangeIsHardToTrack = 15000;
-				//
-				// Script Settings - TypeIDs for the scripts you would like to use in these modules
-				//
-				// 29003 Focused Warp Disruption Script   // Hictor and InfiniPoint
-				//
-				// 29007 Tracking Speed Disruption Script // tracking disruptor
-				// 29005 Optimal Range Disruption Script  // tracking disruptor
-				// 29011 Scan Resolution Script           // sensor booster
-				// 29009 Targeting Range Script           // sensor booster
-				// 29015 Targeting Range Dampening Script // sensor dampener
-				// 29013 Scan Resolution Dampening Script // sensor dampener
-				// 29001 Tracking Speed Script            // tracking enhancer and tracking computer
-				// 28999 Optimal Range Script             // tracking enhancer and tracking computer
-
-				// 3554  Cap Booster 100
-				// 11283 Cap Booster 150
-				// 11285 Cap Booster 200
-				// 263   Cap Booster 25
-				// 11287 Cap Booster 400
-				// 264   Cap Booster 50
-				// 3552  Cap Booster 75
-				// 11289 Cap Booster 800
-				// 31982 Navy Cap Booster 100
-				// 31990 Navy Cap Booster 150
-				// 31998 Navy Cap Booster 200
-				// 32006 Navy Cap Booster 400
-				// 32014 Navy Cap Booster 800
-
-				TrackingDisruptorScript = 29007;
-				TrackingComputerScript = 29001;
-				TrackingLinkScript = 29001;
-				SensorBoosterScript = 29009;
-				SensorDampenerScript = 29015;
-				AncillaryShieldBoosterScript = 11289;
-				CapacitorInjectorScript = 11289;
-				NumberOfCapBoostersToLoad = 15;
-
-				//
-				// OverLoad Settings (this WILL burn out modules, likely very quickly!
-				// If you enable the overloading of a slot it is HIGHLY recommended you actually have something overloadable in that slot =/
-				//
-				OverloadWeapons = false;
-
-				//
-				// Speed and Movement Settings
-				//
-				NavigateOnGrid.AvoidBumpingThingsBool = true;
-				NavigateOnGrid.SpeedTank = false;
-				NavigateOnGrid.OrbitDistance = 0;
-				NavigateOnGrid.OrbitStructure = false;
-				NavigateOnGrid.OptimalRange = 0;
-				Combat.NosDistance = 38000;
-				Combat.RemoteRepairDistance = 2000;
-				Defense.MinimumPropulsionModuleDistance = 5000;
-				Defense.MinimumPropulsionModuleCapacitor = 0;
-
-				//
-				// Tanking Settings
-				//
-				Defense.ActivateRepairModulesAtThisPerc = 65;
-				Defense.DeactivateRepairModulesAtThisPerc = 95;
-				Defense.InjectCapPerc = 60;
-
-				//
-				// Panic Settings
-				//
-				Panic.MinimumShieldPct = 50;
-				Panic.MinimumArmorPct = 50;
-				Panic.MinimumCapacitorPct = 50;
-				Panic.SafeShieldPct = 0;
-				Panic.SafeArmorPct = 0;
-				Panic.SafeCapacitorPct = 0;
-				Panic.UseStationRepair = true;
-
-				//
-				// Drone Settings
-				//
-				Drones.UseDrones = true;
-				Drones.DroneTypeID = 2488;
-				Drones.DroneControlRange = 25000;
-				Drones.DroneMinimumShieldPct = 50;
-				Drones.DroneMinimumArmorPct = 50;
-				Drones.DroneMinimumCapacitorPct = 0;
-				Drones.DroneRecallShieldPct = 0;
-				Drones.DroneRecallArmorPct = 0;
-				Drones.DroneRecallCapacitorPct = 0;
-				Drones.LongRangeDroneRecallShieldPct = 0;
-				Drones.LongRangeDroneRecallArmorPct = 0;
-				Drones.LongRangeDroneRecallCapacitorPct = 0;
-				Drones.DronesKillHighValueTargets = false;
-				Drones.BelowThisHealthLevelRemoveFromDroneBay = 150;
-
-				//
-				// number of days of console logs to keep (anything older will be deleted on startup)
-				//
-				Logging.ConsoleLogDaysOfLogsToKeep = 14;
-
-				Combat.maxHighValueTargets = 0;
-				Combat.maxLowValueTargets = 0;
-
-				//
-				// Email Settings
-				//
-				EmailSupport = false;
-				EmailAddress = "";
-				EmailPassword = "";
-				EmailSMTPServer = "";
-				EmailSMTPPort = 25;
-				EmailAddressToSendAlerts = "";
-				EmailEnableSSL = false;
-
-				//
-				// Skill Training Settings
-				//
-				ThisToonShouldBeTrainingSkills = true;
-
-				UserDefinedLavishScriptScript1 = "";
-				UserDefinedLavishScriptScript1Description = "";
-				UserDefinedLavishScriptScript2 = "";
-				UserDefinedLavishScriptScript2Description = "";
-				UserDefinedLavishScriptScript3 = "";
-				UserDefinedLavishScriptScript3Description = "";
-				UserDefinedLavishScriptScript4 = "";
-				UserDefinedLavishScriptScript4Description = "";
-
-				AgentInteraction.StandingsNeededToAccessLevel1Agent = -11;
-				AgentInteraction.StandingsNeededToAccessLevel2Agent = 1;
-				AgentInteraction.StandingsNeededToAccessLevel3Agent = 3;
-				AgentInteraction.StandingsNeededToAccessLevel4Agent = 5;
-				AgentInteraction.StandingsNeededToAccessLevel5Agent = 7;
-				//
-				// Clear various lists
-				//
-				Combat.Ammo.Clear();
-				//ItemsBlackList.Clear();
-				Salvage.WreckBlackList.Clear();
-				MissionSettings.ListofFactionFittings.Clear();
-				MissionSettings.ListOfAgents.Clear();
-				MissionSettings.ListOfMissionFittings.Clear();
-
-				//
-				// Clear the Blacklist
-				//
-				MissionSettings.MissionBlacklist.Clear();
-				MissionSettings.MissionGreylist.Clear();
-				MissionSettings.FactionBlacklist.Clear();
-
-				MissionSettings.MissionName = null;
-			}
-			else //if the settings file exists - load the characters settings XML
-			{
-				Settings.Instance.CharacterXMLExists = true;
-				;
-				using (XmlTextReader reader = new XmlTextReader(Logging.CharacterSettingsPath))
+				try
 				{
-					reader.EntityHandling = EntityHandling.ExpandEntities;
-					CharacterSettingsXml = XDocument.Load(reader).Root;
+					Directory.CreateDirectory(Logging.Logpath);
+					Directory.CreateDirectory(Logging.SessionDataCachePath);
+					Directory.CreateDirectory(Logging.ConsoleLogPath);
+					Directory.CreateDirectory(Statistics.DroneStatsLogPath);
+					Directory.CreateDirectory(Statistics.WreckLootStatisticsPath);
+					Directory.CreateDirectory(Statistics.MissionStats3LogPath);
+					Directory.CreateDirectory(Statistics.MissionDungeonIdLogPath);
+					Directory.CreateDirectory(Statistics.PocketStatisticsPath);
+					Directory.CreateDirectory(Statistics.PocketObjectStatisticsPath);
+					Directory.CreateDirectory(Statistics.WindowStatsLogPath);
 				}
-
-				if (CharacterSettingsXml == null)
+				catch (Exception exception)
 				{
-					Logging.Log("Settings", "unable to find [" + Logging.CharacterSettingsPath + "] FATAL ERROR - use the provided settings.xml to create that file.", Logging.Red);
+					Logging.Log("Settings", "Problem creating directories for logs [" + exception + "]", Logging.Debug);
 				}
-				else
-				{
-					if (File.Exists(Logging.CharacterSettingsPath)) _lastModifiedDateOfMySettingsFile = File.GetLastWriteTime(Logging.CharacterSettingsPath);
-					if (File.Exists(Settings.Instance.CommonSettingsPath)) _lastModifiedDateOfMyCommonSettingsFile = File.GetLastWriteTime(CommonSettingsPath);
-					ReadSettingsFromXML();
-				}
-			}
-
-//			Statistics.SessionsLogPath = Logging.Logpath;
-//			Statistics.SessionsLogFile = System.IO.Path.Combine(Statistics.SessionsLogPath, Logging.characterNameForLogs + ".Sessions.log");
-			Statistics.DroneStatsLogPath = Logging.Logpath;
-			Statistics.DroneStatslogFile = System.IO.Path.Combine(Statistics.DroneStatsLogPath, Logging.characterNameForLogs + ".DroneStats.log");
-			
-			Statistics.WindowStatsLogPath = System.IO.Path.Combine(Logging.Logpath, "WindowStats\\");
-			Statistics.WindowStatslogFile = System.IO.Path.Combine(Statistics.WindowStatsLogPath, Logging.characterNameForLogs + ".WindowStats-DayOfYear[" + DateTime.UtcNow.DayOfYear + "].log");
-			Statistics.WreckLootStatisticsPath = Logging.Logpath;
-			Statistics.WreckLootStatisticsFile = System.IO.Path.Combine(Statistics.WreckLootStatisticsPath, Logging.characterNameForLogs + ".WreckLootStatisticsDump.log");
-//			Statistics.MissionStats1LogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
-//			Statistics.MissionStats1LogFile = System.IO.Path.Combine(Statistics.MissionStats1LogPath, Logging.characterNameForLogs + ".Statistics.log");
-//			Statistics.MissionStats2LogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
-//			Statistics.MissionStats2LogFile = System.IO.Path.Combine(Statistics.MissionStats2LogPath, Logging.characterNameForLogs + ".DatedStatistics.log");
-			Statistics.MissionStats3LogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
-			Statistics.MissionStats3LogFile = System.IO.Path.Combine(Statistics.MissionStats3LogPath, Logging.characterNameForLogs + ".CustomDatedStatistics.csv");
-			Statistics.MissionDungeonIdLogPath = System.IO.Path.Combine(Logging.Logpath, "MissionStats\\");
-			Statistics.MissionDungeonIdLogFile = System.IO.Path.Combine(Statistics.MissionDungeonIdLogPath, Logging.characterNameForLogs + "Mission-DungeonId-list.csv");
-			Statistics.PocketStatisticsPath = System.IO.Path.Combine(Logging.Logpath, "PocketStats\\");
-			Statistics.PocketStatisticsFile = System.IO.Path.Combine(Statistics.PocketStatisticsPath, Logging.characterNameForLogs + "pocketstats-combined.csv");
-			Statistics.PocketObjectStatisticsPath = System.IO.Path.Combine(Logging.Logpath, "PocketObjectStats\\");
-			Statistics.PocketObjectStatisticsFile = System.IO.Path.Combine(Statistics.PocketObjectStatisticsPath, Logging.characterNameForLogs + "PocketObjectStats-combined.csv");
-			Statistics.MissionDetailsHtmlPath = System.IO.Path.Combine(Logging.Logpath, "MissionDetailsHTML\\");
-
-			try
-			{
-				Directory.CreateDirectory(Logging.Logpath);
-				Directory.CreateDirectory(Logging.SessionDataCachePath);
-				Directory.CreateDirectory(Logging.ConsoleLogPath);
-//				Directory.CreateDirectory(Statistics.SessionsLogPath);
-				Directory.CreateDirectory(Statistics.DroneStatsLogPath);
-				Directory.CreateDirectory(Statistics.WreckLootStatisticsPath);
-//				Directory.CreateDirectory(Statistics.MissionStats1LogPath);
-//				Directory.CreateDirectory(Statistics.MissionStats2LogPath);
-				Directory.CreateDirectory(Statistics.MissionStats3LogPath);
-				Directory.CreateDirectory(Statistics.MissionDungeonIdLogPath);
-				Directory.CreateDirectory(Statistics.PocketStatisticsPath);
-				Directory.CreateDirectory(Statistics.PocketObjectStatisticsPath);
+				//create all the logging directories even if they are not configured to be used - we can adjust this later if it really bugs people to have some potentially empty directories.
 				
-				Directory.CreateDirectory(Statistics.WindowStatsLogPath);
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Settings", "Problem creating directories for logs [" + exception + "]", Logging.Debug);
-			}
-			//create all the logging directories even if they are not configured to be used - we can adjust this later if it really bugs people to have some potentially empty directories.
-			
-			if (!Settings.Instance.DefaultSettingsLoaded)
-			{
-				if (SettingsLoaded != null)
+				if (!Settings.Instance.DefaultSettingsLoaded)
 				{
-					SettingsLoadedICount++;
-					if (Settings.Instance.CommonXMLExists) Logging.Log("Settings", "[" + SettingsLoadedICount + "] Done Loading Settings from [" + Settings.Instance.CommonSettingsPath + "] and", Logging.Green);
-					Logging.Log("Settings", "[" + SettingsLoadedICount + "] Done Loading Settings from [" + Logging.CharacterSettingsPath + "]", Logging.Green);
+					if (SettingsLoaded != null)
+					{
+						SettingsLoadedICount++;
+						if (Settings.Instance.CommonXMLExists) Logging.Log("Settings", "[" + SettingsLoadedICount + "] Done Loading Settings from [" + Settings.Instance.CommonSettingsPath + "] and", Logging.Green);
+						Logging.Log("Settings", "[" + SettingsLoadedICount + "] Done Loading Settings from [" + Logging.CharacterSettingsPath + "]", Logging.Green);
 
-					SettingsLoaded(this, new EventArgs());
+						SettingsLoaded(this, new EventArgs());
+					}
 				}
+			} catch (Exception ex) {
+				
+				Logging.Log("Settings", "Problem creating directories for logs [" + ex + "]", Logging.Debug);
 			}
 		}
 

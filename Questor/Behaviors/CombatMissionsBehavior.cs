@@ -71,11 +71,15 @@ namespace Questor.Behaviors
 
 		public void SettingsLoaded(object sender, EventArgs e)
 		{
+			Logging.Log("CombatMissionsBehavior.ApplySettings",  "called.");
 			ValidateCombatMissionSettings();
 		}
 		
 		public bool ValidateCombatMissionSettings()
 		{
+			try {
+				
+			
 			ValidSettings = true;
 			if (Combat.Ammo.Any())
 			{
@@ -124,6 +128,12 @@ namespace Questor.Behaviors
 			}
 			
 			return true;
+			
+			} catch (Exception ex) {
+				
+				Logging.Log("ValidateCombatMissionSettings", "Exception: " + ex, Logging.White);
+				return false;
+			}
 		}
 
 		public bool ChangeCombatMissionBehaviorState(CombatMissionsBehaviorState _CMBStateToSet, string LogMessage = null)

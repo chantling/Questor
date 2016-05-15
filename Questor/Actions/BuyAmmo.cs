@@ -611,13 +611,13 @@ namespace Questor.Actions
 
 							// Calculate how much ammo we still need
 							int remaining = Math.Min(neededQuantity, order.VolumeRemaining);
-							order.Buy(remaining, DirectOrderRange.Station);
 							long orderPrice = (long)(remaining * order.Price);
 
 							if (orderPrice < Cache.Instance.MyWalletBalance)
 							{
 
 								Logging.Log("BuyAmmo", "Buying [" + remaining + "] ammo price [" + order.Price + "]", Logging.White);
+								order.Buy(remaining, DirectOrderRange.Station);
 
 								// Wait for the order to go through
 								nextAction = DateTime.UtcNow.AddSeconds(10);

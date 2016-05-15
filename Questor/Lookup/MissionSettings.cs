@@ -462,55 +462,50 @@ namespace Questor.Modules.Lookup
 
 			set { _factionFittingNameForThisMissionsFaction = value; }
 		}
-
-		private static string _missionFittingNameForThisMissionName;
-
-		private static MissionFitting _missionFittingForThisMissionName;
+		
 		public static string MissionFittingNameForThisMissionName
 		{
 			get
 			{
-				if (_missionFittingForThisMissionName == null)
+				if (MissionSettings.ListOfMissionFittings != null)
 				{
-					if (MissionSettings.ListOfMissionFittings != null)
+					if (MissionSettings.ListOfMissionFittings.Any())
 					{
-						if (MissionSettings.ListOfMissionFittings.Any())
+						if (MissionSettings.ListOfMissionFittings.Any(i => i.MissionName != null && MissionSettings.Mission != null && i.MissionName.ToLower().Equals(Mission.Name.ToLower())))
 						{
-							if (MissionSettings.ListOfMissionFittings.Any(i => i.MissionName != null && MissionSettings.Mission != null && i.MissionName.ToLower().Equals(Mission.Name.ToLower())))
+							IEnumerable<MissionFitting> tempListOfMissionFittings = MissionSettings.ListOfMissionFittings.Where(i => i.MissionName.ToLower().Equals(Mission.Name.ToLower()));
+							if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())
 							{
-								IEnumerable<MissionFitting> tempListOfMissionFittings = MissionSettings.ListOfMissionFittings.Where(i => i.MissionName.ToLower().Equals(Mission.Name.ToLower()));
-								if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())
+								MissionFitting fitting = tempListOfMissionFittings.FirstOrDefault();
+								if (fitting != null)
 								{
-									MissionFitting fitting = tempListOfMissionFittings.FirstOrDefault();
-									if (fitting != null)
+									if (fitting.DroneTypeID != null)
 									{
-										if (fitting.DroneTypeID != null)
-										{
-											MissionSettings.MissionDroneTypeID = fitting.DroneTypeID;
-										}
-
-										//_fitting.Ship - this should allow for mission specific ships... if we want to allow for that
-										return fitting.FittingName;
+										MissionSettings.MissionDroneTypeID = fitting.DroneTypeID;
 									}
 
-									return null;
+									//_fitting.Ship - this should allow for mission specific ships... if we want to allow for that
+									return fitting.FittingName;
 								}
 
-								Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())", Logging.Debug);
 								return null;
 							}
 
-							Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (!MissionSettings.ListOfMissionFittings.Any(i => i.MissionName != null && Mission != null && i.MissionName.ToLower() == Mission.Name))", Logging.Debug);
+							Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (tempListOfMissionFittings != null && tempListOfMissionFittings.Any())", Logging.Debug);
 							return null;
 						}
 
-						Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (!MissionSettings.ListOfMissionFittings.Any())", Logging.Debug);
+						Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (!MissionSettings.ListOfMissionFittings.Any(i => i.MissionName != null && Mission != null && i.MissionName.ToLower() == Mission.Name))", Logging.Debug);
 						return null;
 					}
 
-					Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (MissionSettings.ListOfMissionFittings == null )", Logging.Debug);
+					Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (!MissionSettings.ListOfMissionFittings.Any())", Logging.Debug);
 					return null;
 				}
+
+				Logging.Log("MissionSettings", "MissionFittingNameForThisMissionName: if (MissionSettings.ListOfMissionFittings == null )", Logging.Debug);
+				return null;
+				
 
 				return _factionFittingNameForThisMissionsFaction;
 			}
@@ -820,7 +815,7 @@ namespace Questor.Modules.Lookup
 							foreach (Ammo specificAmmoType in Combat.Ammo.Where(a => a.DamageType == damageTypeToSearchFor.Key).Select(a => a.Clone()))
 							{
 								Logging.Log("LoadCorrectFactionOrMissionAmmo", "Adding [" + specificAmmoType + "] to the list of AmmoTypes to load. It is defined as [" + missionDamageType + "] Quantity [" + specificAmmoType.Quantity + "]", Logging.White);
-								MissionSettings.AmmoTypesToLoad.Clear(); // this is probaby bad if we want to load more than one ammo 
+								MissionSettings.AmmoTypesToLoad.Clear(); // this is probaby bad if we want to load more than one ammo
 								MissionSettings.AmmoTypesToLoad.AddOrUpdate(specificAmmoType, DateTime.UtcNow);
 								MissionSettings.loadedAmmo = true;
 							}
@@ -839,7 +834,7 @@ namespace Questor.Modules.Lookup
 						
 						Logging.Log("LoadCorrectFactionOrMissionAmmo", "DamageType [" + FactionDamageType + "] is one of the damagetypes we should load", Logging.White);
 						foreach (Ammo specificAmmoType in Combat.Ammo.Where(a => a.DamageType == FactionDamageType).Select(a => a.Clone()))
-						{	
+						{
 							Logging.Log("LoadCorrectFactionOrMissionAmmo", "Adding [" + specificAmmoType + "] to the list of AmmoTypes to load. It is defined as [" + FactionDamageType + "]", Logging.White);
 							MissionSettings.AmmoTypesToLoad.AddOrUpdate(specificAmmoType, DateTime.UtcNow);
 							MissionSettings.loadedAmmo = true;

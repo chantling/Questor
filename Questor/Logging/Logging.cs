@@ -115,9 +115,9 @@ namespace Questor.Modules.Logging
 			}
 		}
 
-		public static void Log(string DescriptionOfWhere, string line, string color, bool verbose = false)
+		public static void Log(string DescriptionOfWhere, string line, string color = "\ag", bool verbose = false)
 		{
-			
+		
 			try
 			{
 

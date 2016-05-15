@@ -519,8 +519,7 @@ namespace Questor.Modules.BackgroundTasks
 			//
 			//if we do not have the skill (to at least lvl1) named thermodynamics, return true and do not try to overload
 			//
-
-
+			
 			ModuleNumber = 0;
 			foreach (ModuleCache module in Cache.Instance.Modules)
 			{

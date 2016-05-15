@@ -112,7 +112,6 @@ namespace Questor
 			{
 				if (Settings.Instance.CharacterXMLExists && DateTime.UtcNow > Time.Instance.NextStartupAction)
 				{
-					Cache.Instance.DirectEve.Skills.RefreshMySkills();
 					_runOnceAfterStartupalreadyProcessed = true;
 
 					Cache.Instance.IterateShipTargetValues("RunOnceAfterStartup");  // populates ship target values from an XML
@@ -120,7 +119,7 @@ namespace Questor
 
 					MissionSettings.UpdateMissionName();
 					Logging.MaintainConsoleLogs();
-
+					
 				}
 				else
 				{
@@ -349,14 +348,11 @@ namespace Questor
 		public void EVEOnFrame(object sender, EventArgs e)
 		{
 			try
-				
 			{
-				
 				if (_nextPulse > DateTime.UtcNow)
 				{
 					return;
 				}
-
 				
 				Time.Instance.LastFrame = DateTime.UtcNow;
 				
@@ -711,12 +707,18 @@ namespace Questor
 				Cache.Instance.InvalidateCache();
 				
 				
+				
 				if (!OnframeProcessEveryPulse()) return;
 				if (Logging.DebugOnframe) Logging.Log("Questor", "OnFrame: this is Questor.cs [" + DateTime.UtcNow + "] by default the next InSpace pulse will be in [" + Time.Instance.QuestorPulseInSpace_milliseconds + "]milliseconds", Logging.Teal);
-
+				// shit happens above here, look @ loadsettingfromxml
 				
+				//return;
 				RunOnceAfterStartup();
+				
 				RunOnceInStationAfterStartup();
+				
+				
+				
 				
 				Defense.ProcessState();
 

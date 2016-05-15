@@ -46,12 +46,13 @@ namespace Questor.Storylines
             //_statistics = new Statistics();
             _combatMissionCtrl = new CombatMissionCtrl();
 
-            Settings.Instance.SettingsLoaded += ApplySettings;
+            //Settings.Instance.SettingsLoaded += ApplySettings;
         }
 
         private void ApplySettings(object sender, EventArgs e)
         {
-            Settings.Instance.LoadSettings(true);
+        	//Logging.Log("GenericCombatStoryline.ApplySettings", "called.");
+            //Settings.Instance.LoadSettings(true);
         }
 
         /// <summary>
