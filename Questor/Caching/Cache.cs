@@ -84,6 +84,7 @@ namespace Questor.Modules.Caching
 		public HashSet<long> LootedContainers { get; private set; }
 		public bool ExitWhenIdle;
 		public bool StopBot;
+		public bool CanSafelyCloseQuestorWindow {get; set;}
 		public static bool LootAlreadyUnloaded;
 		public bool RouteIsAllHighSecBool;
 		public double Wealth { get; set; }

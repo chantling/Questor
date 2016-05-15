@@ -44,6 +44,7 @@ namespace Questor
 		private static DateTime _lastServerStatusCheckWasNotOK = DateTime.MinValue;
 		private static DateTime _lastSessionNotReady = DateTime.MinValue;
 		private static Random _random = new Random();
+		public static Questor questor = null;
 
 		private readonly Stopwatch _watch;
 
@@ -101,6 +102,8 @@ namespace Questor
 
 			
 			Logging.Log("Questor", "Questor.", Logging.White);
+			
+			questor = this;
 		}
 
 		public void RunOnceAfterStartup()
@@ -343,7 +346,7 @@ namespace Questor
 		}
 
 		private int pulseDelay = 800;
-		private void EVEOnFrame(object sender, EventArgs e)
+		public void EVEOnFrame(object sender, EventArgs e)
 		{
 			try
 				
@@ -364,8 +367,11 @@ namespace Questor
 					Time.Instance.LastFrame = DateTime.UtcNow;
 					Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
 					NavigateOnGrid.AvoidBumpingThingsTimeStamp = DateTime.UtcNow;
+					Cache.Instance.CanSafelyCloseQuestorWindow = true;
 					return;
 				}
+				
+				Cache.Instance.CanSafelyCloseQuestorWindow = false;
 
 				if (!BeforeLogin.questorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questor")) {
 					_nextPulse = DateTime.UtcNow.AddSeconds(2);

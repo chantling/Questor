@@ -17,6 +17,7 @@ namespace Questor
 	using global::Questor.Modules.States;
 	using global::Questor.Modules.BackgroundTasks;
 	using System.ComponentModel;
+	using System.Threading;
 	using DirectEve;
 
 	public partial class QuestorUI : Form
@@ -24,6 +25,7 @@ namespace Questor
 		private DateTime _nextUIDataRefresh = DateTime.UtcNow;
 		private DateTime _nextScheduleUpdate = DateTime.UtcNow;
 		private string _lastLogLine = string.Empty;
+		static object Lock = new object();
 
 		public QuestorUI()
 		{
@@ -69,12 +71,13 @@ namespace Questor
 			try
 			{
 				if (Logging.DebugUI) Logging.Log("QuestorUI", "QuestorfrmMainFormClosed", Logging.White);
-				Cleanup.SignalToQuitQuestor = true;
 			}
 			catch (Exception ex)
 			{
 				Logging.Log("QuestorUI", "Exception [" + ex + "]", Logging.Debug);
 			}
+			
+			Logging.OnMessage -= AddLog;
 		}
 
 		private void PopulateStateComboBoxes()
@@ -630,14 +633,17 @@ namespace Questor
 			var frm = new PythonBrowser.PythonBrowserFrm();
 			frm.Show();
 		}
-		void QuestorUILoad(object sender, EventArgs e)
-		{
-			Logging.OnMessage += (msg) => {
+		
+		
+		
+		void AddLog(string msg) {
+			
+			
+			
+			try {
 				
-				var worker = new BackgroundWorker();
-				worker.DoWork += (s, ev) =>
-				{
-					if (logListbox.Items.Count >= 5000)
+				lock(Lock) {
+					if (logListbox.Items.Count >= 100)
 					{
 						logListbox.Items.Clear();
 					}
@@ -646,17 +652,32 @@ namespace Questor
 					
 					if(logListbox.Items.Count>1)
 						logListbox.TopIndex = logListbox.Items.Count - 1;
-					
-				};
-				worker.RunWorkerCompleted += (s, ev) =>
-				{
-
-					var result = ev.Result;
-
-				};
-				worker.RunWorkerAsync();
+				}
 				
-			};
+			} catch (Exception) {
+				
+				
+			}
+
+			
+		}
+		
+		void AddLogInvoker(string msg) {
+				try {
+					this.Invoke((MethodInvoker)delegate {AddLog(msg);});}
+				catch (Exception) {}
+		}
+		
+		void QuestorUILoad(object sender, EventArgs e)
+		{
+			Logging.OnMessage += AddLogInvoker;
+		}
+		void QuestorUIFormClosing(object sender, FormClosingEventArgs e)
+		{
+			Logging.OnMessage -= AddLogInvoker;
+			Cache.Instance.Paused = true;
+			Cache.Instance.DirectEve.OnFrame -= Questor.questor.EVEOnFrame;
+			
 		}
 	}
 }

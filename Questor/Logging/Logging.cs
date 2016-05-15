@@ -26,6 +26,15 @@ namespace Questor.Modules.Logging
 		static Logging()
 		{
 			Logging.PathToCurrentDirectory = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			
+//			
+//			new Thread( () => {
+//			           	while(true) {
+//			           		if (OnMessage != null)
+//			           			OnMessage("test");
+//			           		Thread.Sleep(200);
+//			           	}
+//			           }).Start();
 		}
 
 		public static string PathToCurrentDirectory;
@@ -108,6 +117,7 @@ namespace Questor.Modules.Logging
 
 		public static void Log(string DescriptionOfWhere, string line, string color, bool verbose = false)
 		{
+			
 			try
 			{
 
@@ -192,21 +202,29 @@ namespace Questor.Modules.Logging
 
 		public static void BasicLog(string module, string logmessage)
 		{
-			Console.WriteLine("{0:HH:mm:ss} {1}", DateTime.UtcNow,"[" + module + "] " + logmessage);
-			if (Logging.SaveLogRedacted && Logging.ConsoleLogFileRedacted != null)
-			{
-				if (Directory.Exists(Path.GetDirectoryName(Logging.ConsoleLogFileRedacted)))
+			
+			try {
+				
+				
+				Console.WriteLine("{0:HH:mm:ss} {1}", DateTime.UtcNow,"[" + module + "] " + logmessage);
+				if (Logging.SaveLogRedacted && Logging.ConsoleLogFileRedacted != null)
 				{
-					File.AppendAllText(Logging.ConsoleLogFileRedacted, string.Format("{0:HH:mm:ss} {1}", DateTime.UtcNow,"[" + module + "] " + logmessage));
+					if (Directory.Exists(Path.GetDirectoryName(Logging.ConsoleLogFileRedacted)))
+					{
+						File.AppendAllText(Logging.ConsoleLogFileRedacted, string.Format("{0:HH:mm:ss} {1}", DateTime.UtcNow,"[" + module + "] " + logmessage));
+					}
 				}
-			}
 
-			if (Logging.SaveLogRedacted && Logging.ConsoleLogFile != null)
-			{
-				if (Directory.Exists(Path.GetDirectoryName(Logging.ConsoleLogFile)))
+				if (Logging.SaveLogRedacted && Logging.ConsoleLogFile != null)
 				{
-					File.AppendAllText(Logging.ConsoleLogFile, string.Format("{0:HH:mm:ss} {1}", DateTime.UtcNow, "[" + module + "] " + logmessage));
+					if (Directory.Exists(Path.GetDirectoryName(Logging.ConsoleLogFile)))
+					{
+						File.AppendAllText(Logging.ConsoleLogFile, string.Format("{0:HH:mm:ss} {1}", DateTime.UtcNow, "[" + module + "] " + logmessage));
+					}
 				}
+				
+			} catch (Exception e) {
+				Console.WriteLine("Exception: " + e.ToString());
 			}
 		}
 

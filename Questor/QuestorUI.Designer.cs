@@ -1852,6 +1852,7 @@
         	this.MaximizeBox = false;
         	this.Name = "QuestorUI";
         	this.Text = "Questor";
+        	this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.QuestorUIFormClosing);
         	this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.QuestorfrmMainFormClosed);
         	this.Load += new System.EventHandler(this.QuestorUILoad);
         	this.Shown += new System.EventHandler(this.QuestorUIShown);
