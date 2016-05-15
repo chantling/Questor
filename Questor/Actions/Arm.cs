@@ -1069,6 +1069,7 @@ namespace Questor.Modules.Actions
 				}
 
                 if (currentMissionFitting != null)
+                {
                     if (!string.IsNullOrEmpty(currentMissionFitting.Ship))
                     {
                         List<DirectItem> shipsInShipHangar = Cache.Instance.ShipHangar.Items;
@@ -1084,8 +1085,11 @@ namespace Questor.Modules.Actions
                             MissionSettings.UseMissionShip = false;
                         }
                     }
-                else
+                    else
+                    {
                         Logging.Log(WeAreInThisStateForLogs(), "currentMissionFitting is null", Logging.White);
+                    }
+                }
 
                 if (MissionSettings.UseMissionShip)
                 {
@@ -1100,10 +1104,20 @@ namespace Questor.Modules.Actions
                         }
                     }
                     else
+                    {
                         MissionSettings.UseMissionShip = true;
+                    }
+                }
+                else
+                {
+                    if (!ActivateShip(Combat.CombatShipName) && !switchingShips)
+                    {
+                        Logging.Log(WeAreInThisStateForLogs(), "Unable to activate Combat Ship [" + Combat.CombatShipName + "]", Logging.White);
+                        return false;
+                    }
                 }
 
-				if (SwitchShipsOnly)
+                if (SwitchShipsOnly)
 				{
 					ChangeArmState(ArmState.Done, true);
 					SwitchShipsOnly = false;
@@ -1239,8 +1253,9 @@ namespace Questor.Modules.Actions
 							ChangeArmState(ArmState.MoveDrones, true);
 							return false;
 						}
-                        else if ((MissionSettings.UseMissionShip || !MissionSettings.MissionShipSpecified) && currentMissionFitting.FittingName != null )
-                            MissionSettings.FittingToLoad = currentMissionFitting.FittingName;
+                        else if (currentMissionFitting != null)
+                            if ((MissionSettings.UseMissionShip || !MissionSettings.MissionShipSpecified) && currentMissionFitting.FittingName != null && currentMissionFitting.FittingName != "" )
+                                MissionSettings.FittingToLoad = currentMissionFitting.FittingName;
 
 						//let's check first if we need to change fitting at all
 						Logging.Log(WeAreInThisStateForLogs(), "Fitting: " + MissionSettings.FittingToLoad + " - currentFit: " + MissionSettings.CurrentFit, Logging.White);

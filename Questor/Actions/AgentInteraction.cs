@@ -481,6 +481,8 @@ namespace Questor.Modules.Actions
 		{
 			try
 			{
+                MissionSettings.UseMissionShip = false;
+                MissionSettings.MissionShipSpecified = false;
 				if (MissionSettings.Mission != null)
 				{
 					MissionSettings.MissionName = Logging.FilterPath(MissionSettings.Mission.Name);
