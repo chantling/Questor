@@ -716,8 +716,6 @@ namespace Questor
 				RunOnceInStationAfterStartup();
 				
 				
-				
-				
 				Defense.ProcessState();
 
 				if (Cache.Instance.Paused)

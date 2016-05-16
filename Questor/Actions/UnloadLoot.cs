@@ -58,16 +58,26 @@ namespace Questor.Modules.Actions
 		}
 		
 		
-		public static int CurrentLootValueInShipHangar() {
+		public static long CurrentLootValueInCurrentShipInventory() {
 			
-			var lootValue = 0;
-			foreach(var item in LootItemsInCurrentShipHangar()) {
-				lootValue += (int)item.AveragePrice() * Math.Max(item.Quantity, 1);
+			long lootValue = 0;
+			foreach(var item in LootItemsInCurrentShipInventory()) {
+				lootValue += (long)item.AveragePrice() * Math.Max(item.Quantity, 1);
 			}
 			return lootValue;
 		}
 		
-		public static List<DirectItem> LootItemsInCurrentShipHangar () {
+		
+		public static long CurrentLootValueInItemHangar() {
+			
+			long lootValue = 0;
+			foreach(var item in LootItemsInItemHangar()) {
+				lootValue += (long)item.AveragePrice() * Math.Max(item.Quantity, 1);
+			}
+			return lootValue;
+		}
+		
+		public static List<DirectItem> LootItemsInCurrentShipInventory () {
 			return Cache.Instance.CurrentShipsCargo.Items.Where(i => Combat.Ammo.All(a => a.TypeId != i.TypeId)
 			                                                    && Settings.Instance.CapacitorInjectorScript != i.TypeId
 			                                                    && i.TypeId != (int)TypeID.AngelDiamondTag
@@ -95,6 +105,38 @@ namespace Questor.Modules.Actions
 			                                                    && i.GroupId != (int)Group.CapacitorGroupCharge
 			                                                    || Cache.Instance.UnloadLootTheseItemsAreLootById.ContainsKey(i.TypeId)
 			                                                   ).ToList();
+			
+		}
+		
+		
+		public static List<DirectItem> LootItemsInItemHangar () {
+			return Cache.Instance.ItemHangar.Items.Where(i => Combat.Ammo.All(a => a.TypeId != i.TypeId)
+			                                             && Settings.Instance.CapacitorInjectorScript != i.TypeId
+			                                             && i.TypeId != (int)TypeID.AngelDiamondTag
+			                                             && i.TypeId != (int)TypeID.GuristasDiamondTag
+			                                             && i.TypeId != (int)TypeID.ImperialNavyGatePermit
+			                                             && i.GroupId != (int)Group.AccelerationGateKeys
+			                                             && i.GroupId != (int)Group.Livestock
+			                                             && i.GroupId != (int)Group.MiscSpecialMissionItems
+			                                             && i.GroupId != (int)Group.Kernite
+			                                             && i.GroupId != (int)Group.Omber
+			                                             && i.GroupId != (int)Group.Commodities
+			                                             && i.TypeId != (int)TypeID.MetalScraps
+			                                             && i.TypeId != (int)TypeID.ReinforcedMetalScraps
+			                                             && i.TypeId != (int)TypeID.AncillaryShieldBoosterScript
+			                                             && i.TypeId != (int)TypeID.CapacitorInjectorScript
+			                                             && i.TypeId != (int)TypeID.FocusedWarpDisruptionScript
+			                                             && i.TypeId != (int)TypeID.OptimalRangeDisruptionScript
+			                                             && i.TypeId != (int)TypeID.OptimalRangeScript
+			                                             && i.TypeId != (int)TypeID.ScanResolutionDampeningScript
+			                                             && i.TypeId != (int)TypeID.ScanResolutionScript
+			                                             && i.TypeId != (int)TypeID.TargetingRangeDampeningScript
+			                                             && i.TypeId != (int)TypeID.TargetingRangeScript
+			                                             && i.TypeId != (int)TypeID.TrackingSpeedDisruptionScript
+			                                             && i.TypeId != (int)TypeID.TrackingSpeedScript
+			                                             && i.GroupId != (int)Group.CapacitorGroupCharge
+			                                             || Cache.Instance.UnloadLootTheseItemsAreLootById.ContainsKey(i.TypeId)
+			                                            ).ToList();
 			
 		}
 

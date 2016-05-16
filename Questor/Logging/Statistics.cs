@@ -119,7 +119,7 @@ namespace Questor.Modules.Logging
 			return missiontimeMinutes;
 		}
 
-	
+		
 		public static bool EntityStatistics(IEnumerable<EntityCache> things)
 		{
 			string objectline = "Name;Distance;TypeId;GroupId;CategoryId;IsNPC;IsNPCByGroupID;IsPlayer;TargetValue;Velocity;HaveLootRights;IsContainer;ID;\r\n";
@@ -287,7 +287,7 @@ namespace Questor.Modules.Logging
 		public static void WriteMissionStatistics(long statisticsForThisAgent)
 		{
 			DateTimeForLogs = DateTime.Now;
-		
+			
 			if (Cache.Instance.InSpace)
 			{
 				Logging.Log("Statistics", "We have started questor in space, assume we do not need to write any statistics at the moment.", Logging.Teal);
@@ -314,7 +314,17 @@ namespace Questor.Modules.Logging
 			AgentLPRetrievalAttempts = 0;
 
 			int isk = Convert.ToInt32(BountyValues.Sum(x => x.Value));
-			int lootVal = UnloadLoot.CurrentLootValueInShipHangar();
+			long lootValCurrentShipInv = 0;
+			long lootValItemHangar = 0;
+			
+			try {
+				lootValCurrentShipInv = UnloadLoot.CurrentLootValueInCurrentShipInventory();
+			} catch (Exception) {}
+			
+			try {
+				lootValItemHangar = UnloadLoot.CurrentLootValueInItemHangar();
+			} catch (Exception) {}
+			
 			
 			MissionsThisSession++;
 			if (Logging.DebugStatistics) Logging.Log("Statistics", "We jumped through all the hoops: now do the mission logging", Logging.White);
@@ -330,12 +340,13 @@ namespace Questor.Modules.Logging
 			Logging.Log("Statistics", "FinishedSalvaging: [ " + Statistics.FinishedSalvaging + "]", Logging.White);
 			Logging.Log("Statistics", "Wealth before mission: [ " + Cache.Instance.Wealth + "]", Logging.White);
 			Logging.Log("Statistics", "Wealth after mission: [ " + Cache.Instance.MyWalletBalance + "]", Logging.White);
-			Logging.Log("Statistics", "Value of Loot from the mission: [" + lootVal + "]", Logging.White);
+			Logging.Log("Statistics", "Value of Loot from the mission: [" + lootValCurrentShipInv + "]", Logging.White);
 			Logging.Log("Statistics", "Total LP after mission:  [" + Cache.Instance.Agent.LoyaltyPoints + "]", Logging.White);
 			Logging.Log("Statistics", "Total LP before mission: [" + Statistics.LoyaltyPointsTotal + "]", Logging.White);
 			Logging.Log("Statistics", "LP from this mission: [" + Statistics.LoyaltyPointsForCurrentMission + "]", Logging.White);
 			Logging.Log("Statistics", "ISKBounty from this mission: [" + isk + "]", Logging.White);
 			Logging.Log("Statistics", "ISKMissionreward from this mission: [" + Statistics.ISKMissionReward + "]", Logging.White);
+			Logging.Log("Statistics", "Lootvalue Itemhangar: [" + lootValItemHangar + "]", Logging.White);
 			Logging.Log("Statistics", "LostDrones: [" + Statistics.LostDrones + "]", Logging.White);
 			Logging.Log("Statistics", "DroneRecalls: [" + Statistics.DroneRecalls + "]", Logging.White);
 			Logging.Log("Statistics", "AmmoConsumption: [" + Statistics.AmmoConsumption + "]", Logging.White);
@@ -370,15 +381,15 @@ namespace Questor.Modules.Logging
 
 				if (!File.Exists(MissionStats3LogFile))
 				{
-					File.AppendAllText(MissionStats3LogFile, "Date;Mission;Time;Isk;IskReward;Loot;LP;DroneRecalls;LostDrones;AmmoConsumption;AmmoValue;Panics;LowestShield;LowestArmor;LowestCap;RepairCycles;AfterMissionsalvageTime;TotalMissionTime;MissionXMLAvailable;Faction;SolarSystem;DungeonID;OutOfDronesCount;ISKWallet\r\n");
+					File.AppendAllText(MissionStats3LogFile, "Date;Mission;Time;Isk;IskReward;Loot;LP;DroneRecalls;LostDrones;AmmoConsumption;AmmoValue;Panics;LowestShield;LowestArmor;LowestCap;RepairCycles;AfterMissionsalvageTime;TotalMissionTime;MissionXMLAvailable;Faction;SolarSystem;DungeonID;OutOfDronesCount;ISKWallet;ISKLootHangarItems\r\n");
 				}
 
 				string line3 = DateTimeForLogs + ";";                                                                                  // Date
 				line3 += MissionSettings.MissionName + ";";                                                                           // Mission
 				line3 += ((int)Statistics.FinishedMission.Subtract(Statistics.StartedMission).TotalMinutes) + ";";        			 // TimeMission
 				line3 += isk + ";";                                           														  // Isk
-				line3 += Statistics.ISKMissionReward + ";";                                           								// ISKMissionReward 
-				line3 += lootVal + ";";                                                                 						     // Loot
+				line3 += Statistics.ISKMissionReward + ";";                                           								// ISKMissionReward
+				line3 += lootValCurrentShipInv + ";";                                                                 						     // Loot
 				line3 += LoyaltyPointsForCurrentMission + ";";                           										    // LP
 				line3 += Statistics.DroneRecalls + ";";                                                                             // Lost Drones
 				line3 += Statistics.LostDrones + ";";                                                               // Lost Drones
@@ -397,6 +408,7 @@ namespace Questor.Modules.Logging
 				line3 += Cache.Instance.DungeonId + ";";                                                                                     // DungeonID - the unique identifier for this mission
 				line3 += Statistics.OutOfDronesCount + ";";                                                                         // OutOfDronesCount - number of times we totally ran out of drones and had to go re-arm
 				line3 += Cache.Instance.MyWalletBalance + ";";																		// Current wallet balance
+				line3 += lootValItemHangar + ";";																					// loot value in itemhangar
 				line3 += "\r\n";
 
 				// The mission is finished
