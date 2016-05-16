@@ -12,6 +12,7 @@ namespace DirectEve
 {
     using System.Linq;
     using PySharp;
+    using System;
 
     public class DirectAgent : DirectObject
     {
@@ -110,6 +111,9 @@ namespace DirectEve
 
         internal static DirectAgent GetAgentByName(DirectEve directEve, string name)
         {
+        	
+        	
+        	
             var agentsById = directEve.GetLocalSvc("agents").Attribute("allAgentsByID").Attribute("items").ToDictionary<long>();
             foreach (var agent in agentsById)
             {
@@ -119,7 +123,6 @@ namespace DirectEve
 
                 return GetAgentById(directEve, agent.Key);
             }
-
             return null;
         }
     }

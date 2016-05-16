@@ -95,6 +95,7 @@ namespace Questor.Modules.Caching
 		public bool doneUsingRepairWindow;
 		public long AmmoHangarID = -99;
 		public long LootHangarID = -99;
+		public volatile bool IsLoadingSettings;
 		public static D3DDetour.D3DVersion D3DVersion { get; set; }
 		public static Random _random = new Random();
 
@@ -582,7 +583,9 @@ namespace Questor.Modules.Caching
 								
 								if(MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1) {
 									
+									
 									_currentAgent = SelectFirstAgent(true);
+									Logging.Log("Cache.CurrentAgent", "Current Agent is [" + _currentAgent + "]", Logging.Debug);
 									
 								} else
 								{
@@ -592,7 +595,7 @@ namespace Questor.Modules.Caching
 							}
 							catch (Exception ex)
 							{
-								Logging.Log("Cache.AgentId", "Exception [" + ex + "]", Logging.Debug);
+								Logging.Log("Cache.CurrentAgent", "Exception [" + ex + "]", Logging.Debug);
 								return string.Empty;
 							}
 						}
@@ -661,19 +664,19 @@ namespace Questor.Modules.Caching
 						{
 							if (_agent == null && (!CurrentAgent.Equals(_agentName) || _agentId <= 0))
 							{
-								Logging.Log("Cache.Agent","Trying to GetAgentByName", Logging.White);
 								_agent = Cache.Instance.DirectEve.GetAgentByName(CurrentAgent);
-								
+								if(_agent == null) {
+									Logging.Log("Cache: CurrentAgent", "Agent == null ERROR", Logging.White);
+								}
 							}
 							
-							// if the agent hasn't been changed we can retrieve it by id, which is a lot faster
 							if(_agent == null && CurrentAgent.Equals(_agentName) && _agentId > 0) {
 								_agent = Cache.Instance.DirectEve.GetAgentById(_agentId);
 							}
 
-							if (_agent != null)
+							if (_agent != null && !CurrentAgent.Equals(_agentName))
 							{
-								Logging.Log("Cache: CurrentAgent", "AgentId [" + _agent.AgentId + "]", Logging.White);
+								Logging.Log("Cache: CurrentAgent", "New AgentId [" + _agent.AgentId + "] AgentName [" + CurrentAgent + "]" , Logging.White);
 								Cache.Instance.AgentStationName = Cache.Instance.DirectEve.GetLocationName(Cache.Instance._agent.StationId);
 								Cache.Instance.AgentStationID = Cache.Instance._agent.StationId;
 								Cache.Instance.AgentSolarSystemID = Cache.Instance._agent.SolarSystemId;
@@ -682,19 +685,19 @@ namespace Questor.Modules.Caching
 								_agentName = CurrentAgent;
 								_agentId = _agent.AgentId;
 								
-								return _agent;
-							} else {
-								Logging.Log("Cache.Agent","_agent == null", Logging.White);
-							}
+							} 
+							
+							return _agent;
 						}
 						catch (Exception ex)
 						{
 							Logging.Log("Cache.Agent", "Unable to process agent section of [" + Logging.CharacterSettingsPath + "] make sure you have a valid agent listed! Pausing so you can fix it. [" + ex.Message + "]", Logging.Debug);
 							Cache.Instance.Paused = true;
 						}
-					}
+					} else {
 
-					Logging.Log("Cache.Agent", "if (!Settings.Instance.CharacterXMLExists)", Logging.Debug);
+						Logging.Log("Cache.Agent", "if (!Settings.Instance.CharacterXMLExists)", Logging.Debug);
+					}
 					return null;
 				}
 				catch (Exception exception)

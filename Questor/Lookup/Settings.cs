@@ -224,6 +224,8 @@ namespace Questor.Modules.Lookup
 		{
 			try
 			{
+				Logging.Log("ReadSettingsFromXML","Start reading settings from xml async");
+				Cache.Instance.IsLoadingSettings = true;
 				Settings.Instance.CommonSettingsFileName = (string)CharacterSettingsXml.Element("commonSettingsFileName") ?? "common.xml";
 				Settings.Instance.CommonSettingsPath = System.IO.Path.Combine(Settings.Instance.Path, Settings.Instance.CommonSettingsFileName);
 
@@ -355,10 +357,6 @@ namespace Questor.Modules.Lookup
 				Logging.DebugWeShouldBeInSpaceORInStationAndOutOfSessionChange = (bool?)CharacterSettingsXml.Element("debugWeShouldBeInSpaceORInStationAndOutOfSessionChange") ?? (bool?)CommonSettingsXml.Element("debugWeShouldBeInSpaceORInStationAndOutOfSessionChange") ?? false;
 				Logging.DebugWatchForActiveWars = (bool?)CharacterSettingsXml.Element("debugWatchForActiveWars") ?? (bool?)CommonSettingsXml.Element("debugWatchForActiveWars") ?? false;
 				DetailedCurrentTargetHealthLogging = (bool?)CharacterSettingsXml.Element("detailedCurrentTargetHealthLogging") ?? (bool?)CommonSettingsXml.Element("detailedCurrentTargetHealthLogging") ?? true;
-				
-				
-				
-				
 				
 				BuyAmmo = (bool?)CharacterSettingsXml.Element("buyAmmo") ?? (bool?)CommonSettingsXml.Element("buyAmmo") ?? false;
 				BuyAmmoStationID = (int?)CharacterSettingsXml.Element("buyAmmoStationID") ?? (int?)CommonSettingsXml.Element("buyAmmoStationID") ?? 60003760;
@@ -777,7 +775,8 @@ namespace Questor.Modules.Lookup
 				//
 				try
 				{
-					Combat.Ammo.Clear();
+					
+					Combat.Ammo = new List<Ammo>();
 					XElement ammoTypes = CharacterSettingsXml.Element("ammoTypes") ?? CommonSettingsXml.Element("ammoTypes");
 
 					if (ammoTypes != null)
@@ -798,7 +797,7 @@ namespace Questor.Modules.Lookup
 				}
 				
 				
-				// ------------------ fine until here without the even listener
+				// ------------------ fine until here without the event listener
 			
 
 				//
@@ -808,7 +807,7 @@ namespace Questor.Modules.Lookup
 				{
 					//if (Settings.Instance.CharacterMode.ToLower() == "Combat Missions".ToLower())
 					//{
-					MissionSettings.ListOfAgents.Clear();
+					MissionSettings.ListOfAgents = new List<AgentsList>();
 					XElement agentList = CharacterSettingsXml.Element("agentsList") ?? CommonSettingsXml.Element("agentsList");
 
 					if (agentList != null)
@@ -837,7 +836,7 @@ namespace Questor.Modules.Lookup
 					Logging.Log("Settings", "Error Loading Agent Settings [" + exception + "]", Logging.Teal);
 				}
 				
-				//return;
+//				return;
 
 				//
 				// Loading Mission Blacklists/GreyLists
@@ -896,11 +895,14 @@ namespace Questor.Modules.Lookup
 				// number of days of console logs to keep (anything older will be deleted on startup)
 				//
 				Logging.ConsoleLogDaysOfLogsToKeep = (int?)CharacterSettingsXml.Element("consoleLogDaysOfLogsToKeep") ?? (int?)CommonSettingsXml.Element("consoleLogDaysOfLogsToKeep") ?? 14;
+				Cache.Instance.IsLoadingSettings = false;
+				Logging.Log("ReadSettingsFromXML","Done reading settings from xml async");	
 				//Logging.tryToLogToFile = (bool?)CharacterSettingsXml.Element("tryToLogToFile") ?? (bool?)CommonSettingsXml.Element("tryToLogToFile") ?? true;
 			}
 			catch(Exception exception)
 			{
 				Logging.Log("Settings", "ReadSettingsFromXML: Exception [" + exception + "]", Logging.Teal);
+				Cache.Instance.IsLoadingSettings = false;
 			}
 		}
 
@@ -915,7 +917,7 @@ namespace Questor.Modules.Lookup
 					return;
 				}
 
-				Time.Instance.NextLoadSettings = DateTime.UtcNow.AddSeconds(15);
+				Time.Instance.NextLoadSettings = DateTime.UtcNow.AddSeconds(1);
 				
 				try
 				{
@@ -989,7 +991,7 @@ namespace Questor.Modules.Lookup
 				else //if the settings file exists - load the characters settings XML
 				{
 					Settings.Instance.CharacterXMLExists = true;
-					;
+
 					using (XmlTextReader reader = new XmlTextReader(Logging.CharacterSettingsPath))
 					{
 						reader.EntityHandling = EntityHandling.ExpandEntities;
@@ -1004,6 +1006,7 @@ namespace Questor.Modules.Lookup
 					{
 						if (File.Exists(Logging.CharacterSettingsPath)) _lastModifiedDateOfMySettingsFile = File.GetLastWriteTime(Logging.CharacterSettingsPath);
 						if (File.Exists(Settings.Instance.CommonSettingsPath)) _lastModifiedDateOfMyCommonSettingsFile = File.GetLastWriteTime(CommonSettingsPath);
+//						new Thread(() => {ReadSettingsFromXML();}).Start();
 						ReadSettingsFromXML();
 					}
 				}
@@ -1056,7 +1059,11 @@ namespace Questor.Modules.Lookup
 						//SettingsLoaded(this, new EventArgs());
 					}
 				}
+				
+				
+				
 			} catch (Exception ex) {
+				
 				
 				Logging.Log("Settings", "Problem creating directories for logs [" + ex + "]", Logging.Debug);
 			}

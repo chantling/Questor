@@ -10,75 +10,102 @@
 
 namespace Questor.Modules.Lookup
 {
-    using System;
-    using System.Xml.Linq;
-    using DirectEve;
-    using global::Questor.Modules.Caching;
-    using global::Questor.Modules.Logging;
+	using System;
+	using System.Xml.Linq;
+	using DirectEve;
+	using global::Questor.Modules.Caching;
+	using global::Questor.Modules.Logging;
 
-    public class Ammo
-    {
-        public Ammo()
-        {
-        }
+	public class Ammo
+	{
+		public Ammo()
+		{
+		}
 
-        public Ammo(XElement ammo)
-        {
-            try
-            {
-                TypeId = (int)ammo.Attribute("typeId");
-                DamageType = (DamageType)Enum.Parse(typeof(DamageType), (string)ammo.Attribute("damageType"));
-                Name = (string)ammo.Attribute("name");
-                Range = (int)ammo.Attribute("range");
-                Quantity = (int)ammo.Attribute("quantity");
-                Description = (string)ammo.Attribute("description") ?? (string)ammo.Attribute("typeId");
-                //
-                // the above is pulling from XML, not eve... the below is what we want to pull from eve
-                //
+		public Ammo(XElement ammo)
+		{
+			try
+			{
+				TypeId = (int)ammo.Attribute("typeId");
+				DamageType = (DamageType)Enum.Parse(typeof(DamageType), (string)ammo.Attribute("damageType"));
+//				Name = (string)ammo.Attribute("name");
+				Range = (int)ammo.Attribute("range");
+				Quantity = (int)ammo.Attribute("quantity");
+				Description = (string)ammo.Attribute("description") ?? (string)ammo.Attribute("typeId");
+				//
+				// the above is pulling from XML, not eve... the below is what we want to pull from eve
+				//
 
-                
-                DirectInvType __directInvTypeItem;
-                Cache.Instance.DirectEve.InvTypes.TryGetValue(TypeId, out __directInvTypeItem);
-                if (__directInvTypeItem != null)
-                {
-                    Name = __directInvTypeItem.TypeName;
-                }
-                
-                if (Logging.DebugAmmo)
-                {
-                    Logging.Log("Ammo", " [01] Name [" + Name + "] - derived from XML", Logging.Debug);
-                    Logging.Log("Ammo", " [01] TypeId [" + TypeId + "] - from XML", Logging.Debug);
-                    Logging.Log("Ammo", " [02] DamageType [" + DamageType + "] - from XML", Logging.Debug);
-                    Logging.Log("Ammo", " [03] Range [" + Range + "] - from XML", Logging.Debug);
-                    Logging.Log("Ammo", " [04] Quantity [" + Quantity + "] - from XML", Logging.Debug);
-                    Logging.Log("Ammo", " [05] Description [" + Description + "] - from XML", Logging.Debug);
-                }
-            }
-            catch (Exception exception)
-            {
-                Logging.Log("Ammo","Exception [" + exception + "]",Logging.Debug);
-            }
-        }
+				
+				if(!Cache.Instance.DirectEve.DoesInvTypeExistInTypeStorage(TypeId)) {
+					Logging.Log("Ammo", "ERROR: TypeId: "  + TypeId + " was NOT found in type storage. Fix your ammo type ids." , Logging.Debug);
+				} else {
+					Logging.Log("Ammo", "TypeId: "  + TypeId + " was found in type storage" , Logging.Debug);
+				}
+				
+//				
+//				DirectInvType __directInvTypeItem;
+//				Cache.Instance.DirectEve.InvTypes.TryGetValue(TypeId, out __directInvTypeItem);
+//				if (__directInvTypeItem != null)
+//				{
+//					Name = __directInvTypeItem.TypeName;
+//				}
+				
+//				
+//				if (Logging.DebugAmmo)
+//				{
+//					Logging.Log("Ammo", " [01] Name [" + Name + "] - derived from XML", Logging.Debug);
+//					Logging.Log("Ammo", " [01] TypeId [" + TypeId + "] - from XML", Logging.Debug);
+//					Logging.Log("Ammo", " [02] DamageType [" + DamageType + "] - from XML", Logging.Debug);
+//					Logging.Log("Ammo", " [03] Range [" + Range + "] - from XML", Logging.Debug);
+//					Logging.Log("Ammo", " [04] Quantity [" + Quantity + "] - from XML", Logging.Debug);
+//					Logging.Log("Ammo", " [05] Description [" + Description + "] - from XML", Logging.Debug);
+//				}
+			}
+			catch (Exception exception)
+			{
+				Logging.Log("Ammo","Exception [" + exception + "]",Logging.Debug);
+			}
+		}
 
-        public string Name { get; set; }
-        public int TypeId { get; private set; }
-        public DamageType DamageType { get; private set; }
-        public int Range { get; private set; }
-        public int Quantity { get; set; }
-        public string Description { get; set; }
+		private string _name = String.Empty;
+		public string Name {
+			get {
+				if(!String.IsNullOrEmpty(_name))
+					return _name;
+				
+				string ret = String.Empty;
+				if(!Cache.Instance.DirectEve.DoesInvTypeExistInTypeStorage(TypeId))
+					return ret;
+				
+				DirectInvType invType = Cache.Instance.DirectEve.GetInvType(TypeId);
+				
+				if(invType == null)
+					return ret;
+				
+				string typeName = invType.TypeName;
+				_name = typeName;
+				return typeName;
+			}
+		}
+		public int TypeId { get; private set; }
+		public DamageType DamageType { get; private set; }
+		public int Range { get; private set; }
+		public int Quantity { get; set; }
+		public string Description { get; set; }
 
-        public Ammo Clone()
-        {
-            Ammo _ammo = new Ammo
-                {
-                    TypeId = TypeId,
-                    DamageType = DamageType,
-                    Range = Range,
-                    Quantity = Quantity,
-                    Description = Description,
-                    Name = Name,
-                };
-            return _ammo;
-        }
-    }
+		public Ammo Clone()
+		{
+			Ammo _ammo = new Ammo
+			{
+				TypeId = TypeId,
+				DamageType = DamageType,
+				Range = Range,
+				Quantity = Quantity,
+				Description = Description,
+
+			};
+			return _ammo;
+		}
+	}
 }

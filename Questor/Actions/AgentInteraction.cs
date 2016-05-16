@@ -820,7 +820,7 @@ namespace Questor.Modules.Actions
 					}
 
 					int secondsToWait = ((hours * 3600) + (minutes * 60) + 60);
-					AgentsList _currentAgent = MissionSettings.ListOfAgents.FirstOrDefault(i => i.Name == Cache.Instance.CurrentAgent);
+					
 
 					//
 					// standings are below the blacklist minimum

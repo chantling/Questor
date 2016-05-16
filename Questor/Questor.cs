@@ -175,7 +175,7 @@ namespace Questor
 		{
 			return _random.Next(minValue, maxValue);
 		}
-		protected DateTime GetNowAddDelay(int minDelayInSeconds, int maxDelayInSeconds)
+		protected DateTime UTCNowAddDelay(int minDelayInSeconds, int maxDelayInSeconds)
 		{
 			return DateTime.UtcNow.AddMilliseconds(GetRandom(minDelayInSeconds * 1000, maxDelayInSeconds * 1000));
 		}
@@ -265,7 +265,6 @@ namespace Questor
 			{
 				// New frame, invalidate old cache
 				Cache.Instance.InvalidateCache();
-				
 
 				if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
 				{
@@ -309,7 +308,7 @@ namespace Questor
 				{
 					Time.Instance.LastSessionIsReady = DateTime.UtcNow;
 				}
-
+				
 				if (DateTime.UtcNow < Time.Instance.NextInSpaceorInStation)
 				{
 					if (Cache.Instance.ActiveShip.GroupId == (int)Group.Capsule)
@@ -322,7 +321,7 @@ namespace Questor
 					if (Logging.DebugQuestorEVEOnFrame) Logging.Log("Questor.ProcessState", "if (DateTime.UtcNow < Time.Instance.NextInSpaceorInStation)", Logging.Debug);
 					return false;
 				}
-
+				
 				// Check 3D rendering
 				if (Cache.Instance.DirectEve.Session.IsInSpace && Cache.Instance.DirectEve.Rendering3D != !Settings.Instance.Disable3D)
 				{
@@ -374,9 +373,9 @@ namespace Questor
 					return;
 				}
 				
-				if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(9)) { // temorarily fix
+				if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(5)) { // temorarily fix
 					//Logging.Log("LoginOnFrame", "if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(8)", Logging.White);
-					_nextPulse = _nextPulse.AddSeconds(1);
+					_nextPulse = UTCNowAddDelay(1,1);
 					return;
 				}
 
@@ -384,22 +383,28 @@ namespace Questor
 				{
 					return;
 				}
+				_lastQuestorPulse = DateTime.UtcNow;
+				
+				if(Cache.Instance.IsLoadingSettings) {
+					_nextPulse = UTCNowAddDelay(1,1);
+					return;
+				}
 				
 				if(DateTime.UtcNow < _lastSessionNotReady) {
-					_nextPulse = _nextPulse.AddSeconds(1);
+					_nextPulse = UTCNowAddDelay(1,2);
 					//Logging.Log("Questor.ProcessState", "if(GetNowAddDelay(8,10) > _lastSessionNotReady)", Logging.White);
 					return;
 				}
 				
 				
 				if(!Cache.Instance.DirectEve.Session.IsReady && !Cache.Instance.DirectEve.Login.AtLogin && !Cache.Instance.DirectEve.Login.AtCharacterSelection) {
-					_lastSessionNotReady = GetNowAddDelay(7,8);
+					_lastSessionNotReady = UTCNowAddDelay(7,8);
 					return;
 				}
 				
 				Cache.Instance.WCFClient.GetPipeProxy.SetEveAccountAttributeValue(Cache.Instance.CharName, "LastQuestorSessionReady", DateTime.UtcNow);
 				
-				_lastQuestorPulse = DateTime.UtcNow;
+				
 				
 				if (Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
 				{
@@ -417,7 +422,7 @@ namespace Questor
 				{
 					if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading) {
 						Logging.Log("LoginOnFrame", "if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)", Logging.White);
-						_nextPulse = GetNowAddDelay(2,4);
+						_nextPulse = UTCNowAddDelay(2,4);
 						return;
 					}
 
@@ -668,7 +673,7 @@ namespace Questor
 						{
 							Logging.Log("Startup", "Login account [" + Logging.EVELoginUserName + "]", Logging.White);
 							Cache.Instance.DirectEve.Login.Login(Logging.EVELoginUserName, Logging.EVELoginPassword);
-							_nextPulse = GetNowAddDelay(10,12);
+							_nextPulse = UTCNowAddDelay(10,12);
 							Logging.Log("Startup", "Waiting for Character Selection Screen", Logging.White);
 							return;
 						}
@@ -688,7 +693,7 @@ namespace Questor
 								Logging.Log("Startup", "Activating character [" + slot.CharName + "]", Logging.White);
 								Cache.NextSlotActivate = DateTime.UtcNow.AddSeconds(5);
 								slot.Activate();
-								_nextPulse = GetNowAddDelay(12,14);
+								_nextPulse = UTCNowAddDelay(12,14);
 								return;
 							}
 
@@ -704,13 +709,8 @@ namespace Questor
 				if (Cache.Instance.InSpace) pulseDelay = Time.Instance.QuestorPulseInSpace_milliseconds;
 				if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
 				
-				
-				
 				if (!OnframeProcessEveryPulse()) return;
-				if (Logging.DebugOnframe) Logging.Log("Questor", "OnFrame: this is Questor.cs [" + DateTime.UtcNow + "] by default the next InSpace pulse will be in [" + Time.Instance.QuestorPulseInSpace_milliseconds + "]milliseconds", Logging.Teal);
-				// shit happens above here, look @ loadsettingfromxml
 				
-				//return;
 				RunOnceAfterStartup();
 				
 				RunOnceInStationAfterStartup();
