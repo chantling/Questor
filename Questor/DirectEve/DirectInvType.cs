@@ -585,11 +585,10 @@ namespace DirectEve
 		
 		internal static DirectInvType GetInvType(DirectEve directEve, int typeId) {
 			
-			var pyDict = directEve.PySharp.Import("evetypes").Attribute("storages").Attribute("TypeStorage").Attribute("_storage").ToDictionary<int>();
+			var pyDictItem = directEve.PySharp.Import("evetypes").Attribute("storages").Attribute("TypeStorage").Attribute("_storage").DictionaryItem(typeId);
 			
-			if (pyDict.ContainsKey(typeId)) {
+			if(pyDictItem != null && pyDictItem.IsValid)
 				return new DirectInvType(directEve, typeId);
-			}
 			
 			return null;;
 		}
