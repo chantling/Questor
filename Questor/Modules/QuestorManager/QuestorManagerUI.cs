@@ -105,7 +105,7 @@ namespace QuestorManager
 			}
 			catch (Exception exception)
 			{
-				Logging.Log("QuestorManager.Valuedump", "Unable to load [" + Settings.Instance.Path + "\\InvIgnore.xml" + "][" + exception + "]", Logging.Teal);
+//				Logging.Log("QuestorManager.Valuedump", "Unable to load [" + Settings.Instance.Path + "\\InvIgnore.xml" + "][" + exception + "]", Logging.Teal);
 			}
 
 			RefreshAvailableXMLJobs();
