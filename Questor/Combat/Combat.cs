@@ -880,13 +880,6 @@ namespace Questor.Modules.Combat
 			try
 			{
 				EntityCache currentTarget = null;
-				//
-				// we cant do this because the target may need to be targeted again! ECM == bad
-				//
-				//if (Time.Instance.LastTargetWeWereShooting != null && Cache.Instance.Entities.Any(i => i.Id == Time.Instance.LastTargetWeWereShooting.Id))
-				//{
-				//    currentTarget = Time.Instance.LastTargetWeWereShooting;
-				//}
 
 				if (currentTarget == null)
 				{
@@ -1032,54 +1025,6 @@ namespace Questor.Modules.Combat
 					return true;
 				}
 				#endregion Is our current target any other primary weapon priority target?
-
-				/*
-                #region Current Target Health Logging
-                //
-                // Current Target Health Logging
-                //
-                bool currentTargetHealthLogNow = true;
-                if (Settings.Instance.DetailedCurrentTargetHealthLogging)
-                {
-                    if ((int)currentTarget.Id != (int)TargetingCache.CurrentTargetID)
-                    {
-                        if ((int)currentTarget.ArmorPct == 0 && (int)currentTarget.ShieldPct == 0 && (int)currentTarget.StructurePct == 0)
-                        {
-                            //assume that any NPC with no shields, armor or hull is dead or does not yet have valid data associated with it
-                        }
-                        else
-                        {
-                            //
-                            // assign shields and armor to targetingcache variables - compare them to each other
-                            // to see if we need to send another log message to the console, if the values have not changed no need to log it.
-                            //
-                            if ((int)currentTarget.ShieldPct >= TargetingCache.CurrentTargetShieldPct ||
-                                (int)currentTarget.ArmorPct >= TargetingCache.CurrentTargetArmorPct ||
-                                (int)currentTarget.StructurePct >= TargetingCache.CurrentTargetStructurePct)
-                            {
-                                currentTargetHealthLogNow = false;
-                            }
-
-                            //
-                            // now that we are done comparing - assign new values for this tick
-                            //
-                            TargetingCache.CurrentTargetShieldPct = (int)currentTarget.ShieldPct;
-                            TargetingCache.CurrentTargetArmorPct = (int)currentTarget.ArmorPct;
-                            TargetingCache.CurrentTargetStructurePct = (int)currentTarget.StructurePct;
-                            if (currentTargetHealthLogNow)
-                            {
-                                Logging.Log(callingroutine, ".GetBestTarget (Weapons): CurrentTarget is [" + currentTarget.Name +                              //name
-                                            "][" + (Math.Round(currentTarget.Distance / 1000, 0)).ToString(CultureInfo.InvariantCulture) +           //distance
-                                            "k][Shield%:[" + Math.Round(currentTarget.ShieldPct * 100, 0).ToString(CultureInfo.InvariantCulture) +   //shields
-                                            "][Armor%:[" + Math.Round(currentTarget.ArmorPct * 100, 0).ToString(CultureInfo.InvariantCulture) + "]" //armor
-                                            , Logging.White);
-                            }
-                        }
-                    }
-                }
-
-                #endregion Current Target Health Logging
-				 */
 
 				#region Is our current target already in armor? keep shooting the same target if so...
 				//
@@ -3009,10 +2954,7 @@ namespace Questor.Modules.Combat
 				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: we have enough targets targeted [" + Cache.Instance.TotalTargetsandTargeting.Count() + "] __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] maxLowValueTargets [" + maxLowValueTargets + "]", Logging.Debug);
 				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] highValueSlotsreservedForPriorityTargets [" + highValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
 				if (Logging.DebugTargetCombatants) Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxLowValueTargets [" + maxLowValueTargets + "] lowValueSlotsreservedForPriorityTargets [" + lowValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
-//				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: we have enough targets targeted [" + Cache.Instance.TotalTargetsandTargeting.Count() + "] __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] maxLowValueTargets [" + maxLowValueTargets + "]", Logging.Debug);
-//				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __highValueTargetsTargeted [" + highValueTargetsTargeted.Count() + "] maxHighValueTargets [" + maxHighValueTargets + "] highValueSlotsreservedForPriorityTargets [" + highValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
-//				Logging.Log("Combat.TargetCombatants", "DebugTargetCombatants: __lowValueTargetsTargeted [" + lowValueTargetsTargeted.Count() + "] maxLowValueTargets [" + maxLowValueTargets + "] lowValueSlotsreservedForPriorityTargets [" + lowValueSlotsreservedForPriorityTargets + "]", Logging.Debug);
-//				 = DateTime.UtcNow.AddSeconds(Time.Instance.TargetsAreFullDelay_seconds);
+
 				return;
 			}
 			
@@ -3333,16 +3275,10 @@ namespace Questor.Modules.Combat
 				switch (_States.CurrentCombatState)
 				{
 					case CombatState.CheckTargets:
-						_States.CurrentCombatState = CombatState.KillTargets; //this MUST be before TargetCombatants() or the combat state will potentially get reset (important for the OutOfAmmo state)
-						//if (Settings.Instance.TargetSelectionMethod == "isdp")
-						//{
-						TargetCombatants();
-						//}
-						//else //use new target selection method
-						//{
-						//    TargetCombatants2();
-						//}
+						_States.CurrentCombatState = CombatState.KillTargets;
 						
+						TargetCombatants();
+
 						break;
 
 					case CombatState.KillTargets:
@@ -3361,24 +3297,15 @@ namespace Questor.Modules.Combat
 								{
 									Logging.Log("Combat.KillTargets", "PreferredPrimaryWeaponTarget [ null ]", Logging.Teal);
 								}
-
-								//if (Cache.Instance.PreferredDroneTarget != null) Logging.Log("Combat.KillTargets", "PreferredPrimaryWeaponTarget [" + Cache.Instance.PreferredDroneTarget.Name + "][" + Math.Round(Cache.Instance.PreferredDroneTarget.Distance / 1000, 0) + "k][" + Cache.Instance.MaskedID(Cache.Instance.PreferredDroneTargetID) + "]", Logging.Teal);
 							}
 						}
 						
-						//lets at the least make sure we have a fresh entity this frame to check against so we are not trying to navigate to things that no longer exist
 						EntityCache killTarget = null;
 						if (Combat.PreferredPrimaryWeaponTarget != null)
 						{
 							if (Cache.Instance.Targets.Any(t => t.Id == Combat.PreferredPrimaryWeaponTarget.Id))
 							{
 								killTarget = Cache.Instance.Targets.FirstOrDefault(t => t.Id == Combat.PreferredPrimaryWeaponTarget.Id && t.Distance < Combat.MaxRange);
-							}
-							else
-							{
-								//Logging.Log("Combat.Killtargets", "Unable to find the PreferredPrimaryWeaponTarget in the Entities list... PPWT.Name[" + Combat.PreferredPrimaryWeaponTarget.Name + "] PPWTID [" + Cache.Instance.MaskedID(Combat.PreferredPrimaryWeaponTargetID) + "]", Logging.Debug);
-								//Combat.PreferredPrimaryWeaponTarget = null;
-								//Cache.Instance.NextGetBestCombatTarget = DateTime.UtcNow;
 							}
 						}
 
@@ -3430,15 +3357,7 @@ namespace Questor.Modules.Combat
 						//ok so we do need this, but only use it if we actually have some potential targets
 						if (Combat.PrimaryWeaponPriorityTargets.Any() || (Combat.PotentialCombatTargets.Any() && Cache.Instance.Targets.Any() && (!Cache.Instance.InMission || NavigateOnGrid.SpeedTank)))
 						{
-							//if (Settings.Instance.TargetSelectionMethod == "isdp")
-							//{
 							Combat.GetBestPrimaryWeaponTarget(Combat.MaxRange, false, "Combat");
-							//}
-							//else //use new target selection method
-							//{
-							//    Cache.Instance.__GetBestWeaponTargets(Cache.Instance.MaxDroneRange);
-							//}
-
 							icount = 0;
 						}
 						
@@ -3457,13 +3376,6 @@ namespace Questor.Modules.Combat
 
 					case CombatState.Idle:
 
-						//
-						// below is the reasons we will start the combat state(s) - if the below is not met do nothing
-						//
-						//Logging.Log("Cache.Instance.InSpace: " + Cache.Instance.InSpace);
-						//Logging.Log("Cache.Instance.ActiveShip.Entity.IsCloaked: " + Cache.Instance.ActiveShip.Entity.IsCloaked);
-						//Logging.Log("Cache.Instance.ActiveShip.GivenName.ToLower(): " + Cache.Instance.ActiveShip.GivenName.ToLower());
-						//Logging.Log("Cache.Instance.InSpace: " + Cache.Instance.InSpace);
 						if (Cache.Instance.InSpace && //we are in space (as opposed to being in station or in limbo between systems when jumping)
 						    (Cache.Instance.ActiveShip.Entity != null &&  // we are in a ship!
 						     !Cache.Instance.ActiveShip.Entity.IsCloaked && //we are not cloaked anymore

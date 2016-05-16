@@ -426,106 +426,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 		
-		public bool StackCorpLootHangar(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-			{
-				if (Logging.DebugHangars) Logging.Log("StackCorpLootHangar", "if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Debug);
-				return false;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-			{
-				if (Logging.DebugHangars) Logging.Log("StackCorpLootHangar", "if (DateTime.UtcNow < Cache.Instance.NextOpenHangarAction)", Logging.Debug);
-				return false;
-			}
-
-			try
-			{
-				if (Cache.Instance.InStation)
-				{
-					if (!string.IsNullOrEmpty(Settings.Instance.LootHangarTabName))
-					{
-						if (LootHangar != null && LootHangar.IsValid)
-						{
-							try
-							{
-								if (Cache.Instance.StackHangarAttempts > 0)
-								{
-									if (!WaitForLockedItems(Time.Instance.LastStackAmmoHangar)) return false;
-									return true;
-								}
-
-								if (Cache.Instance.StackHangarAttempts <= 0)
-								{
-									if (LootHangar.Items.Any() && LootHangar.Items.Count() > RandomNumber(600, 800))
-									{
-										Logging.Log(module, "Stacking Item Hangar (as LootHangar)", Logging.White);
-										Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(5);
-										Cache.Instance.LootHangar.StackAll();
-										Cache.Instance.StackHangarAttempts++;
-										Time.Instance.LastStackLootHangar = DateTime.UtcNow;
-										Time.Instance.LastStackItemHangar = DateTime.UtcNow;
-										return false;
-									}
-
-									return true;
-								}
-
-								Logging.Log(module, "Done Stacking AmmoHangar [" + Settings.Instance.AmmoHangarTabName + "]", Logging.White);
-								return true;
-							}
-							catch (Exception exception)
-							{
-								Logging.Log(module, "Stacking LootHangar failed [" + exception + "]", Logging.Teal);
-								return true;
-							}
-						}
-
-						return false;
-					}
-
-					Cache.Instance.LootHangar = null;
-					return true;
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("StackCorpLootHangar", "Unable to complete StackCorpLootHangar [" + exception + "]", Logging.Teal);
-				return true;
-			}
-		}
-		
-		public bool CloseCorpHangar(string module, string window)
-		{
-			try
-			{
-				if (Cache.Instance.InStation && !string.IsNullOrEmpty(window))
-				{
-					DirectContainerWindow corpHangarWindow = (DirectContainerWindow)Cache.Instance.Windows.FirstOrDefault(w => w.Type.Contains("form.InventorySecondary") && w.Caption == window);
-
-					if (corpHangarWindow != null)
-					{
-						Logging.Log(module, "Closing Corp Window: " + window, Logging.Teal);
-						corpHangarWindow.Close();
-						Statistics.LogWindowActionToWindowLog("Corporate Hangar", "Close Corporate Hangar");
-						return false;
-					}
-
-					return true;
-				}
-
-				return true;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("CloseCorpHangar", "Unable to complete CloseCorpHangar [" + exception + "]", Logging.Teal);
-				return false;
-			}
-		}
-		
 		public DirectContainer ShipHangar
 		{
 			get
@@ -675,174 +575,7 @@ namespace Questor.Modules.Caching
 				return false;
 			}
 		}
-
-		public bool GetCorpAmmoHangarID()
-		{
-			try
-			{
-				if (Cache.Instance.InStation && DateTime.UtcNow > Time.Instance.LastSessionChange.AddSeconds(10))
-				{
-					string CorpHangarName;
-					if (Settings.Instance.AmmoHangarTabName != null)
-					{
-						CorpHangarName = Settings.Instance.AmmoHangarTabName;
-						if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "CorpHangarName we are looking for is [" + CorpHangarName + "][ AmmoHangarID was: " + Cache.Instance.AmmoHangarID + "]", Logging.White);
-					}
-					else
-					{
-						if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangar not configured: Questor will default to item hangar", Logging.White);
-						return true;
-					}
-
-					if (CorpHangarName != string.Empty) //&& Cache.Instance.AmmoHangarID == -99)
-					{
-						Cache.Instance.AmmoHangarID = -99;
-						Cache.Instance.AmmoHangarID = Cache.Instance.DirectEve.GetCorpHangarId(Settings.Instance.AmmoHangarTabName); //- 1;
-						if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangarID is [" + Cache.Instance.AmmoHangarID + "]", Logging.Teal);
-						
-						Cache.Instance.AmmoHangar = null;
-						Cache.Instance.AmmoHangar = Cache.Instance.DirectEve.GetCorporationHangar((int)Cache.Instance.AmmoHangarID);
-						if (Cache.Instance.AmmoHangar.IsValid)
-						{
-							if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangar contains [" + Cache.Instance.AmmoHangar.Items.Count() + "] Items", Logging.White);
-
-							//if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangar Description [" + Cache.Instance.AmmoHangar.Description + "]", Logging.White);
-							//if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangar UsedCapacity [" + Cache.Instance.AmmoHangar.UsedCapacity + "]", Logging.White);
-							//if (Logging.DebugHangars) Logging.Log("GetCorpAmmoHangarID", "AmmoHangar Volume [" + Cache.Instance.AmmoHangar.Volume + "]", Logging.White);
-						}
-
-						return true;
-					}
-					return true;
-				}
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("GetCorpAmmoHangarID", "Unable to complete GetCorpAmmoHangarID [" + exception + "]", Logging.Teal);
-				return false;
-			}
-		}
-
-		public bool GetCorpLootHangarID()
-		{
-			try
-			{
-				if (Cache.Instance.InStation && DateTime.UtcNow > Time.Instance.LastSessionChange.AddSeconds(10))
-				{
-					string CorpHangarName;
-					if (Settings.Instance.LootHangarTabName != null)
-					{
-						CorpHangarName = Settings.Instance.LootHangarTabName;
-						if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "CorpHangarName we are looking for is [" + CorpHangarName + "][ LootHangarID was: " + Cache.Instance.LootHangarID + "]", Logging.White);
-					}
-					else
-					{
-						if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangar not configured: Questor will default to item hangar", Logging.White);
-						return true;
-					}
-
-					if (CorpHangarName != string.Empty) //&& Cache.Instance.LootHangarID == -99)
-					{
-						Cache.Instance.LootHangarID = -99;
-						Cache.Instance.LootHangarID = Cache.Instance.DirectEve.GetCorpHangarId(Settings.Instance.LootHangarTabName);  //- 1;
-						if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangarID is [" + Cache.Instance.LootHangarID + "]", Logging.Teal);
-
-						Cache.Instance.LootHangar = null;
-						Cache.Instance.LootHangar = Cache.Instance.DirectEve.GetCorporationHangar((int)Cache.Instance.LootHangarID);
-						if (Cache.Instance.LootHangar.IsValid)
-						{
-							if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangar contains [" + Cache.Instance.LootHangar.Items.Count() + "] Items", Logging.White);
-
-							//if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangar Description [" + Cache.Instance.LootHangar.Description + "]", Logging.White);
-							//if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangar UsedCapacity [" + Cache.Instance.LootHangar.UsedCapacity + "]", Logging.White);
-							//if (Logging.DebugHangars) Logging.Log("GetCorpLootHangarID", "LootHangar Volume [" + Cache.Instance.LootHangar.Volume + "]", Logging.White);
-						}
-
-						return true;
-					}
-					return true;
-				}
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("GetCorpLootHangarID", "Unable to complete GetCorpLootHangarID [" + exception + "]", Logging.Teal);
-				return false;
-			}
-		}
-
-		public bool StackCorpAmmoHangar(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-			{
-				return false;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
-			{
-				return false;
-			}
-
-			try
-			{
-				if (Logging.DebugHangars) Logging.Log("StackCorpAmmoHangar", "LastStackAmmoHangar: [" + Time.Instance.LastStackAmmoHangar.AddSeconds(60) + "] DateTime.UtcNow: [" + DateTime.UtcNow + "]", Logging.Teal);
-				
-				if (Cache.Instance.InStation)
-				{
-					if (!string.IsNullOrEmpty(Settings.Instance.AmmoHangarTabName))
-					{
-						if (AmmoHangar != null && AmmoHangar.IsValid)
-						{
-							try
-							{
-								if (Cache.Instance.StackHangarAttempts > 0)
-								{
-									if (!WaitForLockedItems(Time.Instance.LastStackAmmoHangar)) return false;
-									return true;
-								}
-
-								if (Cache.Instance.StackHangarAttempts <= 0)
-								{
-									if (AmmoHangar.Items.Any() && AmmoHangar.Items.Count() > RandomNumber(600, 800))
-									{
-										Logging.Log(module, "Stacking Item Hangar (as AmmoHangar)", Logging.White);
-										Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(5);
-										Cache.Instance.AmmoHangar.StackAll();
-										Cache.Instance.StackHangarAttempts++;
-										Time.Instance.LastStackAmmoHangar = DateTime.UtcNow;
-										Time.Instance.LastStackItemHangar = DateTime.UtcNow;
-										return true;
-									}
-
-									return true;
-								}
-
-								Logging.Log(module, "Not Stacking AmmoHangar [" + Settings.Instance.AmmoHangarTabName + "]", Logging.White);
-								return true;
-							}
-							catch (Exception exception)
-							{
-								Logging.Log(module, "Stacking AmmoHangar failed [" + exception + "]", Logging.Teal);
-								return true;
-							}
-						}
-
-						return false;
-					}
-
-					Cache.Instance.AmmoHangar = null;
-					return true;
-				}
-
-				return false;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("StackCorpAmmoHangar", "Unable to complete StackCorpAmmoHangar [" + exception + "]", Logging.Teal);
-				return true;
-			}
-		}
+		
 
 		public DirectContainer LootContainer
 		{
@@ -922,64 +655,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 
-		public bool ReadyHighTierLootContainer(string module)
-		{
-			if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
-			{
-				return false;
-			}
-
-			if (DateTime.UtcNow < Time.Instance.NextOpenLootContainerAction)
-			{
-				return false;
-			}
-
-			if (Cache.Instance.InStation)
-			{
-				if (!string.IsNullOrEmpty(Settings.Instance.LootContainerName))
-				{
-					if (Logging.DebugHangars) Logging.Log("OpenLootContainer", "Debug: if (!string.IsNullOrEmpty(Settings.Instance.HighTierLootContainer))", Logging.Teal);
-
-					DirectItem firstLootContainer = Cache.Instance.LootHangar.Items.FirstOrDefault(i => i.GivenName != null && i.IsSingleton && i.GroupId == (int)Group.FreightContainer && i.GivenName.ToLower() == Settings.Instance.HighTierLootContainer.ToLower());
-					if (firstLootContainer != null)
-					{
-						long highTierLootContainerID = firstLootContainer.ItemId;
-						Cache.Instance.HighTierLootContainer = Cache.Instance.DirectEve.GetContainer(highTierLootContainerID);
-
-						if (Cache.Instance.HighTierLootContainer != null && Cache.Instance.HighTierLootContainer.IsValid)
-						{
-							if (Logging.DebugHangars) Logging.Log(module, "HighTierLootContainer is defined (no window needed)", Logging.Debug);
-							return true;
-						}
-
-						if (Cache.Instance.HighTierLootContainer == null)
-						{
-							if (!string.IsNullOrEmpty(Settings.Instance.LootHangarTabName))
-								Logging.Log(module, "Opening HighTierLootContainer: failed! lag?", Logging.Orange);
-							return false;
-						}
-
-						if (Logging.DebugHangars) Logging.Log(module, "HighTierLootContainer is not yet ready. waiting...", Logging.Debug);
-						return false;
-					}
-
-					Logging.Log(module, "unable to find HighTierLootContainer named [ " + Settings.Instance.HighTierLootContainer.ToLower() + " ]", Logging.Orange);
-					DirectItem firstOtherContainer = Cache.Instance.ItemHangar.Items.FirstOrDefault(i => i.GivenName != null && i.IsSingleton && i.GroupId == (int)Group.FreightContainer);
-
-					if (firstOtherContainer != null)
-					{
-						Logging.Log(module, "we did however find a container named [ " + firstOtherContainer.GivenName + " ]", Logging.Orange);
-						return false;
-					}
-
-					return false;
-				}
-
-				return true;
-			}
-
-			return false;
-		}
 		
 		public bool OpenAndSelectInvItem(string module, long id)
 		{
@@ -1178,57 +853,11 @@ namespace Questor.Modules.Caching
 					{
 						if (_lootHangar == null && DateTime.UtcNow > Time.Instance.NextOpenHangarAction)
 						{
-							if (Settings.Instance.LootHangarTabName != string.Empty)
-							{
-								//
-								// todo: we should check for the Inventory window w CorpHangar selected and open it if necessary!
-								//
 
-								Cache.Instance.LootHangarID = -99;
-								Cache.Instance.LootHangarID = Cache.Instance.DirectEve.GetCorpHangarId(Settings.Instance.LootHangarTabName); //- 1;
-								if (Logging.DebugHangars) Logging.Log("LootHangar: GetCorpLootHangarID", "LootHangarID is [" + Cache.Instance.LootHangarID + "]", Logging.Teal);
-
-								_lootHangar = null;
-								Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2);
-								_lootHangar = Cache.Instance.DirectEve.GetCorporationHangar((int)Cache.Instance.LootHangarID);
-								
-								if (_lootHangar != null && _lootHangar.IsValid) //do we have a corp hangar tab setup with that name?
-								{
-									if (Logging.DebugHangars)
-									{
-										Logging.Log("LootHangar", "LootHangar is defined (no window needed)", Logging.Debug);
-										try
-										{
-											if (_lootHangar.Items.Any())
-											{
-												int LootHangarItemCount = _lootHangar.Items.Count();
-												if (Logging.DebugHangars) Logging.Log("LootHangar", "LootHangar [" + Settings.Instance.LootHangarTabName + "] has [" + LootHangarItemCount + "] items", Logging.Debug);
-											}
-										}
-										catch (Exception exception)
-										{
-											Logging.Log("ReadyCorpLootHangar", "Exception [" + exception + "]", Logging.Debug);
-										}
-									}
-
-									return _lootHangar;
-								}
-
-								Logging.Log("LootHangar", "Opening Corporate LootHangar: failed! No Corporate Hangar in this station! lag?", Logging.Orange);
-								return Cache.Instance.ItemHangar;
-
-							}
-							//else if (Settings.Instance.AmmoHangarTabName == string.Empty && Cache.Instance._ammoHangar != null)
-							//{
-							//    Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2);
-							//    _lootHangar = _ammoHangar;
-							//}
-							else
-							{
-								if (Logging.DebugHangars) Logging.Log("Cache.LootHangar","Using ItemHangar as the LootHangar",Logging.Debug);
-								Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2);
-								_lootHangar = Cache.Instance.ItemHangar;
-							}
+							if (Logging.DebugHangars) Logging.Log("Cache.LootHangar","Using ItemHangar as the LootHangar",Logging.Debug);
+							Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(2);
+							_lootHangar = Cache.Instance.ItemHangar;
+							
 
 							return _lootHangar;
 						}
@@ -1359,13 +988,6 @@ namespace Questor.Modules.Caching
 			{
 				if (Cache.Instance.InStation)
 				{
-					if (!string.IsNullOrEmpty(Settings.Instance.LootHangarTabName))
-					{
-						if (Logging.DebugHangars) Logging.Log("StackLootHangar", "Starting [Cache.Instance.StackCorpLootHangar]", Logging.Teal);
-						if (!Cache.Instance.StackCorpLootHangar("Cache.StackCorpLootHangar")) return false;
-						if (Logging.DebugHangars) Logging.Log("StackLootHangar", "Finished [Cache.Instance.StackCorpLootHangar]", Logging.Teal);
-						return true;
-					}
 
 					if (!string.IsNullOrEmpty(Settings.Instance.LootContainerName))
 					{
@@ -1537,22 +1159,6 @@ namespace Questor.Modules.Caching
 			{
 				if (Cache.Instance.InStation)
 				{
-					if (!string.IsNullOrEmpty(Settings.Instance.AmmoHangarTabName))
-					{
-						if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "Starting [Cache.Instance.StackCorpAmmoHangar]", Logging.Teal);
-						if (!Cache.Instance.StackCorpAmmoHangar(module)) return false;
-						if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "Finished [Cache.Instance.StackCorpAmmoHangar]", Logging.Teal);
-						StackAmmohangarAttempts = 0;
-						return true;
-					}
-
-					//if (!string.IsNullOrEmpty(Settings.Instance.LootContainer))
-					//{
-					//    if (Logging.DebugHangars) Logging.Log("StackLootHangar", "if (!string.IsNullOrEmpty(Settings.Instance.LootContainer))", Logging.Teal);
-					//    if (!Cache.Instance.StackLootContainer("Cache.StackLootHangar")) return false;
-					//    StackLoothangarAttempts = 0;
-					//    return true;
-					//}
 
 					if (Logging.DebugHangars) Logging.Log("StackAmmoHangar", "Starting [Cache.Instance.StackItemsHangarAsAmmoHangar]", Logging.Teal);
 					if (!Cache.Instance.StackItemsHangarAsAmmoHangar(module)) return false;

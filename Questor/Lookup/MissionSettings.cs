@@ -507,7 +507,7 @@ namespace Questor.Modules.Lookup
 				return null;
 				
 
-				return _factionFittingNameForThisMissionsFaction;
+//				return _factionFittingNameForThisMissionsFaction;
 			}
 
 			set { _factionFittingNameForThisMissionsFaction = value; }

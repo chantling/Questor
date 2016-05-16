@@ -446,29 +446,7 @@ namespace Questor.Modules.Actions
 				//disable stacking for now
 				_States.CurrentUnloadLootState = UnloadLootState.MoveLoot;
 				return true;
-
-				if (DateTime.UtcNow < _lastUnloadAction.AddMilliseconds(Cache.Instance.RandomNumber(2000, 3000)))
-				{
-					return false;
-				}
-
-				if ((Settings.Instance.AmmoHangarTabName == "" && Settings.Instance.LootHangarTabName == "") || Settings.Instance.AmmoHangarTabName == Settings.Instance.LootHangarTabName)
-				{
-					return true;
-				}
 				
-				try
-				{
-					//
-					// Stack AmmoHangar
-					//
-					if (Logging.DebugUnloadLoot) Logging.Log("UnloadLoot.MoveAmmo", "if (!Cache.Instance.StackAmmoHangar(UnloadLoot.MoveAmmo)) return;", Logging.White);
-					if (!Cache.Instance.StackAmmoHangar("UnloadLoot.StackAmmoHangar")) return false;
-					_States.CurrentUnloadLootState = UnloadLootState.MoveLoot;
-					return true;
-				}
-				catch (NullReferenceException) { }
-				return false;
 			}
 			catch (Exception ex)
 			{
