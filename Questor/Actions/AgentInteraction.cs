@@ -321,7 +321,7 @@ namespace Questor.Modules.Actions
 						int iskFinishedMission = 0;
 						Statistics.ISKMissionReward = 0;
 						Statistics.LoyaltyPointsForCurrentMission = 0;
-						Regex iskRegex = new Regex(@"([0-9]+)\.([0-9]+)\.([0-9]+) ISK", RegexOptions.Compiled);
+						Regex iskRegex = new Regex(@"([0-9]+)((\.([0-9]+))*) ISK", RegexOptions.Compiled);
 						foreach (Match itemMatch in iskRegex.Matches(html))
 						{
 							int val = 0;
@@ -604,7 +604,7 @@ namespace Questor.Modules.Actions
 					int iskFinishedMission = 0;
 					Statistics.ISKMissionReward = 0;
 					Statistics.LoyaltyPointsForCurrentMission = 0;
-					Regex iskRegex = new Regex(@"([0-9]+)\.([0-9]+)\.([0-9]+) ISK", RegexOptions.Compiled);
+					Regex iskRegex = new Regex(@"([0-9]+)((\.([0-9]+))*) ISK", RegexOptions.Compiled);
 					foreach (Match itemMatch in iskRegex.Matches(html))
 					{
 						int val = 0;
