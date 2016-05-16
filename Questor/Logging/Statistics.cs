@@ -381,10 +381,10 @@ namespace Questor.Modules.Logging
 				line3 += lootVal + ";";                                                                 						     // Loot
 				line3 += LoyaltyPointsForCurrentMission + ";";                           										    // LP
 				line3 += Statistics.DroneRecalls + ";";                                                                             // Lost Drones
-				line3 += "LostDrones:" + Statistics.LostDrones + ";";                                                               // Lost Drones
+				line3 += Statistics.LostDrones + ";";                                                               // Lost Drones
 				line3 += Statistics.AmmoConsumption + ";";                                                                          // Ammo Consumption
 				line3 += Statistics.AmmoValue + ";";                                                                                // Ammo Value
-				line3 += "Panics:" + Statistics.PanicAttemptsThisMission + ";";                                                          // Panics
+				line3 += Statistics.PanicAttemptsThisMission + ";";                                                          // Panics
 				line3 += ((int)Statistics.LowestShieldPercentageThisMission) + ";";                                                      // Lowest Shield %
 				line3 += ((int)Statistics.LowestArmorPercentageThisMission) + ";";                                                       // Lowest Armor %
 				line3 += ((int)Statistics.LowestCapacitorPercentageThisMission) + ";";                                                   // Lowest Capacitor %
@@ -393,10 +393,10 @@ namespace Questor.Modules.Logging
 				line3 += ((int)Statistics.FinishedSalvaging.Subtract(Statistics.StartedSalvaging).TotalMinutes) + ((int)Statistics.FinishedMission.Subtract(Statistics.StartedMission).TotalMinutes) + ";"; // Total Time, Mission + After Mission Salvaging (if any)
 				line3 += MissionSettings.MissionXMLIsAvailable.ToString(CultureInfo.InvariantCulture) + ";";
 				line3 += MissionSettings.FactionName + ";";                                                                                   // FactionName that the mission is against
-				line3 += Cache.Instance.MissionSolarSystem + ";";                                                                            // SolarSystem the mission was located in
+				line3 += Cache.Instance.MissionSolarSystem.Name + ";";                                                                            // SolarSystem the mission was located in
 				line3 += Cache.Instance.DungeonId + ";";                                                                                     // DungeonID - the unique identifier for this mission
 				line3 += Statistics.OutOfDronesCount + ";";                                                                         // OutOfDronesCount - number of times we totally ran out of drones and had to go re-arm
-				line3 += Cache.Instance.MyWalletBalance + ";";
+				line3 += Cache.Instance.MyWalletBalance + ";";																		// Current wallet balance
 				line3 += "\r\n";
 
 				// The mission is finished

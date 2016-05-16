@@ -103,7 +103,7 @@ namespace QuestorManager
 			{
 				//MissionSettings.InvIgnore = XDocument.Load(Settings.Instance.Path + "\\InvIgnore.xml"); //items to ignore
 			}
-			catch (Exception exception)
+			catch (Exception)
 			{
 //				Logging.Log("QuestorManager.Valuedump", "Unable to load [" + Settings.Instance.Path + "\\InvIgnore.xml" + "][" + exception + "]", Logging.Teal);
 			}

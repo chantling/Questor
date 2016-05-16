@@ -63,7 +63,7 @@ namespace DirectEve
         /// <summary>
         ///     Your current amount of shields
         /// </summary>
-        public double Shield
+        public new double Shield
         {
             get { return Attributes.TryGet<double>("shieldCharge"); }
         }
@@ -87,7 +87,7 @@ namespace DirectEve
         /// <summary>
         ///     Your current amount of armor
         /// </summary>
-        public double Armor
+        public new double Armor
         {
             get { return MaxArmor - Attributes.TryGet<double>("armorDamage"); }
         }
@@ -111,7 +111,7 @@ namespace DirectEve
         /// <summary>
         ///     Your current amount of structure
         /// </summary>
-        public double Structure
+        public new double Structure
         {
             get { return MaxStructure - Attributes.TryGet<double>("damage"); }
         }
