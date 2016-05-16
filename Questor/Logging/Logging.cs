@@ -23,18 +23,116 @@ namespace Questor.Modules.Logging
 
 	public static class Logging
 	{
+		
+		
+				//
+		// Debug Variables
+		//
+		public static bool DebugActivateGate { get; set; }
+		public static bool DebugActivateWeapons { get; set; }
+		public static bool DebugActivateBastion { get; set; }
+		public static bool DebugAdaptEVE { get; set; }
+		public static bool DebugAdaptEVEDLL { get; set; }
+		public static bool DebugAddDronePriorityTarget { get; set; }
+		public static bool DebugAddPrimaryWeaponPriorityTarget { get; set; }
+		public static bool DebugAgentInteractionReplyToAgent { get; set; }
+		public static bool DebugAllMissionsOnBlackList { get; set; }
+		public static bool DebugAllMissionsOnGreyList { get; set; }
+		public static bool DebugAmmo { get; set; }
+		public static bool DebugAppDomains { get; set; }
+		public static bool DebugArm { get; set; }
+		public static bool DebugAttachVSDebugger { get; set; }
+		public static bool DebugAutoStart { get; set; }
+		public static bool DebugBeforeLogin { get; set; }
+		public static bool DebugBlackList { get; set; }
+		public static bool DebugCargoHold { get; set; }
+		public static bool DebugChat { get; set; }
+		public static bool DebugCleanup { get; set; }
+		public static bool DebugClearPocket { get; set; }
+		public static bool DebugCombat { get; set; }
+		public static bool DebugCombatMissionBehavior { get; set; }
+		public static bool DebugCourierMissions { get; set; }
+		public static bool DebugDecline { get; set; }
+		public static bool DebugDefense { get; set; }
+		public static bool DebugDisableCleanup { get; set; }
+		public static bool DebugDisableCombatMissionsBehavior { get; set; }
+		public static bool DebugDisableCombatMissionCtrl { get; set; }
+		public static bool DebugDisableCombat { get; set; }
+		public static bool DebugDisableDrones { get; set; }
+		public static bool DebugDisablePanic { get; set; }
+		public static bool DebugDisableSalvage { get; set; }
+		public static bool DebugDisableTargetCombatants { get; set; }
+		public static bool DebugDisableGetBestTarget { get; set; }
+		public static bool DebugDisableGetBestDroneTarget { get; set; }
+		public static bool DebugDisableNavigateIntoRange { get; set; }
+		public static bool DebugDoneAction { get; set; }
+		public static bool DebugDoNotCloseTelcomWindows { get; set; }
+		public static bool DebugDrones { get; set; }
+		public static bool DebugDroneHealth { get; set; }
+		public static bool DebugEachWeaponsVolleyCache { get; set; }
+		public static bool DebugEntityCache { get; set; }
+		public static bool DebugExecuteMission { get; set; }
+		public static bool DebugExceptions { get; set; }
+		public static bool DebugFittingMgr { get; set; }
+		public static bool DebugFleetSupportSlave { get; set; }
+		public static bool DebugFleetSupportMaster { get; set; }
+		public static bool DebugGetBestTarget { get; set; }
+		public static bool DebugGetBestDroneTarget { get; set; }
+		public static bool DebugGotobase { get; set; }
+		public static bool DebugGreyList { get; set; }
+		public static bool DebugHangars { get; set; }
+		public static bool DebugIdle { get; set; }
+		public static bool DebugInSpace { get; set; }
+		public static bool DebugInStation { get; set; }
+		public static bool DebugInWarp { get; set; }
+		public static bool DebugIsReadyToShoot { get; set; }
+		public static bool DebugItemHangar { get; set; }
+		public static bool DebugKillTargets { get; set; }
+		public static bool DebugKillAction { get; set; }
+		public static bool DebugLoadScripts { get; set; }
+		public static bool DebugLogging { get; set; }
+		public static bool DebugLootWrecks { get; set; }
+		public static bool DebugLootValue { get; set; }
+		public static bool DebugNavigateOnGrid { get; set; }
+		public static bool DebugMiningBehavior { get; set; }
+		public static bool DebugMissionFittings { get; set; }
+		public static bool DebugMoveTo { get; set; }
+		public static bool DebugOnframe { get; set; }
+		public static bool DebugOverLoadWeapons { get; set; }
+		public static bool DebugPanic { get; set; }
+		public static bool DebugPerformance { get; set; }
+		public static bool DebugPotentialCombatTargets { get; set; }
+		public static bool DebugPreferredPrimaryWeaponTarget { get; set; }
+		public static bool DebugPreLogin { get; set; }
+		public static bool DebugQuestorLoader { get; set; }
+		public static bool DebugQuestorManager { get; set; }
+		public static bool DebugQuestorEVEOnFrame { get; set; }
+		public static bool DebugReloadAll { get; set; }
+		public static bool DebugReloadorChangeAmmo { get; set; }
+		public static bool DebugRemoteRepair { get; set; }
+		public static bool DebugSalvage { get; set; }
+		public static bool DebugScheduler { get; set; }
+		public static bool DebugSettings { get; set; }
+		public static bool DebugShipTargetValues { get; set; }
+		public static bool DebugSkillTraining { get; set; }
+		public static bool DebugSpeedMod { get; set; }
+		public static bool DebugStatistics { get; set; }
+		public static bool DebugStorylineMissions { get; set; }
+		public static bool DebugTargetCombatants { get; set; }
+		public static bool DebugTargetWrecks { get; set; }
+		public static bool DebugTractorBeams { get; set; }
+		public static bool DebugTraveler { get; set; }
+		public static bool DebugUI { get; set; }
+		public static bool DebugUndockBookmarks { get; set; }
+		public static bool DebugUnloadLoot { get; set; }
+		public static bool DebugValuedump { get; set; }
+		public static bool DebugWalletBalance { get; set; }
+		public static bool DebugWeShouldBeInSpaceORInStationAndOutOfSessionChange { get; set; }
+		public static bool DebugWatchForActiveWars { get; set; }
+		
 		static Logging()
 		{
 			Logging.PathToCurrentDirectory = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-			
-//			
-//			new Thread( () => {
-//			           	while(true) {
-//			           		if (OnMessage != null)
-//			           			OnMessage("test");
-//			           		Thread.Sleep(200);
-//			           	}
-//			           }).Start();
 		}
 
 		public static string PathToCurrentDirectory;
@@ -421,173 +519,6 @@ namespace Questor.Modules.Logging
 			}
 		}
 
-		public static IEnumerable<string> SplitArguments(string commandLine)
-		{
-			try
-			{
-				char[] parmChars = commandLine.ToCharArray();
-				bool inSingleQuote = false;
-				bool inDoubleQuote = false;
-				for (int index = 0; index < parmChars.Length; index++)
-				{
-					if (parmChars[index] == '"' && !inSingleQuote)
-					{
-						inDoubleQuote = !inDoubleQuote;
-						parmChars[index] = '\n';
-					}
-					if (parmChars[index] == '\'' && !inDoubleQuote)
-					{
-						inSingleQuote = !inSingleQuote;
-						parmChars[index] = '\n';
-					}
-					if (!inSingleQuote && !inDoubleQuote && parmChars[index] == ' ')
-						parmChars[index] = '\n';
-				}
-				return (new string(parmChars)).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-			}
-			catch (Exception exception)
-			{
-				BasicLog("SplitArguments", exception.Message);
-				return null;
-			}
-		}
 
-		public static void ShowConsoleWindow()
-		{
-			Logging.Log("Adapt", "Showing Console Window", Logging.White);
-			IntPtr handle = GetConsoleWindow();
-			if (handle == IntPtr.Zero)
-			{
-				AllocConsole();
-			}
-			else
-			{
-				ShowWindow(handle, SW_SHOW);
-			}
-		}
-
-		public static void HideConsoleWindow()
-		{
-			Logging.Log("Adapt", "Hiding Console Window", Logging.White);
-			IntPtr handle = GetConsoleWindow();
-			ShowWindow(handle, SW_HIDE);
-		}
-
-		[DllImport("kernel32.dll", SetLastError = true)]
-		static extern bool AllocConsole();
-
-		[DllImport("kernel32.dll")]
-		static extern IntPtr GetConsoleWindow();
-
-		[DllImport("user32.dll")]
-		static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-		const int SW_HIDE = 0;
-		const int SW_SHOW = 5;
-
-		//
-		// Debug Variables
-		//
-		public static bool DebugActivateGate { get; set; }
-		public static bool DebugActivateWeapons { get; set; }
-		public static bool DebugActivateBastion { get; set; }
-		public static bool DebugAdaptEVE { get; set; }
-		public static bool DebugAdaptEVEDLL { get; set; }
-		public static bool DebugAddDronePriorityTarget { get; set; }
-		public static bool DebugAddPrimaryWeaponPriorityTarget { get; set; }
-		public static bool DebugAgentInteractionReplyToAgent { get; set; }
-		public static bool DebugAllMissionsOnBlackList { get; set; }
-		public static bool DebugAllMissionsOnGreyList { get; set; }
-		public static bool DebugAmmo { get; set; }
-		public static bool DebugAppDomains { get; set; }
-		public static bool DebugArm { get; set; }
-		public static bool DebugAttachVSDebugger { get; set; }
-		public static bool DebugAutoStart { get; set; }
-		public static bool DebugBeforeLogin { get; set; }
-		public static bool DebugBlackList { get; set; }
-		public static bool DebugCargoHold { get; set; }
-		public static bool DebugChat { get; set; }
-		public static bool DebugCleanup { get; set; }
-		public static bool DebugClearPocket { get; set; }
-		public static bool DebugCombat { get; set; }
-		public static bool DebugCombatMissionBehavior { get; set; }
-		public static bool DebugCourierMissions { get; set; }
-		public static bool DebugDecline { get; set; }
-		public static bool DebugDefense { get; set; }
-		public static bool DebugDisableCleanup { get; set; }
-		public static bool DebugDisableCombatMissionsBehavior { get; set; }
-		public static bool DebugDisableCombatMissionCtrl { get; set; }
-		public static bool DebugDisableCombat { get; set; }
-		public static bool DebugDisableDrones { get; set; }
-		public static bool DebugDisablePanic { get; set; }
-		public static bool DebugDisableSalvage { get; set; }
-		public static bool DebugDisableTargetCombatants { get; set; }
-		public static bool DebugDisableGetBestTarget { get; set; }
-		public static bool DebugDisableGetBestDroneTarget { get; set; }
-		public static bool DebugDisableNavigateIntoRange { get; set; }
-		public static bool DebugDoneAction { get; set; }
-		public static bool DebugDoNotCloseTelcomWindows { get; set; }
-		public static bool DebugDrones { get; set; }
-		public static bool DebugDroneHealth { get; set; }
-		public static bool DebugEachWeaponsVolleyCache { get; set; }
-		public static bool DebugEntityCache { get; set; }
-		public static bool DebugExecuteMission { get; set; }
-		public static bool DebugExceptions { get; set; }
-		public static bool DebugFittingMgr { get; set; }
-		public static bool DebugFleetSupportSlave { get; set; }
-		public static bool DebugFleetSupportMaster { get; set; }
-		public static bool DebugGetBestTarget { get; set; }
-		public static bool DebugGetBestDroneTarget { get; set; }
-		public static bool DebugGotobase { get; set; }
-		public static bool DebugGreyList { get; set; }
-		public static bool DebugHangars { get; set; }
-		public static bool DebugIdle { get; set; }
-		public static bool DebugInSpace { get; set; }
-		public static bool DebugInStation { get; set; }
-		public static bool DebugInWarp { get; set; }
-		public static bool DebugIsReadyToShoot { get; set; }
-		public static bool DebugItemHangar { get; set; }
-		public static bool DebugKillTargets { get; set; }
-		public static bool DebugKillAction { get; set; }
-		public static bool DebugLoadScripts { get; set; }
-		public static bool DebugLogging { get; set; }
-		public static bool DebugLootWrecks { get; set; }
-		public static bool DebugLootValue { get; set; }
-		public static bool DebugNavigateOnGrid { get; set; }
-		public static bool DebugMiningBehavior { get; set; }
-		public static bool DebugMissionFittings { get; set; }
-		public static bool DebugMoveTo { get; set; }
-		public static bool DebugOnframe { get; set; }
-		public static bool DebugOverLoadWeapons { get; set; }
-		public static bool DebugPanic { get; set; }
-		public static bool DebugPerformance { get; set; }
-		public static bool DebugPotentialCombatTargets { get; set; }
-		public static bool DebugPreferredPrimaryWeaponTarget { get; set; }
-		public static bool DebugPreLogin { get; set; }
-		public static bool DebugQuestorLoader { get; set; }
-		public static bool DebugQuestorManager { get; set; }
-		public static bool DebugQuestorEVEOnFrame { get; set; }
-		public static bool DebugReloadAll { get; set; }
-		public static bool DebugReloadorChangeAmmo { get; set; }
-		public static bool DebugRemoteRepair { get; set; }
-		public static bool DebugSalvage { get; set; }
-		public static bool DebugScheduler { get; set; }
-		public static bool DebugSettings { get; set; }
-		public static bool DebugShipTargetValues { get; set; }
-		public static bool DebugSkillTraining { get; set; }
-		public static bool DebugSpeedMod { get; set; }
-		public static bool DebugStatistics { get; set; }
-		public static bool DebugStorylineMissions { get; set; }
-		public static bool DebugTargetCombatants { get; set; }
-		public static bool DebugTargetWrecks { get; set; }
-		public static bool DebugTractorBeams { get; set; }
-		public static bool DebugTraveler { get; set; }
-		public static bool DebugUI { get; set; }
-		public static bool DebugUndockBookmarks { get; set; }
-		public static bool DebugUnloadLoot { get; set; }
-		public static bool DebugValuedump { get; set; }
-		public static bool DebugWalletBalance { get; set; }
-		public static bool DebugWeShouldBeInSpaceORInStationAndOutOfSessionChange { get; set; }
-		public static bool DebugWatchForActiveWars { get; set; }
 	}
 }
