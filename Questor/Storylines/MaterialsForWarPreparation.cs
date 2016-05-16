@@ -42,7 +42,7 @@ namespace Questor.Storylines
 				List<DirectItem> ships = Cache.Instance.ShipHangar.Items.Where(i => i.IsSingleton).ToList();
 				
 				
-				if(ships.Any( s => s.GroupId == (int)Group.Shuttle)) {
+				if(ships.Any(s => s.GroupId == (int)Group.Shuttle && s.IsSingleton && s.GivenName != null)) {
 					ships.FirstOrDefault(s => s.GivenName != null && s.GroupId == (int)Group.Shuttle && s.IsSingleton).ActivateShip();
 					Logging.Log("MaterialsForWarPreparation", "Found a shuttle - Making Shuttle active", Logging.White);
 					_nextAction = DateTime.UtcNow.AddSeconds(Modules.Lookup.Time.Instance.SwitchShipsDelay_seconds);
