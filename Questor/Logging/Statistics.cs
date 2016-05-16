@@ -370,7 +370,7 @@ namespace Questor.Modules.Logging
 
 				if (!File.Exists(MissionStats3LogFile))
 				{
-					File.AppendAllText(MissionStats3LogFile, "Date;Mission;Time;Isk;IskReward;Loot;LP;DroneRecalls;LostDrones;AmmoConsumption;AmmoValue;Panics;LowestShield;LowestArmor;LowestCap;RepairCycles;AfterMissionsalvageTime;TotalMissionTime;MissionXMLAvailable;Faction;SolarSystem;DungeonID;OutOfDronesCount;\r\n");
+					File.AppendAllText(MissionStats3LogFile, "Date;Mission;Time;Isk;IskReward;Loot;LP;DroneRecalls;LostDrones;AmmoConsumption;AmmoValue;Panics;LowestShield;LowestArmor;LowestCap;RepairCycles;AfterMissionsalvageTime;TotalMissionTime;MissionXMLAvailable;Faction;SolarSystem;DungeonID;OutOfDronesCount;ISKWallet\r\n");
 				}
 
 				string line3 = DateTimeForLogs + ";";                                                                                  // Date
@@ -396,6 +396,7 @@ namespace Questor.Modules.Logging
 				line3 += Cache.Instance.MissionSolarSystem + ";";                                                                            // SolarSystem the mission was located in
 				line3 += Cache.Instance.DungeonId + ";";                                                                                     // DungeonID - the unique identifier for this mission
 				line3 += Statistics.OutOfDronesCount + ";";                                                                         // OutOfDronesCount - number of times we totally ran out of drones and had to go re-arm
+				line3 += Cache.Instance.MyWalletBalance + ";";
 				line3 += "\r\n";
 
 				// The mission is finished
