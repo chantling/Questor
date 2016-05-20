@@ -408,7 +408,7 @@ namespace Questor.Modules.Logging
 				line3 += Cache.Instance.DungeonId + ";";                                                                                     // DungeonID - the unique identifier for this mission
 				line3 += Statistics.OutOfDronesCount + ";";                                                                         // OutOfDronesCount - number of times we totally ran out of drones and had to go re-arm
 				line3 += Cache.Instance.MyWalletBalance + ";";																		// Current wallet balance
-				line3 += lootValItemHangar + ";";																					// loot value in itemhangar
+				line3 += lootValItemHangar;																					// loot value in itemhangar
 				line3 += "\r\n";
 
 				// The mission is finished
