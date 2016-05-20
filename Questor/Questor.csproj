@@ -251,17 +251,6 @@
     <Compile Include="Lookup\ShipTargetValue.cs" />
     <Compile Include="Lookup\Time.cs" />
     <Compile Include="Lookup\TypeID.cs" />
-    <Compile Include="Modules\LINQtoCSV\CsvColumnAttribute.cs" />
-    <Compile Include="Modules\LINQtoCSV\CsvContext.cs" />
-    <Compile Include="Modules\LINQtoCSV\CsvFileDescription.cs" />
-    <Compile Include="Modules\LINQtoCSV\CsvInputFormatAttribute.cs" />
-    <Compile Include="Modules\LINQtoCSV\CsvOutputFormatAttribute.cs" />
-    <Compile Include="Modules\LINQtoCSV\CsvStream.cs" />
-    <Compile Include="Modules\LINQtoCSV\DataRow.cs" />
-    <Compile Include="Modules\LINQtoCSV\DataRowItem.cs" />
-    <Compile Include="Modules\LINQtoCSV\Exceptions.cs" />
-    <Compile Include="Modules\LINQtoCSV\FieldMapper.cs" />
-    <Compile Include="Modules\LINQtoCSV\IDataRow.cs" />
     <Compile Include="States\AgentInteractionState.cs" />
     <Compile Include="States\ArmState.cs" />
     <Compile Include="States\BackgrounsBehaviorState.cs" />
@@ -392,7 +381,6 @@
     <Folder Include="DirectEve\Hooking" />
     <Folder Include="DirectEve\PySharp" />
     <Folder Include="DirectEve\PythonBrowser" />
-    <Folder Include="Modules\LINQtoCSV" />
     <Folder Include="Modules\QuestorManager\Debugging" />
     <Folder Include="DirectEve" />
   </ItemGroup>
