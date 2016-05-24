@@ -43,7 +43,7 @@ namespace Questor.Modules.Actions
         private static int SensorBoosterScripts = 0;
         private static int SensorDampenerScripts = 0;
         private static int CapacitorInjectorScripts = 0;
-        private static int AncillaryShieldBoosterScripts = 0;
+        private static int AncillaryShieldBoosterScripts = 0; 
         private static bool bWaitingonScripts = false;
 
         private static bool DefaultFittingChecked; //false; //flag to check for the correct default fitting before using the fitting manager
@@ -543,6 +543,13 @@ namespace Questor.Modules.Actions
 						foreach (DirectItem shipInShipHangar in Cache.Instance.ShipHangar.Items)
 						{
 							Logging.Log(WeAreInThisStateForLogs(), "GivenName [" + shipInShipHangar.GivenName.ToLower() + "] TypeName[" + shipInShipHangar.TypeName + "]", Logging.White);
+						}
+						
+						if(Cache.Instance.ActiveShip != null && Cache.Instance.ActiveShip.GroupId == (int)Group.Capsule) {
+							
+							Logging.Log(WeAreInThisStateForLogs(), "Capsule detected... this shouldn't happen, disabling this instance.");
+							
+							Cache.Instance.WCFClient.GetPipeProxy.SetEveAccountAttributeValue(Cache.Instance.CharName, "IsActive", false);
 						}
 
 						if (!ChangeArmState(ArmState.NotEnoughAmmo, false)) return false;
