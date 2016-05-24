@@ -970,7 +970,7 @@ namespace Questor.Modules.BackgroundTasks
 			}
 			
 			// temporarily fix
-			if(!Cache.Instance.Paused && Cache.Instance.InSpace &&  Cache.Instance.Modules.Count(m => !m.IsOnline) > 0) {
+			if(!Cache.Instance.Paused && Cache.Instance.InSpace && Cache.Instance.ActiveShip  != null && Cache.Instance.ActiveShip.Entity != null && Cache.Instance.ActiveShip.GroupId != (int) Group.Capsule &&  Cache.Instance.Modules.Count(m => !m.IsOnline) > 0) {
 				
 				
 				if(Time.Instance.LastOfflineModuleCheck.AddSeconds(45) < DateTime.UtcNow) {
@@ -1009,10 +1009,15 @@ namespace Questor.Modules.BackgroundTasks
 			}
 
 			// What? No ship entity?
-			if (Cache.Instance.ActiveShip.Entity == null || Cache.Instance.ActiveShip.GroupId == (int) Group.Capsule)
+			if (Cache.Instance.ActiveShip.Entity == null)
 			{
-				if (Logging.DebugDefense) Logging.Log("Defense", "no ship entity, or we are in a pod...", Logging.White);
+				Logging.Log("Defense", "no ship entity", Logging.White);
 				Time.Instance.LastSessionChange = DateTime.UtcNow;
+				return;
+			}
+			
+			if(Cache.Instance.ActiveShip != null && Cache.Instance.ActiveShip.GroupId == (int) Group.Capsule) {
+				Logging.Log("Defense", "We are in a pod, no defense required...", Logging.White);
 				return;
 			}
 
