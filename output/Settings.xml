@@ -575,33 +575,12 @@
   <!-- Drones normally kill low value targets (frigates) first. If you would prefer your drones to kill high value targets first set this to true -->
   <dronesKillHighValueTargets>false</dronesKillHighValueTargets>
 
-  <!--                                                        -->
-  <!-- EMAIL SETTINGS                         -->
-  <!--                                                        -->
-  <emailSupport>false</emailSupport> <!-- Questor Email Support:  on or off -->
-  <emailAddress></emailAddress> <!-- your email account name, used to authenticate to send email mail: i.e. EmailAddressTheseEmailsAreFrom@myEmailServerDomain.org -->
-  <emailPassword></emailPassword> <!-- your email accounts password, used to authenticate to send email mail -->
-  <emailSMTPServer></emailSMTPServer> <!--  ex: mail.myEmailServerDomain.com-->
-  <emailSMTPPort>25</emailSMTPPort> <!-- port to use for outgoing mail (smtp) -->
-  <emailAddressToSendAlerts></emailAddressToSendAlerts> <!-- email address to send these alert emails to: i.e. QuestorEmailAlerts@myEmailServerDomain.org -->
-  <emailEnableSSL>false</emailEnableSSL> <!-- enable SSL encryption (if needed for the email server you are using) --> 
-
-  <loadQuestorDebugInnerspaceCommandAlias>1</loadQuestorDebugInnerspaceCommandAlias>
-  <loadQuestorDebugInnerspaceCommand>dotnet q1 questor.exe</loadQuestorDebugInnerspaceCommand>
-  <unLoadQuestorDebugInnerspaceCommandAlias>2</unLoadQuestorDebugInnerspaceCommandAlias>
-  <unLoadQuestorDebugInnerspaceCommand>dotnet -unload q1</unLoadQuestorDebugInnerspaceCommand>
 
   <standingsNeededToAccessLevel1Agent>-11</standingsNeededToAccessLevel1Agent>
   <standingsNeededToAccessLevel2Agent>1</standingsNeededToAccessLevel2Agent>
   <standingsNeededToAccessLevel3Agent>3</standingsNeededToAccessLevel3Agent>
   <standingsNeededToAccessLevel4Agent>5</standingsNeededToAccessLevel4Agent>
   <standingsNeededToAccessLevel5Agent>7</standingsNeededToAccessLevel5Agent>
-
-  <!--                                                        -->
-  <!-- SKILL TRAINING SETTINGS       -->
-  <!--                                                        -->
-  <!-- If there is another toon on this account training at the moment this should be false -->
-  <thisToonShouldBeTrainingSkills>false</thisToonShouldBeTrainingSkills>
 
   <!--                                                          -->
   <!-- MISSION BLACKLIST SETTINGS  -->
@@ -629,22 +608,5 @@
   <greylist>
     <!-- <mission>The Blockade</mission> -->
   </greylist>
-  
-  <!--                                                -->
-  <!--            GUI SETTINGS           -->
-  <!--                                                -->
-  
-  <!-- X Position of Questor Window -->
-  <windowXPosition>1</windowXPosition> <!-- needs to be customized -->
-  <!-- Y Position of Questor Window -->
-  <windowYPosition>1</windowYPosition> <!-- needs to be customized -->
-
-  <!-- X Position of EVE Window -->
-  <eveWindowXPosition>0</eveWindowXPosition> <!-- blank leaves the EVE Window Untouched, if you want to use this you must define all 4 settings -->
-  <!-- Y Position of EVE Window -->
-  <eveWindowYPosition>0</eveWindowYPosition> <!-- blank leaves the EVE Window Untouched, if you want to use this you must define all 4 settings  -->
-  <!-- X Size of EVE Window -->
-  <eveWindowXSize>0</eveWindowXSize> <!-- blank leaves the EVE Window Untouched, if you want to use this you must to define all 4 settings -->
-  <!-- Y Size of EVE Window -->
-  <eveWindowYSize>0</eveWindowYSize> <!-- blank leaves the EVE Window Untouched, if you want to use this you must to define all 4 settings  -->
+ 
 </settings>
