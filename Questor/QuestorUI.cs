@@ -40,14 +40,15 @@ namespace Questor
 				InitializeComponent();
 				PopulateStateComboBoxes();
 				PopulateBehaviorStateComboBox();
-				if (Logging.DebugAttachVSDebugger)
-				{
-					if (!System.Diagnostics.Debugger.IsAttached)
-					{
-						Logging.Log("QuestorUI", "VS Debugger is not yet attached: System.Diagnostics.Debugger.Launch()", Logging.Teal);
-						System.Diagnostics.Debugger.Launch();
-					}
-				}
+				
+//				if (Logging.DebugAttachVSDebugger)
+//				{
+//					if (!System.Diagnostics.Debugger.IsAttached)
+//					{
+//						Logging.Log("QuestorUI", "VS Debugger is not yet attached: System.Diagnostics.Debugger.Launch()", Logging.Teal);
+//						System.Diagnostics.Debugger.Launch();
+//					}
+//				}
 				
 				QuestorManager.QuestorManagerUI form = new QuestorManager.QuestorManagerUI(this);
 				form.TopLevel = false;
