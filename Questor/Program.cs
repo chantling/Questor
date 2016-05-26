@@ -74,6 +74,7 @@ namespace Questor
 			{
 				
 				questorUI = new QuestorUI();
+				//questorUI.Visible = (Cache.Instance.WCFClient.GetPipeProxy.IsMainFormMinimized() && Cache.Instance.WCFClient.GetPipeProxy.GetEVESettings().ToggleHideShowOnMinimize) || Cache.Instance.WCFClient.GetPipeProxy.GetEveAccount(Cache.Instance.EveAccount.CharacterName).Hidden;
 				
 				Logging.Log("Startup", "Launching Questor", Logging.Teal);
 				_questor = new Questor();

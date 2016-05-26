@@ -1,7 +1,10 @@
 using Questor.Properties;
 
+
 namespace Questor
 {
+	
+	extern alias Ut;
 	using System;
 	using System.Diagnostics;
 	using System.Globalization;
@@ -19,6 +22,8 @@ namespace Questor
 	using System.ComponentModel;
 	using System.Threading;
 	using DirectEve;
+	using Ut;
+	
 
 	public partial class QuestorUI : Form
 	{
@@ -35,7 +40,6 @@ namespace Questor
 				InitializeComponent();
 				PopulateStateComboBoxes();
 				PopulateBehaviorStateComboBox();
-				Show();
 				if (Logging.DebugAttachVSDebugger)
 				{
 					if (!System.Diagnostics.Debugger.IsAttached)
@@ -56,8 +60,7 @@ namespace Questor
 						tab.Controls.Add(form);
 					}
 				}
-				
-				form.Visible = true;
+
 				
 			}
 			catch (Exception ex)
@@ -625,16 +628,20 @@ namespace Questor
 		
 		void QuestorUIShown(object sender, EventArgs e)
 		{
-			if(Cache.Instance.WCFClient.GetPipeProxy.ShouldHideEveWindows())
-				this.Hide();
+			if((Cache.Instance.WCFClient.GetPipeProxy.IsMainFormMinimized() && Cache.Instance.WCFClient.GetPipeProxy.GetEVESettings().ToggleHideShowOnMinimize) || Cache.Instance.WCFClient.GetPipeProxy.GetEveAccount(Cache.Instance.EveAccount.CharacterName).Hidden) {
+				Logging.Log("QuestorUIShown","Hiding form.");
+				BeginInvoke(new MethodInvoker(delegate
+				                              {
+				                              	Hide();
+				                              }));
+//				Cache.Instance.WCFClient.GetPipeProxy.CallHideEveWindows(Cache.Instance.EveAccount.CharacterName);
+			}
 		}
 		void Button1Click(object sender, EventArgs e)
 		{
 			var frm = new PythonBrowser.PythonBrowserFrm();
 			frm.Show();
 		}
-		
-		
 		
 		void AddLog(string msg) {
 			
@@ -663,9 +670,9 @@ namespace Questor
 		}
 		
 		void AddLogInvoker(string msg) {
-				try {
-					this.Invoke((MethodInvoker)delegate {AddLog(msg);});}
-				catch (Exception) {}
+			try {
+				this.Invoke((MethodInvoker)delegate {AddLog(msg);});}
+			catch (Exception) {}
 		}
 		
 		void QuestorUILoad(object sender, EventArgs e)
