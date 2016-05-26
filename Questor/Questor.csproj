@@ -222,7 +222,6 @@
     <Compile Include="DirectEve\EasyHook\ServiceMgmt.cs" />
     <Compile Include="DirectEve\EasyHook\WOW64Bypass.cs" />
     <Compile Include="DirectEve\Frameworks\IFramework.cs" />
-    <Compile Include="DirectEve\Frameworks\InnerSpace.cs" />
     <Compile Include="DirectEve\Hooking\Hooks.cs" />
     <Compile Include="DirectEve\PySharp\IntPtrExtension.cs" />
     <Compile Include="DirectEve\PySharp\Py.cs" />

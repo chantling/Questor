@@ -590,7 +590,7 @@ namespace Questor.Modules.BackgroundTasks
 							Logging.Log("Questor", "EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB", Logging.White);
 							string MemoryManagerCommandToRun = "dotnet m1 memmanager.exe " + Settings.Instance.MemoryManagerTrimThreshold;
 							Logging.Log("Cleanup.CleanupTasks", "EVEMemoryManager: running [ " + MemoryManagerCommandToRun + " ]", Logging.White);
-							//                            if (Logging.UseInnerspace) LavishScript.ExecuteCommand(MemoryManagerCommandToRun);
+							
 							MemoryManagerHasBeenRunThisIteration = true;
 						}
 

@@ -200,10 +200,7 @@ namespace DirectEve
 			{
 				_framework = framework;
 			}
-			else
-			{
-				_framework = new InnerSpaceFramework();
-			}
+			
 
 			try
 			{

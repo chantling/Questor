@@ -329,7 +329,7 @@ namespace QuestorManager
 
 
 						Logging.Log("QuestorManager", "CmdLine: " + LstTask.Items[0].SubItems[1].Text, Logging.White);
-						Logging.Log("QuestorManager", "CmdLine: Error: command skipped: UseInnerspace is false", Logging.White);
+						
 
 
 						LstTask.Items.Remove(LstTask.Items[0]);

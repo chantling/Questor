@@ -45,25 +45,7 @@ namespace ValueDump
             {
                 if (Cache.Instance.DirectEve == null)
                 {
-                    //
-                    // DE now has cloaking enabled using EasyHook, If EasyHook DLLs are missing DE should complain. We check for and complain about missing EasyHook stuff before we get this far.
-                    // 
-                    //
-                    //Logging.Log("Startup", "temporarily disabling the loading of DE for debugging purposes, halting", Logging.Debug);
-                    //while (Cache.Instance.DirectEve == null)
-                    //{
-                    //    System.Threading.Thread.Sleep(50); //this pauses forever...
-                    //}
-                    if (_standaloneInstance)
-                    {
-                        Logging.Log("Startup", "Starting Instance of DirectEVE using StandaloneFramework", Logging.Debug);
-                        Cache.Instance.DirectEve = new DirectEve(new StandaloneFramework(Cache.D3DVersion));
-                    }
-                    else
-                    {
-                        Logging.Log("Startup", "Starting Instance of DirectEVE using Innerspace", Logging.Debug);
-                        Cache.Instance.DirectEve = new DirectEve();
-                    }
+
                 }
             }
             catch (Exception ex)
