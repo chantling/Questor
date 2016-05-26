@@ -171,7 +171,7 @@
   <requireMissionXML>false</requireMissionXML>
   <!-- agentsList is used when WaitDecine is true and your standings have gone below MinStandings, it will switch to a lower priority agent, need to be filled out for at least one agent -->
   <agentsList>
-    <agentList name="ThisIsTheNameOfMyAgentReplaceMe" priority="0" /><!-- needs to be customized -->
+    <agentList name="ThisIsTheNameOfMyAgentReplaceMe" priority="0" homestationid="0" /><!-- needs to be customized, homestationid IS REQUIRED! --> 
     <!-- <agentList name="" priority="1" /> -->
     <!-- <agentList name="" priority="2" /> -->
     <!-- <agentList name="" priority="3" /> -->

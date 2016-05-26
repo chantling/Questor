@@ -583,7 +583,6 @@ namespace Questor.Modules.Caching
 								
 								if(MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1) {
 									
-									
 									_currentAgent = SelectFirstAgent(true);
 									Logging.Log("Cache.CurrentAgent", "Current Agent is [" + _currentAgent + "]", Logging.Debug);
 									
@@ -666,7 +665,7 @@ namespace Questor.Modules.Caching
 							{
 								_agent = Cache.Instance.DirectEve.GetAgentByName(CurrentAgent);
 								if(_agent == null) {
-									Logging.Log("Cache: CurrentAgent", "Agent == null ERROR", Logging.White);
+									Logging.Log("Cache: CurrentAgent", "Agent == null", Logging.White);
 								}
 							}
 							

@@ -79,11 +79,15 @@
         {
             Name = (string)agentList.Attribute("name") ?? "";
             Priorit = (int)agentList.Attribute("priority");
+            long homeStationId = (long)agentList.Attribute("homestationid") > 0 ? (long)agentList.Attribute("homestationid") : 60003760;
+            HomeStationId = homeStationId;
         }
 
         public string Name { get; private set; }
 
         public int Priorit { get; private set; }
+        
+        public long HomeStationId { get; private set; }
 
         public DateTime DeclineTimer
         {
