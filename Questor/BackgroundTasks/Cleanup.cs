@@ -343,6 +343,7 @@ namespace Questor.Modules.BackgroundTasks
 								close |= window.Html.Contains("No rigs were added to or removed from the ship");
 								//In station - Flying Between Hangars
 								close |= window.Html.Contains("You can't fly your active ship into someone else's hangar");
+								close |= window.Html.Contains("You can't do this quite so fast");
 								// Lag :/
 								
 								clearPocket |= window.Html.Contains("This gate is locked!");
