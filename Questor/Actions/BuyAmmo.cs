@@ -671,7 +671,7 @@ namespace Questor.Actions
 					break;
 
 				case BuyAmmoState.Done:
-					Console.WriteLine(state.ToString());
+//					Console.WriteLine(state.ToString());
 
 					if (Cache.Instance.DirectEve.Session.StationId != null && Cache.Instance.DirectEve.Session.StationId > 0 && Cache.Instance.DirectEve.Session.StationId == Settings.Instance.BuyAmmoStationID)
 					{
@@ -679,11 +679,11 @@ namespace Questor.Actions
 						_States.CurrentArmState = ArmState.Idle;
 					}
 
-					Logging.Log("BuyAmmo", "State iterations statistics: []", Logging.White);
-					foreach(var kV in stateIterations)
-					{
-						Logging.Log("BuyAmmo", "State [BuyAmmoState." + kV.Key.ToString() + "] iterations [" + kV.Value + "]" , Logging.White);
-					}
+//					Logging.Log("BuyAmmo", "State iterations statistics: []", Logging.White);
+//					foreach(var kV in stateIterations)
+//					{
+//						Logging.Log("BuyAmmo", "State [BuyAmmoState." + kV.Key.ToString() + "] iterations [" + kV.Value + "]" , Logging.White);
+//					}
 
 					break;
 
