@@ -123,7 +123,6 @@
     <Compile Include="BackgroundTasks\NavigateOnGrid.cs" />
     <Compile Include="BackgroundTasks\Panic.cs" />
     <Compile Include="BackgroundTasks\Salvage.cs" />
-    <Compile Include="BackgroundTasks\Scoop.cs" />
     <Compile Include="Behaviors\CombatMissionsBehavior.cs" />
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\CacheBookmarks.cs" />
