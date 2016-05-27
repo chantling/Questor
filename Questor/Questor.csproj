@@ -242,7 +242,6 @@
     <Compile Include="Lookup\GroupID.cs" />
     <Compile Include="Lookup\InvType.cs" />
     <Compile Include="Lookup\MissionSettings.cs" />
-    <Compile Include="Lookup\OreType.cs" />
     <Compile Include="Lookup\Priority.cs" />
     <Compile Include="Lookup\PriorityTarget.cs" />
     <Compile Include="Lookup\SelectAgent.cs" />

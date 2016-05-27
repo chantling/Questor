@@ -5321,41 +5321,6 @@ namespace Questor.Modules.Caching
 			}
 		}
 		
-		public void WarpToAndDock()
-		{
-			try
-			{
-				if (DateTime.UtcNow < Time.Instance.LastInWarp.AddSeconds(5))
-				{
-					return;
-				}
-
-				if (DateTime.UtcNow > Time.Instance.NextDockAction && DateTime.UtcNow > Time.Instance.NextWarpAction)
-				{
-					if (Time.Instance.LastInSpace.AddSeconds(2) > DateTime.UtcNow && Cache.Instance.InSpace && DateTime.UtcNow > Time.Instance.LastInStation.AddSeconds(20))
-					{
-						if (_directEntity != null && _directEntity.IsValid)
-						{
-							if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
-							{
-								Logging.Log("EntityCache.Name", "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" + MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Debug);
-							}
-
-							Time.Instance.WehaveMoved = DateTime.UtcNow;
-							Time.Instance.LastInWarp = DateTime.UtcNow;
-							Time.Instance.NextWarpAction = DateTime.UtcNow.AddSeconds(Time.Instance.WarptoDelay_seconds);
-							Time.Instance.NextDockAction = DateTime.UtcNow.AddSeconds(Time.Instance.DockingDelay_seconds);
-							_directEntity.WarpToAndDock();
-						}
-					}
-				}
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Debug);
-			}
-		}
-		
 		public bool Dock()
 		{
 			try
