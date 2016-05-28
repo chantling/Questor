@@ -56,9 +56,13 @@ namespace Questor.Controllers
 				return;
 			}
 			
+			
+			
 			if (Cache.Instance.DirectEve.Login.AtLogin || Cache.Instance.DirectEve.Login.AtCharacterSelection ||
 			    Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)
 			{
+				
+				
 				if (Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)
 				{
 					Logging.Log("if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)");
@@ -88,7 +92,7 @@ namespace Questor.Controllers
 
 				LocalPulse = DateTime.UtcNow.AddMilliseconds(Time.Instance.QuestorBeforeLoginPulseDelay_milliseconds);
 
-				if (DateTime.UtcNow < Cache.QuestorProgramLaunched.AddSeconds(5))
+				if (DateTime.UtcNow < Cache.QuestorProgramLaunched.AddSeconds(1))
 				{
 					//
 					// do not login for the first 7 seconds, wait...
@@ -309,6 +313,7 @@ namespace Questor.Controllers
 				if (Cache.Instance.DirectEve.Login.AtLogin &&
 				    Cache.Instance.DirectEve.Login.ServerStatus != "Status: OK")
 				{
+					Logging.Log("Server status =! OK");
 					if (Cache.ServerStatusCheck <= 20) // at 10 sec a piece this would be 200+ seconds
 					{
 						Logging.Log("Server status[" + Cache.Instance.DirectEve.Login.ServerStatus + "] != [OK] try later");
@@ -331,20 +336,19 @@ namespace Questor.Controllers
 					Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor, true);
 					return;
 				}
+				
+				Logging.Log("Server status == OK");
 
 				if (Cache.Instance.DirectEve.Login.AtLogin && !Cache.Instance.DirectEve.Login.IsLoading &&
 				    !Cache.Instance.DirectEve.Login.IsConnecting)
 				{
-					if (DateTime.UtcNow.Subtract(Cache.QuestorSchedulerReadyToLogin).TotalMilliseconds >
-					    Cache.Instance.RandomNumber(Time.Instance.EVEAccountLoginDelayMinimum_seconds*1000,
-					                                Time.Instance.EVEAccountLoginDelayMaximum_seconds*1000))
-					{
+					
 						Logging.Log("Login account [" + Logging.EVELoginUserName + "]");
 						Cache.Instance.DirectEve.Login.Login(Logging.EVELoginUserName, Logging.EVELoginPassword);
 						LocalPulse = GetUTCNowDelaySeconds(10, 12);
 						Logging.Log("Waiting for Character Selection Screen");
 						return;
-					}
+					
 				}
 
 				if (Cache.Instance.DirectEve.Login.AtCharacterSelection &&
