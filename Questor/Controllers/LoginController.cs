@@ -41,6 +41,10 @@ namespace Questor.Controllers
 				return;
 			}
 			
+			Cache.Instance.WCFClient.GetPipeProxy.SetEveAccountAttributeValue(Cache.Instance.CharName,
+				                                                                  "LastQuestorSessionReady", DateTime.UtcNow);
+						
+			
 			if(LoggedIn || Cache.Instance.DirectEve.Session.IsReadyPreLogin) {
 					Logging.Log("Successfully logged in.");
 					IsWorkDone = true; // once we selected the char the work is done, of if the session is ready ( we already have been loggin in )
