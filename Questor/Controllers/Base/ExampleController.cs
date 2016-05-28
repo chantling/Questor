@@ -30,8 +30,8 @@ namespace Questor.Controllers
 			
 			if(ControllerDependencies == null) {
 				ControllerDependencies = new Dictionary<Type, bool>();
-				ControllerDependencies.Add(typeof(LoginController),false); // means this controller does not run until there is an controller with type of LoginController
-				ControllerDependencies.Add(typeof(QuestorController),true); // means this controller does not run until there is an controller with type of QuestorController AND QuestorController.IsWorkDone == true
+				ControllerDependencies.Add(typeof(LoginController),false); // means ExampleController does not run until there is an controller with type of LoginController
+				ControllerDependencies.Add(typeof(QuestorController),true); // means ExampleController does not run until there is an controller with type of QuestorController AND QuestorController.IsWorkDone == true
 			}
 			return ControllerDependencies;
 		}

@@ -736,6 +736,8 @@ namespace Questor
         {
             Logging.OnMessage -= AddLogInvoker;
             Cache.Instance.Paused = true;
+            Program.QuestorControllerManagerInstance.RemoveAllControllers();
+            Program.QuestorControllerManagerInstance.Dispose();
 //            Cache.Instance.DirectEve.OnFrame -= Questor.questor.EVEOnFrame;
         }
     }

@@ -54,6 +54,7 @@ namespace Questor
 				Logging.Log("Launching QuestorControllerManager");
 				
 				QuestorControllerManagerInstance = new QuestorControllerManager();
+				QuestorControllerManagerInstance.AddController(new LoginController());
 				QuestorControllerManagerInstance.AddController(new QuestorController());
 
 				QuestorUIInstance = new QuestorUI();

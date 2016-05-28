@@ -211,6 +211,8 @@ namespace EasyHook.IPC
         ///     <see cref="_state" /> is set accordingly.
         /// </summary>
         /// <returns></returns>
+        
+       #pragma warning disable
         private bool TryConnectClient()
         {
             try
@@ -225,6 +227,7 @@ namespace EasyHook.IPC
                 return false;
             }
         }
+        #pragma warning restore
 
         /// <summary>
         ///     Returns an instance to the remote endpoint.

@@ -751,7 +751,7 @@ namespace EasyHook
                 throw new ApplicationException("Unable to install assemblies to GAC, see inner exception for details", e);
             }
         }
-
+		#pragma warning disable
         public static void GacUninstallAssemblies(
             String[] InAssemblyNames,
             String InDescription,
@@ -773,5 +773,6 @@ namespace EasyHook
                 throw new ApplicationException("Unable to uninstall assemblies from GAC, see inner exception for details", e);
             }
         }
+		#pragma warning restore
     }
 }

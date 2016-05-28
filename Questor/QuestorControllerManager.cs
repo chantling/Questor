@@ -21,7 +21,7 @@ namespace Questor
 	/// <summary>
 	/// Description of QuestorControllerManager.
 	/// </summary>
-	public class QuestorControllerManager
+	public class QuestorControllerManager : IDisposable
 	{
 		
 		DateTime Pulse { get; set; }
@@ -53,10 +53,12 @@ namespace Questor
 				var deps = controller.GetControllerDependencies();
 				
 				if(deps.Any()) {
+					
 					// there are denpendencies, lets check if every single one is met
-					if(ControllerList.All( c => deps.Any( d =>  d.Key.Equals(c.GetType()) && d.Value == c.IsWorkDone))) {
+					if(deps.All( d => ControllerList.Any( c => c.GetType().Equals(d.Key)  && c.IsWorkDone == d.Value))) {
+						
 						controller.DoWork();
-					}
+					} 
 					
 				} else {
 					// no dependencies
@@ -65,10 +67,20 @@ namespace Questor
 			}
 		}
 		
+		public void AddControllers(IEnumerable<IController> controllers) {
+			foreach(var controller in controllers) {
+				this.AddController(controller);
+			}
+		}
+		
 		public void AddController(IController controller)
 		{
 			if(ControllerList.All(c => !c.GetType().Equals(controller.GetType())))
 				ControllerList.Add(controller);
+		}
+		
+		public bool IsControllerOfTypeExistingAlready(Type t) {
+			return ControllerList.Any(c => c.GetType().Equals(t));
 		}
 		
 		public void RemoveAllControllers() {
@@ -79,8 +91,18 @@ namespace Questor
 			ControllerList.RemoveWhere(s => s.IsWorkDone);
 		}
 		
-		public void RemoveControllerOfType(Type t) {
+		public void RemoveControllers(IEnumerable<Type> controllers) {
+			foreach(var t in controllers) {
+				this.RemoveController(t);
+			}
+		}
+		
+		public void RemoveController(Type t) {
 			ControllerList.RemoveWhere( c => c.GetType().Equals(t)); //RemoveControllerType(typeof(LoginController));
+		}
+		
+		public void RemoveController(IController controller) {
+			ControllerList.RemoveWhere(c => c == controller);
 		}
 		
 		
@@ -97,5 +119,39 @@ namespace Questor
 				return ret;
 			}
 		}
+		
+		
+		#region IDisposable implementation
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+		
+		private bool m_Disposed = false;
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!m_Disposed)
+			{
+				if (disposing)
+				{
+					if(Cache.Instance.DirectEve != null) {
+						Cache.Instance.DirectEve.OnFrame -= EVEOnFrame;
+						Cache.Instance.DirectEve.Dispose();
+					}
+					
+				}
+				m_Disposed = true;
+			}
+		}
+
+		~QuestorControllerManager()
+		{
+			Dispose(false);
+		}
+
+		#endregion
 	}
 }

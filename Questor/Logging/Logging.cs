@@ -248,7 +248,7 @@ namespace Questor.Modules.Logging
                     OnMessage(plainLogLineWithTime);
                 }
                 // eventlistener here
-                Console.Write(redactedPlainLogLine);
+                //Console.Write(redactedPlainLogLine);
 
                 if (!ConsoleLogOpened)
                 {

@@ -161,5 +161,43 @@ namespace DirectEve
                 return true;
             }
         }
+        
+        
+        
+        public bool IsReadyPreLogin
+        {
+            get
+            {
+                if (ShipId == null)
+                    return false;
+
+                if (!Session.Attribute("locationid").IsValid)
+                    return false;
+
+                if (!Session.Attribute("solarsystemid2").IsValid)
+                    return false;
+
+                if (Session.Attribute("changing").IsValid)
+                    return false;
+
+                if ((bool) Session.Attribute("mutating"))
+                    return false;
+
+                if (Session.Attribute("nextSessionChange").IsValid)
+                {
+                    // Wait 10 seconds after a session change
+                    var nextSessionChange = (DateTime) Session.Attribute("nextSessionChange");
+                    nextSessionChange = nextSessionChange.AddSeconds(-20);
+                    if (nextSessionChange >= Now)
+                        return false;
+                }
+
+                var loading = (bool) DirectEve.PySharp.Import("__builtin__").Attribute("uicore").Attribute("layer").Attribute("loading").Attribute("display");
+                if (loading)
+                    return false;
+
+                return true;
+            }
+        }
     }
 }

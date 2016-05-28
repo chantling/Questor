@@ -513,6 +513,12 @@ namespace Questor.Modules.Actions
                 //
                 // is the ShipName is already the current ship? (we may have started in the right ship!)
                 //
+                
+                if(Cache.Instance.DirectEve.ActiveShip == null) {
+                	Logging.Logging.Log("Activeship is null.");
+                	return false;
+                }
+                
                 if (Cache.Instance.DirectEve.ActiveShip != null && Cache.Instance.DirectEve.ActiveShip.GivenName.ToLower() == shipName.ToLower())
                 {
                     switchingShips = false;

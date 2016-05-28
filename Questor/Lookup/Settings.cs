@@ -1327,6 +1327,7 @@ namespace Questor.Modules.Lookup
                         if (Instance.CommonXMLExists)
                             Logging.Logging.Log("[" + SettingsLoadedICount + "] Done Loading Settings from [" + Instance.CommonSettingsPath + "] and");
                         Logging.Logging.Log("[" + SettingsLoadedICount + "] Done Loading Settings from [" + Logging.Logging.CharacterSettingsPath + "]");
+                        Settings.Instance.DefaultSettingsLoaded = true;
 
                         //SettingsLoaded(this, new EventArgs());
                     }
