@@ -238,12 +238,17 @@ namespace Questor.Modules.Logging
                     //In memory Console Log with sensitive info redacted
 
                 plainLogLine = FilterColorsFromLogs(line);
+                
+                
+                var plainLogLineWithTime = String.Format("{0:HH:mm:ss} {1}", DateTimeForLogs,
+                    "[" + DescriptionOfWhere + "] " + (plainLogLine));
+                
                 redactedPlainLogLine = String.Format("{0:HH:mm:ss} {1}", DateTimeForLogs,
                     "[" + DescriptionOfWhere + "] " + FilterSensitiveInfo(plainLogLine) + "\r\n"); //In memory Console Log with sensitive info redacted
 
                 if (OnMessage != null)
                 {
-                    OnMessage(plainLogLine);
+                    OnMessage(plainLogLineWithTime);
                 }
                 // eventlistener here
                 Console.Write(redactedPlainLogLine);
