@@ -6,22 +6,21 @@
  * 
  * ---------------------------------------
  */
-using System;
 
 namespace Questor.Modules.States
 {
     public enum BuyAmmoState
     {
         Idle,
-    	AmmoCheck,
+        AmmoCheck,
         ActivateTransportShip,
         CreateBuyList,
         TravelToDestinationStation,
-		BuyAmmo,
-		MoveItemsToCargo,
-		TravelToHomeSystem,
-		Done,
-		Error,
-		DisabledForThisSession
+        BuyAmmo,
+        MoveItemsToCargo,
+        TravelToHomeSystem,
+        Done,
+        Error,
+        DisabledForThisSession
     }
 }

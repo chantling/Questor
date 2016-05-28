@@ -8,282 +8,319 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using DirectEve;
+using Questor.Modules.Actions;
+using Questor.Modules.BackgroundTasks;
+using Questor.Modules.Caching;
+using Questor.Modules.Combat;
+using Questor.Modules.Lookup;
+using Questor.Modules.States;
+
 namespace Questor.Modules.Activities
 {
-	using System;
-	using System.Linq;
-	using System.Collections.Generic;
-	using DirectEve;
-	using global::Questor.Modules.Actions;
-	using global::Questor.Modules.BackgroundTasks;
-	using global::Questor.Modules.Caching;
-	using global::Questor.Modules.Combat;
-	using global::Questor.Modules.Logging;
-	using global::Questor.Modules.Lookup;
-	using global::Questor.Modules.States;
+    public static class Traveler
+    {
+        private static TravelerDestination _destination;
+        private static DateTime _lastTravelerPulse;
+        private static DateTime _nextGetLocation;
 
-	public static class Traveler
-	{
-		private static TravelerDestination _destination;
-		private static DateTime _lastTravelerPulse;
-		private static DateTime _nextGetLocation;
-		
-		private static List<int> _destinationRoute;
-		public static DirectLocation _location;
-		private static IEnumerable<DirectBookmark> myHomeBookmarks;
-		private static string _locationName;
-		private static int _locationErrors;
-		
-		static Traveler()
-		{
-			_lastTravelerPulse = DateTime.MinValue;
-		}
+        private static List<int> _destinationRoute;
+        public static DirectLocation _location;
+        private static IEnumerable<DirectBookmark> myHomeBookmarks;
+        private static string _locationName;
+        private static int _locationErrors;
 
-		public static TravelerDestination Destination
-		{
-			get { return _destination; }
-			set
-			{
-				_destination = value;
-				_States.CurrentTravelerState = _destination == null ? TravelerState.AtDestination : TravelerState.Idle;
-			}
-		}
+        static Traveler()
+        {
+            _lastTravelerPulse = DateTime.MinValue;
+        }
 
-		/// <summary>
-		///   Set destination to a solar system
-		/// </summary>
-		public static bool SetStationDestination(long stationId)
-		{
-			_location = Cache.Instance.DirectEve.Navigation.GetLocation(stationId);
-			if (Logging.DebugTraveler) Logging.Log("Traveler", "Location = [" + Logging.Yellow + Cache.Instance.DirectEve.Navigation.GetLocationName(stationId) + Logging.Green + "]", Logging.Green);
-			if (_location != null && _location.IsValid)
-			{
-				_locationErrors = 0;
-				if (Logging.DebugTraveler) Logging.Log("Traveler", "Setting destination to [" + Logging.Yellow + _location.Name + Logging.Green + "]", Logging.Teal);
-				try
-				{
-					_location.SetDestination();
-				}
-				catch (Exception)
-				{
-					Logging.Log("Traveler", "SetStationDestination: set destination to [" + _location.ToString() + "] failed ", Logging.Debug);
-				}
-				return true;
-			}
+        public static TravelerDestination Destination
+        {
+            get { return _destination; }
+            set
+            {
+                _destination = value;
+                _States.CurrentTravelerState = _destination == null ? TravelerState.AtDestination : TravelerState.Idle;
+            }
+        }
 
-			Logging.Log("Traveler", "Error setting station destination [" + Logging.Yellow + stationId + Logging.Green + "]", Logging.Green);
-			_locationErrors++;
-			if (_locationErrors > 20)
-			{
-				return false;
-			}
-			return false;
-		}
+        /// <summary>
+        ///     Set destination to a solar system
+        /// </summary>
+        public static bool SetStationDestination(long stationId)
+        {
+            _location = Cache.Instance.DirectEve.Navigation.GetLocation(stationId);
+            if (Logging.Logging.DebugTraveler)
+                Logging.Logging.Log("Traveler",
+                    "Location = [" + Logging.Logging.Yellow + Cache.Instance.DirectEve.Navigation.GetLocationName(stationId) + Logging.Logging.Green + "]",
+                    Logging.Logging.Green);
+            if (_location != null && _location.IsValid)
+            {
+                _locationErrors = 0;
+                if (Logging.Logging.DebugTraveler)
+                    Logging.Logging.Log("Traveler", "Setting destination to [" + Logging.Logging.Yellow + _location.Name + Logging.Logging.Green + "]",
+                        Logging.Logging.Teal);
+                try
+                {
+                    _location.SetDestination();
+                }
+                catch (Exception)
+                {
+                    Logging.Logging.Log("Traveler", "SetStationDestination: set destination to [" + _location.ToString() + "] failed ", Logging.Logging.Debug);
+                }
+                return true;
+            }
 
-		/// <summary>
-		///   Navigate to a solar system
-		/// </summary>
-		/// <param name = "solarSystemId"></param>
-		private static void NavigateToBookmarkSystem(long solarSystemId)
-		{
-			if (Time.Instance.NextTravelerAction > DateTime.UtcNow)
-			{
-				if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem: will continue in [ " + Math.Round(Time.Instance.NextTravelerAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + " ]sec", Logging.Debug);
-				return;
-			}
+            Logging.Logging.Log("Traveler", "Error setting station destination [" + Logging.Logging.Yellow + stationId + Logging.Logging.Green + "]",
+                Logging.Logging.Green);
+            _locationErrors++;
+            if (_locationErrors > 20)
+            {
+                return false;
+            }
+            return false;
+        }
 
-			if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(7))
-			{
-				if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem: We just session changed less than 7 sec go, wait.", Logging.Teal);
-				return;
-			}
+        /// <summary>
+        ///     Navigate to a solar system
+        /// </summary>
+        /// <param name="solarSystemId"></param>
+        private static void NavigateToBookmarkSystem(long solarSystemId)
+        {
+            if (Time.Instance.NextTravelerAction > DateTime.UtcNow)
+            {
+                if (Logging.Logging.DebugTraveler)
+                    Logging.Logging.Log("Traveler",
+                        "NavigateToBookmarkSystem: will continue in [ " + Math.Round(Time.Instance.NextTravelerAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) +
+                        " ]sec", Logging.Logging.Debug);
+                return;
+            }
 
-			Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(2);
-			if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem - Iterating- next iteration should be in no less than [1] second ", Logging.Teal);
-			
-			_destinationRoute = null;
-			_destinationRoute = Cache.Instance.DirectEve.Navigation.GetDestinationPath();
-			
-			if (_destinationRoute == null || _destinationRoute.Count == 0 || _destinationRoute.All(d => d != solarSystemId))
-			{
-				if (_destinationRoute != null || (_destinationRoute != null && _destinationRoute.Count == 0)) Logging.Log("Traveler", "NavigateToBookmarkSystem: We have no destination", Logging.Teal);
-				if (_destinationRoute != null || (_destinationRoute != null && _destinationRoute.All(d => d != solarSystemId))) Logging.Log("Traveler", "NavigateToBookmarkSystem: the destination is not currently set to solarsystemId [" + solarSystemId + "]", Logging.Teal);
+            if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(7))
+            {
+                if (Logging.Logging.DebugTraveler)
+                    Logging.Logging.Log("Traveler", "NavigateToBookmarkSystem: We just session changed less than 7 sec go, wait.", Logging.Logging.Teal);
+                return;
+            }
 
-				// We do not have the destination set
-				if (DateTime.UtcNow > _nextGetLocation || _location == null)
-				{
-					Logging.Log("Traveler", "NavigateToBookmarkSystem: getting Location of solarSystemId [" + solarSystemId + "]", Logging.Teal);
-					_nextGetLocation = DateTime.UtcNow.AddSeconds(10);
-					_location = Cache.Instance.DirectEve.Navigation.GetLocation(solarSystemId);
-					Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(2);
-					return;
-				}
+            Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(2);
+            if (Logging.Logging.DebugTraveler)
+                Logging.Logging.Log("Traveler", "NavigateToBookmarkSystem - Iterating- next iteration should be in no less than [1] second ",
+                    Logging.Logging.Teal);
 
-				if (_location != null && _location.IsValid)
-				{
-					_locationErrors = 0;
-					Logging.Log("Traveler", "Setting destination to [" + Logging.Yellow + _location.Name + Logging.Green + "]", Logging.Green);
-					try
-					{
-						_location.SetDestination();
-					}
-					catch (Exception)
-					{
-						Logging.Log("Traveler", "NavigateToBookmarkSystem: set destination to [" + _location.ToString() + "] failed ", Logging.Debug);
-					}
+            _destinationRoute = null;
+            _destinationRoute = Cache.Instance.DirectEve.Navigation.GetDestinationPath();
 
-					Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(3);
-					return;
-				}
+            if (_destinationRoute == null || _destinationRoute.Count == 0 || _destinationRoute.All(d => d != solarSystemId))
+            {
+                if (_destinationRoute != null || (_destinationRoute != null && _destinationRoute.Count == 0))
+                    Logging.Logging.Log("Traveler", "NavigateToBookmarkSystem: We have no destination", Logging.Logging.Teal);
+                if (_destinationRoute != null || (_destinationRoute != null && _destinationRoute.All(d => d != solarSystemId)))
+                    Logging.Logging.Log("Traveler", "NavigateToBookmarkSystem: the destination is not currently set to solarsystemId [" + solarSystemId + "]",
+                        Logging.Logging.Teal);
 
-				Logging.Log("Traveler", "NavigateToBookmarkSystem: Error setting solar system destination [" + Logging.Yellow + solarSystemId + Logging.Green + "]", Logging.Green);
-				_locationErrors++;
-				if (_locationErrors > 20)
-				{
-					_States.CurrentTravelerState = TravelerState.Error;
-					return;
-				}
+                // We do not have the destination set
+                if (DateTime.UtcNow > _nextGetLocation || _location == null)
+                {
+                    Logging.Logging.Log("Traveler", "NavigateToBookmarkSystem: getting Location of solarSystemId [" + solarSystemId + "]", Logging.Logging.Teal);
+                    _nextGetLocation = DateTime.UtcNow.AddSeconds(10);
+                    _location = Cache.Instance.DirectEve.Navigation.GetLocation(solarSystemId);
+                    Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(2);
+                    return;
+                }
 
-				return;
-			}
+                if (_location != null && _location.IsValid)
+                {
+                    _locationErrors = 0;
+                    Logging.Logging.Log("Traveler", "Setting destination to [" + Logging.Logging.Yellow + _location.Name + Logging.Logging.Green + "]",
+                        Logging.Logging.Green);
+                    try
+                    {
+                        _location.SetDestination();
+                    }
+                    catch (Exception)
+                    {
+                        Logging.Logging.Log("Traveler", "NavigateToBookmarkSystem: set destination to [" + _location.ToString() + "] failed ",
+                            Logging.Logging.Debug);
+                    }
 
-			_locationErrors = 0;
-			if (!Cache.Instance.InSpace)
-			{
-				if (Cache.Instance.InStation)
-				{
-					if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(25)) //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
-					{
-						Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
-						Time.Instance.LastDockAction = DateTime.UtcNow;
-						Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerExitStationAmIInSpaceYet_seconds);
-					}
-				}
+                    Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(3);
+                    return;
+                }
 
-				Time.Instance.NextActivateModules = DateTime.UtcNow.AddSeconds(Cache.Instance.RandomNumber(2, 3));
+                Logging.Logging.Log("Traveler",
+                    "NavigateToBookmarkSystem: Error setting solar system destination [" + Logging.Logging.Yellow + solarSystemId + Logging.Logging.Green + "]",
+                    Logging.Logging.Green);
+                _locationErrors++;
+                if (_locationErrors > 20)
+                {
+                    _States.CurrentTravelerState = TravelerState.Error;
+                    return;
+                }
 
-				// We are not yet in space, wait for it
-				return;
-			}
+                return;
+            }
 
-			// We are apparently not really in space yet...
-			if (Cache.Instance.ActiveShip == null || Cache.Instance.ActiveShip.Entity == null)
-				return;
+            _locationErrors = 0;
+            if (!Cache.Instance.InSpace)
+            {
+                if (Cache.Instance.InStation)
+                {
+                    if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(25))
+                        //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
+                    {
+                        Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
+                        Time.Instance.LastDockAction = DateTime.UtcNow;
+                        Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerExitStationAmIInSpaceYet_seconds);
+                    }
+                }
 
-			//if (Logging.DebugTraveler) Logging.Log("Traveler", "Destination is set: processing...", Logging.Teal);
+                Time.Instance.NextActivateModules = DateTime.UtcNow.AddSeconds(Cache.Instance.RandomNumber(2, 3));
 
-			// Find the first waypoint
-			int waypoint = _destinationRoute.FirstOrDefault();
+                // We are not yet in space, wait for it
+                return;
+            }
 
-			//if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem: getting next way-points locationName", Logging.Teal);
-			_locationName = Cache.Instance.DirectEve.Navigation.GetLocationName(waypoint);
-			if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem: Next Waypoint is: [" + _locationName + "]", Logging.Teal);
+            // We are apparently not really in space yet...
+            if (Cache.Instance.ActiveShip == null || Cache.Instance.ActiveShip.Entity == null)
+                return;
 
-			if (waypoint > 60000000) // this MUST be a station
-			{
-				//insert code to handle station destinations here
-			}
+            //if (Logging.DebugTraveler) Logging.Log("Traveler", "Destination is set: processing...", Logging.Teal);
 
-			if (waypoint < 60000000) // this is not a station, probably a system
-			{
-				//useful?a
-			}
+            // Find the first waypoint
+            var waypoint = _destinationRoute.FirstOrDefault();
 
-			DirectSolarSystem solarSystemInRoute = Cache.Instance.DirectEve.SolarSystems[waypoint];
+            //if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem: getting next way-points locationName", Logging.Teal);
+            _locationName = Cache.Instance.DirectEve.Navigation.GetLocationName(waypoint);
+            if (Logging.Logging.DebugTraveler)
+                Logging.Logging.Log("Traveler", "NavigateToBookmarkSystem: Next Waypoint is: [" + _locationName + "]", Logging.Logging.Teal);
 
-			if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)
-			{
-				if (solarSystemInRoute != null && solarSystemInRoute.Security < 0.45 && (Cache.Instance.ActiveShip.GroupId != (int)Group.Shuttle || Cache.Instance.ActiveShip.GroupId != (int)Group.Frigate || Cache.Instance.ActiveShip.GroupId != (int)Group.Interceptor || Cache.Instance.ActiveShip.GroupId != (int)Group.TransportShip || Cache.Instance.ActiveShip.GroupId != (int)Group.ForceReconShip || Cache.Instance.ActiveShip.GroupId != (int)Group.StealthBomber))
-				{
-					Logging.Log("Traveler", "NavigateToBookmarkSystem: Next Waypoint is: [" + _locationName + "] which is LOW SEC! This should never happen. Turning off AutoStart and going home.", Logging.Teal);
-					Settings.Instance.AutoStart = false;
-					if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)
-					{
-						_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
-					}
-					return;
-				}
-			}
-			
-			// Find the stargate associated with it
+            if (waypoint > 60000000) // this MUST be a station
+            {
+                //insert code to handle station destinations here
+            }
 
-			if (!Cache.Instance.Stargates.Any())
-			{
-				// not found, that cant be true?!?!?!?!
-				Logging.Log("Traveler", "Error [" + Logging.Yellow + _locationName + Logging.Green + "] not found, most likely lag waiting [" + Time.Instance.TravelerNoStargatesFoundRetryDelay_seconds + "] seconds.", Logging.Red);
-				Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerNoStargatesFoundRetryDelay_seconds);
-				return;
-			}
+            if (waypoint < 60000000) // this is not a station, probably a system
+            {
+                //useful?a
+            }
 
-			// Warp to, approach or jump the stargate
-			EntityCache MyNextStargate = Cache.Instance.StargateByName(_locationName);
-			if (MyNextStargate != null)
-			{
-				if ((MyNextStargate.Distance < (int)Distances.DecloakRange && !Cache.Instance.ActiveShip.Entity.IsCloaked) || (MyNextStargate.Distance < (int)Distances.JumpRange && Cache.Instance.Modules.Any(i => i.GroupId != (int)Group.CloakingDevice)))
-				{
-					if (MyNextStargate.Jump())
-					{
-						Logging.Log("Traveler", "Jumping to [" + Logging.Yellow + _locationName + Logging.Green + "]", Logging.Green);
-						return;
-					}
+            var solarSystemInRoute = Cache.Instance.DirectEve.SolarSystems[waypoint];
 
-					return;
-				}
+            if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)
+            {
+                if (solarSystemInRoute != null && solarSystemInRoute.Security < 0.45 &&
+                    (Cache.Instance.ActiveShip.GroupId != (int) Group.Shuttle || Cache.Instance.ActiveShip.GroupId != (int) Group.Frigate ||
+                     Cache.Instance.ActiveShip.GroupId != (int) Group.Interceptor || Cache.Instance.ActiveShip.GroupId != (int) Group.TransportShip ||
+                     Cache.Instance.ActiveShip.GroupId != (int) Group.ForceReconShip || Cache.Instance.ActiveShip.GroupId != (int) Group.StealthBomber))
+                {
+                    Logging.Logging.Log("Traveler",
+                        "NavigateToBookmarkSystem: Next Waypoint is: [" + _locationName +
+                        "] which is LOW SEC! This should never happen. Turning off AutoStart and going home.", Logging.Logging.Teal);
+                    Settings.Instance.AutoStart = false;
+                    if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)
+                    {
+                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
+                    }
+                    return;
+                }
+            }
 
-				if (MyNextStargate.Distance < (int)Distances.WarptoDistance && MyNextStargate.Distance != 0)
-				{
-					if (DateTime.UtcNow > Time.Instance.NextApproachAction && !Cache.Instance.IsApproaching(MyNextStargate.Id))
-					{
-						if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem: approaching the stargate named [" + MyNextStargate.Name + "]", Logging.Teal);
-						MyNextStargate.Approach(); //you could use a negative approach distance here but ultimately that is a bad idea.. Id like to go toward the entity without approaching it so we would end up inside the docking ring (eventually)
-						return;
-					}
+            // Find the stargate associated with it
 
-					if (Logging.DebugTraveler) Logging.Log("Traveler", "NavigateToBookmarkSystem: we are already approaching the stargate named [" + MyNextStargate.Name + "]", Logging.Teal);
-					return;
-				}
-				
-				if (Cache.Instance.InSpace && !Combat.TargetedBy.Any(t => t.IsWarpScramblingMe))
-				{
-					if (MyNextStargate.WarpTo())
-					{
-						Logging.Log("Traveler", "Warping to [" + Logging.Yellow + _locationName + Logging.Green + "][" + Logging.Yellow + Math.Round((MyNextStargate.Distance / 1000) / 149598000, 2) + Logging.Green + " AU away]", Logging.Green);
-						return;
-					}
+            if (!Cache.Instance.Stargates.Any())
+            {
+                // not found, that cant be true?!?!?!?!
+                Logging.Logging.Log("Traveler",
+                    "Error [" + Logging.Logging.Yellow + _locationName + Logging.Logging.Green + "] not found, most likely lag waiting [" +
+                    Time.Instance.TravelerNoStargatesFoundRetryDelay_seconds + "] seconds.", Logging.Logging.Red);
+                Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerNoStargatesFoundRetryDelay_seconds);
+                return;
+            }
 
-					return;
-				}
-			}
+            // Warp to, approach or jump the stargate
+            var MyNextStargate = Cache.Instance.StargateByName(_locationName);
+            if (MyNextStargate != null)
+            {
+                if ((MyNextStargate.Distance < (int) Distances.DecloakRange && !Cache.Instance.ActiveShip.Entity.IsCloaked) ||
+                    (MyNextStargate.Distance < (int) Distances.JumpRange && Cache.Instance.Modules.Any(i => i.GroupId != (int) Group.CloakingDevice)))
+                {
+                    if (MyNextStargate.Jump())
+                    {
+                        Logging.Logging.Log("Traveler", "Jumping to [" + Logging.Logging.Yellow + _locationName + Logging.Logging.Green + "]",
+                            Logging.Logging.Green);
+                        return;
+                    }
 
-			Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(Time.Instance.WarptoDelay_seconds); //this should probably use a different Time definition, but this works for now. (5 seconds)
-			if (!Combat.ReloadAll(Cache.Instance.MyShipEntity)) return;
-			return;
-		}
+                    return;
+                }
 
-		public static void TravelHome(string module)
-		{
-			//only call bookmark stuff if UseHomebookmark is true
-			if (Settings.Instance.UseHomebookmark)
-			{
-				// if we can't travel to bookmark, travel to agent's station
-				if (!TravelToBookmarkName(Settings.Instance.HomeBookmarkName, module))
-				{
-					TravelToAgentsStation(module);
-				}
+                if (MyNextStargate.Distance < (int) Distances.WarptoDistance && MyNextStargate.Distance != 0)
+                {
+                    if (DateTime.UtcNow > Time.Instance.NextApproachAction && !Cache.Instance.IsApproaching(MyNextStargate.Id))
+                    {
+                        if (Logging.Logging.DebugTraveler)
+                            Logging.Logging.Log("Traveler", "NavigateToBookmarkSystem: approaching the stargate named [" + MyNextStargate.Name + "]",
+                                Logging.Logging.Teal);
+                        MyNextStargate.Approach();
+                            //you could use a negative approach distance here but ultimately that is a bad idea.. Id like to go toward the entity without approaching it so we would end up inside the docking ring (eventually)
+                        return;
+                    }
 
-				return;
-			}
-			
-			TravelToAgentsStation(module);
-		}
+                    if (Logging.Logging.DebugTraveler)
+                        Logging.Logging.Log("Traveler", "NavigateToBookmarkSystem: we are already approaching the stargate named [" + MyNextStargate.Name + "]",
+                            Logging.Logging.Teal);
+                    return;
+                }
+
+                if (Cache.Instance.InSpace && !Combat.Combat.TargetedBy.Any(t => t.IsWarpScramblingMe))
+                {
+                    if (MyNextStargate.WarpTo())
+                    {
+                        Logging.Logging.Log("Traveler",
+                            "Warping to [" + Logging.Logging.Yellow + _locationName + Logging.Logging.Green + "][" + Logging.Logging.Yellow +
+                            Math.Round((MyNextStargate.Distance/1000)/149598000, 2) + Logging.Logging.Green + " AU away]", Logging.Logging.Green);
+                        return;
+                    }
+
+                    return;
+                }
+            }
+
+            Time.Instance.NextTravelerAction = DateTime.UtcNow.AddSeconds(Time.Instance.WarptoDelay_seconds);
+                //this should probably use a different Time definition, but this works for now. (5 seconds)
+            if (!Combat.Combat.ReloadAll(Cache.Instance.MyShipEntity)) return;
+            return;
+        }
+
+        public static void TravelHome(string module)
+        {
+            //only call bookmark stuff if UseHomebookmark is true
+            if (Settings.Instance.UseHomebookmark)
+            {
+                // if we can't travel to bookmark, travel to agent's station
+                if (!TravelToBookmarkName(Settings.Instance.HomeBookmarkName, module))
+                {
+                    TravelToAgentsStation(module);
+                }
+
+                return;
+            }
+
+            TravelToAgentsStation(module);
+        }
 
 //		private static int agentRetrievalCnt =  0;
-		public static void TravelToAgentsStation(string module)
-		{
-			// if we can't warp because we are scrambled, prevent next actions
-			if (!_defendOnTravel(module))
-				return;
-			
+        public static void TravelToAgentsStation(string module)
+        {
+            // if we can't warp because we are scrambled, prevent next actions
+            if (!_defendOnTravel(module))
+                return;
+
 //			if(_destination == null) {
 //				agentRetrievalCnt++;
 //				if(agentRetrievalCnt <= 5 && (Cache.Instance.Agent == null || !Cache.Instance.Agent.IsValid))
@@ -291,211 +328,226 @@ namespace Questor.Modules.Activities
 //			}
 //			
 //			agentRetrievalCnt = 0;
-			long destinationId = (Cache.Instance.Agent != null && Cache.Instance.Agent.IsValid) || Cache.Instance.AgentStationID > 0 ? Cache.Instance.AgentStationID : MissionSettings.ListOfAgents.FirstOrDefault().HomeStationId;
-			
+            var destinationId = (Cache.Instance.Agent != null && Cache.Instance.Agent.IsValid) || Cache.Instance.AgentStationID > 0
+                ? Cache.Instance.AgentStationID
+                : MissionSettings.ListOfAgents.FirstOrDefault().HomeStationId;
 
-			if (Logging.DebugGotobase) Logging.Log(module, "TravelToAgentsStation:      Cache.Instance.AgentStationId [" + Cache.Instance.AgentStationID + "]", Logging.White);
-			if (Logging.DebugGotobase) Logging.Log(module, "TravelToAgentsStation:  Cache.Instance.AgentSolarSystemId [" + Cache.Instance.AgentSolarSystemID + "]", Logging.White);
 
-			if (_destination == null || (((StationDestination)_destination) != null && ((StationDestination)_destination).StationId != destinationId))
-			{
-				Logging.Log(module, "StationDestination: [" + destinationId + "]", Logging.White);
-				_destination = new StationDestination(destinationId);
-				
-				_States.CurrentTravelerState = TravelerState.Idle;
-				return;
-			}
-			
-			if (Logging.DebugGotobase) if (Traveler.Destination != null) Logging.Log("CombatMissionsBehavior", "TravelToAgentsStation: Traveler.Destination.SolarSystemId [" + Traveler.Destination.SolarSystemId + "]", Logging.White);
-			_processAtDestinationActions(module);
-			Traveler.ProcessState();
-			
-			
-			return;
-		}
+            if (Logging.Logging.DebugGotobase)
+                Logging.Logging.Log(module, "TravelToAgentsStation:      Cache.Instance.AgentStationId [" + Cache.Instance.AgentStationID + "]",
+                    Logging.Logging.White);
+            if (Logging.Logging.DebugGotobase)
+                Logging.Logging.Log(module, "TravelToAgentsStation:  Cache.Instance.AgentSolarSystemId [" + Cache.Instance.AgentSolarSystemID + "]",
+                    Logging.Logging.White);
 
-		public static bool TravelToBookmarkName(string bookmarkName, string module)
-		{
-			bool travel = false;
+            if (_destination == null || (((StationDestination) _destination) != null && ((StationDestination) _destination).StationId != destinationId))
+            {
+                Logging.Logging.Log(module, "StationDestination: [" + destinationId + "]", Logging.Logging.White);
+                _destination = new StationDestination(destinationId);
 
-			myHomeBookmarks = Cache.Instance.BookmarksByLabel(bookmarkName).ToList();
+                _States.CurrentTravelerState = TravelerState.Idle;
+                return;
+            }
 
-			if (myHomeBookmarks.Any())
-			{
-				DirectBookmark oldestHomeBookmark = myHomeBookmarks.OrderBy(b => b.CreatedOn).FirstOrDefault();
-				if (oldestHomeBookmark != null && oldestHomeBookmark.LocationId != null)
-				{
-					TravelToBookmark(oldestHomeBookmark, module);
-					travel = true;
-				}
-			}
-			else
-			{
-				Logging.Log("Traveler.TravelToBookmarkName", "bookmark not found! We were Looking for bookmark starting with [" + bookmarkName + "] found none.", Logging.Orange);
-			}
+            if (Logging.Logging.DebugGotobase)
+                if (Destination != null)
+                    Logging.Logging.Log("CombatMissionsBehavior",
+                        "TravelToAgentsStation: Traveler.Destination.SolarSystemId [" + Destination.SolarSystemId + "]", Logging.Logging.White);
+            _processAtDestinationActions(module);
+            ProcessState();
 
-			return travel;
-		}
 
-		public static void TravelToBookmark(DirectBookmark bookmark, string module)
-		{
-			// if we can't warp because we are scrambled, prevent next actions
-			if(!_defendOnTravel(module))
-				return;
+            return;
+        }
 
-			if (Logging.DebugGotobase) Logging.Log(module, "TravelToBookmark:      bookmark [" + bookmark.Title + "]", Logging.White);
+        public static bool TravelToBookmarkName(string bookmarkName, string module)
+        {
+            var travel = false;
 
-			if (_destination == null)
-			{
-				Logging.Log(module, "Destination: bookmark[" + bookmark.Description + "]", Logging.White);
+            myHomeBookmarks = Cache.Instance.BookmarksByLabel(bookmarkName).ToList();
 
-				_destination = new BookmarkDestination(bookmark);
-				_States.CurrentTravelerState = TravelerState.Idle;
-				return;
-			}
-			
-			if (Logging.DebugGotobase) if (Traveler.Destination != null) Logging.Log("CombatMissionsBehavior", "TravelToAgentsStation: Traveler.Destination.SolarSystemId [" + Traveler.Destination.SolarSystemId + "]", Logging.White);
-			_processAtDestinationActions(module);
-			Traveler.ProcessState();
-			
-			
-			return;
-		}
+            if (myHomeBookmarks.Any())
+            {
+                var oldestHomeBookmark = myHomeBookmarks.OrderBy(b => b.CreatedOn).FirstOrDefault();
+                if (oldestHomeBookmark != null && oldestHomeBookmark.LocationId != null)
+                {
+                    TravelToBookmark(oldestHomeBookmark, module);
+                    travel = true;
+                }
+            }
+            else
+            {
+                Logging.Logging.Log("Traveler.TravelToBookmarkName",
+                    "bookmark not found! We were Looking for bookmark starting with [" + bookmarkName + "] found none.", Logging.Logging.Orange);
+            }
 
-		public static void ProcessState()
-		{
-			// Only pulse state changes every 1.5s
-			if (DateTime.UtcNow.Subtract(_lastTravelerPulse).TotalMilliseconds < 1000) //default: 1000ms
-				return;
+            return travel;
+        }
 
-			_lastTravelerPulse = DateTime.UtcNow;
+        public static void TravelToBookmark(DirectBookmark bookmark, string module)
+        {
+            // if we can't warp because we are scrambled, prevent next actions
+            if (!_defendOnTravel(module))
+                return;
 
-			switch (_States.CurrentTravelerState)
-			{
-				case TravelerState.Idle:
-					_States.CurrentTravelerState = TravelerState.Traveling;
-					break;
+            if (Logging.Logging.DebugGotobase) Logging.Logging.Log(module, "TravelToBookmark:      bookmark [" + bookmark.Title + "]", Logging.Logging.White);
 
-				case TravelerState.Traveling:
-					if ((!Cache.Instance.InSpace && !Cache.Instance.InStation) || Cache.Instance.InWarp) //if we are in warp, do nothing, as nothing can actually be done until we are out of warp anyway.
-						return;
+            if (_destination == null)
+            {
+                Logging.Logging.Log(module, "Destination: bookmark[" + bookmark.Description + "]", Logging.Logging.White);
 
-					if (Destination == null)
-					{
-						_States.CurrentTravelerState = TravelerState.Error;
-						break;
-					}
+                _destination = new BookmarkDestination(bookmark);
+                _States.CurrentTravelerState = TravelerState.Idle;
+                return;
+            }
 
-					if (Destination.SolarSystemId != Cache.Instance.DirectEve.Session.SolarSystemId)
-					{
-						//Logging.Log("traveler: NavigateToBookmarkSystem(Destination.SolarSystemId);");
-						NavigateToBookmarkSystem(Destination.SolarSystemId);
-					}
-					else if (Destination.PerformFinalDestinationTask())
-					{
-						_destinationRoute = null;
-						_location = null;
-						_locationName = string.Empty;
-						_locationErrors = 0;
+            if (Logging.Logging.DebugGotobase)
+                if (Destination != null)
+                    Logging.Logging.Log("CombatMissionsBehavior",
+                        "TravelToAgentsStation: Traveler.Destination.SolarSystemId [" + Destination.SolarSystemId + "]", Logging.Logging.White);
+            _processAtDestinationActions(module);
+            ProcessState();
 
-						//Logging.Log("traveler: _States.CurrentTravelerState = TravelerState.AtDestination;");
-						_States.CurrentTravelerState = TravelerState.AtDestination;
-					}
-					break;
 
-				case TravelerState.AtDestination:
+            return;
+        }
 
-					//do nothing when at destination
-					//Traveler sits in AtDestination when it has nothing to do, NOT in idle.
-					break;
+        public static void ProcessState()
+        {
+            // Only pulse state changes every 1.5s
+            if (DateTime.UtcNow.Subtract(_lastTravelerPulse).TotalMilliseconds < 1000) //default: 1000ms
+                return;
 
-				default:
-					break;
-			}
-		}
+            _lastTravelerPulse = DateTime.UtcNow;
 
-		private static bool _defendOnTravel(string module)
-		{
-			bool canWarp = true;
-			//
-			// defending yourself is more important that the traveling part... so it comes first.
-			//
-			if (Cache.Instance.InSpace && Settings.Instance.DefendWhileTraveling)
-			{
-				if (!Cache.Instance.ActiveShip.Entity.IsCloaked || (Time.Instance.LastSessionChange.AddSeconds(60) > DateTime.UtcNow))
-				{
-					if (Logging.DebugGotobase) Logging.Log(module, "Travel: _combat.ProcessState()", Logging.White);
+            switch (_States.CurrentTravelerState)
+            {
+                case TravelerState.Idle:
+                    _States.CurrentTravelerState = TravelerState.Traveling;
+                    break;
 
-					try
-					{
-						Combat.ProcessState();
-					}
-					catch (Exception exception)
-					{
-						Logging.Log("Travel.Travel", "Exception [" + exception + "]", Logging.Debug);
-					}
+                case TravelerState.Traveling:
+                    if ((!Cache.Instance.InSpace && !Cache.Instance.InStation) || Cache.Instance.InWarp)
+                        //if we are in warp, do nothing, as nothing can actually be done until we are out of warp anyway.
+                        return;
 
-					if (!Combat.TargetedBy.Any(t => t.IsWarpScramblingMe))
-					{
-						if (Logging.DebugGotobase) Logging.Log(module, "Travel: we are not scrambled - pulling drones.", Logging.White);
-						Drones.IsMissionPocketDone = true; //tells drones.cs that we can pull drones
+                    if (Destination == null)
+                    {
+                        _States.CurrentTravelerState = TravelerState.Error;
+                        break;
+                    }
 
-						//Logging.Log("CombatmissionBehavior","TravelToAgentStation: not pointed",Logging.White);
-					}
-					else if (Combat.TargetedBy.Any(t => t.IsWarpScramblingMe))
-					{
-						Drones.IsMissionPocketDone = false;
-						if (Logging.DebugGotobase) Logging.Log(module, "Travel: we are scrambled", Logging.Teal);
-						Drones.ProcessState();
+                    if (Destination.SolarSystemId != Cache.Instance.DirectEve.Session.SolarSystemId)
+                    {
+                        //Logging.Log("traveler: NavigateToBookmarkSystem(Destination.SolarSystemId);");
+                        NavigateToBookmarkSystem(Destination.SolarSystemId);
+                    }
+                    else if (Destination.PerformFinalDestinationTask())
+                    {
+                        _destinationRoute = null;
+                        _location = null;
+                        _locationName = string.Empty;
+                        _locationErrors = 0;
 
-						canWarp = false;
-					}
-				}
-			}
+                        //Logging.Log("traveler: _States.CurrentTravelerState = TravelerState.AtDestination;");
+                        _States.CurrentTravelerState = TravelerState.AtDestination;
+                    }
+                    break;
 
-			
-			if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking) {
-				if (Logging.DebugTargetWrecks) Logging.Log("_defendOnTravel", "Salvage.OpenWrecks = false;", Logging.Debug);
-				Salvage.OpenWrecks = false;
-			}
+                case TravelerState.AtDestination:
 
-			return canWarp;
-		}
+                    //do nothing when at destination
+                    //Traveler sits in AtDestination when it has nothing to do, NOT in idle.
+                    break;
 
-		private static void _processAtDestinationActions(string module)
-		{
-			if (!Cache.Instance.UpdateMyWalletBalance()) return;
+                default:
+                    break;
+            }
+        }
 
-			if (_States.CurrentTravelerState == TravelerState.AtDestination)
-			{
-				if (_States.CurrentCombatMissionCtrlState == CombatMissionCtrlState.Error)
-				{
-					Logging.Log(module, "an error has occurred", Logging.White);
-					if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.Traveler)
-					{
-						_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;
-					}
+        private static bool _defendOnTravel(string module)
+        {
+            var canWarp = true;
+            //
+            // defending yourself is more important that the traveling part... so it comes first.
+            //
+            if (Cache.Instance.InSpace && Settings.Instance.DefendWhileTraveling)
+            {
+                if (!Cache.Instance.ActiveShip.Entity.IsCloaked || (Time.Instance.LastSessionChange.AddSeconds(60) > DateTime.UtcNow))
+                {
+                    if (Logging.Logging.DebugGotobase) Logging.Logging.Log(module, "Travel: _combat.ProcessState()", Logging.Logging.White);
 
-					return;
-				}
+                    try
+                    {
+                        Combat.Combat.ProcessState();
+                    }
+                    catch (Exception exception)
+                    {
+                        Logging.Logging.Log("Travel.Travel", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    }
 
-				if (Cache.Instance.InSpace)
-				{
-					Logging.Log(module, "Arrived at destination (in space, Questor stopped)", Logging.White);
-					Cache.Instance.Paused = true;
-					return;
-				}
+                    if (!Combat.Combat.TargetedBy.Any(t => t.IsWarpScramblingMe))
+                    {
+                        if (Logging.Logging.DebugGotobase) Logging.Logging.Log(module, "Travel: we are not scrambled - pulling drones.", Logging.Logging.White);
+                        Drones.IsMissionPocketDone = true; //tells drones.cs that we can pull drones
 
-				if (Logging.DebugTraveler) Logging.Log(module, "Arrived at destination", Logging.White);
-				if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.Traveler)
-				{
-					_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Idle;
-					_lastTravelerPulse = DateTime.UtcNow;
-					return;
-				}
+                        //Logging.Log("CombatmissionBehavior","TravelToAgentStation: not pointed",Logging.White);
+                    }
+                    else if (Combat.Combat.TargetedBy.Any(t => t.IsWarpScramblingMe))
+                    {
+                        Drones.IsMissionPocketDone = false;
+                        if (Logging.Logging.DebugGotobase) Logging.Logging.Log(module, "Travel: we are scrambled", Logging.Logging.Teal);
+                        Drones.ProcessState();
 
-				return;
-			}
-		}
-	}
+                        canWarp = false;
+                    }
+                }
+            }
+
+
+            if (NavigateOnGrid.SpeedTank && !Settings.Instance.LootWhileSpeedTanking)
+            {
+                if (Logging.Logging.DebugTargetWrecks) Logging.Logging.Log("_defendOnTravel", "Salvage.OpenWrecks = false;", Logging.Logging.Debug);
+                Salvage.OpenWrecks = false;
+            }
+
+            return canWarp;
+        }
+
+        private static void _processAtDestinationActions(string module)
+        {
+            if (!Cache.Instance.UpdateMyWalletBalance()) return;
+
+            if (_States.CurrentTravelerState == TravelerState.AtDestination)
+            {
+                if (_States.CurrentCombatMissionCtrlState == CombatMissionCtrlState.Error)
+                {
+                    Logging.Logging.Log(module, "an error has occurred", Logging.Logging.White);
+                    if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.Traveler)
+                    {
+                        _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;
+                    }
+
+                    return;
+                }
+
+                if (Cache.Instance.InSpace)
+                {
+                    Logging.Logging.Log(module, "Arrived at destination (in space, Questor stopped)", Logging.Logging.White);
+                    Cache.Instance.Paused = true;
+                    return;
+                }
+
+                if (Logging.Logging.DebugTraveler) Logging.Logging.Log(module, "Arrived at destination", Logging.Logging.White);
+                if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.Traveler)
+                {
+                    _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Idle;
+                    _lastTravelerPulse = DateTime.UtcNow;
+                    return;
+                }
+
+                return;
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-﻿using global::Questor.Modules.States;
+﻿using Questor.Modules.States;
 
 namespace Questor.Storylines
 {

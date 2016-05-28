@@ -1,13 +1,7 @@
-﻿
-namespace Questor.Modules.States
+﻿namespace Questor.Modules.States
 {
-    using global::Questor.Modules.Caching;
-    using global::Questor.Modules.Lookup;
-    using global::Questor.Modules.Logging;
-
     public static class _States
     {
-
         public static QuestorState CurrentQuestorState { get; set; }
 
         public static DroneState CurrentDroneState { get; set; }
@@ -55,11 +49,9 @@ namespace Questor.Modules.States
         public static MasterState CurrentMasterState { get; set; }
 
         public static SlaveState CurrentSlaveState { get; set; }
-        
+
         public static ManageFleetState CurrentManageFleetState { get; set; }
 
         public static BackgroundBehaviorState CurrentBackgroundBehaviorState { get; set; }
-
-        
     }
 }

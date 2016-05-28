@@ -1,39 +1,31 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using DirectEve;
-using global::Questor.Modules.Actions;
-using global::Questor.Modules.Activities;
-using global::Questor.Modules.BackgroundTasks;
-using global::Questor.Modules.Caching;
-using global::Questor.Modules.Combat;
-using global::Questor.Modules.Logging;
-using global::Questor.Modules.Lookup;
-using global::Questor.Modules.States;
+using Questor.Modules.Actions;
+using Questor.Modules.Activities;
+using Questor.Modules.BackgroundTasks;
+using Questor.Modules.Caching;
+using Questor.Modules.Combat;
+using Questor.Modules.Logging;
+using Questor.Modules.Lookup;
+using Questor.Modules.States;
 
 namespace Questor.Storylines
 {
     public class GenericCombatStoryline : IStoryline
     {
-        private long _agentId;
-        private readonly List<Ammo> _neededAmmo;
-
         //private readonly AgentInteraction _agentInteraction;
         //private readonly Arm _arm;
         private readonly CombatMissionCtrl _combatMissionCtrl;
+        private readonly List<Ammo> _neededAmmo;
+        private long _agentId;
         //private readonly Combat _combat;
         //private readonly Drones _drones;
         //private readonly Salvage _salvage;
         //private readonly Statistics _statistics;
 
         private GenericCombatStorylineState _state;
-
-        public GenericCombatStorylineState State
-        {
-            get { return _state; }
-            set { _state = value; }
-        }
 
         public GenericCombatStoryline()
         {
@@ -49,14 +41,14 @@ namespace Questor.Storylines
             //Settings.Instance.SettingsLoaded += ApplySettings;
         }
 
-        private void ApplySettings(object sender, EventArgs e)
+        public GenericCombatStorylineState State
         {
-        	//Logging.Log("GenericCombatStoryline.ApplySettings", "called.");
-            //Settings.Instance.LoadSettings(true);
+            get { return _state; }
+            set { _state = value; }
         }
 
         /// <summary>
-        ///   We check what ammo we need by starting a conversation with the agent and load the appropriate ammo
+        ///     We check what ammo we need by starting a conversation with the agent and load the appropriate ammo
         /// </summary>
         /// <returns></returns>
         public StorylineState Arm(Storyline storyline)
@@ -97,61 +89,7 @@ namespace Questor.Storylines
         }
 
         /// <summary>
-        ///   Interact with the agent so we know what ammo to bring
-        /// </summary>
-        /// <returns>True if interact is done</returns>
-        private bool Interact()
-        {
-            // Are we done?
-            if (_States.CurrentAgentInteractionState == AgentInteractionState.Done)
-                return true;
-
-            if (Cache.Instance.Agent == null)
-                throw new Exception("Invalid agent");
-
-            // Start the conversation
-            if (_States.CurrentAgentInteractionState == AgentInteractionState.Idle)
-                _States.CurrentAgentInteractionState = AgentInteractionState.StartConversation;
-
-            // Interact with the agent to find out what ammo we need
-            AgentInteraction.ProcessState();
-
-            if (_States.CurrentAgentInteractionState == AgentInteractionState.DeclineMission)
-            {
-                if (Cache.Instance.Agent.Window != null)
-                    Cache.Instance.Agent.Window.Close();
-                Logging.Log("GenericCombatStoryline", "Mission offer is in a Low Security System or faction blacklisted.", Logging.Orange); //do storyline missions in lowsec get blacklisted by: "public StorylineState Arm(Storyline storyline)"?
-                throw new Exception("Low security systems");
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        ///   Load the appropriate ammo
-        /// </summary>
-        /// <returns></returns>
-        private bool LoadAmmo()
-        {
-            if (_States.CurrentArmState == ArmState.Done)
-                return true;
-
-            if (_States.CurrentArmState == ArmState.Idle)
-                _States.CurrentArmState = ArmState.Begin;
-
-            Modules.Actions.Arm.ProcessState();
-
-            if (_States.CurrentArmState == ArmState.Done)
-            {
-                _States.CurrentArmState = ArmState.Idle;
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        ///   We have no pre-accept steps
+        ///     We have no pre-accept steps
         /// </summary>
         /// <returns></returns>
         public StorylineState PreAcceptMission(Storyline storyline)
@@ -162,7 +100,7 @@ namespace Questor.Storylines
         }
 
         /// <summary>
-        ///   Do a mini-questor here (goto mission, execute mission, goto base)
+        ///     Do a mini-questor here (goto mission, execute mission, goto base)
         /// </summary>
         /// <returns></returns>
         public StorylineState ExecuteMission(Storyline storyline)
@@ -174,7 +112,10 @@ namespace Questor.Storylines
                     DirectBookmark warpOutBookMark = null;
                     try
                     {
-                        warpOutBookMark = Cache.Instance.BookmarksByLabel(Settings.Instance.UndockBookmarkPrefix ?? "").OrderByDescending(b => b.CreatedOn).FirstOrDefault(b => b.LocationId == Cache.Instance.DirectEve.Session.SolarSystemId);
+                        warpOutBookMark =
+                            Cache.Instance.BookmarksByLabel(Settings.Instance.UndockBookmarkPrefix ?? "")
+                                .OrderByDescending(b => b.CreatedOn)
+                                .FirstOrDefault(b => b.LocationId == Cache.Instance.DirectEve.Session.SolarSystemId);
                     }
                     catch (Exception ex)
                     {
@@ -211,26 +152,30 @@ namespace Questor.Storylines
 
                         break;
                     }
-                    
+
                     Logging.Log("GenericCombatStoryline.WarpOut", "No Bookmark in System", Logging.White);
                     _state = GenericCombatStorylineState.GotoMission;
                     break;
 
                 case GenericCombatStorylineState.GotoMission:
-                    MissionBookmarkDestination missionDestination = Traveler.Destination as MissionBookmarkDestination;
+                    var missionDestination = Traveler.Destination as MissionBookmarkDestination;
                     //
                     // if we have no destination yet... OR if missionDestination.AgentId != storyline.CurrentStorylineAgentId
                     //
                     //if (missionDestination != null) Logging.Log("GenericCombatStoryline: missionDestination.AgentId [" + missionDestination.AgentId + "] " + "and storyline.CurrentStorylineAgentId [" + storyline.CurrentStorylineAgentId + "]");
                     //if (missionDestination == null) Logging.Log("GenericCombatStoryline: missionDestination.AgentId [ NULL ] " + "and storyline.CurrentStorylineAgentId [" + storyline.CurrentStorylineAgentId + "]");
-                    if (missionDestination == null || missionDestination.AgentId != Cache.Instance.CurrentStorylineAgentId) // We assume that this will always work "correctly" (tm)
+                    if (missionDestination == null || missionDestination.AgentId != Cache.Instance.CurrentStorylineAgentId)
+                        // We assume that this will always work "correctly" (tm)
                     {
-                        string nameOfBookmark ="";
+                        var nameOfBookmark = "";
                         if (Settings.Instance.EveServerName == "Tranquility") nameOfBookmark = "Encounter";
                         if (Settings.Instance.EveServerName == "Serenity") nameOfBookmark = "遭遇战";
                         if (nameOfBookmark == "") nameOfBookmark = "Encounter";
-                        Logging.Log("GenericCombatStoryline", "Setting Destination to 1st bookmark from AgentID: [" + Cache.Instance.CurrentStorylineAgentId + "] with [" + nameOfBookmark + "] in the title", Logging.White);
-                        Traveler.Destination = new MissionBookmarkDestination(MissionSettings.GetMissionBookmark(Cache.Instance.CurrentStorylineAgentId, nameOfBookmark));
+                        Logging.Log("GenericCombatStoryline",
+                            "Setting Destination to 1st bookmark from AgentID: [" + Cache.Instance.CurrentStorylineAgentId + "] with [" + nameOfBookmark +
+                            "] in the title", Logging.White);
+                        Traveler.Destination =
+                            new MissionBookmarkDestination(MissionSettings.GetMissionBookmark(Cache.Instance.CurrentStorylineAgentId, nameOfBookmark));
                     }
 
                     if (Combat.PotentialCombatTargets.Any())
@@ -262,7 +207,9 @@ namespace Questor.Storylines
                         // Clear looted containers
                         Cache.Instance.LootedContainers.Clear();
 
-                        Logging.Log("GenericCombatStoryline", "Out of Ammo! - Not enough [" + MissionSettings.CurrentDamageType + "] ammo in cargohold: MinimumCharges: [" + Combat.MinimumAmmoCharges + "]", Logging.Orange);
+                        Logging.Log("GenericCombatStoryline",
+                            "Out of Ammo! - Not enough [" + MissionSettings.CurrentDamageType + "] ammo in cargohold: MinimumCharges: [" +
+                            Combat.MinimumAmmoCharges + "]", Logging.Orange);
                         return StorylineState.ReturnToAgent;
                     }
 
@@ -286,6 +233,67 @@ namespace Questor.Storylines
             }
 
             return StorylineState.ExecuteMission;
+        }
+
+        private void ApplySettings(object sender, EventArgs e)
+        {
+            //Logging.Log("GenericCombatStoryline.ApplySettings", "called.");
+            //Settings.Instance.LoadSettings(true);
+        }
+
+        /// <summary>
+        ///     Interact with the agent so we know what ammo to bring
+        /// </summary>
+        /// <returns>True if interact is done</returns>
+        private bool Interact()
+        {
+            // Are we done?
+            if (_States.CurrentAgentInteractionState == AgentInteractionState.Done)
+                return true;
+
+            if (Cache.Instance.Agent == null)
+                throw new Exception("Invalid agent");
+
+            // Start the conversation
+            if (_States.CurrentAgentInteractionState == AgentInteractionState.Idle)
+                _States.CurrentAgentInteractionState = AgentInteractionState.StartConversation;
+
+            // Interact with the agent to find out what ammo we need
+            AgentInteraction.ProcessState();
+
+            if (_States.CurrentAgentInteractionState == AgentInteractionState.DeclineMission)
+            {
+                if (Cache.Instance.Agent.Window != null)
+                    Cache.Instance.Agent.Window.Close();
+                Logging.Log("GenericCombatStoryline", "Mission offer is in a Low Security System or faction blacklisted.", Logging.Orange);
+                    //do storyline missions in lowsec get blacklisted by: "public StorylineState Arm(Storyline storyline)"?
+                throw new Exception("Low security systems");
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Load the appropriate ammo
+        /// </summary>
+        /// <returns></returns>
+        private bool LoadAmmo()
+        {
+            if (_States.CurrentArmState == ArmState.Done)
+                return true;
+
+            if (_States.CurrentArmState == ArmState.Idle)
+                _States.CurrentArmState = ArmState.Begin;
+
+            Modules.Actions.Arm.ProcessState();
+
+            if (_States.CurrentArmState == ArmState.Done)
+            {
+                _States.CurrentArmState = ArmState.Idle;
+                return true;
+            }
+
+            return false;
         }
     }
 }

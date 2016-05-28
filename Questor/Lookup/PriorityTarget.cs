@@ -9,39 +9,38 @@
 // -------------------------------------------------------------------------------
 
 
+using System;
+using Questor.Modules.Caching;
+
 namespace Questor.Modules.Lookup
 {
-    using System;
-    using global::Questor.Modules.Caching;
-    using global::Questor.Modules.Logging;
-
     public class PriorityTarget
     {
         private EntityCache _entity;
 
+        private string _maskedID;
+
         public long EntityID { get; set; }
 
-        private string _maskedID;
         public string MaskedID
         {
             get
             {
                 try
                 {
-                    int numofCharacters = EntityID.ToString().Length;
+                    var numofCharacters = EntityID.ToString().Length;
                     if (numofCharacters >= 5)
                     {
                         _maskedID = EntityID.ToString().Substring(numofCharacters - 4);
                         _maskedID = "[MaskedID]" + _maskedID;
                         return _maskedID;
                     }
-                        
+
                     return "!0!";
-                   
                 }
                 catch (Exception exception)
                 {
-                    Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Debug);
+                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
                     return "!0!";
                 }
             }

@@ -8,12 +8,11 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
+using System;
+using System.Xml.Linq;
+
 namespace Questor.Modules.Actions
 {
-    using System.Xml.Linq;
-    using global::Questor.Modules.Logging;
-    using System;
-
     public class FactionFitting
     {
         public FactionFitting()
@@ -24,17 +23,17 @@ namespace Questor.Modules.Actions
         {
             try
             {
-                FactionName = (string)factionfitting.Attribute("faction") ?? "";
-                FittingName = (string)factionfitting.Attribute("fitting") ?? "default";
-                DroneTypeID = (int?)factionfitting.Attribute("dronetype") ??
-                              (int?)factionfitting.Attribute("drone") ??
-                              (int?)factionfitting.Attribute("dronetype") ??
+                FactionName = (string) factionfitting.Attribute("faction") ?? "";
+                FittingName = (string) factionfitting.Attribute("fitting") ?? "default";
+                DroneTypeID = (int?) factionfitting.Attribute("dronetype") ??
+                              (int?) factionfitting.Attribute("drone") ??
+                              (int?) factionfitting.Attribute("dronetype") ??
                               null;
                 //FittingIsForShipTypeID = (int?)factionfitting.Attribute("FittingIsForShipTypeID");
             }
             catch (Exception exception)
             {
-                Logging.Log("FactionFitting", "Exception: [" + exception + "]", Logging.Red);
+                Logging.Logging.Log("FactionFitting", "Exception: [" + exception + "]", Logging.Logging.Red);
             }
         }
 
@@ -57,10 +56,10 @@ namespace Questor.Modules.Actions
         {
             try
             {
-                MissionName = (string)missionfitting.Attribute("mission") ?? "";
-                FactionName = (string)missionfitting.Attribute("faction") ?? "Default";
-                FittingName = (string)missionfitting.Attribute("fitting") ?? "";
-                Ship = (string)missionfitting.Attribute("ship") ?? "";
+                MissionName = (string) missionfitting.Attribute("mission") ?? "";
+                FactionName = (string) missionfitting.Attribute("faction") ?? "Default";
+                FittingName = (string) missionfitting.Attribute("fitting") ?? "";
+                Ship = (string) missionfitting.Attribute("ship") ?? "";
                 DroneTypeID = (int?) missionfitting.Attribute("droneTypeID") ??
                               (int?) missionfitting.Attribute("drone") ??
                               (int?) missionfitting.Attribute("dronetype") ??
@@ -68,7 +67,7 @@ namespace Questor.Modules.Actions
             }
             catch (Exception exception)
             {
-                Logging.Log("MissionFitting", "Exception: [" + exception + "]", Logging.Red);
+                Logging.Logging.Log("MissionFitting", "Exception: [" + exception + "]", Logging.Logging.Red);
             }
         }
 

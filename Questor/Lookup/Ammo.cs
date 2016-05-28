@@ -8,41 +8,44 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
+using System;
+using System.Xml.Linq;
+using Questor.Modules.Caching;
+
 namespace Questor.Modules.Lookup
 {
-	using System;
-	using System.Xml.Linq;
-	using DirectEve;
-	using global::Questor.Modules.Caching;
-	using global::Questor.Modules.Logging;
+    public class Ammo
+    {
+        private string _name = String.Empty;
 
-	public class Ammo
-	{
-		public Ammo()
-		{
-		}
+        public Ammo()
+        {
+        }
 
-		public Ammo(XElement ammo)
-		{
-			try
-			{
-				TypeId = (int)ammo.Attribute("typeId");
-				DamageType = (DamageType)Enum.Parse(typeof(DamageType), (string)ammo.Attribute("damageType"));
+        public Ammo(XElement ammo)
+        {
+            try
+            {
+                TypeId = (int) ammo.Attribute("typeId");
+                DamageType = (DamageType) Enum.Parse(typeof(DamageType), (string) ammo.Attribute("damageType"));
 //				Name = (string)ammo.Attribute("name");
-				Range = (int)ammo.Attribute("range");
-				Quantity = (int)ammo.Attribute("quantity");
-				Description = (string)ammo.Attribute("description") ?? (string)ammo.Attribute("typeId");
-				//
-				// the above is pulling from XML, not eve... the below is what we want to pull from eve
-				//
+                Range = (int) ammo.Attribute("range");
+                Quantity = (int) ammo.Attribute("quantity");
+                Description = (string) ammo.Attribute("description") ?? (string) ammo.Attribute("typeId");
+                //
+                // the above is pulling from XML, not eve... the below is what we want to pull from eve
+                //
 
-				
-				if(!Cache.Instance.DirectEve.DoesInvTypeExistInTypeStorage(TypeId)) {
-					Logging.Log("Ammo", "ERROR: TypeId: "  + TypeId + " was NOT found in type storage. Fix your ammo type ids." , Logging.Debug);
-				} else {
-					Logging.Log("Ammo", "TypeId: "  + TypeId + " was found in type storage" , Logging.Debug);
-				}
-				
+
+                if (!Cache.Instance.DirectEve.DoesInvTypeExistInTypeStorage(TypeId))
+                {
+                    Logging.Logging.Log("Ammo", "ERROR: TypeId: " + TypeId + " was NOT found in type storage. Fix your ammo type ids.", Logging.Logging.Debug);
+                }
+                else
+                {
+                    Logging.Logging.Log("Ammo", "TypeId: " + TypeId + " was found in type storage", Logging.Logging.Debug);
+                }
+
 //				
 //				DirectInvType __directInvTypeItem;
 //				Cache.Instance.DirectEve.InvTypes.TryGetValue(TypeId, out __directInvTypeItem);
@@ -50,7 +53,7 @@ namespace Questor.Modules.Lookup
 //				{
 //					Name = __directInvTypeItem.TypeName;
 //				}
-				
+
 //				
 //				if (Logging.DebugAmmo)
 //				{
@@ -61,51 +64,52 @@ namespace Questor.Modules.Lookup
 //					Logging.Log("Ammo", " [04] Quantity [" + Quantity + "] - from XML", Logging.Debug);
 //					Logging.Log("Ammo", " [05] Description [" + Description + "] - from XML", Logging.Debug);
 //				}
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Ammo","Exception [" + exception + "]",Logging.Debug);
-			}
-		}
+            }
+            catch (Exception exception)
+            {
+                Logging.Logging.Log("Ammo", "Exception [" + exception + "]", Logging.Logging.Debug);
+            }
+        }
 
-		private string _name = String.Empty;
-		public string Name {
-			get {
-				if(!String.IsNullOrEmpty(_name))
-					return _name;
-				
-				string ret = String.Empty;
-				if(!Cache.Instance.DirectEve.DoesInvTypeExistInTypeStorage(TypeId))
-					return ret;
-				
-				DirectInvType invType = Cache.Instance.DirectEve.GetInvType(TypeId);
-				
-				if(invType == null)
-					return ret;
-				
-				string typeName = invType.TypeName;
-				_name = typeName;
-				return typeName;
-			}
-		}
-		public int TypeId { get; private set; }
-		public DamageType DamageType { get; private set; }
-		public int Range { get; private set; }
-		public int Quantity { get; set; }
-		public string Description { get; set; }
+        public string Name
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(_name))
+                    return _name;
 
-		public Ammo Clone()
-		{
-			Ammo _ammo = new Ammo
-			{
-				TypeId = TypeId,
-				DamageType = DamageType,
-				Range = Range,
-				Quantity = Quantity,
-				Description = Description,
+                var ret = String.Empty;
+                if (!Cache.Instance.DirectEve.DoesInvTypeExistInTypeStorage(TypeId))
+                    return ret;
 
-			};
-			return _ammo;
-		}
-	}
+                var invType = Cache.Instance.DirectEve.GetInvType(TypeId);
+
+                if (invType == null)
+                    return ret;
+
+                var typeName = invType.TypeName;
+                _name = typeName;
+                return typeName;
+            }
+        }
+
+        public int TypeId { get; private set; }
+        public DamageType DamageType { get; private set; }
+        public int Range { get; private set; }
+        public int Quantity { get; set; }
+        public string Description { get; set; }
+
+        public Ammo Clone()
+        {
+            var _ammo = new Ammo
+            {
+                TypeId = TypeId,
+                DamageType = DamageType,
+                Range = Range,
+                Quantity = Quantity,
+                Description = Description,
+            };
+            return _ammo;
+        }
+    }
 }

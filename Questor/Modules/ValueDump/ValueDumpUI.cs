@@ -8,35 +8,33 @@
 //  </copyright>
 //-------------------------------------------------------------------------------
 
-using global::Questor.Modules.BackgroundTasks;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
+using Questor.Modules.Actions;
+using Questor.Modules.BackgroundTasks;
+using Questor.Modules.Caching;
+using Questor.Modules.Logging;
+using Questor.Modules.Lookup;
+using Questor.Modules.States;
 
 namespace ValueDump
 {
-    using System;
-    using System.Linq;
-    using System.Windows.Forms;
-    using DirectEve;
-    using global::Questor.Modules.Actions;
-    using global::Questor.Modules.Caching;
-    using global::Questor.Modules.Lookup;
-    using global::Questor.Modules.Logging;
-    using global::Questor.Modules.States;
-
     public partial class ValueDumpUI : Form
     {
-        private DateTime _lastPulse;
-        //private DirectEve _directEve { get; set; }
-        public string CharacterName { get; set; }
         private readonly Market _market;
+        private DateTime _lastPulse;
 
         public ValueDumpUI(bool _standaloneInstance)
         {
             Application.EnableVisualStyles();
-            Logging.Log("ValueDump","Starting ValueDump",Logging.Orange);
+            Logging.Log("ValueDump", "Starting ValueDump", Logging.Orange);
             InitializeComponent();
             _market = new Market();
 
             #region Load DirectEVE
+
             //
             // Load DirectEVE
             //
@@ -45,7 +43,6 @@ namespace ValueDump
             {
                 if (Cache.Instance.DirectEve == null)
                 {
-
                 }
             }
             catch (Exception ex)
@@ -61,8 +58,9 @@ namespace ValueDump
                 Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
                 return;
             }
+
             #endregion Load DirectEVE
-            
+
             try
             {
                 Cache.Instance.DirectEve.OnFrame += ValuedumpOnFrame;
@@ -73,6 +71,9 @@ namespace ValueDump
                 return;
             }
         }
+
+        //private DirectEve _directEve { get; set; }
+        public string CharacterName { get; set; }
 
         private void ValuedumpOnFrame(object sender, EventArgs e)
         {
@@ -121,7 +122,7 @@ namespace ValueDump
 
             if (DateTime.UtcNow.Subtract(Time.Instance.LastUpdateOfSessionRunningTime).TotalSeconds < Time.Instance.SessionRunningTimeUpdate_seconds)
             {
-                Statistics.SessionRunningTime = (int)DateTime.UtcNow.Subtract(Time.Instance.QuestorStarted_DateTime).TotalMinutes;
+                Statistics.SessionRunningTime = (int) DateTime.UtcNow.Subtract(Time.Instance.QuestorStarted_DateTime).TotalMinutes;
                 Time.Instance.LastUpdateOfSessionRunningTime = DateTime.UtcNow;
             }
 
@@ -153,7 +154,7 @@ namespace ValueDump
                 case ValueDumpState.SaveMineralPrices:
                     if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.SaveMineralPrices:", Logging.Debug);
                     if (!Market.SaveMineralprices("ValueDump")) return;
-                    _States.CurrentValueDumpState = ValueDumpState.Idle;    
+                    _States.CurrentValueDumpState = ValueDumpState.Idle;
                     break;
 
                 case ValueDumpState.GetItems:
@@ -198,13 +199,14 @@ namespace ValueDump
 
                 case ValueDumpState.InspectOrder:
                     if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.InspectOrder:", Logging.Debug);
-                    if (!Market.Inspectorder("ValueDump", cbxSell.Checked, RefineCheckBox.Checked, cbxUndersell.Checked, (double)RefineEfficiencyInput.Value)) return;
+                    if (!Market.Inspectorder("ValueDump", cbxSell.Checked, RefineCheckBox.Checked, cbxUndersell.Checked, (double) RefineEfficiencyInput.Value))
+                        return;
                     _States.CurrentValueDumpState = ValueDumpState.WaitingToFinishQuickSell;
                     break;
 
                 case ValueDumpState.InspectRefinery:
                     if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.InspectRefinery:", Logging.Debug);
-                    if (!Market.InspectRefinery("ValueDump", (double)RefineEfficiencyInput.Value)) return;
+                    if (!Market.InspectRefinery("ValueDump", (double) RefineEfficiencyInput.Value)) return;
                     _States.CurrentValueDumpState = ValueDumpState.NextItem;
                     break;
 
@@ -236,7 +238,7 @@ namespace ValueDump
                 Logging.Log("ValueDump", "Waiting for items", Logging.White);
                 while (_States.CurrentValueDumpState != ValueDumpState.Idle)
                 {
-                    System.Threading.Thread.Sleep(50);
+                    Thread.Sleep(50);
                     Application.DoEvents();
                 }
 
@@ -282,7 +284,6 @@ namespace ValueDump
             {
                 Logging.Log("ValueDump.ProcessItems", "Exception: [" + exception + "]", Logging.Debug);
             }
-             
         }
 
         private void ValueDumpUIFormClosed(object sender, FormClosedEventArgs e)
@@ -303,7 +304,7 @@ namespace ValueDump
 
         private void LvItemsColumnClick(object sender, ColumnClickEventArgs e)
         {
-            ListViewColumnSort oCompare = new ListViewColumnSort();
+            var oCompare = new ListViewColumnSort();
 
             if (lvItems.Sorting == SortOrder.Ascending)
                 oCompare.Sorting = SortOrder.Descending;

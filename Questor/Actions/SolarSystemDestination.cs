@@ -8,22 +8,20 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
-using global::Questor.Modules.Lookup;
+using System;
+using DirectEve;
+using Questor.Modules.Caching;
+using Questor.Modules.Lookup;
 
 namespace Questor.Modules.Actions
 {
-    using System;
-    using DirectEve;
-    using global::Questor.Modules.Logging;
-    using global::Questor.Modules.Caching;
-
     public class SolarSystemDestination2 : TravelerDestination
     {
         private DateTime _nextAction;
 
         public SolarSystemDestination2(long solarSystemId)
         {
-            Logging.Log("QuestorManager.SolarSystemDestination", "Destination set to solar system id [" + solarSystemId + "]", Logging.White);
+            Logging.Logging.Log("QuestorManager.SolarSystemDestination", "Destination set to solar system id [" + solarSystemId + "]", Logging.Logging.White);
             SolarSystemId = solarSystemId;
         }
 
@@ -34,9 +32,10 @@ namespace Questor.Modules.Actions
             {
                 if (_nextAction < DateTime.UtcNow)
                 {
-                    if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(45)) //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
+                    if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(45))
+                        //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
                     {
-                        Logging.Log("QuestorManager.SolarSystemDestination", "Exiting station", Logging.White);
+                        Logging.Logging.Log("QuestorManager.SolarSystemDestination", "Exiting station", Logging.Logging.White);
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
                         Time.Instance.LastDockAction = DateTime.UtcNow;
                         _nextAction = DateTime.UtcNow.AddSeconds(30);
@@ -48,7 +47,7 @@ namespace Questor.Modules.Actions
             }
 
             // The task was to get to the solar system, we are there :)
-            Logging.Log("QuestorManager.SolarSystemDestination", "Arrived in system", Logging.White);
+            Logging.Logging.Log("QuestorManager.SolarSystemDestination", "Arrived in system", Logging.Logging.White);
             return true;
         }
     }

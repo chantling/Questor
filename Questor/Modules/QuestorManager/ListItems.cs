@@ -1,5 +1,4 @@
-﻿
-namespace QuestorManager
+﻿namespace QuestorManager
 {
     public class ListItems
     {

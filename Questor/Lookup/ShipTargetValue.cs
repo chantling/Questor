@@ -9,20 +9,19 @@
 // -------------------------------------------------------------------------------
 
 using System;
+using System.Xml.Linq;
 
 namespace Questor.Modules.Lookup
 {
-    using System.Xml.Linq;
-
     public class ShipTargetValue
     {
         public ShipTargetValue(XElement element)
         {
             try
             {
-                Name = (string)element.Attribute("name");
-                GroupId = (int)element.Attribute("groupid");
-                TargetValue = (int)element.Attribute("targetvalue");
+                Name = (string) element.Attribute("name");
+                GroupId = (int) element.Attribute("groupid");
+                TargetValue = (int) element.Attribute("targetvalue");
             }
             catch (Exception)
             {

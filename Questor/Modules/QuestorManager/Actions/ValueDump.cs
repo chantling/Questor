@@ -8,19 +8,19 @@
 //  </copyright>
 //-------------------------------------------------------------------------------
 
+using System;
+using Questor.Modules.Actions;
+using Questor.Modules.Logging;
+using Questor.Modules.States;
+
 namespace QuestorManager.Actions
 {
-    using System;
-    using global::Questor.Modules.Logging;
-    using global::Questor.Modules.Actions;
-    using global::Questor.Modules.States;
-
     public class ValueDump
     {
+        private readonly Market _market;
         private readonly QuestorManagerUI _questorManagerForm;
         private DateTime _lastExecute = DateTime.MinValue;
         private bool _valueProcess; //false
-        private readonly Market _market;
 
         public ValueDump(QuestorManagerUI form1)
         {
@@ -34,14 +34,14 @@ namespace QuestorManager.Actions
             {
                 case ValueDumpState.CheckMineralPrices:
                     if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.CheckMineralPrices:", Logging.Debug);
-                    if(!Market.CheckMineralPrices("ValueDump",  _questorManagerForm.RefineCheckBox.Checked)) return;
+                    if (!Market.CheckMineralPrices("ValueDump", _questorManagerForm.RefineCheckBox.Checked)) return;
                     _States.CurrentValueDumpState = ValueDumpState.SaveMineralPrices;
                     break;
 
                 case ValueDumpState.SaveMineralPrices:
                     if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.SaveMineralPrices:", Logging.Debug);
                     if (!Market.SaveMineralprices("ValueDump")) return;
-                    _States.CurrentValueDumpState = ValueDumpState.Idle;    
+                    _States.CurrentValueDumpState = ValueDumpState.Idle;
                     break;
 
                 case ValueDumpState.GetItems:
@@ -64,7 +64,9 @@ namespace QuestorManager.Actions
 
                 case ValueDumpState.UpdatePrices:
                     if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.UpdatePrices:", Logging.Debug);
-                    if (!Market.UpdatePrices("ValueDump", _questorManagerForm.cbxSell.Checked, _questorManagerForm.RefineCheckBox.Checked, _questorManagerForm.cbxUndersell.Checked)) return;
+                    if (
+                        !Market.UpdatePrices("ValueDump", _questorManagerForm.cbxSell.Checked, _questorManagerForm.RefineCheckBox.Checked,
+                            _questorManagerForm.cbxUndersell.Checked)) return;
                     //
                     // we are out of items
                     //
@@ -117,14 +119,16 @@ namespace QuestorManager.Actions
 
                 case ValueDumpState.InspectOrder:
                     if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.InspectOrder:", Logging.Debug);
-                    if (!Market.Inspectorder("ValueDump", _questorManagerForm.cbxSell.Checked, _questorManagerForm.RefineCheckBox.Checked, _questorManagerForm.cbxUndersell.Checked, (double)_questorManagerForm.RefineEfficiencyInput.Value)) return;
+                    if (
+                        !Market.Inspectorder("ValueDump", _questorManagerForm.cbxSell.Checked, _questorManagerForm.RefineCheckBox.Checked,
+                            _questorManagerForm.cbxUndersell.Checked, (double) _questorManagerForm.RefineEfficiencyInput.Value)) return;
                     _States.CurrentValueDumpState = ValueDumpState.WaitingToFinishQuickSell;
                     break;
 
                 case ValueDumpState.InspectRefinery:
                     if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.InspectRefinery:", Logging.Debug);
-                    if (!Market.InspectRefinery("ValueDump", (double)_questorManagerForm.RefineEfficiencyInput.Value))
-                    _States.CurrentValueDumpState = ValueDumpState.NextItem;
+                    if (!Market.InspectRefinery("ValueDump", (double) _questorManagerForm.RefineEfficiencyInput.Value))
+                        _States.CurrentValueDumpState = ValueDumpState.NextItem;
                     break;
 
                 case ValueDumpState.WaitingToFinishQuickSell:

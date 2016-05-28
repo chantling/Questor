@@ -8,12 +8,12 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+using Questor.Modules.States;
+
 namespace Questor.Modules.Actions
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using global::Questor.Modules.States;
-
     public class Action
     {
         public Action()
@@ -58,10 +58,10 @@ namespace Questor.Modules.Actions
 
         public override string ToString()
         {
-            string output = State.ToString();
+            var output = State.ToString();
 
-            foreach (string key in Parameters.Keys)
-                foreach (string value in Parameters[key])
+            foreach (var key in Parameters.Keys)
+                foreach (var value in Parameters[key])
                     output += string.Format(" [{0}: {1}]", key, value);
 
             return output;

@@ -9,451 +9,460 @@
 // -------------------------------------------------------------------------------
 
 extern alias Ut;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using DirectEve;
+using Questor.Modules.BackgroundTasks;
+using Questor.Modules.Logging;
+using Questor.Modules.Lookup;
+using Questor.Modules.States;
 
 namespace Questor.Modules.Caching
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.IO;
-	using System.Linq;
-	using System.Xml.Linq;
-	using System.Threading;
-	using global::Questor.Modules.Actions;
-	using global::Questor.Modules.BackgroundTasks;
-	using global::Questor.Modules.Combat;
-	using global::Questor.Modules.Lookup;
-	using global::Questor.Modules.States;
-	using global::Questor.Modules.Logging;
-	using DirectEve;
-	using global::Questor.Storylines;
-	using Ut::EVE;
-	using Ut;
-	using Ut::WCF;
-	
-	public partial class Cache
-	{
-		public List<DirectBookmark> _allBookmarks;
-		private IEnumerable<DirectBookmark> ListOfUndockBookmarks;
-		internal static DirectBookmark _undockBookmarkInLocal;
-		private int _bookmarkDeletionAttempt;
-		public DateTime NextBookmarkDeletionAttempt = DateTime.UtcNow;
+    public partial class Cache
+    {
+        internal static DirectBookmark _undockBookmarkInLocal;
+        public List<DirectBookmark> _allBookmarks;
+        private int _bookmarkDeletionAttempt;
+        private IEnumerable<DirectBookmark> ListOfUndockBookmarks;
+        public DateTime NextBookmarkDeletionAttempt = DateTime.UtcNow;
 
-		public List<DirectBookmark> AllBookmarks
-		{
-			get
-			{
-				try
-				{
-					if (Cache.Instance._allBookmarks == null || !Cache.Instance._allBookmarks.Any())
-					{
-						if (DateTime.UtcNow > Time.Instance.NextBookmarkAction)
-						{
-							Time.Instance.NextBookmarkAction = DateTime.UtcNow.AddMilliseconds(200);
-							if (DirectEve.Bookmarks.Any())
-							{
-								_allBookmarks = Cache.Instance.DirectEve.Bookmarks;
-								return _allBookmarks;
-							}
+        public List<DirectBookmark> AllBookmarks
+        {
+            get
+            {
+                try
+                {
+                    if (Instance._allBookmarks == null || !Instance._allBookmarks.Any())
+                    {
+                        if (DateTime.UtcNow > Time.Instance.NextBookmarkAction)
+                        {
+                            Time.Instance.NextBookmarkAction = DateTime.UtcNow.AddMilliseconds(200);
+                            if (DirectEve.Bookmarks.Any())
+                            {
+                                _allBookmarks = Instance.DirectEve.Bookmarks;
+                                return _allBookmarks;
+                            }
 
-							return null; //there are no bookmarks to list...
-						}
+                            return null; //there are no bookmarks to list...
+                        }
 
-						return null; //new List<DirectBookmark>(); //there are no bookmarks to list...
-					}
+                        return null; //new List<DirectBookmark>(); //there are no bookmarks to list...
+                    }
 
-					return Cache.Instance._allBookmarks;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.allBookmarks", "Exception [" + exception + "]", Logging.Debug);
-					return new List<DirectBookmark>();;
-				}
-			}
-			set
-			{
-				_allBookmarks = value;
-			}
-		}
-		
-		public DirectBookmark BookmarkById(long bookmarkId)
-		{
-			try
-			{
-				if (Cache.Instance.AllBookmarks != null && Cache.Instance.AllBookmarks.Any())
-				{
-					return Cache.Instance.AllBookmarks.FirstOrDefault(b => b.BookmarkId == bookmarkId);
-				}
+                    return Instance._allBookmarks;
+                }
+                catch (Exception exception)
+                {
+                    Logging.Logging.Log("Cache.allBookmarks", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    return new List<DirectBookmark>();
+                    ;
+                }
+            }
+            set { _allBookmarks = value; }
+        }
 
-				return null;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.BookmarkById", "Exception [" + exception + "]", Logging.Debug);
-				return null;
-			}
-		}
-		
-		public List<DirectBookmark> BookmarksByLabel(string label)
-		{
-			try
-			{
-				// Does not seems to refresh the Corporate Bookmark list so it's having troubles to find Corporate Bookmarks
-				if (Cache.Instance.AllBookmarks != null && Cache.Instance.AllBookmarks.Any())
-				{
-					return Cache.Instance.AllBookmarks.Where(b => !string.IsNullOrEmpty(b.Title) && b.Title.ToLower().StartsWith(label.ToLower())).OrderBy(f => f.LocationId).ThenBy(i => Cache.Instance.DistanceFromMe(i.X ?? 0, i.Y ?? 0, i.Z ?? 0)).ToList();
-				}
+        public DirectBookmark UndockBookmark
+        {
+            get
+            {
+                try
+                {
+                    if (_undockBookmarkInLocal == null)
+                    {
+                        if (ListOfUndockBookmarks == null)
+                        {
+                            if (Settings.Instance.UndockBookmarkPrefix != "")
+                            {
+                                ListOfUndockBookmarks = Instance.BookmarksByLabel(Settings.Instance.UndockBookmarkPrefix);
+                            }
+                        }
+                        if (ListOfUndockBookmarks != null && ListOfUndockBookmarks.Any())
+                        {
+                            ListOfUndockBookmarks = ListOfUndockBookmarks.Where(i => i.LocationId == Instance.DirectEve.Session.LocationId).ToList();
+                            _undockBookmarkInLocal =
+                                ListOfUndockBookmarks.OrderBy(i => Instance.DistanceFromMe(i.X ?? 0, i.Y ?? 0, i.Z ?? 0))
+                                    .FirstOrDefault(b => Instance.DistanceFromMe(b.X ?? 0, b.Y ?? 0, b.Z ?? 0) < (int) Distances.NextPocketDistance);
+                            if (_undockBookmarkInLocal != null)
+                            {
+                                return _undockBookmarkInLocal;
+                            }
 
-				return null;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.BookmarkById", "Exception [" + exception + "]", Logging.Debug);
-				return null;
-			}
-		}
-		
-		public List<DirectBookmark> BookmarksThatContain(string label)
-		{
-			try
-			{
-				if (Cache.Instance.AllBookmarks != null && Cache.Instance.AllBookmarks.Any())
-				{
-					return Cache.Instance.AllBookmarks.Where(b => !string.IsNullOrEmpty(b.Title) && b.Title.ToLower().Contains(label.ToLower())).OrderBy(f => f.LocationId).ToList();
-				}
+                            return null;
+                        }
 
-				return null;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.BookmarksThatContain", "Exception [" + exception + "]", Logging.Debug);
-				return null;
-			}
-		}
-		
-		public void CreateBookmark(string label)
-		{
-			try
-			{
-				if (Cache.Instance.AfterMissionSalvageBookmarks.Count() < 100)
-				{
-					if (Salvage.CreateSalvageBookmarksIn.ToLower() == "corp".ToLower())
-					{
-						DirectBookmarkFolder folder = Cache.Instance.DirectEve.BookmarkFolders.FirstOrDefault(i => i.Name == Settings.Instance.BookmarkFolder);
-						if (folder != null)
-						{
-							Cache.Instance.DirectEve.CorpBookmarkCurrentLocation(label, "", folder.Id);
-						}
-						else
-						{
-							Cache.Instance.DirectEve.CorpBookmarkCurrentLocation(label, "", null);
-						}
-					}
-					else
-					{
-						DirectBookmarkFolder folder = Cache.Instance.DirectEve.BookmarkFolders.FirstOrDefault(i => i.Name == Settings.Instance.BookmarkFolder);
-						if (folder != null)
-						{
-							Cache.Instance.DirectEve.BookmarkCurrentLocation(label, "", folder.Id);
-						}
-						else
-						{
-							Cache.Instance.DirectEve.BookmarkCurrentLocation(label, "", null);
-						}
-					}
-				}
-				else
-				{
-					Logging.Log("CreateBookmark", "We already have over 100 AfterMissionSalvage bookmarks: their must be a issue processing or deleting bookmarks. No additional bookmarks will be created until the number of salvage bookmarks drops below 100.", Logging.Orange);
-				}
+                        return null;
+                    }
 
-				return;
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("CreateBookmark", "Exception [" + ex + "]", Logging.Debug);
-				return;
-			}
-		}
-		
-		public DirectBookmark UndockBookmark
-		{
-			get
-			{
-				try
-				{
-					if (_undockBookmarkInLocal == null)
-					{
-						if (ListOfUndockBookmarks == null)
-						{
-							if (Settings.Instance.UndockBookmarkPrefix != "")
-							{
-								ListOfUndockBookmarks = Cache.Instance.BookmarksByLabel(Settings.Instance.UndockBookmarkPrefix);
-							}
-						}
-						if (ListOfUndockBookmarks != null && ListOfUndockBookmarks.Any())
-						{
-							ListOfUndockBookmarks = ListOfUndockBookmarks.Where(i => i.LocationId == Cache.Instance.DirectEve.Session.LocationId).ToList();
-							_undockBookmarkInLocal = ListOfUndockBookmarks.OrderBy(i => Cache.Instance.DistanceFromMe(i.X ?? 0, i.Y ?? 0, i.Z ?? 0)).FirstOrDefault(b => Cache.Instance.DistanceFromMe(b.X ?? 0, b.Y ?? 0, b.Z ?? 0) < (int)Distances.NextPocketDistance);
-							if (_undockBookmarkInLocal != null)
-							{
-								return _undockBookmarkInLocal;
-							}
+                    return _undockBookmarkInLocal;
+                }
+                catch (Exception exception)
+                {
+                    Logging.Logging.Log("UndockBookmark", "[" + exception + "]", Logging.Logging.Teal);
+                    return null;
+                }
+            }
+            internal set { _undockBookmarkInLocal = value; }
+        }
 
-							return null;
-						}
+        public IEnumerable<DirectBookmark> SafeSpotBookmarks
+        {
+            get
+            {
+                try
+                {
+                    if (_safeSpotBookmarks == null)
+                    {
+                        _safeSpotBookmarks = Instance.BookmarksByLabel(Settings.Instance.SafeSpotBookmarkPrefix).ToList();
+                    }
 
-						return null;
-					}
+                    if (_safeSpotBookmarks != null && _safeSpotBookmarks.Any())
+                    {
+                        return _safeSpotBookmarks;
+                    }
 
-					return _undockBookmarkInLocal;
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("UndockBookmark", "[" + exception + "]", Logging.Teal);
-					return null;
-				}
-			}
-			internal set
-			{
-				_undockBookmarkInLocal = value;
-			}
+                    return new List<DirectBookmark>();
+                }
+                catch (Exception exception)
+                {
+                    Logging.Logging.Log("Cache.SafeSpotBookmarks", "Exception [" + exception + "]", Logging.Logging.Debug);
+                }
 
-		}
-		
-		public IEnumerable<DirectBookmark> SafeSpotBookmarks
-		{
-			get
-			{
-				try
-				{
+                return new List<DirectBookmark>();
+            }
+        }
 
-					if (_safeSpotBookmarks == null)
-					{
-						_safeSpotBookmarks = Cache.Instance.BookmarksByLabel(Settings.Instance.SafeSpotBookmarkPrefix).ToList();
-					}
+        public IEnumerable<DirectBookmark> AfterMissionSalvageBookmarks
+        {
+            get
+            {
+                try
+                {
+                    var _bookmarkprefix = Settings.Instance.BookmarkPrefix;
 
-					if (_safeSpotBookmarks != null && _safeSpotBookmarks.Any())
-					{
-						return _safeSpotBookmarks;
-					}
+                    if (Instance.BookmarksByLabel(_bookmarkprefix + " ") != null)
+                    {
+                        return Instance.BookmarksByLabel(_bookmarkprefix + " ").ToList();
+                    }
 
-					return new List<DirectBookmark>();
-				}
-				catch (Exception exception)
-				{
-					Logging.Log("Cache.SafeSpotBookmarks", "Exception [" + exception + "]", Logging.Debug);
-				}
+                    return new List<DirectBookmark>();
+                }
+                catch (Exception ex)
+                {
+                    Logging.Logging.Log("AfterMissionSalvageBookmarks", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    return new List<DirectBookmark>();
+                }
+            }
+        }
 
-				return new List<DirectBookmark>();
-			}
-		}
+        public DateTime AgedDate
+        {
+            get
+            {
+                try
+                {
+                    return DateTime.UtcNow.AddMinutes(-Salvage.AgeofBookmarksForSalvageBehavior);
+                }
+                catch (Exception ex)
+                {
+                    Logging.Logging.Log("AgedDate", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    return DateTime.UtcNow.AddMinutes(-45);
+                }
+            }
+        }
 
-		public IEnumerable<DirectBookmark> AfterMissionSalvageBookmarks
-		{
-			get
-			{
-				try
-				{
-					string _bookmarkprefix = Settings.Instance.BookmarkPrefix;
+        public DirectBookmark GetSalvagingBookmark
+        {
+            get
+            {
+                try
+                {
+                    if (Instance.AllBookmarks != null && Instance.AllBookmarks.Any())
+                    {
+                        List<DirectBookmark> _SalvagingBookmarks;
+                        DirectBookmark _SalvagingBookmark;
+                        if (Salvage.FirstSalvageBookmarksInSystem)
+                        {
+                            Logging.Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "Salvaging at first bookmark from system",
+                                Logging.Logging.White);
+                            _SalvagingBookmarks = Instance.BookmarksByLabel(Settings.Instance.BookmarkPrefix + " ");
+                            if (_SalvagingBookmarks != null && _SalvagingBookmarks.Any())
+                            {
+                                _SalvagingBookmark =
+                                    _SalvagingBookmarks.OrderBy(b => b.CreatedOn).FirstOrDefault(c => c.LocationId == Instance.DirectEve.Session.SolarSystemId);
+                                return _SalvagingBookmark;
+                            }
 
-					if (Cache.Instance.BookmarksByLabel(_bookmarkprefix + " ") != null)
-					{
-						return Cache.Instance.BookmarksByLabel(_bookmarkprefix + " ").ToList();
-					}
+                            return null;
+                        }
 
-					return new List<DirectBookmark>();
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("AfterMissionSalvageBookmarks", "Exception [" + ex + "]", Logging.Debug);
-					return new List<DirectBookmark>();
-				}
-			}
-		}
+                        Logging.Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "Salvaging at first oldest bookmarks", Logging.Logging.White);
+                        _SalvagingBookmarks = Instance.BookmarksByLabel(Settings.Instance.BookmarkPrefix + " ");
+                        if (_SalvagingBookmarks != null && _SalvagingBookmarks.Any())
+                        {
+                            _SalvagingBookmark = _SalvagingBookmarks.OrderBy(b => b.CreatedOn).FirstOrDefault();
+                            return _SalvagingBookmark;
+                        }
 
-		public DateTime AgedDate
-		{
-			get
-			{
-				try
-				{
-					return DateTime.UtcNow.AddMinutes(-Salvage.AgeofBookmarksForSalvageBehavior);
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("AgedDate", "Exception [" + ex + "]", Logging.Debug);
-					return DateTime.UtcNow.AddMinutes(-45);
-				}
-			}
-		}
+                        return null;
+                    }
 
-		public DirectBookmark GetSalvagingBookmark
-		{
-			get
-			{
-				try
-				{
-					if (Cache.Instance.AllBookmarks != null && Cache.Instance.AllBookmarks.Any())
-					{
-						List<DirectBookmark> _SalvagingBookmarks;
-						DirectBookmark _SalvagingBookmark;
-						if (Salvage.FirstSalvageBookmarksInSystem)
-						{
-							Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "Salvaging at first bookmark from system", Logging.White);
-							_SalvagingBookmarks = Cache.Instance.BookmarksByLabel(Settings.Instance.BookmarkPrefix + " ");
-							if (_SalvagingBookmarks != null && _SalvagingBookmarks.Any())
-							{
-								_SalvagingBookmark = _SalvagingBookmarks.OrderBy(b => b.CreatedOn).FirstOrDefault(c => c.LocationId == Cache.Instance.DirectEve.Session.SolarSystemId);
-								return _SalvagingBookmark;
-							}
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    Logging.Logging.Log("GetSalvagingBookmark", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    return null;
+                }
+            }
+        }
 
-							return null;
-						}
+        public DirectBookmark GetTravelBookmark
+        {
+            get
+            {
+                try
+                {
+                    var bm =
+                        Instance.BookmarksByLabel(Settings.Instance.TravelToBookmarkPrefix)
+                            .OrderByDescending(b => b.CreatedOn)
+                            .FirstOrDefault(c => c.LocationId == Instance.DirectEve.Session.SolarSystemId) ??
+                        Instance.BookmarksByLabel(Settings.Instance.TravelToBookmarkPrefix).OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
+                        Instance.BookmarksByLabel("Jita").OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
+                        Instance.BookmarksByLabel("Rens").OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
+                        Instance.BookmarksByLabel("Amarr").OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
+                        Instance.BookmarksByLabel("Dodixie").OrderByDescending(b => b.CreatedOn).FirstOrDefault();
 
-						Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "Salvaging at first oldest bookmarks", Logging.White);
-						_SalvagingBookmarks = Cache.Instance.BookmarksByLabel(Settings.Instance.BookmarkPrefix + " ");
-						if (_SalvagingBookmarks != null && _SalvagingBookmarks.Any())
-						{
-							_SalvagingBookmark = _SalvagingBookmarks.OrderBy(b => b.CreatedOn).FirstOrDefault();
-							return _SalvagingBookmark;
-						}
+                    if (bm != null)
+                    {
+                        Logging.Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "GetTravelBookmark [" + bm.Title + "][" + bm.LocationId + "]",
+                            Logging.Logging.White);
+                    }
+                    return bm;
+                }
+                catch (Exception ex)
+                {
+                    Logging.Logging.Log("GetTravelBookmark", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    return null;
+                }
+            }
+        }
 
-						return null;
-					}
+        public DirectBookmark BookmarkById(long bookmarkId)
+        {
+            try
+            {
+                if (Instance.AllBookmarks != null && Instance.AllBookmarks.Any())
+                {
+                    return Instance.AllBookmarks.FirstOrDefault(b => b.BookmarkId == bookmarkId);
+                }
 
-					return null;
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("GetSalvagingBookmark", "Exception [" + ex + "]", Logging.Debug);
-					return null;
-				}
-			}
-		}
+                return null;
+            }
+            catch (Exception exception)
+            {
+                Logging.Logging.Log("Cache.BookmarkById", "Exception [" + exception + "]", Logging.Logging.Debug);
+                return null;
+            }
+        }
 
-		public DirectBookmark GetTravelBookmark
-		{
-			get
-			{
-				try
-				{
-					DirectBookmark bm = Cache.Instance.BookmarksByLabel(Settings.Instance.TravelToBookmarkPrefix).OrderByDescending(b => b.CreatedOn).FirstOrDefault(c => c.LocationId == Cache.Instance.DirectEve.Session.SolarSystemId) ??
-						Cache.Instance.BookmarksByLabel(Settings.Instance.TravelToBookmarkPrefix).OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
-						Cache.Instance.BookmarksByLabel("Jita").OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
-						Cache.Instance.BookmarksByLabel("Rens").OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
-						Cache.Instance.BookmarksByLabel("Amarr").OrderByDescending(b => b.CreatedOn).FirstOrDefault() ??
-						Cache.Instance.BookmarksByLabel("Dodixie").OrderByDescending(b => b.CreatedOn).FirstOrDefault();
+        public List<DirectBookmark> BookmarksByLabel(string label)
+        {
+            try
+            {
+                // Does not seems to refresh the Corporate Bookmark list so it's having troubles to find Corporate Bookmarks
+                if (Instance.AllBookmarks != null && Instance.AllBookmarks.Any())
+                {
+                    return
+                        Instance.AllBookmarks.Where(b => !string.IsNullOrEmpty(b.Title) && b.Title.ToLower().StartsWith(label.ToLower()))
+                            .OrderBy(f => f.LocationId)
+                            .ThenBy(i => Instance.DistanceFromMe(i.X ?? 0, i.Y ?? 0, i.Z ?? 0))
+                            .ToList();
+                }
 
-					if (bm != null)
-					{
-						Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "GetTravelBookmark [" + bm.Title + "][" + bm.LocationId + "]", Logging.White);
-					}
-					return bm;
-				}
-				catch (Exception ex)
-				{
-					Logging.Log("GetTravelBookmark", "Exception [" + ex + "]", Logging.Debug);
-					return null;
-				}
-			}
-		}
+                return null;
+            }
+            catch (Exception exception)
+            {
+                Logging.Logging.Log("Cache.BookmarkById", "Exception [" + exception + "]", Logging.Logging.Debug);
+                return null;
+            }
+        }
 
-		public bool DeleteBookmarksOnGrid(string module)
-		{
-			try
-			{
-				if (DateTime.UtcNow < NextBookmarkDeletionAttempt)
-				{
-					return false;
-				}
+        public List<DirectBookmark> BookmarksThatContain(string label)
+        {
+            try
+            {
+                if (Instance.AllBookmarks != null && Instance.AllBookmarks.Any())
+                {
+                    return
+                        Instance.AllBookmarks.Where(b => !string.IsNullOrEmpty(b.Title) && b.Title.ToLower().Contains(label.ToLower()))
+                            .OrderBy(f => f.LocationId)
+                            .ToList();
+                }
 
-				NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(5 + Settings.Instance.RandomNumber(1, 5));
+                return null;
+            }
+            catch (Exception exception)
+            {
+                Logging.Logging.Log("Cache.BookmarksThatContain", "Exception [" + exception + "]", Logging.Logging.Debug);
+                return null;
+            }
+        }
 
-				//
-				// remove all salvage bookmarks over 48hrs old - they have long since been rendered useless
-				//
-				DeleteUselessSalvageBookmarks(module);
+        public void CreateBookmark(string label)
+        {
+            try
+            {
+                if (Instance.AfterMissionSalvageBookmarks.Count() < 100)
+                {
+                    if (Salvage.CreateSalvageBookmarksIn.ToLower() == "corp".ToLower())
+                    {
+                        var folder = Instance.DirectEve.BookmarkFolders.FirstOrDefault(i => i.Name == Settings.Instance.BookmarkFolder);
+                        if (folder != null)
+                        {
+                            Instance.DirectEve.CorpBookmarkCurrentLocation(label, "", folder.Id);
+                        }
+                        else
+                        {
+                            Instance.DirectEve.CorpBookmarkCurrentLocation(label, "", null);
+                        }
+                    }
+                    else
+                    {
+                        var folder = Instance.DirectEve.BookmarkFolders.FirstOrDefault(i => i.Name == Settings.Instance.BookmarkFolder);
+                        if (folder != null)
+                        {
+                            Instance.DirectEve.BookmarkCurrentLocation(label, "", folder.Id);
+                        }
+                        else
+                        {
+                            Instance.DirectEve.BookmarkCurrentLocation(label, "", null);
+                        }
+                    }
+                }
+                else
+                {
+                    Logging.Logging.Log("CreateBookmark",
+                        "We already have over 100 AfterMissionSalvage bookmarks: their must be a issue processing or deleting bookmarks. No additional bookmarks will be created until the number of salvage bookmarks drops below 100.",
+                        Logging.Logging.Orange);
+                }
 
-				List<DirectBookmark> bookmarksInLocal = new List<DirectBookmark>(AfterMissionSalvageBookmarks.Where(b => b.LocationId == Cache.Instance.DirectEve.Session.SolarSystemId).OrderBy(b => b.CreatedOn));
-				DirectBookmark onGridBookmark = bookmarksInLocal.FirstOrDefault(b => Cache.Instance.DistanceFromMe(b.X ?? 0, b.Y ?? 0, b.Z ?? 0) < (int)Distances.OnGridWithMe);
-				if (onGridBookmark != null)
-				{
-					_bookmarkDeletionAttempt++;
-					if (_bookmarkDeletionAttempt <= bookmarksInLocal.Count() + 60)
-					{
-						Logging.Log(module, "removing salvage bookmark:" + onGridBookmark.Title, Logging.White);
-						onGridBookmark.Delete();
-						Logging.Log(module, "after: removing salvage bookmark:" + onGridBookmark.Title, Logging.White);
-						NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(Cache.Instance.RandomNumber(2, 6));
-						return false;
-					}
+                return;
+            }
+            catch (Exception ex)
+            {
+                Logging.Logging.Log("CreateBookmark", "Exception [" + ex + "]", Logging.Logging.Debug);
+                return;
+            }
+        }
 
-					if (_bookmarkDeletionAttempt > bookmarksInLocal.Count() + 60)
-					{
-						Logging.Log(module, "error removing bookmark!" + onGridBookmark.Title, Logging.White);
-						_States.CurrentQuestorState = QuestorState.Error;
-						return false;
-					}
+        public bool DeleteBookmarksOnGrid(string module)
+        {
+            try
+            {
+                if (DateTime.UtcNow < NextBookmarkDeletionAttempt)
+                {
+                    return false;
+                }
 
-					return false;
-				}
+                NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(5 + Settings.Instance.RandomNumber(1, 5));
 
-				_bookmarkDeletionAttempt = 0;
-				Time.Instance.NextSalvageTrip = DateTime.UtcNow;
-				Statistics.FinishedSalvaging = DateTime.UtcNow;
-				return true;
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("DeleteBookmarksOnGrid", "Exception [" + ex + "]", Logging.Debug);
-				return true;
-			}
-		}
+                //
+                // remove all salvage bookmarks over 48hrs old - they have long since been rendered useless
+                //
+                DeleteUselessSalvageBookmarks(module);
 
-		public bool DeleteUselessSalvageBookmarks(string module)
-		{
-			if (DateTime.UtcNow < NextBookmarkDeletionAttempt)
-			{
-				if (Logging.DebugSalvage) Logging.Log("DeleteUselessSalvageBookmarks", "NextBookmarkDeletionAttempt is still [" + NextBookmarkDeletionAttempt.Subtract(DateTime.UtcNow).TotalSeconds + "] sec in the future... waiting", Logging.Debug);
-				return false;
-			}
+                var bookmarksInLocal =
+                    new List<DirectBookmark>(
+                        AfterMissionSalvageBookmarks.Where(b => b.LocationId == Instance.DirectEve.Session.SolarSystemId).OrderBy(b => b.CreatedOn));
+                var onGridBookmark = bookmarksInLocal.FirstOrDefault(b => Instance.DistanceFromMe(b.X ?? 0, b.Y ?? 0, b.Z ?? 0) < (int) Distances.OnGridWithMe);
+                if (onGridBookmark != null)
+                {
+                    _bookmarkDeletionAttempt++;
+                    if (_bookmarkDeletionAttempt <= bookmarksInLocal.Count() + 60)
+                    {
+                        Logging.Logging.Log(module, "removing salvage bookmark:" + onGridBookmark.Title, Logging.Logging.White);
+                        onGridBookmark.Delete();
+                        Logging.Logging.Log(module, "after: removing salvage bookmark:" + onGridBookmark.Title, Logging.Logging.White);
+                        NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(Instance.RandomNumber(2, 6));
+                        return false;
+                    }
 
-			try
-			{
-				//Delete bookmarks older than 2 hours.
-				DateTime bmExpirationDate = DateTime.UtcNow.AddMinutes(-Salvage.AgeofSalvageBookmarksToExpire);
-				List<DirectBookmark> uselessSalvageBookmarks = new List<DirectBookmark>(AfterMissionSalvageBookmarks.Where(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0).ToList());
+                    if (_bookmarkDeletionAttempt > bookmarksInLocal.Count() + 60)
+                    {
+                        Logging.Logging.Log(module, "error removing bookmark!" + onGridBookmark.Title, Logging.Logging.White);
+                        _States.CurrentQuestorState = QuestorState.Error;
+                        return false;
+                    }
 
-				DirectBookmark uselessSalvageBookmark = uselessSalvageBookmarks.FirstOrDefault();
-				if (uselessSalvageBookmark != null)
-				{
-					_bookmarkDeletionAttempt++;
-					if (_bookmarkDeletionAttempt <= uselessSalvageBookmarks.Count(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0) + 60)
-					{
-						Logging.Log(module, "removing a salvage bookmark that aged more than [" + Salvage.AgeofSalvageBookmarksToExpire + "]" + uselessSalvageBookmark.Title, Logging.White);
-						NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(5 + Settings.Instance.RandomNumber(1, 5));
-						uselessSalvageBookmark.Delete();
-						return false;
-					}
+                    return false;
+                }
 
-					if (_bookmarkDeletionAttempt > uselessSalvageBookmarks.Count(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0) + 60)
-					{
-						Logging.Log(module, "error removing bookmark!" + uselessSalvageBookmark.Title, Logging.White);
-						_States.CurrentQuestorState = QuestorState.Error;
-						return false;
-					}
+                _bookmarkDeletionAttempt = 0;
+                Time.Instance.NextSalvageTrip = DateTime.UtcNow;
+                Statistics.FinishedSalvaging = DateTime.UtcNow;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logging.Logging.Log("DeleteBookmarksOnGrid", "Exception [" + ex + "]", Logging.Logging.Debug);
+                return true;
+            }
+        }
 
-					return false;
-				}
-			}
-			catch (Exception ex)
-			{
-				Logging.Log("Cache.DeleteUselessSalvageBookmarks", "Exception:" + ex.Message, Logging.White);
-			}
+        public bool DeleteUselessSalvageBookmarks(string module)
+        {
+            if (DateTime.UtcNow < NextBookmarkDeletionAttempt)
+            {
+                if (Logging.Logging.DebugSalvage)
+                    Logging.Logging.Log("DeleteUselessSalvageBookmarks",
+                        "NextBookmarkDeletionAttempt is still [" + NextBookmarkDeletionAttempt.Subtract(DateTime.UtcNow).TotalSeconds +
+                        "] sec in the future... waiting", Logging.Logging.Debug);
+                return false;
+            }
 
-			return true;
-		}
-		
-	}
+            try
+            {
+                //Delete bookmarks older than 2 hours.
+                var bmExpirationDate = DateTime.UtcNow.AddMinutes(-Salvage.AgeofSalvageBookmarksToExpire);
+                var uselessSalvageBookmarks =
+                    new List<DirectBookmark>(
+                        AfterMissionSalvageBookmarks.Where(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0).ToList());
+
+                var uselessSalvageBookmark = uselessSalvageBookmarks.FirstOrDefault();
+                if (uselessSalvageBookmark != null)
+                {
+                    _bookmarkDeletionAttempt++;
+                    if (_bookmarkDeletionAttempt <=
+                        uselessSalvageBookmarks.Count(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0) + 60)
+                    {
+                        Logging.Logging.Log(module,
+                            "removing a salvage bookmark that aged more than [" + Salvage.AgeofSalvageBookmarksToExpire + "]" + uselessSalvageBookmark.Title,
+                            Logging.Logging.White);
+                        NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(5 + Settings.Instance.RandomNumber(1, 5));
+                        uselessSalvageBookmark.Delete();
+                        return false;
+                    }
+
+                    if (_bookmarkDeletionAttempt >
+                        uselessSalvageBookmarks.Count(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0) + 60)
+                    {
+                        Logging.Logging.Log(module, "error removing bookmark!" + uselessSalvageBookmark.Title, Logging.Logging.White);
+                        _States.CurrentQuestorState = QuestorState.Error;
+                        return false;
+                    }
+
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.Logging.Log("Cache.DeleteUselessSalvageBookmarks", "Exception:" + ex.Message, Logging.Logging.White);
+            }
+
+            return true;
+        }
+    }
 }

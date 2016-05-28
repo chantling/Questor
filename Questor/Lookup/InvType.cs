@@ -7,49 +7,50 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Xml.Linq;
-using System.Globalization;
-using global::Questor.Modules.Caching;
+using Questor.Modules.Caching;
 
 namespace Questor.Modules.Lookup
 {
     public class InvType
     {
         public static List<string> Minerals = new List<string>
-                                               {
-                                                  "Morphite",
-                                                  "Megacyte",
-                                                  "Zydrine",
-                                                  "Nocxium",
-                                                  "Isogen",
-                                                  "Mexallon",
-                                                  "Pyerite",
-                                                  "Tritanium"
-                                               };
+        {
+            "Morphite",
+            "Megacyte",
+            "Zydrine",
+            "Nocxium",
+            "Isogen",
+            "Mexallon",
+            "Pyerite",
+            "Tritanium"
+        };
 
         public static int InvTypeInstances = 0;
 
         public InvType(XElement element)
         {
-            Id = (int)element.Attribute("id");
-            Name = (string)element.Attribute("name");
-            GroupId = (int)element.Attribute("groupid");
-            BasePrice = (double)element.Attribute("baseprice");
-            Volume = (double)element.Attribute("volume");
-            Capacity = (double)element.Attribute("capacity");
-            PortionSize = (double)element.Attribute("portionsize");
-            MedianBuy = (double?)element.Attribute("medianbuy");
-            MedianSell = (double?)element.Attribute("mediansell");
-            MedianAll = (double?)element.Attribute("medianall");
-            MinSell = (double?)element.Attribute("minsell");
-            MaxBuy = (double?)element.Attribute("maxbuy");
-            ReprocessValue = (double?)element.Attribute("reprocess");
-            LastUpdate = (DateTime?)element.Attribute("lastupdate");
+            Id = (int) element.Attribute("id");
+            Name = (string) element.Attribute("name");
+            GroupId = (int) element.Attribute("groupid");
+            BasePrice = (double) element.Attribute("baseprice");
+            Volume = (double) element.Attribute("volume");
+            Capacity = (double) element.Attribute("capacity");
+            PortionSize = (double) element.Attribute("portionsize");
+            MedianBuy = (double?) element.Attribute("medianbuy");
+            MedianSell = (double?) element.Attribute("mediansell");
+            MedianAll = (double?) element.Attribute("medianall");
+            MinSell = (double?) element.Attribute("minsell");
+            MaxBuy = (double?) element.Attribute("maxbuy");
+            ReprocessValue = (double?) element.Attribute("reprocess");
+            LastUpdate = (DateTime?) element.Attribute("lastupdate");
             Reprocess = new Dictionary<string, double?>();
-            foreach (string m in Minerals)
+            foreach (var m in Minerals)
             {
                 Reprocess.Add(m, (double?) element.Attribute(m));
             }
@@ -68,17 +69,12 @@ namespace Questor.Modules.Lookup
             PortionSize = item.PortionSize;
             LastUpdate = DateTime.MinValue;
             Reprocess = new Dictionary<string, double?>();
-            foreach (string m in Minerals)
+            foreach (var m in Minerals)
             {
                 Reprocess.Add(m, null);
             }
 
             Interlocked.Increment(ref InvTypeInstances);
-        }
-
-        ~InvType()
-        {
-            Interlocked.Decrement(ref InvTypeInstances);
         }
 
 
@@ -112,9 +108,14 @@ namespace Questor.Modules.Lookup
 
         public Dictionary<string, double?> Reprocess { get; set; }
 
+        ~InvType()
+        {
+            Interlocked.Decrement(ref InvTypeInstances);
+        }
+
         public XElement Save()
         {
-            XElement element = new XElement("invtype");
+            var element = new XElement("invtype");
             element.SetAttributeValue("id", Id);
             element.SetAttributeValue("name", Name);
             element.SetAttributeValue("groupid", GroupId);
@@ -130,10 +131,10 @@ namespace Questor.Modules.Lookup
                 element.SetAttributeValue("medianall", MedianAll.Value.ToString("0.00", CultureInfo.InvariantCulture));
             if (ReprocessValue.HasValue && ReprocessValue.Value > 0)
                 element.SetAttributeValue("reprocess", ReprocessValue.Value.ToString("0.00", CultureInfo.InvariantCulture));
-            foreach (string m in Minerals)
+            foreach (var m in Minerals)
                 if (Reprocess[m].HasValue && Reprocess[m] > 0)
                 {
-                    double? d = Reprocess[m];
+                    var d = Reprocess[m];
                     if (d != null) element.SetAttributeValue(m, d.Value);
                 }
 

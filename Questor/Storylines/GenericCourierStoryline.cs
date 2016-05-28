@@ -1,17 +1,14 @@
-﻿
+﻿using System;
+using System.Linq;
+using Questor.Modules.Actions;
+using Questor.Modules.Activities;
+using Questor.Modules.Caching;
+using Questor.Modules.Logging;
+using Questor.Modules.Lookup;
+using Questor.Modules.States;
+
 namespace Questor.Storylines
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using global::Questor.Modules.Actions;
-    using global::Questor.Modules.Activities;
-    using global::Questor.Modules.Caching;
-    using global::Questor.Modules.Logging;
-    using global::Questor.Modules.Lookup;
-    using global::Questor.Modules.States;
-    using DirectEve;
-
     public class GenericCourier : IStoryline
     {
         private DateTime _nextGenericCourierStorylineAction;
@@ -64,15 +61,19 @@ namespace Questor.Storylines
                 if (Logging.DebugArm) Logging.Log("Arm.ActivateTransportShip", "try", Logging.White);
                 if (Cache.Instance.ActiveShip.GivenName.ToLower() != Settings.Instance.TransportShipName.ToLower())
                 {
-                    if (Logging.DebugArm) Logging.Log("Arm.ActivateTransportShip", "if (Cache.Instance.ActiveShip.GivenName.ToLower() != transportshipName.ToLower())", Logging.White);
+                    if (Logging.DebugArm)
+                        Logging.Log("Arm.ActivateTransportShip", "if (Cache.Instance.ActiveShip.GivenName.ToLower() != transportshipName.ToLower())",
+                            Logging.White);
                     if (!Cache.Instance.ShipHangar.Items.Any()) return StorylineState.Arm; //no ships?!?
 
-                    if (Logging.DebugArm) Logging.Log("Arm.ActivateTransportShip", "if (!Cache.Instance.ShipHangar.Items.Any()) return StorylineState.Arm; done", Logging.White);
+                    if (Logging.DebugArm)
+                        Logging.Log("Arm.ActivateTransportShip", "if (!Cache.Instance.ShipHangar.Items.Any()) return StorylineState.Arm; done", Logging.White);
 
-                    List<DirectItem> ships = Cache.Instance.ShipHangar.Items;
+                    var ships = Cache.Instance.ShipHangar.Items;
                     if (Logging.DebugArm) Logging.Log("Arm.ActivateTransportShip", "List<DirectItem> ships = Cache.Instance.ShipHangar.Items;", Logging.White);
 
-                    foreach (DirectItem ship in ships.Where(ship => ship.GivenName != null && ship.GivenName.ToLower() == Settings.Instance.TransportShipName.ToLower()))
+                    foreach (
+                        var ship in ships.Where(ship => ship.GivenName != null && ship.GivenName.ToLower() == Settings.Instance.TransportShipName.ToLower()))
                     {
                         Logging.Log("Arm", "Making [" + ship.GivenName + "] active", Logging.White);
                         ship.ActivateShip();
@@ -86,7 +87,9 @@ namespace Questor.Storylines
             catch (Exception exception)
             {
                 Logging.Log("GenericCourierStoryline", "Exception thrown while attempting to switch to transport ship: [" + exception + "]", Logging.White);
-                Logging.Log("GenericCourierStoryline", "blacklisting this storyline agent for this session because we could not switch to the configured TransportShip named [" + Settings.Instance.TransportShipName + "]", Logging.White);
+                Logging.Log("GenericCourierStoryline",
+                    "blacklisting this storyline agent for this session because we could not switch to the configured TransportShip named [" +
+                    Settings.Instance.TransportShipName + "]", Logging.White);
                 return StorylineState.BlacklistAgent;
             }
 
@@ -104,7 +107,7 @@ namespace Questor.Storylines
         }
 
         /// <summary>
-        ///   There are no pre-accept actions
+        ///     There are no pre-accept actions
         /// </summary>
         /// <param name="storyline"></param>
         /// <returns></returns>
@@ -118,59 +121,12 @@ namespace Questor.Storylines
             return StorylineState.AcceptMission;
         }
 
-        private bool GotoMissionBookmark(long agentId, string title)
-        {
-            MissionBookmarkDestination destination = Traveler.Destination as MissionBookmarkDestination;
-            if (destination == null || destination.AgentId != agentId || !destination.Title.ToLower().StartsWith(title.ToLower()))
-                Traveler.Destination = new MissionBookmarkDestination(MissionSettings.GetMissionBookmark(agentId, title));
-
-            Traveler.ProcessState();
-
-            if (_States.CurrentTravelerState == TravelerState.AtDestination)
-            {
-                Traveler.Destination = null;
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool MoveItem(bool pickup)
-        {
-            DirectEve directEve = Cache.Instance.DirectEve;
-
-            // Open the item hangar (should still be open)
-            if (Cache.Instance.ItemHangar == null) return false;
-
-            if (Cache.Instance.CurrentShipsCargo == null) return false;
-
-            DirectContainer from = pickup ? Cache.Instance.ItemHangar : Cache.Instance.CurrentShipsCargo;
-            DirectContainer to = pickup ? Cache.Instance.CurrentShipsCargo : Cache.Instance.ItemHangar;
-
-            // We moved the item
-
-            if (to.Items.Any(i => i.GroupId == (int)Group.MiscSpecialMissionItems || i.GroupId == (int)Group.Livestock))
-                return true;
-
-            if (directEve.GetLockedItems().Count != 0)
-                return false;
-
-            // Move items
-            foreach (DirectItem item in from.Items.Where(i => i.GroupId == (int)Group.MiscSpecialMissionItems || i.GroupId == (int)Group.Livestock))
-            {
-                Logging.Log("GenericCourier", "Moving [" + item.TypeName + "][" + item.ItemId + "] to " + (pickup ? "cargo" : "hangar"), Logging.White);
-                to.Add(item, item.Stacksize);
-            }
-            _nextGenericCourierStorylineAction = DateTime.UtcNow.AddSeconds(10);
-            return false;
-        }
-
         /// <summary>
-        ///   Goto the pickup location
-        ///   Pickup the item
-        ///   Goto drop off location
-        ///   Drop the item
-        ///   Complete mission
+        ///     Goto the pickup location
+        ///     Pickup the item
+        ///     Goto drop off location
+        ///     Drop the item
+        ///     Complete mission
         /// </summary>
         /// <param name="storyline"></param>
         /// <returns></returns>
@@ -205,6 +161,53 @@ namespace Questor.Storylines
             }
 
             return StorylineState.ExecuteMission;
+        }
+
+        private bool GotoMissionBookmark(long agentId, string title)
+        {
+            var destination = Traveler.Destination as MissionBookmarkDestination;
+            if (destination == null || destination.AgentId != agentId || !destination.Title.ToLower().StartsWith(title.ToLower()))
+                Traveler.Destination = new MissionBookmarkDestination(MissionSettings.GetMissionBookmark(agentId, title));
+
+            Traveler.ProcessState();
+
+            if (_States.CurrentTravelerState == TravelerState.AtDestination)
+            {
+                Traveler.Destination = null;
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool MoveItem(bool pickup)
+        {
+            var directEve = Cache.Instance.DirectEve;
+
+            // Open the item hangar (should still be open)
+            if (Cache.Instance.ItemHangar == null) return false;
+
+            if (Cache.Instance.CurrentShipsCargo == null) return false;
+
+            var from = pickup ? Cache.Instance.ItemHangar : Cache.Instance.CurrentShipsCargo;
+            var to = pickup ? Cache.Instance.CurrentShipsCargo : Cache.Instance.ItemHangar;
+
+            // We moved the item
+
+            if (to.Items.Any(i => i.GroupId == (int) Group.MiscSpecialMissionItems || i.GroupId == (int) Group.Livestock))
+                return true;
+
+            if (directEve.GetLockedItems().Count != 0)
+                return false;
+
+            // Move items
+            foreach (var item in from.Items.Where(i => i.GroupId == (int) Group.MiscSpecialMissionItems || i.GroupId == (int) Group.Livestock))
+            {
+                Logging.Log("GenericCourier", "Moving [" + item.TypeName + "][" + item.ItemId + "] to " + (pickup ? "cargo" : "hangar"), Logging.White);
+                to.Add(item, item.Stacksize);
+            }
+            _nextGenericCourierStorylineAction = DateTime.UtcNow.AddSeconds(10);
+            return false;
         }
     }
 }

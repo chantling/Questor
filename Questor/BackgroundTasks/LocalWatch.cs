@@ -1,10 +1,10 @@
-﻿namespace Questor.Modules.BackgroundTasks
-{
-    using System;
-    using global::Questor.Modules.Caching;
-    using global::Questor.Modules.Lookup;
-    using global::Questor.Modules.States;
+﻿using System;
+using Questor.Modules.Caching;
+using Questor.Modules.Lookup;
+using Questor.Modules.States;
 
+namespace Questor.Modules.BackgroundTasks
+{
     public class LocalWatch
     {
         private DateTime _lastAction;

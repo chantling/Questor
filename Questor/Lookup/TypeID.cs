@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace Questor.Modules.Lookup
 {
     public enum TypeID
@@ -28,7 +29,7 @@ namespace Questor.Modules.Lookup
         MetalScraps = 15331,
         ReinforcedMetalScraps = 30497,
 
-        OptimalRangeScript = 	28999,
+        OptimalRangeScript = 28999,
         TrackingSpeedScript = 29001,
         FocusedWarpDisruptionScript = 29003,
         OptimalRangeDisruptionScript = 29005,
@@ -42,28 +43,28 @@ namespace Questor.Modules.Lookup
         CivilianGatlingAutocannon = 3636,
         CivilianGatlingRailgun = 3638,
         CivilianLightElectronBlaster = 3640,
-            
+
         //Minmater Rookie Ship
         //Amarr Rookie Ship
         //Caldari Rookie Ship
         //Gallente Rookie Ship
         Tengu = 29984,
-        Venture = 32880,   //groupID 25 (frigate)
-        Procurer = 17480,  //groupID 463 (Mining barge)
+        Venture = 32880, //groupID 25 (frigate)
+        Procurer = 17480, //groupID 463 (Mining barge)
         Retriever = 17478, //groupID 463 (Mining barge)
-        Covetor = 17476,   //groupID 463 (Mining barge)
-        Skiff = 22546,     //groupID 543 (Exhumer)
-        Mackinaw = 22548,  //groupID 543 (Exhumer)
-        Hulk = 22544,      //groupID 543 (Exhumer)
-        Orca = 28606,      //groupID 941 (Industrial Command Ship)
-        Rorqual = 28352,   //groupID 883 (Capital Industrial Ship)
-        
+        Covetor = 17476, //groupID 463 (Mining barge)
+        Skiff = 22546, //groupID 543 (Exhumer)
+        Mackinaw = 22548, //groupID 543 (Exhumer)
+        Hulk = 22544, //groupID 543 (Exhumer)
+        Orca = 28606, //groupID 941 (Industrial Command Ship)
+        Rorqual = 28352, //groupID 883 (Capital Industrial Ship)
+
 
         //Polaris = 9856,
         //Polaris = 9855 //wtf
 
-        Tritanium =	34,
-        Pyerite	= 35,
+        Tritanium = 34,
+        Pyerite = 35,
         Mexallon = 36,
         Isogen = 37,
         Nocxium = 38,

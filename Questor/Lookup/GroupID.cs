@@ -7,6 +7,7 @@
 //     http://www.thehackerwithin.com/license.htm)
 //   </copyright>
 // -------------------------------------------------------------------------------
+
 namespace Questor.Modules.Lookup
 {
     public enum Group
@@ -63,8 +64,8 @@ namespace Questor.Modules.Lookup
 
         RemoteShieldRepairer = 41,
         RemoteArmorRepairer = 325,
-        RemoteHullRepairer = 585, 
-        WarpDisruptor = 52, 
+        RemoteHullRepairer = 585,
+        WarpDisruptor = 52,
         StasisWeb = 65,
         NOS = 68,
         Neutralizer = 71,
@@ -86,12 +87,12 @@ namespace Questor.Modules.Lookup
         Miners = 54, // Miner I, Miner II, etc - Mining Tool GroupIDs
         StripMiners = 464, // Strip Miner I, etc - Mining Tool GroupIDs
         ModulatedStripMiners = 483, // Modulated Strip Miners, etc - Mining Tool GroupIDs
-        MiningBarge = 463, 
+        MiningBarge = 463,
         Exhumer = 543,
         IndustrialCommandShip = 941,
         CapitalIndustrialShip = 883,
-        
-        SentryGun = 99,                       //Protecting the weak and upholding the law
+
+        SentryGun = 99, //Protecting the weak and upholding the law
 
         ConcordBillboard = 323,
         ProtectiveSentryGun = 180,
@@ -121,7 +122,7 @@ namespace Questor.Modules.Lookup
         Wreck = 186,
 
         PlayerDrone = 100,
-        
+
         Livestock = 283, //this includes most CommonMissionCompletionitems like Militants and Marines
         MiscSpecialMissionItems = 314, //Misc special mission items that should not be on the market and not available from random missions.
 

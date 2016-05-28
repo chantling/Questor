@@ -1,26 +1,23 @@
-using global::Questor.Modules.Lookup;
+using System;
+using System.Linq;
+using DirectEve;
+using Questor.Modules.Caching;
+using Questor.Modules.Logging;
+using Questor.Modules.Lookup;
+using Questor.Modules.States;
 
 namespace Questor.Modules.Actions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using DirectEve;
-    using global::Questor.Modules.Caching;
-    using global::Questor.Modules.States;
-    using global::Questor.Modules.Logging;
-
     public class Buy
     {
+        private DateTime _lastAction;
+
+        private bool _returnBuy;
         public int Item { get; set; }
 
         public int Unit { get; set; }
 
         public bool useOrders { get; set; }
-
-        private DateTime _lastAction;
-
-        private bool _returnBuy;
 
         public void ProcessState()
         {
@@ -30,10 +27,11 @@ namespace Questor.Modules.Actions
             if (Cache.Instance.InSpace)
                 return;
 
-            if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20)) // we wait 20 seconds after we last thought we were in space before trying to do anything in station
+            if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20))
+                // we wait 20 seconds after we last thought we were in space before trying to do anything in station
                 return;
 
-            DirectMarketWindow marketWindow = Cache.Instance.Windows.OfType<DirectMarketWindow>().FirstOrDefault();
+            var marketWindow = Cache.Instance.Windows.OfType<DirectMarketWindow>().FirstOrDefault();
 
             switch (_States.CurrentBuyState)
             {
@@ -64,7 +62,7 @@ namespace Questor.Modules.Actions
                     if (!marketWindow.IsReady)
                         break;
 
-                    Logging.Log("Buy", "Opening Market", Logging.White);
+                    Logging.Logging.Log("Buy", "Opening Market", Logging.Logging.White);
                     _States.CurrentBuyState = BuyState.LoadItem;
 
                     break;
@@ -99,15 +97,16 @@ namespace Questor.Modules.Actions
 
                     if (marketWindow != null)
                     {
-                        IEnumerable<DirectOrder> orders = marketWindow.BuyOrders.Where(o => o.StationId == Cache.Instance.DirectEve.Session.StationId);
+                        var orders = marketWindow.BuyOrders.Where(o => o.StationId == Cache.Instance.DirectEve.Session.StationId);
 
-                        DirectOrder order = orders.OrderByDescending(o => o.Price).FirstOrDefault();
+                        var order = orders.OrderByDescending(o => o.Price).FirstOrDefault();
                         if (order != null)
                         {
-                            double price = order.Price + 0.01;
+                            var price = order.Price + 0.01;
                             if (Cache.Instance.DirectEve.Session.StationId != null)
                             {
-                                Cache.Instance.DirectEve.Buy((int)Cache.Instance.DirectEve.Session.StationId , Item, price, Unit, DirectOrderRange.Station, 1, 30);
+                                Cache.Instance.DirectEve.Buy((int) Cache.Instance.DirectEve.Session.StationId, Item, price, Unit, DirectOrderRange.Station, 1,
+                                    30);
                             }
                         }
                         useOrders = false;
@@ -123,9 +122,9 @@ namespace Questor.Modules.Actions
 
                     if (marketWindow != null)
                     {
-                        IEnumerable<DirectOrder> orders = marketWindow.SellOrders.Where(o => o.StationId == Cache.Instance.DirectEve.Session.StationId);
+                        var orders = marketWindow.SellOrders.Where(o => o.StationId == Cache.Instance.DirectEve.Session.StationId);
 
-                        DirectOrder order = orders.OrderBy(o => o.Price).FirstOrDefault();
+                        var order = orders.OrderBy(o => o.Price).FirstOrDefault();
                         if (order != null)
                         {
                             // Calculate how much we still need
@@ -138,7 +137,7 @@ namespace Questor.Modules.Actions
                             {
                                 order.Buy(Unit, DirectOrderRange.Station);
                                 Unit = Unit - order.VolumeEntered;
-                                Logging.Log("Buy", "Missing " + Convert.ToString(Unit) + " units", Logging.White);
+                                Logging.Logging.Log("Buy", "Missing " + Convert.ToString(Unit) + " units", Logging.Logging.White);
                                 _returnBuy = true;
                                 _States.CurrentBuyState = BuyState.WaitForItems;
                             }
@@ -158,13 +157,13 @@ namespace Questor.Modules.Actions
 
                     if (_returnBuy)
                     {
-                        Logging.Log("Buy", "Return Buy", Logging.White);
+                        Logging.Logging.Log("Buy", "Return Buy", Logging.Logging.White);
                         _returnBuy = false;
                         _States.CurrentBuyState = BuyState.OpenMarket;
                         break;
                     }
 
-                    Logging.Log("Buy", "Done", Logging.White);
+                    Logging.Logging.Log("Buy", "Done", Logging.Logging.White);
                     _States.CurrentBuyState = BuyState.Done;
 
                     break;

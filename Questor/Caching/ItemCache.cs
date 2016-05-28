@@ -8,17 +8,18 @@
 //  </copyright>
 //-------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using DirectEve;
+using Questor.Modules.Lookup;
+using Questor.Modules.States;
+
 namespace Questor.Modules.Caching
 {
-    using System;
-    using System.Collections.Generic;
-    using DirectEve;
-    using global::Questor.Modules.Lookup;
-    using global::Questor.Modules.Logging;
-    using global::Questor.Modules.States;
-
     public class ItemCache
     {
+        private readonly DirectItem _directItem;
+
         public ItemCache(DirectItem item, bool cacheRefineOutput)
         {
             try
@@ -41,12 +42,12 @@ namespace Questor.Modules.Caching
                 RefineOutput = new List<ItemCache>();
                 if (cacheRefineOutput)
                 {
-                    foreach (DirectItem i in item.Materials)
+                    foreach (var i in item.Materials)
                         RefineOutput.Add(new ItemCache(i, false));
                 }
 
                 maxVelocity = item.Attributes.TryGet<int>("maxVelocity");
-                
+
                 emDamage = item.Attributes.TryGet<int>("emDamage");
                 explosiveDamage = item.Attributes.TryGet<int>("explosiveDamage");
                 kineticDamage = item.Attributes.TryGet<int>("explosiveDamage");
@@ -66,7 +67,7 @@ namespace Questor.Modules.Caching
                 agility = item.Attributes.TryGet<int>("agility");
                 explosionDelay = item.Attributes.TryGet<int>("explosionDelay");
                 maxVelocityBonus = item.Attributes.TryGet<int>("maxVelocityBonus");
-                
+
                 //
                 // only useful for AutoCannon / Artillery and Blaster/RailGun ammo should we not pull this info for items that wont have these attributes?!
                 //
@@ -74,12 +75,16 @@ namespace Questor.Modules.Caching
                 weaponRangeMultiplier = item.Attributes.TryGet<int>("weaponRangeMultiplier");
                 trackingSpeedMultiplier = item.Attributes.TryGet<int>("trackingSpeedMultiplier");
                 powerNeedMultiplier = item.Attributes.TryGet<int>("powerNeedMultiplier");
-
             }
             catch (Exception exception)
             {
-                Logging.Log("ItemCache", "Exception [" + exception + "]", Logging.Debug);
+                Logging.Logging.Log("ItemCache", "Exception [" + exception + "]", Logging.Logging.Debug);
             }
+        }
+
+        public ItemCache(DirectItem item)
+        {
+            _directItem = item;
         }
 
         public int maxVelocity { get; set; } //(int)ammo.Attribute("maxVelocity");
@@ -102,7 +107,7 @@ namespace Questor.Modules.Caching
         public int agility { get; set; } //(int)ammo.Attribute("agility");
         public int explosionDelay { get; set; } //(int)ammo.Attribute("explosionDelay");
         public int maxVelocityBonus { get; set; } //(int)ammo.Attribute("maxVelocityBonus");
-        
+
         //
         // only useful for AutoCannons and RailGuns
         //
@@ -110,7 +115,7 @@ namespace Questor.Modules.Caching
         public int weaponRangeMultiplier { get; set; } //(int)ammo.Attribute("weaponRangeMultiplier");
         public int trackingSpeedMultiplier { get; set; } //(int)ammo.Attribute("trackingSpeedMultiplier");
         public int powerNeedMultiplier { get; set; } //(int)ammo.Attribute("powerNeedMultiplier");
-        
+
         public string NameForSorting { get; private set; }
 
         public int GroupId { get; private set; }
@@ -130,13 +135,6 @@ namespace Questor.Modules.Caching
         public double? StationBuy { get; set; }
 
         public List<ItemCache> RefineOutput { get; private set; }
-
-        private readonly DirectItem _directItem;
-
-        public ItemCache(DirectItem item)
-        {
-            _directItem = item;
-        }
 
         public DirectItem DirectItem
         {
@@ -169,12 +167,12 @@ namespace Questor.Modules.Caching
         {
             get
             {
-                bool result = false;
-                result |= (GroupID == (int)Group.Drugs);
-                result |= (GroupID == (int)Group.ToxicWaste);
-                result |= (TypeId == (int)TypeID.Slaves);
-                result |= (TypeId == (int)TypeID.Small_Arms);
-                result |= (TypeId == (int)TypeID.Ectoplasm);
+                var result = false;
+                result |= (GroupID == (int) Group.Drugs);
+                result |= (GroupID == (int) Group.ToxicWaste);
+                result |= (TypeId == (int) TypeID.Slaves);
+                result |= (TypeId == (int) TypeID.Small_Arms);
+                result |= (TypeId == (int) TypeID.Ectoplasm);
                 //result |= (TypeId == (int)TypeID.AIMEDs);
                 return result;
             }
@@ -184,35 +182,35 @@ namespace Questor.Modules.Caching
         {
             get
             {
-                if (TypeId == 41) return true;      // Garbage
-                if (TypeId == 42) return true;      // Spiced Wine
-                if (TypeId == 42) return true;      // Antibiotics
-                if (TypeId == 44) return true;      // Enriched Uranium
-                if (TypeId == 45) return true;      // Frozen Plant Seeds
-                if (TypeId == 3673) return true;    // Wheat
-                if (TypeId == 3699) return true;    // Quafe
-                if (TypeId == 3715) return true;    // Frozen Food
-                if (TypeId == 3717) return true;    // Dairy Products
-                if (TypeId == 3721) return true;    // Slaves
-                if (TypeId == 3723) return true;    // Slaver Hound
-                if (TypeId == 3725) return true;    // Livestock
-                if (TypeId == 3727) return true;    // Plutonium
-                if (TypeId == 3729) return true;    // Toxic Waste
-                if (TypeId == 3771) return true;    // Ectoplasm
-                if (TypeId == 3773) return true;    // Hydrochloric Acid
-                if (TypeId == 3775) return true;    // Viral Agent
-                if (TypeId == 3777) return true;    // Long-limb Roes
-                if (TypeId == 3779) return true;    // Biomass
-                if (TypeId == 3804) return true;    // VIPs
-                if (TypeId == 3806) return true;    // Refugees
-                if (TypeId == 3808) return true;    // Prisoners
+                if (TypeId == 41) return true; // Garbage
+                if (TypeId == 42) return true; // Spiced Wine
+                if (TypeId == 42) return true; // Antibiotics
+                if (TypeId == 44) return true; // Enriched Uranium
+                if (TypeId == 45) return true; // Frozen Plant Seeds
+                if (TypeId == 3673) return true; // Wheat
+                if (TypeId == 3699) return true; // Quafe
+                if (TypeId == 3715) return true; // Frozen Food
+                if (TypeId == 3717) return true; // Dairy Products
+                if (TypeId == 3721) return true; // Slaves
+                if (TypeId == 3723) return true; // Slaver Hound
+                if (TypeId == 3725) return true; // Livestock
+                if (TypeId == 3727) return true; // Plutonium
+                if (TypeId == 3729) return true; // Toxic Waste
+                if (TypeId == 3771) return true; // Ectoplasm
+                if (TypeId == 3773) return true; // Hydrochloric Acid
+                if (TypeId == 3775) return true; // Viral Agent
+                if (TypeId == 3777) return true; // Long-limb Roes
+                if (TypeId == 3779) return true; // Biomass
+                if (TypeId == 3804) return true; // VIPs
+                if (TypeId == 3806) return true; // Refugees
+                if (TypeId == 3808) return true; // Prisoners
                 //if (TypeId == 3810) return true;  // Marines **Common Mission Completion Item
-                if (TypeId == 12865) return true;   // Quafe Ultra
-                if (TypeId == 13267) return true;   // Janitor
-                if (TypeId == 17765) return true;   // Exotic Dancers
-                if (TypeId == 22208) return true;   // Prostitute
-                if (TypeId == 22209) return true;   // Refugee
-                if (TypeId == 22210) return true;   // Cloned SOE officer
+                if (TypeId == 12865) return true; // Quafe Ultra
+                if (TypeId == 13267) return true; // Janitor
+                if (TypeId == 17765) return true; // Exotic Dancers
+                if (TypeId == 22208) return true; // Prostitute
+                if (TypeId == 22209) return true; // Refugee
+                if (TypeId == 22210) return true; // Cloned SOE officer
                 //if (TypeId == 25373) return true;   // Militants **Common Mission Completion Item
                 // people (all the different kinds - ugh?)
                 return false;
@@ -223,30 +221,38 @@ namespace Questor.Modules.Caching
         {
             get
             {
-                if (TypeId == 25373) return true;   // Militants
-                if (TypeId == 3810) return true;    // Marines
-                if (TypeId == 2076) return true;    // Gate Key
-                if (TypeId == 24576) return true;    // Imperial Navy Gate Permit
-                if (TypeId == 28260) return true;   // Zbikoki's Hacker Card
-                if (TypeId == 3814) return true;    // Reports
-                if (TypeId == 24766) return true;    // Ship's Crew
+                if (TypeId == 25373) return true; // Militants
+                if (TypeId == 3810) return true; // Marines
+                if (TypeId == 2076) return true; // Gate Key
+                if (TypeId == 24576) return true; // Imperial Navy Gate Permit
+                if (TypeId == 28260) return true; // Zbikoki's Hacker Card
+                if (TypeId == 3814) return true; // Reports
+                if (TypeId == 24766) return true; // Ship's Crew
 
                 return false;
             }
         }
 
         public bool IsOre
-        {   // GroupIDs listed in this order: Plagioclase	Spodumain	Kernite	Hedbergite	Arkonor	Bistot	Pyroxeres	Crokite	Jaspet	Omber	Scordite	Gneiss	Veldspar	Hemorphite	Dark Ochre Ice
-            get { return GroupID == 458 || GroupID == 461 || GroupID == 457 || GroupID == 454 || GroupID == 450 || GroupID == 451 || GroupID == 459 || GroupID == 452 || GroupID == 456 || GroupID == 469 || GroupID == 460 || GroupID == 467 || GroupID == 462 || GroupID == 455 || GroupID == 453 || GroupID == 465; }
+        {
+            // GroupIDs listed in this order: Plagioclase	Spodumain	Kernite	Hedbergite	Arkonor	Bistot	Pyroxeres	Crokite	Jaspet	Omber	Scordite	Gneiss	Veldspar	Hemorphite	Dark Ochre Ice
+            get
+            {
+                return GroupID == 458 || GroupID == 461 || GroupID == 457 || GroupID == 454 || GroupID == 450 || GroupID == 451 || GroupID == 459 ||
+                       GroupID == 452 || GroupID == 456 || GroupID == 469 || GroupID == 460 || GroupID == 467 || GroupID == 462 || GroupID == 455 ||
+                       GroupID == 453 || GroupID == 465;
+            }
         }
 
         public bool IsLowEndMineral
-        {   // Tritanium, pyerite, mexalon
+        {
+            // Tritanium, pyerite, mexalon
             get { return TypeId == 34 || TypeId == 35 || TypeId == 36; }
         }
 
         public bool IsHighEndMineral
-        {   // isogen, nocxium, zydrine, megacyte
+        {
+            // isogen, nocxium, zydrine, megacyte
             get { return TypeId == 37 || TypeId == 38 || TypeId == 39 || TypeId == 40; }
         }
 
@@ -256,19 +262,21 @@ namespace Questor.Modules.Caching
         }
 
         public bool IsCommonMissionItem
-        {   //Zbikoki's Hacker Card 28260, Reports 3814, Gate Key 2076, Militants 25373, Marines 3810
+        {
+            //Zbikoki's Hacker Card 28260, Reports 3814, Gate Key 2076, Militants 25373, Marines 3810
             get { return TypeId == 28260 || TypeId == 3814 || TypeId == 2076 || TypeId == 25373 || TypeId == 3810; }
         }
 
         public bool InjectSkillBook
-        {   //Zbikoki's Hacker Card 28260, Reports 3814, Gate Key 2076, Militants 25373, Marines 3810
+        {
+            //Zbikoki's Hacker Card 28260, Reports 3814, Gate Key 2076, Militants 25373, Marines 3810
             get
             {
-                if (_directItem.CategoryId == (int)CategoryID.Skill)
+                if (_directItem.CategoryId == (int) CategoryID.Skill)
                 {
-                    _directItem.InjectSkill();    
+                    _directItem.InjectSkill();
                 }
-                
+
                 return false;
             }
         }
@@ -277,10 +285,10 @@ namespace Questor.Modules.Caching
         {
             get
             {
-                if (TypeId == (int)TypeID.CivilianGatlingPulseLaser) return true;
-                if (TypeId == (int)TypeID.CivilianGatlingAutocannon) return true;
-                if (TypeId == (int)TypeID.CivilianGatlingRailgun) return true;
-                if (TypeId == (int)TypeID.CivilianLightElectronBlaster) return true;
+                if (TypeId == (int) TypeID.CivilianGatlingPulseLaser) return true;
+                if (TypeId == (int) TypeID.CivilianGatlingAutocannon) return true;
+                if (TypeId == (int) TypeID.CivilianGatlingRailgun) return true;
+                if (TypeId == (int) TypeID.CivilianLightElectronBlaster) return true;
                 return false;
             }
         }
@@ -289,9 +297,9 @@ namespace Questor.Modules.Caching
         {
             get
             {
-                if (GroupId == (int)Group.EnergyWeapon) return true;
-                if (GroupId == (int)Group.ProjectileWeapon) return true;
-                if (GroupId == (int)Group.HybridWeapon) return true;
+                if (GroupId == (int) Group.EnergyWeapon) return true;
+                if (GroupId == (int) Group.ProjectileWeapon) return true;
+                if (GroupId == (int) Group.HybridWeapon) return true;
                 return false;
             }
         }
@@ -326,14 +334,15 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Log("ItemCache.IsMissionItem", "Exception [" + ex + "]", Logging.Debug);
+                    Logging.Logging.Log("ItemCache.IsMissionItem", "Exception [" + ex + "]", Logging.Logging.Debug);
                     return false;
                 }
             }
         }
 
         public bool IsLootForShipFitting
-        {   //Named 100mn Afterburner, Named Target Painter (PWNAGE),
+        {
+            //Named 100mn Afterburner, Named Target Painter (PWNAGE),
             // this needs attention // fix me
             get { return TypeId == 1 || TypeId == 1; }
         }
@@ -359,7 +368,7 @@ namespace Questor.Modules.Caching
 
         public double TotalVolume
         {
-            get { return _directItem.Volume * Quantity; }
+            get { return _directItem.Volume*Quantity; }
         }
 
         public double? IskPerM3
@@ -372,7 +381,7 @@ namespace Questor.Modules.Caching
                     {
                         if (_directItem.AveragePrice() > 0)
                         {
-                            return _directItem.AveragePrice() / _directItem.Volume;
+                            return _directItem.AveragePrice()/_directItem.Volume;
                         }
 
                         return 0.001;
@@ -382,7 +391,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Log("ItemCache.IskPerM3", "Exception [" + ex + "]", Logging.Debug);
+                    Logging.Logging.Log("ItemCache.IskPerM3", "Exception [" + ex + "]", Logging.Logging.Debug);
                     return null;
                 }
             }
@@ -408,7 +417,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Log("ItemCache.Value","Exception [" + ex + "]",Logging.Debug);
+                    Logging.Logging.Log("ItemCache.Value", "Exception [" + ex + "]", Logging.Logging.Debug);
                     return null;
                 }
             }

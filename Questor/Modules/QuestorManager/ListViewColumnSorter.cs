@@ -13,8 +13,9 @@ namespace QuestorManager
             Fecha
         }
 
-        public TipoCompare CompararPor;
         public int ColumnIndex;
+
+        public TipoCompare CompararPor;
         public SortOrder Sorting = SortOrder.Ascending;
 
         public ListViewColumnSort()
@@ -34,8 +35,8 @@ namespace QuestorManager
             if (Sorting == SortOrder.None)
                 return 0;
 
-            string s1 = ((ListViewItem)a).SubItems[ColumnIndex].Text;
-            string s2 = ((ListViewItem)b).SubItems[ColumnIndex].Text;
+            var s1 = ((ListViewItem) a).SubItems[ColumnIndex].Text;
+            var s2 = ((ListViewItem) b).SubItems[ColumnIndex].Text;
 
             if (Sorting == SortOrder.Descending)
             {
@@ -49,8 +50,8 @@ namespace QuestorManager
                 case TipoCompare.Fecha:
                     try
                     {
-                        DateTime f1 = DateTime.Parse(s1);
-                        DateTime f2 = DateTime.Parse(s2);
+                        var f1 = DateTime.Parse(s1);
+                        var f2 = DateTime.Parse(s2);
 
                         //
                         if (f1 < f2)
@@ -63,14 +64,14 @@ namespace QuestorManager
                     }
                     catch
                     {
-                        return System.String.Compare(s1, s2, System.StringComparison.OrdinalIgnoreCase) * mayor;
+                        return String.Compare(s1, s2, StringComparison.OrdinalIgnoreCase)*mayor;
                     }
 
                 case TipoCompare.Numero:
                     try
                     {
-                        decimal n1 = decimal.Parse(s1);
-                        decimal n2 = decimal.Parse(s2);
+                        var n1 = decimal.Parse(s1);
+                        var n2 = decimal.Parse(s2);
                         if (n1 < n2)
                             return menor;
 
@@ -81,12 +82,12 @@ namespace QuestorManager
                     }
                     catch
                     {
-                        return System.String.Compare(s1, s2, System.StringComparison.OrdinalIgnoreCase) * mayor;
+                        return String.Compare(s1, s2, StringComparison.OrdinalIgnoreCase)*mayor;
                     }
 
                 default:
 
-                    return System.String.Compare(s1, s2, System.StringComparison.OrdinalIgnoreCase) * mayor;
+                    return String.Compare(s1, s2, StringComparison.OrdinalIgnoreCase)*mayor;
             }
         }
     }

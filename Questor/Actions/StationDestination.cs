@@ -8,24 +8,23 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
+using System;
+using DirectEve;
+using Questor.Modules.Caching;
+using Questor.Modules.Lookup;
+
 namespace Questor.Modules.Actions
 {
-    using System;
-    using DirectEve;
-    using global::Questor.Modules.Logging;
-    using global::Questor.Modules.Caching;
-    using global::Questor.Modules.Lookup;
-
     public class StationDestination2 : TravelerDestination
     {
         private DateTime _nextStationAction;
 
         public StationDestination2(long stationId)
         {
-            DirectLocation station = Cache.Instance.DirectEve.Navigation.GetLocation(stationId);
+            var station = Cache.Instance.DirectEve.Navigation.GetLocation(stationId);
             if (station == null || !station.ItemId.HasValue || !station.SolarSystemId.HasValue)
             {
-                Logging.Log("QuestorManager.StationDestination", "Invalid station id [" + stationId + "]", Logging.Red);
+                Logging.Logging.Log("QuestorManager.StationDestination", "Invalid station id [" + stationId + "]", Logging.Logging.Red);
 
                 SolarSystemId = Cache.Instance.DirectEve.Session.SolarSystemId ?? -1;
                 StationId = -1;
@@ -33,7 +32,7 @@ namespace Questor.Modules.Actions
                 return;
             }
 
-            Logging.Log("QuestorManager.StationDestination", "Destination set to [" + station.Name + "]", Logging.White);
+            Logging.Logging.Log("QuestorManager.StationDestination", "Destination set to [" + station.Name + "]", Logging.Logging.White);
 
             StationId = stationId;
             StationName = station.Name;
@@ -43,7 +42,7 @@ namespace Questor.Modules.Actions
 
         public StationDestination2(long solarSystemId, long stationId, string stationName)
         {
-            Logging.Log("QuestorManager.StationDestination", "Destination set to [" + stationName + "]", Logging.White);
+            Logging.Logging.Log("QuestorManager.StationDestination", "Destination set to [" + stationName + "]", Logging.Logging.White);
             //Logging.Log(solarSystemId + " " + stationId + " " + stationName);
 
             SolarSystemId = solarSystemId;
@@ -64,7 +63,7 @@ namespace Questor.Modules.Actions
         {
             if (Cache.Instance.InStation && Cache.Instance.DirectEve.Session.StationId == stationId)
             {
-                Logging.Log("QuestorManager.StationDestination", "Arrived in station", Logging.White);
+                Logging.Logging.Log("QuestorManager.StationDestination", "Arrived in station", Logging.Logging.White);
                 return true;
             }
 
@@ -73,9 +72,10 @@ namespace Questor.Modules.Actions
                 // We are in a station, but not the correct station!
                 if (Time.Instance.NextUndockAction < DateTime.UtcNow)
                 {
-                    if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(45)) //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
+                    if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(45))
+                        //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
                     {
-                        Logging.Log("QuestorManager.StationDestination", "We're docked in the wrong station, undocking", Logging.White);
+                        Logging.Logging.Log("QuestorManager.StationDestination", "We're docked in the wrong station, undocking", Logging.Logging.White);
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
                         Time.Instance.LastDockAction = DateTime.UtcNow;
                         Time.Instance.NextUndockAction = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerExitStationAmIInSpaceYet_seconds);
@@ -96,42 +96,44 @@ namespace Questor.Modules.Actions
             if (nextAction > DateTime.UtcNow)
                 return false;
 
-            EntityCache station = Cache.Instance.EntityByName(stationName);
+            var station = Cache.Instance.EntityByName(stationName);
             if (station == null)
             {
                 // We are there but no station? Wait a bit
                 return false;
             }
 
-            if (station.Distance < (int)Distances.DockingRange)
+            if (station.Distance < (int) Distances.DockingRange)
             {
                 if (station.Dock())
                 {
-                    Logging.Log("StationDestination.StationDestination", "Dock at [" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]", Logging.White);
+                    Logging.Logging.Log("StationDestination.StationDestination",
+                        "Dock at [" + station.Name + "] which is [" + Math.Round(station.Distance/1000, 0) + "k away]", Logging.Logging.White);
                     nextAction = DateTime.UtcNow.AddSeconds(30);
                 }
 
                 return false;
             }
 
-            if (station.Distance < (int)Distances.WarptoDistance)
+            if (station.Distance < (int) Distances.WarptoDistance)
             {
                 if (station.Approach())
                 {
-                    Logging.Log("TravelerDestination.StationDestination", "Approaching [" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]", Logging.White);
+                    Logging.Logging.Log("TravelerDestination.StationDestination",
+                        "Approaching [" + station.Name + "] which is [" + Math.Round(station.Distance/1000, 0) + "k away]", Logging.Logging.White);
                     nextAction = DateTime.UtcNow.AddSeconds(30);
-                }    
+                }
 
                 return false;
             }
 
             if (station.WarpTo())
             {
-                Logging.Log("QuestorManager.StationDestination", "Warp to and dock at [" + station.Name + "]", Logging.White);
+                Logging.Logging.Log("QuestorManager.StationDestination", "Warp to and dock at [" + station.Name + "]", Logging.Logging.White);
                 nextAction = DateTime.UtcNow.AddSeconds(30);
                 return false;
             }
-            
+
 
             return false;
         }

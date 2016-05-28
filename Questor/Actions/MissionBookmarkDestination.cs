@@ -8,14 +8,13 @@
 //   </copyright>
 // -------------------------------------------------------------------------------
 
+using System;
+using System.Linq;
+using DirectEve;
+using Questor.Modules.Caching;
+
 namespace Questor.Modules.Actions
 {
-    using System;
-    using System.Linq;
-    using DirectEve;
-    using global::Questor.Modules.Logging;
-    using global::Questor.Modules.Caching;
-
     public class MissionBookmarkDestination2 : TravelerDestination
     {
         private DateTime _nextAction;
@@ -26,7 +25,7 @@ namespace Questor.Modules.Actions
 
             if (bookmark == null)
             {
-                Logging.Log("QuestorManager.MissionBookmarkDestination", "Invalid mission bookmark!", Logging.Red);
+                Logging.Logging.Log("QuestorManager.MissionBookmarkDestination", "Invalid mission bookmark!", Logging.Logging.Red);
 
                 AgentId = -1;
                 Title = null;
@@ -34,7 +33,8 @@ namespace Questor.Modules.Actions
                 return;
             }
 
-            Logging.Log("QuestorManager.MissionBookmarkDestination", "Destination set to mission bookmark [" + Logging.Yellow + bookmark.Title + Logging.Green + "]", Logging.Green);
+            Logging.Logging.Log("QuestorManager.MissionBookmarkDestination",
+                "Destination set to mission bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]", Logging.Logging.Green);
             AgentId = bookmark.AgentId ?? -1;
             Title = bookmark.Title;
             SolarSystemId = bookmark.SolarSystemId ?? -1;
@@ -51,7 +51,7 @@ namespace Questor.Modules.Actions
 
         private static DirectAgentMissionBookmark GetMissionBookmark(long agentId, string title)
         {
-            DirectAgentMission mission = Cache.Instance.DirectEve.AgentMissions.FirstOrDefault(m => m.AgentId == agentId);
+            var mission = Cache.Instance.DirectEve.AgentMissions.FirstOrDefault(m => m.AgentId == agentId);
             if (mission == null)
                 return null;
 
