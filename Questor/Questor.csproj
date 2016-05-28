@@ -134,9 +134,10 @@
     <Compile Include="Caching\ModuleCache.cs" />
     <Compile Include="Combat\Combat.cs" />
     <Compile Include="Combat\Drones.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\ExampleController.cs" />
-    <Compile Include="Controllers\IController.cs" />
+    <Compile Include="Controllers\Base\BaseController.cs" />
+    <Compile Include="Controllers\Base\ExampleController.cs" />
+    <Compile Include="Controllers\Base\IController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\QuestorController.cs" />
     <Compile Include="DirectEve\D3DDetour\D3D11.cs" />
     <Compile Include="DirectEve\D3DDetour\D3D9.cs" />
@@ -372,6 +373,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controllers\Base" />
     <Folder Include="DirectEve\D3DDetour" />
     <Folder Include="DirectEve\EasyHook" />
     <Folder Include="DirectEve\EasyHook\Domain" />

@@ -29,6 +29,7 @@ namespace Questor
 		int PulseDelayMilliseconds { get; set; }
 		public HashSet<IController> ControllerList;
 		
+		
 		public QuestorControllerManager(int pulseDelayMilliseconds = 800)
 		{
 			
@@ -47,16 +48,27 @@ namespace Questor
 			if (DateTime.UtcNow < NextPulse)
 				return;
 			
-			foreach(IController controller in ControllerList.ToList()){
-				controller.DoWork();
+			foreach(IController controller in ControllerList.Where(a => !a.IsWorkDone).ToList()){
+				
+				var deps = controller.GetControllerDependencies();
+				
+				if(deps.Any()) {
+					// there are denpendencies, lets check if every single one is met
+					if(ControllerList.All( c => deps.Any( d =>  d.Key.Equals(c.GetType()) && d.Value == c.IsWorkDone))) {
+						controller.DoWork();
+					}
+					
+				} else {
+					// no dependencies
+					controller.DoWork();
+				}
 			}
-			
-			RemovedFinishedControllers();
 		}
 		
 		public void AddController(IController controller)
 		{
-			ControllerList.Add(controller);
+			if(ControllerList.All(c => !c.GetType().Equals(controller.GetType())))
+				ControllerList.Add(controller);
 		}
 		
 		public void RemoveAllControllers() {
@@ -65,6 +77,10 @@ namespace Questor
 		
 		public void RemovedFinishedControllers() {
 			ControllerList.RemoveWhere(s => s.IsWorkDone);
+		}
+		
+		public void RemoveControllerOfType(Type t) {
+			ControllerList.RemoveWhere( c => c.GetType().Equals(t)); //RemoveControllerType(typeof(LoginController));
 		}
 		
 		

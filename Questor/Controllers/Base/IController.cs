@@ -9,6 +9,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Questor.Controllers
 {
@@ -19,5 +20,6 @@ namespace Questor.Controllers
     {
         bool IsWorkDone { get; set; }
         void DoWork();
+        Dictionary<Type,Boolean> GetControllerDependencies();
     }
 }

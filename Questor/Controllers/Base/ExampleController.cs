@@ -8,6 +8,7 @@
  */
 using System;
 using Questor.Modules.Logging;
+using System.Collections.Generic;
 
 namespace Questor.Controllers
 {
@@ -23,6 +24,16 @@ namespace Questor.Controllers
 		public ExampleController()
 		{
 			Logging.Log("Starting a new ExampleController");
+		}
+		
+		public override Dictionary<Type,Boolean> GetControllerDependencies() {
+			
+			if(ControllerDependencies == null) {
+				ControllerDependencies = new Dictionary<Type, bool>();
+				ControllerDependencies.Add(typeof(LoginController),false); // means this controller does not run until there is an controller with type of LoginController
+				ControllerDependencies.Add(typeof(QuestorController),true); // means this controller does not run until there is an controller with type of QuestorController AND QuestorController.IsWorkDone == true
+			}
+			return ControllerDependencies;
 		}
 
 		public override void DoWork()

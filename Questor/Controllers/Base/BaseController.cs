@@ -9,6 +9,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Questor.Controllers
 {
@@ -21,6 +22,7 @@ namespace Questor.Controllers
 		protected int RandomFactor { get; set; }
 		public bool IsWorkDone { get; set; }
 		protected DateTime LocalPulse { get; set; }
+		internal Dictionary<Type,Boolean> ControllerDependencies { get; set; }
 		
 		protected BaseController()
 		{
@@ -31,6 +33,13 @@ namespace Questor.Controllers
 		protected bool CanWork { get { return DateTime.UtcNow > LocalPulse; } }
 
 		public abstract void DoWork();
+		
+		public virtual Dictionary<Type,Boolean> GetControllerDependencies() {
+			if(ControllerDependencies == null) {
+				ControllerDependencies = new Dictionary<Type, bool>();
+			}
+				return ControllerDependencies;
+		}
 
 		protected int GetRandom(int minValue, int maxValue)
 		{
@@ -69,7 +78,7 @@ namespace Questor.Controllers
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
-
+		
 		private bool m_Disposed = false;
 
 		protected virtual void Dispose(bool disposing)
