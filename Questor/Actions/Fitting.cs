@@ -33,7 +33,7 @@ namespace Questor.Modules.Actions
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("FactionFitting", "Exception: [" + exception + "]", Logging.Logging.Red);
+                Logging.Logging.Log("Exception: [" + exception + "]");
             }
         }
 
@@ -67,7 +67,7 @@ namespace Questor.Modules.Actions
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("MissionFitting", "Exception: [" + exception + "]", Logging.Logging.Red);
+                Logging.Logging.Log("Exception: [" + exception + "]");
             }
         }
 

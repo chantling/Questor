@@ -58,7 +58,7 @@ namespace Questor.Actions
 
                 if (stateIterations[state] >= maxStateIterations)
                 {
-                    Logging.Log("BuyAmmo", "ERROR:  if (stateIterations[state] >= maxStateIterations)", Logging.White);
+                    Logging.Log("ERROR:  if (stateIterations[state] >= maxStateIterations)");
                     state = BuyAmmoState.Error;
                     return false;
                 }
@@ -92,7 +92,7 @@ namespace Questor.Actions
 
                     if (Cache.Instance.EveAccount.LastAmmoBuy.AddHours(hoursBetweenAmmoBuy) > DateTime.UtcNow) // temporarily disabled
                     {
-                        Logging.Log("BuyAmmo", "We were buying ammo already in the past [" + hoursBetweenAmmoBuy + "] hours.", Logging.White);
+                        Logging.Log("We were buying ammo already in the past [" + hoursBetweenAmmoBuy + "] hours.");
                         state = BuyAmmoState.Done;
                         return;
                     }
@@ -116,9 +116,8 @@ namespace Questor.Actions
                         var minQty = ammo.Quantity*minAmmoMultiplier;
                         if (totalQuantity < minQty)
                         {
-                            Logging.Log("BuyAmmo",
-                                "Total ammo amount in hangar type [" + ammo.TypeId + "] [" + totalQuantity + "] Minimum amount [" + minQty +
-                                "] We're going to buy ammo.", Logging.White);
+                            Logging.Log("Total ammo amount in hangar type [" + ammo.TypeId + "] [" + totalQuantity + "] Minimum amount [" + minQty +
+                                "] We're going to buy ammo.");
                             buy = true;
                             break;
                         }
@@ -154,16 +153,15 @@ namespace Questor.Actions
                             var totalQuantityDrones = Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == droneTypeId).Sum(i => i.Stacksize);
                             if (totalQuantityDrones < minimumDroneAmount)
                             {
-                                Logging.Log("BuyAmmo",
-                                    "Total drone amount in hangar [" + totalQuantityDrones + "]  Minimum amount [" + minimumDroneAmount +
-                                    "] We're going to buy drones of type [" + droneTypeId + "]", Logging.White);
+                                Logging.Log("Total drone amount in hangar [" + totalQuantityDrones + "]  Minimum amount [" + minimumDroneAmount +
+                                    "] We're going to buy drones of type [" + droneTypeId + "]");
                                 buy = true;
                             }
                         }
                     }
 
 
-                    Logging.Log("BuyAmmo", "LastAmmoBuy was on [" + Cache.Instance.EveAccount.LastAmmoBuy + "]", Logging.White);
+                    Logging.Log("LastAmmoBuy was on [" + Cache.Instance.EveAccount.LastAmmoBuy + "]");
 
 
                     if (buy)
@@ -172,7 +170,7 @@ namespace Questor.Actions
                     }
                     else
                     {
-                        Logging.Log("BuyAmmo", "There is still enough ammo avaiable in the itemhangar. Changing state to done.", Logging.White);
+                        Logging.Log("There is still enough ammo avaiable in the itemhangar. Changing state to done.");
                         state = BuyAmmoState.Done;
                     }
 
@@ -212,7 +210,7 @@ namespace Questor.Actions
                             var ship in ships.Where(ship => ship.GivenName != null && ship.GivenName.ToLower() == Settings.Instance.TransportShipName.ToLower())
                             )
                         {
-                            Logging.Log("BuyAmmo", "Making [" + ship.GivenName + "] active", Logging.White);
+                            Logging.Log("Making [" + ship.GivenName + "] active");
                             ship.ActivateShip();
                             nextAction = DateTime.UtcNow.AddSeconds(Time.Instance.SwitchShipsDelay_seconds);
                         }
@@ -246,14 +244,13 @@ namespace Questor.Actions
 
                     if (Cache.Instance.CurrentShipsCargo.Capacity == 0)
                     {
-                        Logging.Log("BuyAmmo", "if(Cache.Instance.CurrentShipsCargo.Capacity == 0)", Logging.White);
+                        Logging.Log("if(Cache.Instance.CurrentShipsCargo.Capacity == 0)");
                         nextAction = DateTime.UtcNow.AddSeconds(5);
                         return;
                     }
 
-                    Logging.Log("BuyAmmo",
-                        "Current [" + Cache.Instance.ActiveShip.GivenName + "] Cargo [" + Cache.Instance.CurrentShipsCargo.Capacity + "] Used Capacity [" +
-                        Cache.Instance.CurrentShipsCargo.UsedCapacity + "] Free Capacity [" + freeCargo + "]", Logging.White);
+                    Logging.Log("Current [" + Cache.Instance.ActiveShip.GivenName + "] Cargo [" + Cache.Instance.CurrentShipsCargo.Capacity + "] Used Capacity [" +
+                        Cache.Instance.CurrentShipsCargo.UsedCapacity + "] Free Capacity [" + freeCargo + "]");
 
 
                     if (Drones.UseDrones)
@@ -287,8 +284,7 @@ namespace Questor.Actions
 
                             if (totalQuantityDrones < minimumDroneAmount)
                             {
-                                Logging.Log("BuyAmmo", "Total drone amount in hangar [" + totalQuantityDrones + "]  Minimum amount [" + minimumDroneAmount + "]",
-                                    Logging.White);
+                                Logging.Log("Total drone amount in hangar [" + totalQuantityDrones + "]  Minimum amount [" + minimumDroneAmount + "]");
                                 buyList.AddOrUpdate(droneTypeId, Drones.BuyAmmoDroneAmmount);
                             }
                         }
@@ -297,7 +293,7 @@ namespace Questor.Actions
                     // here we could also run through our mission xml folder and seach for the bring, trybring items and add them here ( if we dont have them in our hangar )
                     if (Combat.Ammo.Select(a => a.DamageType).Distinct().Count() != 4)
                     {
-                        Logging.Log("BuyAmmo", "ERROR: if (Combat.Ammo.Select(a => a.DamageType).Distinct().Count() != 4)", Logging.White);
+                        Logging.Log("ERROR: if (Combat.Ammo.Select(a => a.DamageType).Distinct().Count() != 4)");
                         state = BuyAmmoState.Error;
                         return;
                     }
@@ -316,8 +312,7 @@ namespace Questor.Actions
 
                         if (!Cache.Instance.DirectEve.InvTypes.ContainsKey(buyListKeyValuePair.Key))
                         {
-                            Logging.Log("BuyAmmo", "TypeId [" + buyListKeyValuePair.Key + "] does not exist in eve invtypes. THIS SHOULD NOT HAPPEN AT ALL.",
-                                Logging.White);
+                            Logging.Log("TypeId [" + buyListKeyValuePair.Key + "] does not exist in eve invtypes. THIS SHOULD NOT HAPPEN AT ALL.");
                             buyList.Remove(buyListKeyValuePair.Key);
                             continue;
                         }
@@ -325,7 +320,7 @@ namespace Questor.Actions
                         var droneInvType = Cache.Instance.DirectEve.InvTypes.FirstOrDefault(d => d.Key == buyListKeyValuePair.Key).Value;
                         var cargoBefore = freeCargo;
                         freeCargo = freeCargo - (buyListKeyValuePair.Value*droneInvType.Volume);
-                        Logging.Log("BuyAmmo", "Drones, Reducing freeCargo from [" + cargoBefore + "] to [" + freeCargo + "]", Logging.White);
+                        Logging.Log("Drones, Reducing freeCargo from [" + cargoBefore + "] to [" + freeCargo + "]");
                     }
 
                     freeCargo = freeCargo*0.995; // leave 0.5% free space
@@ -341,8 +336,7 @@ namespace Questor.Actions
 
                             if (!Cache.Instance.DirectEve.InvTypes.ContainsKey(ammo.TypeId))
                             {
-                                Logging.Log("BuyAmmo", "TypeId [" + ammo.TypeId + "] does not exist in eve invtypes. THIS SHOULD NOT HAPPEN AT ALL.",
-                                    Logging.White);
+                                Logging.Log("TypeId [" + ammo.TypeId + "] does not exist in eve invtypes. THIS SHOULD NOT HAPPEN AT ALL.");
                                 continue;
                             }
 
@@ -365,14 +359,14 @@ namespace Questor.Actions
                         }
                         catch (Exception e)
                         {
-                            Logging.Log("BuyAmmo", "ERROR: foreach(var ammo in Combat.Ammo)", Logging.White);
-                            Logging.Log("BuyAmmo", "Stacktrace [" + e.StackTrace + "]", Logging.White);
+                            Logging.Log("ERROR: foreach(var ammo in Combat.Ammo)");
+                            Logging.Log("Stacktrace [" + e.StackTrace + "]");
                             state = BuyAmmoState.Error;
                             return;
                         }
                     }
 
-                    Logging.Log("BuyAmmo", "Done building the ammoToBuy list:", Logging.White);
+                    Logging.Log("Done building the ammoToBuy list:");
                     var z = 0;
                     double totalVolumeBuyList = 0;
                     foreach (var entry in buyList)
@@ -381,17 +375,16 @@ namespace Questor.Actions
                         var buyTotalVolume = buyInvType.Volume*entry.Value;
                         z++;
 
-                        Logging.Log("BuyAmmo", "[" + z + "] typeID [" + entry.Key + "] amount [" + entry.Value + "] volume [" + buyTotalVolume + "]",
-                            Logging.White);
+                        Logging.Log("[" + z + "] typeID [" + entry.Key + "] amount [" + entry.Value + "] volume [" + buyTotalVolume + "]");
                         totalVolumeBuyList += buyTotalVolume;
                     }
 
                     var currentShipFreeCargo = (Cache.Instance.CurrentShipsCargo.Capacity - Cache.Instance.CurrentShipsCargo.UsedCapacity);
-                    Logging.Log("BuyAmmo", "CurrentShipFreeCargo [" + currentShipFreeCargo + "] BuyListTotalVolume [" + totalVolumeBuyList + "]", Logging.White);
+                    Logging.Log("CurrentShipFreeCargo [" + currentShipFreeCargo + "] BuyListTotalVolume [" + totalVolumeBuyList + "]");
 
                     if (currentShipFreeCargo < totalVolumeBuyList)
                     {
-                        Logging.Log("BuyAmmo", "if(currentShipFreeCargo < totalVolumeBuyList)", Logging.White);
+                        Logging.Log("if(currentShipFreeCargo < totalVolumeBuyList)");
                         state = BuyAmmoState.Error;
                         return;
                     }
@@ -424,7 +417,7 @@ namespace Questor.Actions
 
                     if (_States.CurrentTravelerState == TravelerState.AtDestination)
                     {
-                        Logging.Log("BuyAmmo", "Arrived at destination", Logging.White);
+                        Logging.Log("Arrived at destination");
                         state = BuyAmmoState.BuyAmmo;
                         orderIterations = 0;
                         Traveler.Destination = null;
@@ -436,7 +429,7 @@ namespace Questor.Actions
                     {
                         if (Traveler.Destination != null)
                         {
-                            Logging.Log("BuyAmmo", "Stopped traveling, traveller threw an error...", Logging.White);
+                            Logging.Log("Stopped traveling, traveller threw an error...");
                         }
 
                         Traveler.Destination = null;
@@ -471,7 +464,7 @@ namespace Questor.Actions
                             marketWindow.Close();
                         }
 
-                        Logging.Log("BuyAmmo", "Finished buying changing state to MoveItemsToCargo", Logging.White);
+                        Logging.Log("Finished buying changing state to MoveItemsToCargo");
                         state = BuyAmmoState.MoveItemsToCargo;
                         return;
                     }
@@ -495,10 +488,9 @@ namespace Questor.Actions
                         var ammoItemInHangar = Cache.Instance.ItemHangar.Items.FirstOrDefault(i => i.TypeId == ammoTypeId);
                         if (ammoItemInHangar != null)
                         {
-                            Logging.Log("BuyAmmo",
-                                "We have [" +
+                            Logging.Log("We have [" +
                                 Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == ammoTypeId).Sum(i => i.Stacksize).ToString(CultureInfo.InvariantCulture) +
-                                "] " + ammoItemInHangar.TypeName + " in the item hangar.", Logging.White);
+                                "] " + ammoItemInHangar.TypeName + " in the item hangar.");
                         }
 
                         buyList.Remove(ammoTypeId);
@@ -510,7 +502,7 @@ namespace Questor.Actions
                     {
                         nextAction = DateTime.UtcNow.AddSeconds(10);
 
-                        Logging.Log("BuyAmmo", "Opening market window", Logging.White);
+                        Logging.Log("Opening market window");
 
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenMarket);
                         Statistics.LogWindowActionToWindowLog("MarketWindow", "MarketWindow Opened");
@@ -529,7 +521,7 @@ namespace Questor.Actions
                         // No, load the ammo orders
                         marketWindow.LoadTypeId(ammoTypeId);
 
-                        Logging.Log("BuyAmmo", "Loading market window", Logging.White);
+                        Logging.Log("Loading market window");
 
                         nextAction = DateTime.UtcNow.AddSeconds(10);
                         return;
@@ -547,9 +539,8 @@ namespace Questor.Actions
                         var avgPrice = currentAmmoDirectItem.GetAverAgePrice;
                         var basePrice = currentAmmoDirectItem.BasePrice/currentAmmoDirectItem.PortionSize;
 
-                        Logging.Log("BuyAmmo",
-                            "Item [" + currentAmmoDirectItem.TypeName + "] avgPrice [" + avgPrice + "] basePrice [" + basePrice + "] groupID [" +
-                            currentAmmoDirectItem.GroupId + "] groupName [" + currentAmmoDirectItem.GroupId + "]", Logging.Orange);
+                        Logging.Log("Item [" + currentAmmoDirectItem.TypeName + "] avgPrice [" + avgPrice + "] basePrice [" + basePrice + "] groupID [" +
+                            currentAmmoDirectItem.GroupId + "] groupName [" + currentAmmoDirectItem.GroupId + "]");
 
 
                         if (avgPrice != 0)
@@ -568,21 +559,20 @@ namespace Questor.Actions
                                     // if everything else falls through we limit the price to 1000 isk to not get fooled by market manipulations, this also passively disables buying drones
                             }
                         }
-                        Logging.Log("BuyAmmo", "Item [" + currentAmmoDirectItem.TypeName + "] avgPrice [" + avgPrice + "] basePrice [" + basePrice + "]",
-                            Logging.Orange);
+                        Logging.Log("Item [" + currentAmmoDirectItem.TypeName + "] avgPrice [" + avgPrice + "] basePrice [" + basePrice + "]");
                     }
 
                     // Are there any orders with an reasonable price?
                     IEnumerable<DirectOrder> orders;
                     if (maxPrice == 0)
                     {
-                        Logging.Log("BuyAmmo", "if(maxPrice == 0)", Logging.Orange);
+                        Logging.Log("if(maxPrice == 0)");
                         orders =
                             marketWindow.SellOrders.Where(o => o.StationId == Cache.Instance.DirectEve.Session.StationId && o.TypeId == ammoTypeId).ToList();
                     }
                     else
                     {
-                        Logging.Log("BuyAmmo", "if(maxPrice != 0) max price [" + maxPrice + "]", Logging.Orange);
+                        Logging.Log("if(maxPrice != 0) max price [" + maxPrice + "]");
                         orders =
                             marketWindow.SellOrders.Where(
                                 o => o.StationId == Cache.Instance.DirectEve.Session.StationId && o.Price < maxPrice && o.TypeId == ammoTypeId).ToList();
@@ -600,7 +590,7 @@ namespace Questor.Actions
                     // Is there any order left?
                     if (!orders.Any())
                     {
-                        Logging.Log("BuyAmmo", "No reasonably priced ammo available! Removing this item from the buyList", Logging.Orange);
+                        Logging.Log("No reasonably priced ammo available! Removing this item from the buyList");
                         buyList.Remove(ammoTypeId);
                         nextAction = DateTime.UtcNow.AddSeconds(3);
                         return;
@@ -620,7 +610,7 @@ namespace Questor.Actions
 
                             if (orderPrice < Cache.Instance.MyWalletBalance)
                             {
-                                Logging.Log("BuyAmmo", "Buying [" + remaining + "] ammo price [" + order.Price + "]", Logging.White);
+                                Logging.Log("Buying [" + remaining + "] ammo price [" + order.Price + "]");
                                 order.Buy(remaining, DirectOrderRange.Station);
 
                                 // Wait for the order to go through
@@ -628,7 +618,7 @@ namespace Questor.Actions
                             }
                             else
                             {
-                                Logging.Log("BuyAmmo", "ERROR: We don't have enough ISK on our wallet to finish that transaction.", Logging.White);
+                                Logging.Log("ERROR: We don't have enough ISK on our wallet to finish that transaction.");
                                 state = BuyAmmoState.Error;
                                 return;
                             }
@@ -664,12 +654,12 @@ namespace Questor.Actions
                         var maxVolumeToMove = Math.Min(ammoItem.Stacksize, moveToCargoList[ammoItem.TypeId]);
                         maxVolumeToMove = Math.Max(1, maxVolumeToMove);
 
-                        Logging.Log("BuyAmmo", "Moving ammo to cargohold", Logging.White);
+                        Logging.Log("Moving ammo to cargohold");
                         Cache.Instance.CurrentShipsCargo.Add(ammoItem, maxVolumeToMove);
                         return;
                     }
 
-                    Logging.Log("BuyAmmo", "Done moving ammo to cargohold", Logging.White);
+                    Logging.Log("Done moving ammo to cargohold");
                     state = BuyAmmoState.Done;
                     break;
 
@@ -696,7 +686,7 @@ namespace Questor.Actions
                     state = BuyAmmoState.DisabledForThisSession;
                     _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.DelayedGotoBase;
                     _States.CurrentArmState = ArmState.Idle;
-                    Logging.Log("BuyAmmo", "ERROR. BuyAmmo should stay disabled while this session is still active.", Logging.White);
+                    Logging.Log("ERROR. BuyAmmo should stay disabled while this session is still active.");
                     break;
 
                 case BuyAmmoState.DisabledForThisSession:

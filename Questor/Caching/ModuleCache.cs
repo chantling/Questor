@@ -114,7 +114,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("ModuleCache.RemoteRepairDistance", "Exception [ " + ex + " ]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [ " + ex + " ]");
                 }
 
                 return 0;
@@ -190,10 +190,8 @@ namespace Questor.Modules.Caching
                     if (DateTime.UtcNow < Time.Instance.LastReloadedTimeStamp[ItemId].AddSeconds(reloadDelayToUseForThisWeapon))
                     {
                         if (Logging.Logging.DebugActivateWeapons)
-                            Logging.Logging.Log("ModuleCache",
-                                "TypeName: [" + _module.TypeName + "] This module is likely still reloading! Last reload was [" +
-                                Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastReloadedTimeStamp[ItemId]).TotalSeconds, 0) + "sec ago]",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("TypeName: [" + _module.TypeName + "] This module is likely still reloading! Last reload was [" +
+                                Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastReloadedTimeStamp[ItemId]).TotalSeconds, 0) + "sec ago]");
                         return true;
                     }
                 }
@@ -365,7 +363,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("InLimboState", "IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]", Logging.Logging.Red);
+                    Logging.Logging.Log("IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]");
                     return false;
                 }
             }
@@ -388,7 +386,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("InLimboState", "IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]", Logging.Logging.Red);
+                    Logging.Logging.Log("IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]");
                     return false;
                 }
             }
@@ -412,9 +410,7 @@ namespace Questor.Modules.Caching
                 {
                     if (!InLimboState)
                     {
-                        Logging.Logging.Log("ReloadAmmo",
-                            "Reloading [" + weaponNumber + "] [" + _module.TypeName + "] with [" + charge.TypeName + "][" + Math.Round(Range/1000, 0) + "]",
-                            Logging.Logging.Teal);
+                        Logging.Logging.Log("Reloading [" + weaponNumber + "] [" + _module.TypeName + "] with [" + charge.TypeName + "][" + Math.Round(Range / 1000, 0) + "]");
                         _module.ReloadAmmo(charge);
                         Time.Instance.LastReloadedTimeStamp[ItemId] = DateTime.UtcNow;
                         if (Time.Instance.ReloadTimePerModule.ContainsKey(ItemId))
@@ -430,16 +426,15 @@ namespace Questor.Modules.Caching
                         return true;
                     }
 
-                    Logging.Logging.Log("ReloadAmmo", "[" + weaponNumber + "][" + _module.TypeName + "] is currently in a limbo state, waiting",
-                        Logging.Logging.Teal);
+                    Logging.Logging.Log("[" + weaponNumber + "][" + _module.TypeName + "] is currently in a limbo state, waiting");
                     return false;
                 }
 
-                Logging.Logging.Log("ReloadAmmo", "[" + weaponNumber + "][" + _module.TypeName + "] is already changing ammo, waiting", Logging.Logging.Teal);
+                Logging.Logging.Log("[" + weaponNumber + "][" + _module.TypeName + "] is already changing ammo, waiting");
                 return false;
             }
 
-            Logging.Logging.Log("ReloadAmmo", "[" + weaponNumber + "][" + _module.TypeName + "] is already reloading, waiting", Logging.Logging.Teal);
+            Logging.Logging.Log("[" + weaponNumber + "][" + _module.TypeName + "] is already reloading, waiting");
             return false;
         }
 
@@ -451,7 +446,7 @@ namespace Questor.Modules.Caching
                 {
                     if (!InLimboState)
                     {
-                        Logging.Logging.Log("ReloadAmmo", "[" + _module.TypeName + "]" + "Calling UnloadToCargo()", Logging.Logging.White);
+                        Logging.Logging.Log("[" + _module.TypeName + "]" + "Calling UnloadToCargo()");
                         _module.UnloadToCargo();
                     }
                 }
@@ -468,9 +463,8 @@ namespace Questor.Modules.Caching
                     if (!InLimboState)
                     {
                         _module.ChangeAmmo(charge);
-                        Logging.Logging.Log("ChangeAmmo",
-                            "Changing [" + weaponNumber + "][" + _module.TypeName + "] with [" + charge.TypeName + "][" + Math.Round(Range/1000, 0) +
-                            "] so we can hit [" + entityName + "][" + Math.Round(entityDistance/1000, 0) + "k]", Logging.Logging.Teal);
+                        Logging.Logging.Log("Changing [" + weaponNumber + "][" + _module.TypeName + "] with [" + charge.TypeName + "][" + Math.Round(Range / 1000, 0) +
+                            "] so we can hit [" + entityName + "][" + Math.Round(entityDistance / 1000, 0) + "k]");
                         Time.Instance.LastChangedAmmoTimeStamp[ItemId] = DateTime.UtcNow;
                         if (Time.Instance.ReloadTimePerModule.ContainsKey(ItemId))
                         {
@@ -485,16 +479,15 @@ namespace Questor.Modules.Caching
                         return true;
                     }
 
-                    Logging.Logging.Log("ChangeAmmo", "[" + weaponNumber + "][" + _module.TypeName + "] is currently in a limbo state, waiting",
-                        Logging.Logging.Teal);
+                    Logging.Logging.Log("[" + weaponNumber + "][" + _module.TypeName + "] is currently in a limbo state, waiting");
                     return false;
                 }
 
-                Logging.Logging.Log("ChangeAmmo", "[" + weaponNumber + "][" + _module.TypeName + "] is already changing ammo, waiting", Logging.Logging.Teal);
+                Logging.Logging.Log("[" + weaponNumber + "][" + _module.TypeName + "] is already changing ammo, waiting");
                 return false;
             }
 
-            Logging.Logging.Log("ChangeAmmo", "[" + weaponNumber + "][" + _module.TypeName + "] is already reloading, waiting", Logging.Logging.Teal);
+            Logging.Logging.Log("[" + weaponNumber + "][" + _module.TypeName + "] is already reloading, waiting");
             return false;
         }
 
@@ -505,14 +498,14 @@ namespace Questor.Modules.Caching
                 if (InLimboState || ClickCountThisFrame > 0)
                 {
                     if (Logging.Logging.DebugDefense)
-                        Logging.Logging.Log("ModuleCache.Click", "if (InLimboState || ClickCountThisFrame > 0)", Logging.Logging.Debug);
+                        Logging.Logging.Log("if (InLimboState || ClickCountThisFrame > 0)");
                     return false;
                 }
 
                 if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(5))
                 {
                     if (Logging.Logging.DebugDefense)
-                        Logging.Logging.Log("ModuleCache.Click", "if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(5))", Logging.Logging.Debug);
+                        Logging.Logging.Log("if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(5))");
                     return false;
                 }
 
@@ -521,9 +514,7 @@ namespace Questor.Modules.Caching
                     if (DateTime.UtcNow < Time.Instance.LastClickedTimeStamp[ItemId].AddMilliseconds(Settings.Instance.EnforcedDelayBetweenModuleClicks))
                     {
                         if (Logging.Logging.DebugDefense)
-                            Logging.Logging.Log("ModuleCache.Click",
-                                "if (DateTime.UtcNow < Time.Instance.LastClickedTimeStamp[ItemId].AddMilliseconds(Settings.Instance.EnforcedDelayBetweenModuleClicks))",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("if (DateTime.UtcNow < Time.Instance.LastClickedTimeStamp[ItemId].AddMilliseconds(Settings.Instance.EnforcedDelayBetweenModuleClicks))");
                         return false;
                     }
 
@@ -533,8 +524,7 @@ namespace Questor.Modules.Caching
                         if (DateTime.UtcNow < Time.Instance.LastClickedTimeStamp[ItemId].AddMilliseconds(CycleTime))
                         {
                             if (Logging.Logging.DebugDefense)
-                                Logging.Logging.Log("ModuleCache.Click",
-                                    "if (DateTime.UtcNow < Time.Instance.LastClickedTimeStamp[ItemId].AddMilliseconds(CycleTime))", Logging.Logging.Debug);
+                                Logging.Logging.Log("if (DateTime.UtcNow < Time.Instance.LastClickedTimeStamp[ItemId].AddMilliseconds(CycleTime))");
                             return false;
                         }
                     }
@@ -565,7 +555,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Click", "ModuleCache.Click - Exception: [" + exception + "]", Logging.Logging.Red);
+                Logging.Logging.Log("ModuleCache.Click - Exception: [" + exception + "]");
                 return false;
             }
         }
@@ -588,9 +578,7 @@ namespace Questor.Modules.Caching
                     if (DateTime.UtcNow < Time.Instance.LastReloadedTimeStamp[ItemId].AddSeconds(Time.Instance.ReloadWeaponDelayBeforeUsable_seconds))
                     {
                         if (Logging.Logging.DebugActivateWeapons)
-                            Logging.Logging.Log("Activate",
-                                "TypeName: [" + _module.TypeName + "] This module is likely still reloading! aborting activating this module.",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("TypeName: [" + _module.TypeName + "] This module is likely still reloading! aborting activating this module.");
                         return false;
                     }
                 }
@@ -600,26 +588,22 @@ namespace Questor.Modules.Caching
                     if (DateTime.UtcNow < Time.Instance.LastChangedAmmoTimeStamp[ItemId].AddSeconds(Time.Instance.ReloadWeaponDelayBeforeUsable_seconds))
                     {
                         if (Logging.Logging.DebugActivateWeapons)
-                            Logging.Logging.Log("Activate",
-                                "TypeName: [" + _module.TypeName + "] This module is likely still changing ammo! aborting activating this module.",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("TypeName: [" + _module.TypeName + "] This module is likely still changing ammo! aborting activating this module.");
                         return false;
                     }
                 }
 
                 if (!target.IsTarget)
                 {
-                    Logging.Logging.Log("Activate",
-                        "Target [" + target.Name + "][" + Math.Round(target.Distance/1000, 2) + "]IsTargeting[" + target.IsTargeting +
-                        "] was not locked, aborting activating module as we cant activate a module on something that is not locked!", Logging.Logging.Debug);
+                    Logging.Logging.Log("Target [" + target.Name + "][" + Math.Round(target.Distance / 1000, 2) + "]IsTargeting[" + target.IsTargeting +
+                        "] was not locked, aborting activating module as we cant activate a module on something that is not locked!");
                     return false;
                 }
 
                 if (target.IsEwarImmune && IsEwarModule)
                 {
-                    Logging.Logging.Log("Activate",
-                        "Target [" + target.Name + "][" + Math.Round(target.Distance/1000, 2) + "]IsEwarImmune[" + target.IsEwarImmune +
-                        "] is EWar Immune and Module [" + _module.TypeName + "] isEwarModule [" + IsEwarModule + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Target [" + target.Name + "][" + Math.Round(target.Distance / 1000, 2) + "]IsEwarImmune[" + target.IsEwarImmune +
+                        "] is EWar Immune and Module [" + _module.TypeName + "] isEwarModule [" + IsEwarModule + "]");
                     return false;
                 }
 
@@ -635,7 +619,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Activate", "IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]", Logging.Logging.Red);
+                Logging.Logging.Log("IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]");
                 return false;
             }
         }

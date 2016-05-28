@@ -25,7 +25,7 @@ namespace Questor.Modules.Actions
 
             if (bookmark == null)
             {
-                Logging.Logging.Log("QuestorManager.MissionBookmarkDestination", "Invalid mission bookmark!", Logging.Logging.Red);
+                Logging.Logging.Log("Invalid mission bookmark!");
 
                 AgentId = -1;
                 Title = null;
@@ -33,8 +33,7 @@ namespace Questor.Modules.Actions
                 return;
             }
 
-            Logging.Logging.Log("QuestorManager.MissionBookmarkDestination",
-                "Destination set to mission bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]", Logging.Logging.Green);
+            Logging.Logging.Log("Destination set to mission bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]");
             AgentId = bookmark.AgentId ?? -1;
             Title = bookmark.Title;
             SolarSystemId = bookmark.SolarSystemId ?? -1;

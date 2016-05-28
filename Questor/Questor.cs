@@ -51,7 +51,7 @@ namespace Questor
 
             if (Cache.Instance.DirectEve == null)
             {
-                Logging.Log("Startup", "Error on Loading DirectEve, maybe server is down", Logging.Orange);
+                Logging.Log("Error on Loading DirectEve, maybe server is down");
                 Cache.Instance.CloseQuestorCMDLogoff = false;
                 Cache.Instance.CloseQuestorCMDExitGame = true;
                 Cache.Instance.CloseQuestorEndProcess = true;
@@ -70,20 +70,18 @@ namespace Questor
 
             // get the physical mem usage
             Cache.Instance.TotalMegaBytesOfMemoryUsed = ((currentProcess.WorkingSet64 + 1/1024)/1024);
-            Logging.Log("Questor",
-                "EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB",
-                Logging.White);
+            Logging.Log("EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB");
 
             Settings.Instance.CharacterMode = "none";
 
             try
             {
-                Logging.Log("Questor", "Register EVEOnFrame Event", Logging.White);
+                Logging.Log("Register EVEOnFrame Event");
                 Cache.Instance.DirectEve.OnFrame += EVEOnFrame;
             }
             catch (Exception ex)
             {
-                Logging.Log("Questor", string.Format("DirectEVE.OnFrame: Exception {0}...", ex), Logging.White);
+                Logging.Log(string.Format("DirectEVE.OnFrame: Exception {0}...", ex));
                 Cache.Instance.CloseQuestorCMDLogoff = false;
                 Cache.Instance.CloseQuestorCMDExitGame = true;
                 Cache.Instance.CloseQuestorEndProcess = true;
@@ -94,7 +92,7 @@ namespace Questor
             }
 
 
-            Logging.Log("Questor", "Questor.", Logging.White);
+            Logging.Log("Questor.");
 
             questor = this;
         }
@@ -119,7 +117,7 @@ namespace Questor
                 }
                 else
                 {
-                    Logging.Log("RunOnceAfterStartup", "Settings.Instance.CharacterName is still null", Logging.Orange);
+                    Logging.Log("Settings.Instance.CharacterName is still null");
                     Time.Instance.NextStartupAction = DateTime.UtcNow.AddSeconds(10);
                     _runOnceAfterStartupalreadyProcessed = false;
                     return;
@@ -138,8 +136,7 @@ namespace Questor
                     if (!string.IsNullOrEmpty(Settings.Instance.AmmoHangarTabName) ||
                         !string.IsNullOrEmpty(Settings.Instance.LootHangarTabName) && Cache.Instance.InStation)
                     {
-                        Logging.Log("RunOnceAfterStartup",
-                            "Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenCorpHangar);", Logging.Debug);
+                        Logging.Log("Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenCorpHangar);");
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenCorpHangar);
                         Statistics.LogWindowActionToWindowLog("CorpHangar", "CorpHangar Opened");
                     }
@@ -149,7 +146,7 @@ namespace Questor
                 }
                 else
                 {
-                    Logging.Log("RunOnceAfterStartup", "Settings.Instance.CharacterName is still null", Logging.Orange);
+                    Logging.Log("Settings.Instance.CharacterName is still null");
                     Time.Instance.NextStartupAction = DateTime.UtcNow.AddSeconds(10);
                     _runOnceInStationAfterStartupalreadyProcessed = false;
                     return;
@@ -167,7 +164,7 @@ namespace Questor
         {
             _watch.Stop();
             if (Logging.DebugPerformance)
-                Logging.Log(whatWeAreTiming, " took " + _watch.ElapsedMilliseconds + "ms", Logging.White);
+                Logging.Log(" took " + _watch.ElapsedMilliseconds + "ms");
         }
 
         protected static int GetRandom(int minValue, int maxValue)
@@ -189,7 +186,7 @@ namespace Questor
 
             if (Cache.Instance.ExitWhenIdle)
             {
-                Logging.Log("Questor", "ExitWhenIdle set to true.  Quitting game.", Logging.White);
+                Logging.Log("ExitWhenIdle set to true.  Quitting game.");
                 Cleanup.ReasonToStopQuestor = "ExitWhenIdle set to true";
                 Settings.Instance.AutoStart = false;
                 Cache.Instance.CloseQuestorCMDLogoff = false;
@@ -210,18 +207,14 @@ namespace Questor
             //Logging.Log("[Questor] Wallet Balance Debug Info: DateTime.UtcNow - LastKnownGoodConnectedTime = " + DateTime.UtcNow.Subtract(Settings.Instance.LastKnownGoodConnectedTime).TotalSeconds);
             if (Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes) > 1)
             {
-                Logging.Log("Questor.WalletCheck",
-                    String.Format("Wallet Balance Has Not Changed in [ {0} ] minutes.",
-                        Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes, 0)),
-                    Logging.White);
+                Logging.Log(String.Format("Wallet Balance Has Not Changed in [ {0} ] minutes.",
+                    Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes, 0)));
             }
 
             if (Logging.DebugWalletBalance)
             {
-                Logging.Log("Questor.WalletCheck",
-                    String.Format("DEBUG: Wallet Balance [ {0} ] has been checked.",
-                        Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes, 0)),
-                    Logging.Yellow);
+                Logging.Log(String.Format("DEBUG: Wallet Balance [ {0} ] has been checked.",
+                    Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes, 0)));
             }
 
             //Settings.Instance.WalletBalanceChangeLogOffDelay = 2;  //used for debugging purposes
@@ -239,8 +232,7 @@ namespace Questor
                 }
                 catch (Exception exception)
                 {
-                    Logging.Log("Questor.WalletCheck",
-                        "Checking my wallet balance caused an exception [" + exception + "]", Logging.White);
+                    Logging.Log("Checking my wallet balance caused an exception [" + exception + "]");
                 }
             }
             else if (Settings.Instance.WalletBalanceChangeLogOffDelay != 0)
@@ -249,11 +241,10 @@ namespace Questor
                     (Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes) >
                      Settings.Instance.WalletBalanceChangeLogOffDelay + 5))
                 {
-                    Logging.Log("Questor",
-                        String.Format(
+                    Logging.Log(String.Format(
                             "Questor: Wallet Balance Has Not Changed in [ {0} ] minutes. Switching to QuestorState.CloseQuestor",
-                            Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes,
-                                0)), Logging.White);
+                        Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes,
+                            0)));
                     Cleanup.ReasonToStopQuestor = "Wallet Balance did not change for over " +
                                                   Settings.Instance.WalletBalanceChangeLogOffDelay + "min";
                     Cache.Instance.CloseQuestorCMDLogoff = false;
@@ -283,9 +274,7 @@ namespace Questor
                     Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
                 {
                     if (Logging.DebugQuestorEVEOnFrame)
-                        Logging.Log("Questor.ProcessState",
-                            "if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))",
-                            Logging.Debug);
+                        Logging.Log("if (DateTime.UtcNow < Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))");
                     return false;
                 }
 
@@ -301,8 +290,7 @@ namespace Questor
                 if (!Cache.Instance.InSpace && !Cache.Instance.InStation)
                 {
                     if (Logging.DebugQuestorEVEOnFrame)
-                        Logging.Log("Questor.ProcessState", "if (!Cache.Instance.InSpace && !Cache.Instance.InStation)",
-                            Logging.Debug);
+                        Logging.Log("if (!Cache.Instance.InSpace && !Cache.Instance.InStation)");
                     return false;
                 }
 
@@ -314,15 +302,15 @@ namespace Questor
                 // Session is not ready yet, do not continue
                 if (!Cache.Instance.DirectEve.Session.IsReady)
                 {
-                    Logging.Log("Questor.ProcessState", "if (!Cache.Instance.DirectEve.Session.IsReady)", Logging.Debug);
+                    Logging.Log("if (!Cache.Instance.DirectEve.Session.IsReady)");
                     return false;
                 }
 
                 if (Logging.DebugQuestorEVEOnFrame)
-                    Logging.Log("Questor.ProcessState", "Cleanup.ProcessState();", Logging.Debug);
+                    Logging.Log("Cleanup.ProcessState();");
                 Cleanup.ProcessState();
                 if (Logging.DebugQuestorEVEOnFrame)
-                    Logging.Log("Questor.ProcessState", "Statistics.ProcessState();", Logging.Debug);
+                    Logging.Log("Statistics.ProcessState();");
                 Statistics.ProcessState();
 
                 if (Cache.Instance.DirectEve.Session.IsReady)
@@ -334,15 +322,13 @@ namespace Questor
                 {
                     if (Cache.Instance.ActiveShip.GroupId == (int) Group.Capsule)
                     {
-                        Logging.Log("Panic", "We are in a pod. Don't wait for the session wait timer to expire!",
-                            Logging.Red);
+                        Logging.Log("We are in a pod. Don't wait for the session wait timer to expire!");
                         Time.Instance.NextInSpaceorInStation = DateTime.UtcNow;
                         return true;
                     }
 
                     if (Logging.DebugQuestorEVEOnFrame)
-                        Logging.Log("Questor.ProcessState",
-                            "if (DateTime.UtcNow < Time.Instance.NextInSpaceorInStation)", Logging.Debug);
+                        Logging.Log("if (DateTime.UtcNow < Time.Instance.NextInSpaceorInStation)");
                     return false;
                 }
 
@@ -365,7 +351,7 @@ namespace Questor
             }
             catch (Exception ex)
             {
-                Logging.Log("Questor.OnframeProcessEveryPulse", "Exception [" + ex + "]", Logging.Debug);
+                Logging.Log("Exception [" + ex + "]");
                 return false;
             }
         }
@@ -455,9 +441,7 @@ namespace Questor
                 {
                     if (Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)
                     {
-                        Logging.Log("LoginOnFrame",
-                            "if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)",
-                            Logging.White);
+                        Logging.Log("if(Cache.Instance.DirectEve.Login.IsConnecting || Cache.Instance.DirectEve.Login.IsLoading)");
                         _nextPulse = UTCNowAddDelay(2, 4);
                         return;
                     }
@@ -466,9 +450,8 @@ namespace Questor
 
                     if (DateTime.UtcNow < _lastServerStatusCheckWasNotOK.AddSeconds(Cache.Instance.RandomNumber(4, 7)))
                     {
-                        Logging.Log("LoginOnFrame",
-                            "lastServerStatusCheckWasNotOK = [" + _lastServerStatusCheckWasNotOK.ToShortTimeString() +
-                            "] waiting 10 to 20 seconds.", Logging.White);
+                        Logging.Log("lastServerStatusCheckWasNotOK = [" + _lastServerStatusCheckWasNotOK.ToShortTimeString() +
+                            "] waiting 10 to 20 seconds.");
                         return;
                     }
 
@@ -478,11 +461,11 @@ namespace Questor
                     if (DateTime.UtcNow < _nextPulse)
                     {
                         if (Logging.DebugOnframe)
-                            Logging.Log("LoginOnFrame", "if (DateTime.UtcNow < _nextPulse)", Logging.White);
+                            Logging.Log("if (DateTime.UtcNow < _nextPulse)");
                         return;
                     }
 
-                    if (Logging.DebugOnframe) Logging.Log("LoginOnFrame", "Pulse...", Logging.White);
+                    if (Logging.DebugOnframe) Logging.Log("Pulse...");
 
 
                     _nextPulse = DateTime.UtcNow.AddMilliseconds(Time.Instance.QuestorBeforeLoginPulseDelay_milliseconds);
@@ -497,16 +480,13 @@ namespace Questor
 
                     if (Cache._humanInterventionRequired)
                     {
-                        Logging.Log("Startup",
-                            "OnFrame: _humanInterventionRequired is true (this will spam every second or so)",
-                            Logging.Orange);
+                        Logging.Log("OnFrame: _humanInterventionRequired is true (this will spam every second or so)");
                         _nextPulse = _nextPulse.AddMinutes(2);
                         return;
                     }
 
                     if (Logging.DebugOnframe)
-                        Logging.Log("LoginOnFrame", "before: if (Cache.Instance.DirectEve.Windows.Count != 0)",
-                            Logging.White);
+                        Logging.Log("before: if (Cache.Instance.DirectEve.Windows.Count != 0)");
 
                     // We should not get any windows
                     if (Cache.Instance.DirectEve.Windows.Count != 0)
@@ -515,17 +495,16 @@ namespace Questor
                         {
                             if (string.IsNullOrEmpty(window.Html))
                                 continue;
-                            Logging.Log("Startup", "WindowTitles:" + window.Name + "::" + window.Html, Logging.White);
+                            Logging.Log("WindowTitles:" + window.Name + "::" + window.Html);
 
                             //
                             // Close these windows and continue
                             //
                             if (window.Name == "telecom" && !Logging.DebugDoNotCloseTelcomWindows)
                             {
-                                Logging.Log("Startup", "Closing telecom message...", Logging.Yellow);
-                                Logging.Log("Startup",
-                                    "Content of telecom window (HTML): [" +
-                                    (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Yellow);
+                                Logging.Log("Closing telecom message...");
+                                Logging.Log("Content of telecom window (HTML): [" +
+                                    (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                 window.Close();
                                 continue;
                             }
@@ -623,20 +602,18 @@ namespace Questor
 
                                 if (sayYes)
                                 {
-                                    Logging.Log("Startup", "Found a window that needs 'yes' chosen...", Logging.White);
-                                    Logging.Log("Startup",
-                                        "Content of modal window (HTML): [" +
-                                        (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.White);
+                                    Logging.Log("Found a window that needs 'yes' chosen...");
+                                    Logging.Log("Content of modal window (HTML): [" +
+                                        (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                     window.AnswerModal("Yes");
                                     continue;
                                 }
 
                                 if (sayOk)
                                 {
-                                    Logging.Log("Startup", "Found a window that needs 'ok' chosen...", Logging.White);
-                                    Logging.Log("Startup",
-                                        "Content of modal window (HTML): [" +
-                                        (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.White);
+                                    Logging.Log("Found a window that needs 'ok' chosen...");
+                                    Logging.Log("Content of modal window (HTML): [" +
+                                        (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                     window.AnswerModal("OK");
                                     if (
                                         window.Html.Contains(
@@ -651,10 +628,9 @@ namespace Questor
 
                                 if (quit)
                                 {
-                                    Logging.Log("Startup", "Restarting eve...", Logging.Red);
-                                    Logging.Log("Startup",
-                                        "Content of modal window (HTML): [" +
-                                        (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Red);
+                                    Logging.Log("Restarting eve...");
+                                    Logging.Log("Content of modal window (HTML): [" +
+                                        (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                     window.AnswerModal("quit");
 
                                     //_directEve.ExecuteCommand(DirectCmd.CmdQuitGame);
@@ -662,40 +638,34 @@ namespace Questor
 
                                 if (restart)
                                 {
-                                    Logging.Log("Startup", "Restarting eve...", Logging.Red);
-                                    Logging.Log("Startup",
-                                        "Content of modal window (HTML): [" +
-                                        (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Red);
+                                    Logging.Log("Restarting eve...");
+                                    Logging.Log("Content of modal window (HTML): [" +
+                                        (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                     window.AnswerModal("restart");
                                     continue;
                                 }
 
                                 if (close)
                                 {
-                                    Logging.Log("Startup", "Closing modal window...", Logging.Yellow);
-                                    Logging.Log("Startup",
-                                        "Content of modal window (HTML): [" +
-                                        (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Yellow);
+                                    Logging.Log("Closing modal window...");
+                                    Logging.Log("Content of modal window (HTML): [" +
+                                        (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                     window.Close();
                                     continue;
                                 }
 
                                 if (needHumanIntervention)
                                 {
-                                    Logging.Log("Startup",
-                                        "ERROR! - Human Intervention is required in this case: halting all login attempts - ERROR!",
-                                        Logging.Red);
-                                    Logging.Log("Startup", "window.Name is: " + window.Name, Logging.Red);
-                                    Logging.Log("Startup", "window.Html is: " + window.Html, Logging.Red);
-                                    Logging.Log("Startup", "window.Caption is: " + window.Caption, Logging.Red);
-                                    Logging.Log("Startup", "window.Type is: " + window.Type, Logging.Red);
-                                    Logging.Log("Startup", "window.ID is: " + window.Id, Logging.Red);
-                                    Logging.Log("Startup", "window.IsDialog is: " + window.IsDialog, Logging.Red);
-                                    Logging.Log("Startup", "window.IsKillable is: " + window.IsKillable, Logging.Red);
-                                    Logging.Log("Startup", "window.Viewmode is: " + window.ViewMode, Logging.Red);
-                                    Logging.Log("Startup",
-                                        "ERROR! - Human Intervention is required in this case: halting all login attempts - ERROR!",
-                                        Logging.Red);
+                                    Logging.Log("ERROR! - Human Intervention is required in this case: halting all login attempts - ERROR!");
+                                    Logging.Log("window.Name is: " + window.Name);
+                                    Logging.Log("window.Html is: " + window.Html);
+                                    Logging.Log("window.Caption is: " + window.Caption);
+                                    Logging.Log("window.Type is: " + window.Type);
+                                    Logging.Log("window.ID is: " + window.Id);
+                                    Logging.Log("window.IsDialog is: " + window.IsDialog);
+                                    Logging.Log("window.IsKillable is: " + window.IsKillable);
+                                    Logging.Log("window.Viewmode is: " + window.ViewMode);
+                                    Logging.Log("ERROR! - Human Intervention is required in this case: halting all login attempts - ERROR!");
                                     Cache._humanInterventionRequired = true;
                                     return;
                                 }
@@ -706,16 +676,16 @@ namespace Questor
 
                             if (window.Name == "telecom")
                                 continue;
-                            Logging.Log("Startup", "We have an unexpected window, auto login halted.", Logging.Red);
-                            Logging.Log("Startup", "window.Name is: " + window.Name, Logging.Red);
-                            Logging.Log("Startup", "window.Html is: " + window.Html, Logging.Red);
-                            Logging.Log("Startup", "window.Caption is: " + window.Caption, Logging.Red);
-                            Logging.Log("Startup", "window.Type is: " + window.Type, Logging.Red);
-                            Logging.Log("Startup", "window.ID is: " + window.Id, Logging.Red);
-                            Logging.Log("Startup", "window.IsDialog is: " + window.IsDialog, Logging.Red);
-                            Logging.Log("Startup", "window.IsKillable is: " + window.IsKillable, Logging.Red);
-                            Logging.Log("Startup", "window.Viewmode is: " + window.ViewMode, Logging.Red);
-                            Logging.Log("Startup", "We have got an unexpected window, auto login halted.", Logging.Red);
+                            Logging.Log("We have an unexpected window, auto login halted.");
+                            Logging.Log("window.Name is: " + window.Name);
+                            Logging.Log("window.Html is: " + window.Html);
+                            Logging.Log("window.Caption is: " + window.Caption);
+                            Logging.Log("window.Type is: " + window.Type);
+                            Logging.Log("window.ID is: " + window.Id);
+                            Logging.Log("window.IsDialog is: " + window.IsDialog);
+                            Logging.Log("window.IsKillable is: " + window.IsKillable);
+                            Logging.Log("window.Viewmode is: " + window.ViewMode);
+                            Logging.Log("We have got an unexpected window, auto login halted.");
                             return;
                         }
                         return;
@@ -726,9 +696,7 @@ namespace Questor
                     {
                         if (Cache.ServerStatusCheck <= 20) // at 10 sec a piece this would be 200+ seconds
                         {
-                            Logging.Log("Startup",
-                                "Server status[" + Cache.Instance.DirectEve.Login.ServerStatus + "] != [OK] try later",
-                                Logging.Orange);
+                            Logging.Log("Server status[" + Cache.Instance.DirectEve.Login.ServerStatus + "] != [OK] try later");
                             Cache.ServerStatusCheck++;
                             //retry the server status check twice (with 1 sec delay between each) before kicking in a larger delay
                             if (Cache.ServerStatusCheck > 2)
@@ -743,7 +711,7 @@ namespace Questor
                         Cleanup.ReasonToStopQuestor =
                             "Server Status Check shows server still not ready after more than 3 min. Restarting Questor. ServerStatusCheck is [" +
                             Cache.ServerStatusCheck + "]";
-                        Logging.Log("Startup", Cleanup.ReasonToStopQuestor, Logging.Red);
+                        Logging.Log(Cleanup.ReasonToStopQuestor);
                         Time.EnteredCloseQuestor_DateTime = DateTime.UtcNow;
                         Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor, true);
                         return;
@@ -756,10 +724,10 @@ namespace Questor
                             Cache.Instance.RandomNumber(Time.Instance.EVEAccountLoginDelayMinimum_seconds*1000,
                                 Time.Instance.EVEAccountLoginDelayMaximum_seconds*1000))
                         {
-                            Logging.Log("Startup", "Login account [" + Logging.EVELoginUserName + "]", Logging.White);
+                            Logging.Log("Login account [" + Logging.EVELoginUserName + "]");
                             Cache.Instance.DirectEve.Login.Login(Logging.EVELoginUserName, Logging.EVELoginPassword);
                             _nextPulse = UTCNowAddDelay(10, 12);
-                            Logging.Log("Startup", "Waiting for Character Selection Screen", Logging.White);
+                            Logging.Log("Waiting for Character Selection Screen");
                             return;
                         }
                     }
@@ -782,16 +750,14 @@ namespace Questor
                                     continue;
                                 }
 
-                                Logging.Log("Startup", "Activating character [" + slot.CharName + "]", Logging.White);
+                                Logging.Log("Activating character [" + slot.CharName + "]");
                                 Cache.NextSlotActivate = DateTime.UtcNow.AddSeconds(5);
                                 slot.Activate();
                                 _nextPulse = UTCNowAddDelay(12, 14);
                                 return;
                             }
 
-                            Logging.Log("Startup",
-                                "Character id/name [" + Logging.MyCharacterName + "] not found, retrying in 10 seconds",
-                                Logging.White);
+                            Logging.Log("Character id/name [" + Logging.MyCharacterName + "] not found, retrying in 10 seconds");
                         }
                     }
 
@@ -815,7 +781,7 @@ namespace Questor
                 if (Cache.Instance.Paused)
                 {
                     if (Logging.DebugQuestorEVEOnFrame)
-                        Logging.Log("Questor.ProcessState", "if (Cache.Instance.Paused)", Logging.Debug);
+                        Logging.Log("if (Cache.Instance.Paused)");
                     Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
                     Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
                     Cache.Instance.GotoBaseNow = false;
@@ -836,8 +802,7 @@ namespace Questor
                 if (Cache.Instance.InSpace && Cache.Instance.InWarp)
                 {
                     if (Logging.DebugQuestorEVEOnFrame)
-                        Logging.Log("Questor.EVEOnFrame", "if (Cache.Instance.InSpace && Cache.Instance.InWarp)",
-                            Logging.Debug);
+                        Logging.Log("if (Cache.Instance.InSpace && Cache.Instance.InWarp)");
                     return;
                 }
 
@@ -849,9 +814,7 @@ namespace Questor
                         if (Cache.Instance.StopBot)
                         {
                             if (Logging.DebugIdle)
-                                Logging.Log("Questor",
-                                    "Cache.Instance.StopBot = true - this is set by the LocalWatch code so that we stay in station when local is unsafe",
-                                    Logging.Orange);
+                                Logging.Log("Cache.Instance.StopBot = true - this is set by the LocalWatch code so that we stay in station when local is unsafe");
                             return;
                         }
 
@@ -862,9 +825,7 @@ namespace Questor
                             return;
                         }
 
-                        Logging.Log("Questor",
-                            "Settings.Instance.CharacterMode = [" + Settings.Instance.CharacterMode + "]",
-                            Logging.Orange);
+                        Logging.Log("Settings.Instance.CharacterMode = [" + Settings.Instance.CharacterMode + "]");
                         _States.CurrentQuestorState = QuestorState.Error;
                         break;
 
@@ -880,7 +841,7 @@ namespace Questor
                             case "combat missions":
                             case "combat_missions":
                             case "dps":
-                                Logging.Log("Questor", "Start Mission Behavior", Logging.White);
+                                Logging.Log("Start Mission Behavior");
                                 _States.CurrentQuestorState = QuestorState.CombatMissionsBehavior;
                                 break;
                         }
@@ -898,7 +859,7 @@ namespace Questor
             }
             catch (Exception ex)
             {
-                Logging.Log("Questor.EVEOnFrame", "Exception [" + ex + "]", Logging.Debug);
+                Logging.Log("Exception [" + ex + "]");
                 return;
             }
         }

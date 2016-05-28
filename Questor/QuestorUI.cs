@@ -59,7 +59,7 @@ namespace Questor
             }
             catch (Exception ex)
             {
-                Logging.Log("QuestorUI", "Exception [" + ex + "]", Logging.Debug);
+                Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -67,11 +67,11 @@ namespace Questor
         {
             try
             {
-                if (Logging.DebugUI) Logging.Log("QuestorUI", "QuestorfrmMainFormClosed", Logging.White);
+                if (Logging.DebugUI) Logging.Log("QuestorfrmMainFormClosed");
             }
             catch (Exception ex)
             {
-                Logging.Log("QuestorUI", "Exception [" + ex + "]", Logging.Debug);
+                Logging.Log("Exception [" + ex + "]");
             }
 
             Logging.OnMessage -= AddLog;
@@ -81,7 +81,7 @@ namespace Questor
         {
             try
             {
-                if (Logging.DebugUI) Logging.Log("QuestorUI", "PopulateStateComboBoxes", Logging.White);
+                if (Logging.DebugUI) Logging.Log("PopulateStateComboBoxes");
                 QuestorStateComboBox.Items.Clear();
                 foreach (var text in Enum.GetNames(typeof(QuestorState)))
                     QuestorStateComboBox.Items.Add(text);
@@ -170,7 +170,7 @@ namespace Questor
             }
             catch (Exception ex)
             {
-                Logging.Log("QuestorUI", "Exception [" + ex + "]", Logging.Debug);
+                Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -192,7 +192,7 @@ namespace Questor
             }
             catch (Exception ex)
             {
-                Logging.Log("QuestorUI", "Exception [" + ex + "]", Logging.Debug);
+                Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -240,9 +240,8 @@ namespace Questor
                 catch (Exception ex)
                 {
                     if (Logging.DebugUI)
-                        Logging.Log("QuestorUI",
-                            "RefreshInfoDisplayedInUI: unable to update all UI labels: exception was [" + ex.Message +
-                            "]", Logging.Teal);
+                        Logging.Log("RefreshInfoDisplayedInUI: unable to update all UI labels: exception was [" + ex.Message +
+                            "]");
                 }
             }
         }
@@ -251,7 +250,7 @@ namespace Questor
         {
             try
             {
-                if (Logging.DebugUI) Logging.Log("QuestorUI", "PopulateBehaviorStateComboBox", Logging.White);
+                if (Logging.DebugUI) Logging.Log("PopulateBehaviorStateComboBox");
 
                 if (_States.CurrentQuestorState == QuestorState.CombatMissionsBehavior)
                 {
@@ -264,7 +263,7 @@ namespace Questor
             }
             catch (Exception ex)
             {
-                Logging.Log("QuestorUI", "Exception [" + ex + "]", Logging.Debug);
+                Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -508,10 +507,9 @@ namespace Questor
                     {
                         if (DateTime.UtcNow.Subtract(Time.Instance.LastLogMessage).TotalSeconds > 30)
                         {
-                            Logging.Log("QuestorUI",
-                                "The Last UI Frame Drawn by EVE was [" +
+                            Logging.Log("The Last UI Frame Drawn by EVE was [" +
                                 Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastFrame).TotalSeconds, 0) +
-                                "] seconds ago! This is bad. - Exiting EVE", Logging.Red);
+                                "] seconds ago! This is bad. - Exiting EVE");
                             Cleanup.ReasonToStopQuestor = "The Last UI Frame Drawn by EVE was [" +
                                                           Math.Round(
                                                               DateTime.UtcNow.Subtract(Time.Instance.LastFrame)
@@ -528,10 +526,9 @@ namespace Questor
                     {
                         if (DateTime.UtcNow.Subtract(Time.Instance.LastLogMessage).TotalSeconds > 60)
                         {
-                            Logging.Log("QuestorUI",
-                                "The Last Session.IsReady = true was [" +
+                            Logging.Log("The Last Session.IsReady = true was [" +
                                 Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastSessionIsReady).TotalSeconds, 0) +
-                                "] seconds ago! This is bad. - Exiting EVE", Logging.Red);
+                                "] seconds ago! This is bad. - Exiting EVE");
                             Cleanup.ReasonToStopQuestor = "The Last Session.IsReady = true was [" +
                                                           Math.Round(
                                                               DateTime.UtcNow.Subtract(Time.Instance.LastSessionIsReady)
@@ -545,7 +542,7 @@ namespace Questor
             }
             catch (Exception ex)
             {
-                Logging.Log("QuestorUI", "Exception [" + ex + "]", Logging.Debug);
+                Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -571,7 +568,7 @@ namespace Questor
 
         private void ButtonOpenMissionXmlClick(object sender, EventArgs e)
         {
-            Logging.Log("QuestorUI", "Launching [" + MissionSettings.MissionXmlPath + "]", Logging.White);
+            Logging.Log("Launching [" + MissionSettings.MissionXmlPath + "]");
             Process.Start(MissionSettings.MissionXmlPath);
         }
 
@@ -611,7 +608,7 @@ namespace Questor
             catch (Exception ex)
             {
                 if (Logging.DebugExceptions || (Logging.DebugUI))
-                    Logging.Log("QuestorUI", "Exception was [" + ex.Message + "]", Logging.Teal);
+                    Logging.Log("Exception was [" + ex.Message + "]");
             }
         }
 
@@ -685,7 +682,7 @@ namespace Questor
                  Cache.Instance.WCFClient.GetPipeProxy.GetEVESettings().ToggleHideShowOnMinimize) ||
                 Cache.Instance.WCFClient.GetPipeProxy.GetEveAccount(Cache.Instance.EveAccount.CharacterName).Hidden)
             {
-                Logging.Log("QuestorUIShown", "Hiding form.");
+                Logging.Log("Hiding form.");
                 BeginInvoke(new MethodInvoker(delegate { Hide(); }));
 //				Cache.Instance.WCFClient.GetPipeProxy.CallHideEveWindows(Cache.Instance.EveAccount.CharacterName);
             }

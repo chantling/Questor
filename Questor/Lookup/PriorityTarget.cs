@@ -40,7 +40,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return "!0!";
                 }
             }

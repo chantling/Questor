@@ -173,7 +173,7 @@ namespace QuestorManager
                 // Session is not ready yet, do not continue
                 if (!Cache.Instance.DirectEve.Session.IsReady)
                 {
-                    Logging.Log("Qm.OnFrame", "Session is not ready yet.", Logging.White);
+                    Logging.Log("Session is not ready yet.");
                     return;
                 }
 
@@ -241,7 +241,7 @@ namespace QuestorManager
 
                         if (_start)
                         {
-                            Logging.Log("QuestorManager", "Start", Logging.White);
+                            Logging.Log("Start");
                             State = QuestormanagerState.NextAction;
                         }
 
@@ -254,7 +254,7 @@ namespace QuestorManager
 
                         if (LstTask.Items.Count <= 0)
                         {
-                            Logging.Log("QuestorManager", "Finish", Logging.White);
+                            Logging.Log("Finish");
                             LblStatus.Text = "Finish";
                             BttnStart.Text = "Start";
                             State = QuestormanagerState.Idle;
@@ -267,7 +267,7 @@ namespace QuestorManager
                             _destination = LstTask.Items[0].Tag;
                             if (_destination == null || _destination.Equals(""))
                                 _destination = Cache.Instance.BookmarksByLabel(LstTask.Items[0].SubItems[1].Text)[0];
-                            Logging.Log("manager", "Destination: " + _destination, Logging.White);
+                            Logging.Log("Destination: " + _destination);
                             State = QuestormanagerState.Traveler;
                             break;
                         }
@@ -333,7 +333,7 @@ namespace QuestorManager
                     case QuestormanagerState.CmdLine:
 
 
-                        Logging.Log("QuestorManager", "CmdLine: " + LstTask.Items[0].SubItems[1].Text, Logging.White);
+                        Logging.Log("CmdLine: " + LstTask.Items[0].SubItems[1].Text);
 
 
                         LstTask.Items.Remove(LstTask.Items[0]);
@@ -348,7 +348,7 @@ namespace QuestorManager
                         {
                             _buylpi.Item = Convert.ToInt32(LstTask.Items[0].Tag);
                             _buylpi.Unit = Convert.ToInt32(LstTask.Items[0].SubItems[2].Text);
-                            Logging.Log("QuestorManager", "BuyLPI: Begin", Logging.White);
+                            Logging.Log("BuyLPI: Begin");
                             _States.CurrentBuyLPIState = BuyLPIState.Begin;
                         }
 
@@ -356,7 +356,7 @@ namespace QuestorManager
 
                         if (_States.CurrentBuyLPIState == BuyLPIState.Done)
                         {
-                            Logging.Log("QuestorManager", "BuyLPI: Done", Logging.White);
+                            Logging.Log("BuyLPI: Done");
                             _States.CurrentBuyLPIState = BuyLPIState.Idle;
                             LstTask.Items.Remove(LstTask.Items[0]);
                             _lastAction = DateTime.UtcNow;
@@ -375,7 +375,7 @@ namespace QuestorManager
 
                         if (_States.CurrentValueDumpState == ValueDumpState.Idle)
                         {
-                            Logging.Log("QuestorManager", "ValueDump: Begin", Logging.White);
+                            Logging.Log("ValueDump: Begin");
                             _States.CurrentValueDumpState = ValueDumpState.Begin;
                         }
 
@@ -383,7 +383,7 @@ namespace QuestorManager
 
                         if (_States.CurrentValueDumpState == ValueDumpState.Done)
                         {
-                            Logging.Log("QuestorManager", "ValueDump: Done", Logging.White);
+                            Logging.Log("ValueDump: Done");
                             _States.CurrentValueDumpState = ValueDumpState.Idle;
                             ProcessItems();
                             LstTask.Items.Remove(LstTask.Items[0]);
@@ -402,7 +402,7 @@ namespace QuestorManager
 
                         if (Cache.Instance.ActiveShip.GivenName == LstTask.Items[0].SubItems[1].Text)
                         {
-                            Logging.Log("QuestorManager", "MakeShip: Ship: [" + LstTask.Items[0].SubItems[1].Text + "] already active", Logging.White);
+                            Logging.Log("MakeShip: Ship: [" + LstTask.Items[0].SubItems[1].Text + "] already active");
                             LstTask.Items.Remove(LstTask.Items[0]);
                             State = QuestormanagerState.NextAction;
                             break;
@@ -413,7 +413,7 @@ namespace QuestorManager
                             var ships = Cache.Instance.ShipHangar.Items;
                             foreach (var ship in ships.Where(ship => ship.GivenName != null && ship.GivenName == LstTask.Items[0].SubItems[1].Text))
                             {
-                                Logging.Log("QuestorManager", "MakeShip: Making [" + ship.GivenName + "] active", Logging.White);
+                                Logging.Log("MakeShip: Making [" + ship.GivenName + "] active");
 
                                 ship.ActivateShip();
                                 LstTask.Items.Remove(LstTask.Items[0]);
@@ -433,7 +433,7 @@ namespace QuestorManager
                                 _buy.useOrders = true;
                             _buy.Item = Convert.ToInt32(LstTask.Items[0].Tag);
                             _buy.Unit = Convert.ToInt32(LstTask.Items[0].SubItems[2].Text);
-                            Logging.Log("QuestorManager", "Buy: Begin", Logging.White);
+                            Logging.Log("Buy: Begin");
                             _States.CurrentBuyState = BuyState.Begin;
                         }
 
@@ -441,7 +441,7 @@ namespace QuestorManager
 
                         if (_States.CurrentBuyState == BuyState.Done)
                         {
-                            Logging.Log("QuestorManager", "Buy: Done", Logging.White);
+                            Logging.Log("Buy: Done");
                             _States.CurrentBuyState = BuyState.Idle;
                             LstTask.Items.Remove(LstTask.Items[0]);
                             _lastAction = DateTime.UtcNow;
@@ -457,7 +457,7 @@ namespace QuestorManager
 
                         if (_States.CurrentSellState == SellState.Idle)
                         {
-                            Logging.Log("QuestorManager", "Sell: Begin", Logging.White);
+                            Logging.Log("Sell: Begin");
                             _States.CurrentSellState = SellState.Begin;
                         }
 
@@ -465,7 +465,7 @@ namespace QuestorManager
 
                         if (_States.CurrentSellState == SellState.Done)
                         {
-                            Logging.Log("QuestorManager", "Sell: Done", Logging.White);
+                            Logging.Log("Sell: Done");
                             _States.CurrentSellState = SellState.Idle;
                             LstTask.Items.Remove(LstTask.Items[0]);
                             _lastAction = DateTime.UtcNow;
@@ -482,7 +482,7 @@ namespace QuestorManager
 
                         if (_States.CurrentDropState == DropState.Idle)
                         {
-                            Logging.Log("QuestorManager", "Drop: Begin", Logging.White);
+                            Logging.Log("Drop: Begin");
                             _States.CurrentDropState = DropState.Begin;
                         }
 
@@ -490,7 +490,7 @@ namespace QuestorManager
 
                         if (_States.CurrentDropState == DropState.Done)
                         {
-                            Logging.Log("QuestorManager", "Drop: Done", Logging.White);
+                            Logging.Log("Drop: Done");
                             _States.CurrentDropState = DropState.Idle;
                             LstTask.Items.Remove(LstTask.Items[0]);
                             _lastAction = DateTime.UtcNow;
@@ -507,7 +507,7 @@ namespace QuestorManager
 
                         if (_States.CurrentGrabState == GrabState.Idle)
                         {
-                            Logging.Log("QuestorManager", "Grab: Begin", Logging.White);
+                            Logging.Log("Grab: Begin");
                             _States.CurrentGrabState = GrabState.Begin;
                         }
 
@@ -515,7 +515,7 @@ namespace QuestorManager
 
                         if (_States.CurrentGrabState == GrabState.Done)
                         {
-                            Logging.Log("QuestorManager", "Grab: Done", Logging.White);
+                            Logging.Log("Grab: Done");
                             _States.CurrentGrabState = GrabState.Idle;
                             LstTask.Items.Remove(LstTask.Items[0]);
                             _lastAction = DateTime.UtcNow;
@@ -578,7 +578,7 @@ namespace QuestorManager
                         // Arrived at destination
                         if (_destination != null && _States.CurrentTravelerState == TravelerState.AtDestination)
                         {
-                            Logging.Log("QuestorManager", "Arrived at destination", Logging.White);
+                            Logging.Log("Arrived at destination");
 
                             Traveler.Destination = null;
                             _destination = null;
@@ -592,7 +592,7 @@ namespace QuestorManager
                         {
                             if (Traveler.Destination != null)
                             {
-                                Logging.Log("QuestorManager", "Stopped traveling, QuestorManager threw an error...", Logging.White);
+                                Logging.Log("Stopped traveling, QuestorManager threw an error...");
                             }
 
                             _destination = null;
@@ -605,7 +605,7 @@ namespace QuestorManager
             }
             catch (Exception ex)
             {
-                Logging.Log("QuestorManager", "Exception, [" + ex + "]", Logging.White);
+                Logging.Log("Exception, [" + ex + "]");
                 return;
             }
         }
@@ -710,7 +710,7 @@ namespace QuestorManager
             }
             catch (Exception exception)
             {
-                Logging.Log("Cache.UpdateSearchResultsTick", "Exception [" + exception + "]", Logging.Debug);
+                Logging.Log("Exception [" + exception + "]");
             }
             finally
             {
@@ -767,19 +767,19 @@ namespace QuestorManager
                     }
                     else
                     {
-                        Logging.Log("QuestorManager", "BttnAddTraveler_Click: SearchResults.SelectedItems is 0", Logging.Debug);
+                        Logging.Log("BttnAddTraveler_Click: SearchResults.SelectedItems is 0");
                     }
                 }
                 else
                 {
-                    Logging.Log("QuestorManager", "BttnAddTraveler_Click: SearchResults.SelectedItems[0] is null", Logging.Debug);
+                    Logging.Log("BttnAddTraveler_Click: SearchResults.SelectedItems[0] is null");
                 }
                 //}
             }
             catch (Exception exception)
             {
-                Logging.Log("QuestorManager", "Exception [" + exception + "]", Logging.Debug);
-                Logging.Log("QuestorManager", "Is this exception timing based?", Logging.Debug);
+                Logging.Log("Exception [" + exception + "]");
+                Logging.Log("Is this exception timing based?");
             }
         }
 
@@ -1041,12 +1041,12 @@ namespace QuestorManager
         {
             try
             {
-                if (Logging.DebugUI) Logging.Log("QuestorUI", "frmMainFormClosed", Logging.White);
+                if (Logging.DebugUI) Logging.Log("frmMainFormClosed");
                 Cleanup.SignalToQuitQuestor = true;
             }
             catch (Exception ex)
             {
-                Logging.Log("QuestorManagerUI", "Exception [" + ex + "]", Logging.Debug);
+                Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -1215,7 +1215,7 @@ namespace QuestorManager
                 //Logging.Log("QuestorManager", "LoadSavedTaskList: Args [" + args.Length + "][" + args[0] + "][" + args[1] + "]", Logging.White);
                 if (args.Length != 2)
                 {
-                    Logging.Log("QuestorManager", "LoadSavedTaskList [SavedJobFile] - Reads the Saved Task List specified and processes the jobs", Logging.White);
+                    Logging.Log("LoadSavedTaskList [SavedJobFile] - Reads the Saved Task List specified and processes the jobs");
                     return -1;
                 }
 
@@ -1237,7 +1237,7 @@ namespace QuestorManager
                     return 0;
                 }
 
-                Logging.Log("QuestorManager", "LoadSavedTaskList: File Job file [" + savedjobtoload + "] does not exist", Logging.Orange);
+                Logging.Log("LoadSavedTaskList: File Job file [" + savedjobtoload + "] does not exist");
                 return -1;
             }
             return -1;
@@ -1249,9 +1249,7 @@ namespace QuestorManager
             {
                 if (args.Length != 1)
                 {
-                    Logging.Log("QuestorManager",
-                        "StartProcessing - Starts Processing any already loaded task items",
-                        Logging.White);
+                    Logging.Log("StartProcessing - Starts Processing any already loaded task items");
                     return -1;
                 }
                 try
@@ -1268,7 +1266,7 @@ namespace QuestorManager
                 }
             }
 
-            Logging.Log("QuestorUI", "QuestorState is now: CloseQuestor ", Logging.White);
+            Logging.Log("QuestorState is now: CloseQuestor ");
             return 0;
         }
 
@@ -1459,11 +1457,11 @@ namespace QuestorManager
             var questorPath = Path.Combine(Settings.Instance.Path, "Questor.exe");
             if (File.Exists(questorPath))
             {
-                Logging.Log("QuestorUI", "Launching [ dotnet QuestorManager QuestorManager ] - fix me", Logging.White);
+                Logging.Log("Launching [ dotnet QuestorManager QuestorManager ] - fix me");
             }
             else
             {
-                Logging.Log("QuestorUI", "Unable to launch Questor from [" + questorPath + "] file not found", Logging.Orange);
+                Logging.Log("Unable to launch Questor from [" + questorPath + "] file not found");
             }
         }
     }

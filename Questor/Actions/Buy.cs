@@ -62,7 +62,7 @@ namespace Questor.Modules.Actions
                     if (!marketWindow.IsReady)
                         break;
 
-                    Logging.Logging.Log("Buy", "Opening Market", Logging.Logging.White);
+                    Logging.Logging.Log("Opening Market");
                     _States.CurrentBuyState = BuyState.LoadItem;
 
                     break;
@@ -137,7 +137,7 @@ namespace Questor.Modules.Actions
                             {
                                 order.Buy(Unit, DirectOrderRange.Station);
                                 Unit = Unit - order.VolumeEntered;
-                                Logging.Logging.Log("Buy", "Missing " + Convert.ToString(Unit) + " units", Logging.Logging.White);
+                                Logging.Logging.Log("Missing " + Convert.ToString(Unit) + " units");
                                 _returnBuy = true;
                                 _States.CurrentBuyState = BuyState.WaitForItems;
                             }
@@ -157,13 +157,13 @@ namespace Questor.Modules.Actions
 
                     if (_returnBuy)
                     {
-                        Logging.Logging.Log("Buy", "Return Buy", Logging.Logging.White);
+                        Logging.Logging.Log("Return Buy");
                         _returnBuy = false;
                         _States.CurrentBuyState = BuyState.OpenMarket;
                         break;
                     }
 
-                    Logging.Logging.Log("Buy", "Done", Logging.Logging.White);
+                    Logging.Logging.Log("Done");
                     _States.CurrentBuyState = BuyState.Done;
 
                     break;

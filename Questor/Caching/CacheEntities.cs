@@ -72,7 +72,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.MaxLockedTargets", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return -1;
                 }
             }
@@ -118,7 +118,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.Containers", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return new List<EntityCache>();
                 }
             }
@@ -246,8 +246,7 @@ namespace Questor.Modules.Caching
         {
             get
             {
-                Logging.Logging.Log("Cache.IDsinInventoryTree", "Refreshing IDs from inventory tree, it has been longer than 30 seconds since the last refresh",
-                    Logging.Logging.Teal);
+                Logging.Logging.Log("Refreshing IDs from inventory tree, it has been longer than 30 seconds since the last refresh");
                 return _IDsinInventoryTree ?? (_IDsinInventoryTree = Instance.PrimaryInventoryWindow.GetIdsFromTree(false));
             }
         }
@@ -425,28 +424,27 @@ namespace Questor.Modules.Caching
                                     }
                                 }
 
-                                if (Logging.Logging.DebugInSpace) Logging.Logging.Log("InSpace", "Session is Not Ready", Logging.Logging.Debug);
+                                if (Logging.Logging.DebugInSpace) Logging.Logging.Log("Session is Not Ready");
                                 return false;
                             }
 
                             if (Logging.Logging.DebugInSpace)
-                                Logging.Logging.Log("InSpace", "Cache.Instance.DirectEve.ActiveShip.Entity is null", Logging.Logging.Debug);
+                                Logging.Logging.Log("Cache.Instance.DirectEve.ActiveShip.Entity is null");
                             return false;
                         }
 
-                        if (Logging.Logging.DebugInSpace) Logging.Logging.Log("InSpace", "NOT InStation is False", Logging.Logging.Debug);
+                        if (Logging.Logging.DebugInSpace) Logging.Logging.Log("NOT InStation is False");
                         return false;
                     }
 
-                    if (Logging.Logging.DebugInSpace) Logging.Logging.Log("InSpace", "InSpace is False", Logging.Logging.Debug);
+                    if (Logging.Logging.DebugInSpace) Logging.Logging.Log("InSpace is False");
                     return false;
                 }
                 catch (Exception ex)
                 {
                     if (Logging.Logging.DebugExceptions)
-                        Logging.Logging.Log("Cache.InSpace",
-                            "if (DirectEve.Session.IsInSpace && !DirectEve.Session.IsInStation && DirectEve.Session.IsReady && Cache.Instance.ActiveShip.Entity != null) <---must have failed exception was [" +
-                            ex.Message + "]", Logging.Logging.Teal);
+                        Logging.Logging.Log("if (DirectEve.Session.IsInSpace && !DirectEve.Session.IsInStation && DirectEve.Session.IsReady && Cache.Instance.ActiveShip.Entity != null) <---must have failed exception was [" +
+                            ex.Message + "]");
                     return false;
                 }
             }
@@ -484,9 +482,8 @@ namespace Questor.Modules.Caching
                 catch (Exception ex)
                 {
                     if (Logging.Logging.DebugExceptions)
-                        Logging.Logging.Log("Cache.InStation",
-                            "if (DirectEve.Session.IsInStation && !DirectEve.Session.IsInSpace && DirectEve.Session.IsReady) <---must have failed exception was [" +
-                            ex.Message + "]", Logging.Logging.Teal);
+                        Logging.Logging.Log("if (DirectEve.Session.IsInStation && !DirectEve.Session.IsInSpace && DirectEve.Session.IsReady) <---must have failed exception was [" +
+                            ex.Message + "]");
                     return false;
                 }
             }
@@ -516,31 +513,27 @@ namespace Questor.Modules.Caching
                                 }
 
                                 if (Logging.Logging.DebugInWarp && !Instance.Paused)
-                                    Logging.Logging.Log("Cache.InWarp",
-                                        "We are not in warp.Cache.Instance.ActiveShip.Entity.Mode  is [" + (int) Instance.MyShipEntity.Mode + "]",
-                                        Logging.Logging.Teal);
+                                    Logging.Logging.Log("We are not in warp.Cache.Instance.ActiveShip.Entity.Mode  is [" + (int)Instance.MyShipEntity.Mode + "]");
                                 return false;
                             }
 
                             if (Logging.Logging.DebugInWarp && !Instance.Paused)
-                                Logging.Logging.Log("Cache.InWarp",
-                                    "Why are we checking for InWarp if Cache.Instance.ActiveShip.Entity is Null? (session change?)", Logging.Logging.Teal);
+                                Logging.Logging.Log("Why are we checking for InWarp if Cache.Instance.ActiveShip.Entity is Null? (session change?)");
                             return false;
                         }
 
                         if (Logging.Logging.DebugInWarp && !Instance.Paused)
-                            Logging.Logging.Log("Cache.InWarp", "Why are we checking for InWarp if Cache.Instance.ActiveShip is Null? (session change?)",
-                                Logging.Logging.Teal);
+                            Logging.Logging.Log("Why are we checking for InWarp if Cache.Instance.ActiveShip is Null? (session change?)");
                         return false;
                     }
 
                     if (Logging.Logging.DebugInWarp && !Instance.Paused)
-                        Logging.Logging.Log("Cache.InWarp", "Why are we checking for InWarp while docked or between session changes?", Logging.Logging.Teal);
+                        Logging.Logging.Log("Why are we checking for InWarp while docked or between session changes?");
                     return false;
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.InWarp", "InWarp check failed, exception [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("InWarp check failed, exception [" + exception + "]");
                 }
 
                 return false;
@@ -573,7 +566,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.SolarSystems", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -594,7 +587,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.IsApproaching", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -642,7 +635,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.SolarSystems", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -703,7 +696,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.Stargates", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -734,7 +727,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.ClosestStargate", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -753,7 +746,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.BigObjects", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return new List<EntityCache>();
                 }
             }
@@ -830,7 +823,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.Approaching", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -872,7 +865,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.allBookmarks", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return null;
             }
         }
@@ -885,7 +878,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.EntitiesThatContainTheName", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return null;
             }
         }
@@ -905,7 +898,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.EntityById", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return null;
             }
         }
@@ -927,7 +920,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("DistanceFromMe", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return 0;
             }
         }
@@ -940,7 +933,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("OrderByLowestHealth", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return null;
             }
         }
@@ -974,7 +967,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.IsApproaching", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -1008,7 +1001,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.IsApproaching", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -1031,7 +1024,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.IsApproachingOrOrbiting", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -1066,7 +1059,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("GateInGrid", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return true;
             }
         }

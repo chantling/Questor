@@ -119,13 +119,13 @@ namespace Questor.Modules.Logging
         public static bool EntityStatistics(IEnumerable<EntityCache> things)
         {
             var objectline = "Name;Distance;TypeId;GroupId;CategoryId;IsNPC;IsNPCByGroupID;IsPlayer;TargetValue;Velocity;HaveLootRights;IsContainer;ID;\r\n";
-            Logging.Log("Statistics", ";EntityStatistics;" + objectline, Logging.White);
+            Logging.Log(";EntityStatistics;" + objectline);
 
             things = things.ToList();
 
             if (!things.Any()) //if their are no entries, return
             {
-                Logging.Log("Statistics", "EntityStatistics: No entries to log", Logging.White);
+                Logging.Log("EntityStatistics: No entries to log");
                 return true;
             }
 
@@ -146,7 +146,7 @@ namespace Questor.Modules.Logging
                 objectline += thing.IsContainer + ";";
                 objectline += thing.Id + ";\r\n";
 
-                Logging.Log("Statistics", ";EntityStatistics;" + objectline, Logging.White);
+                Logging.Log(";EntityStatistics;" + objectline);
             }
             return true;
         }
@@ -155,7 +155,7 @@ namespace Questor.Modules.Logging
         {
             if (Cache.Instance.CurrentShipsCargo == null)
             {
-                Logging.Log("AmmoConsumptionStatistics", "if (Cache.Instance.CurrentShipsCargo == null)", Logging.Teal);
+                Logging.Log("if (Cache.Instance.CurrentShipsCargo == null)");
                 return false;
             }
 
@@ -173,7 +173,7 @@ namespace Questor.Modules.Logging
             }
             catch (Exception exception)
             {
-                Logging.Log("Statistics.AmmoConsumptionStatistics", "Exception: " + exception, Logging.Debug);
+                Logging.Log("Exception: " + exception);
             }
 
             return true;
@@ -208,7 +208,7 @@ namespace Questor.Modules.Logging
                 }
                 else
                 {
-                    Logging.Log("DroneStats", "We do not use drones in this type of ship, skipping drone stats", Logging.White);
+                    Logging.Log("We do not use drones in this type of ship, skipping drone stats");
                     DroneLoggingCompleted = true;
                 }
             }
@@ -250,8 +250,7 @@ namespace Questor.Modules.Logging
                 pocketstatsLine += WrecksThisPocket + ";"; //wrecksThisPocket
                 pocketstatsLine += "\r\n";
 
-                Logging.Log("Statistics: WritePocketStatistics",
-                    "Writing pocket statistics to [ " + PocketStatisticsFile + " ] and clearing stats for next pocket", Logging.White);
+                Logging.Log("Writing pocket statistics to [ " + PocketStatisticsFile + " ] and clearing stats for next pocket");
                 File.AppendAllText(PocketStatisticsFile, pocketstatsLine);
             }
 
@@ -281,7 +280,7 @@ namespace Questor.Modules.Logging
 
             if (!File.Exists(missionDetailsHtmlFile))
             {
-                Logging.Log("Statistics: SaveMissionHTMLDetails", "Writing mission details HTML [ " + missionDetailsHtmlFile + " ]", Logging.White);
+                Logging.Log("Writing mission details HTML [ " + missionDetailsHtmlFile + " ]");
                 File.AppendAllText(missionDetailsHtmlFile, MissionDetailsHtml);
             }
         }
@@ -292,16 +291,15 @@ namespace Questor.Modules.Logging
 
             if (Cache.Instance.InSpace)
             {
-                Logging.Log("Statistics", "We have started questor in space, assume we do not need to write any statistics at the moment.", Logging.Teal);
+                Logging.Log("We have started questor in space, assume we do not need to write any statistics at the moment.");
                 MissionLoggingCompleted = true; //if the mission was completed more than 10 min ago assume the logging has been done already.
                 return;
             }
 
             if (AgentLPRetrievalAttempts > 5)
             {
-                Logging.Log("Statistics",
-                    "WriteMissionStatistics: We do not have loyalty points with the current agent yet, still -1, attempt # [" + AgentLPRetrievalAttempts +
-                    "] giving up", Logging.White);
+                Logging.Log("WriteMissionStatistics: We do not have loyalty points with the current agent yet, still -1, attempt # [" + AgentLPRetrievalAttempts +
+                    "] giving up");
                 AgentLPRetrievalAttempts = 0;
                 MissionLoggingCompleted = true; //if it is not true - this means we should not be trying to log mission stats atm
                 return;
@@ -311,9 +309,8 @@ namespace Questor.Modules.Logging
             if (Cache.Instance.Agent.LoyaltyPoints == -1)
             {
                 AgentLPRetrievalAttempts++;
-                Logging.Log("Statistics",
-                    "WriteMissionStatistics: We do not have loyalty points with the current agent yet, still -1, attempt # [" + AgentLPRetrievalAttempts +
-                    "] retrying...", Logging.White);
+                Logging.Log("WriteMissionStatistics: We do not have loyalty points with the current agent yet, still -1, attempt # [" + AgentLPRetrievalAttempts +
+                    "] retrying...");
                 return;
             }
 
@@ -341,51 +338,50 @@ namespace Questor.Modules.Logging
 
 
             MissionsThisSession++;
-            if (Logging.DebugStatistics) Logging.Log("Statistics", "We jumped through all the hoops: now do the mission logging", Logging.White);
+            if (Logging.DebugStatistics) Logging.Log("We jumped through all the hoops: now do the mission logging");
 
-            Logging.Log("Statistics", "Printing All Statistics Related Variables to the console log:", Logging.White);
-            Logging.Log("Statistics", "Mission Name: [" + MissionSettings.MissionName + "]", Logging.White);
-            Logging.Log("Statistics", "Faction: [" + MissionSettings.FactionName + "]", Logging.White);
-            Logging.Log("Statistics", "System: [" + Cache.Instance.MissionSolarSystem + "]", Logging.White);
-            Logging.Log("Statistics", "Total Missions completed this session: [" + MissionsThisSession + "]", Logging.White);
-            Logging.Log("Statistics", "StartedMission: [ " + StartedMission + "]", Logging.White);
-            Logging.Log("Statistics", "FinishedMission: [ " + FinishedMission + "]", Logging.White);
-            Logging.Log("Statistics", "StartedSalvaging: [ " + StartedSalvaging + "]", Logging.White);
-            Logging.Log("Statistics", "FinishedSalvaging: [ " + FinishedSalvaging + "]", Logging.White);
-            Logging.Log("Statistics", "Wealth before mission: [ " + Cache.Instance.Wealth + "]", Logging.White);
-            Logging.Log("Statistics", "Wealth after mission: [ " + Cache.Instance.MyWalletBalance + "]", Logging.White);
-            Logging.Log("Statistics", "Value of Loot from the mission: [" + lootValCurrentShipInv + "]", Logging.White);
-            Logging.Log("Statistics", "Total LP after mission:  [" + Cache.Instance.Agent.LoyaltyPoints + "]", Logging.White);
-            Logging.Log("Statistics", "Total LP before mission: [" + LoyaltyPointsTotal + "]", Logging.White);
-            Logging.Log("Statistics", "LP from this mission: [" + LoyaltyPointsForCurrentMission + "]", Logging.White);
-            Logging.Log("Statistics", "ISKBounty from this mission: [" + isk + "]", Logging.White);
-            Logging.Log("Statistics", "ISKMissionreward from this mission: [" + ISKMissionReward + "]", Logging.White);
-            Logging.Log("Statistics", "Lootvalue Itemhangar: [" + lootValItemHangar + "]", Logging.White);
-            Logging.Log("Statistics", "LostDrones: [" + LostDrones + "]", Logging.White);
-            Logging.Log("Statistics", "DroneRecalls: [" + DroneRecalls + "]", Logging.White);
-            Logging.Log("Statistics", "AmmoConsumption: [" + AmmoConsumption + "]", Logging.White);
-            Logging.Log("Statistics", "AmmoValue: [" + AmmoConsumption + "]", Logging.White);
-            Logging.Log("Statistics", "Panic Attempts: [" + PanicAttemptsThisMission + "]", Logging.White);
-            Logging.Log("Statistics", "Lowest Shield %: [" + Math.Round(LowestShieldPercentageThisMission, 0) + "]", Logging.White);
-            Logging.Log("Statistics", "Lowest Armor %: [" + Math.Round(LowestArmorPercentageThisMission, 0) + "]", Logging.White);
-            Logging.Log("Statistics", "Lowest Capacitor %: [" + Math.Round(LowestCapacitorPercentageThisMission, 0) + "]", Logging.White);
-            Logging.Log("Statistics", "Repair Cycle Time: [" + RepairCycleTimeThisMission + "]", Logging.White);
-            Logging.Log("Statistics", "MissionXMLIsAvailable: [" + MissionSettings.MissionXMLIsAvailable + "]", Logging.White);
-            Logging.Log("Statistics", "MissionCompletionerrors: [" + MissionCompletionErrors + "]", Logging.White);
-            Logging.Log("Statistics", "the stats below may not yet be correct and need some TLC", Logging.White);
+            Logging.Log("Printing All Statistics Related Variables to the console log:");
+            Logging.Log("Mission Name: [" + MissionSettings.MissionName + "]");
+            Logging.Log("Faction: [" + MissionSettings.FactionName + "]");
+            Logging.Log("System: [" + Cache.Instance.MissionSolarSystem + "]");
+            Logging.Log("Total Missions completed this session: [" + MissionsThisSession + "]");
+            Logging.Log("StartedMission: [ " + StartedMission + "]");
+            Logging.Log("FinishedMission: [ " + FinishedMission + "]");
+            Logging.Log("StartedSalvaging: [ " + StartedSalvaging + "]");
+            Logging.Log("FinishedSalvaging: [ " + FinishedSalvaging + "]");
+            Logging.Log("Wealth before mission: [ " + Cache.Instance.Wealth + "]");
+            Logging.Log("Wealth after mission: [ " + Cache.Instance.MyWalletBalance + "]");
+            Logging.Log("Value of Loot from the mission: [" + lootValCurrentShipInv + "]");
+            Logging.Log("Total LP after mission:  [" + Cache.Instance.Agent.LoyaltyPoints + "]");
+            Logging.Log("Total LP before mission: [" + LoyaltyPointsTotal + "]");
+            Logging.Log("LP from this mission: [" + LoyaltyPointsForCurrentMission + "]");
+            Logging.Log("ISKBounty from this mission: [" + isk + "]");
+            Logging.Log("ISKMissionreward from this mission: [" + ISKMissionReward + "]");
+            Logging.Log("Lootvalue Itemhangar: [" + lootValItemHangar + "]");
+            Logging.Log("LostDrones: [" + LostDrones + "]");
+            Logging.Log("DroneRecalls: [" + DroneRecalls + "]");
+            Logging.Log("AmmoConsumption: [" + AmmoConsumption + "]");
+            Logging.Log("AmmoValue: [" + AmmoConsumption + "]");
+            Logging.Log("Panic Attempts: [" + PanicAttemptsThisMission + "]");
+            Logging.Log("Lowest Shield %: [" + Math.Round(LowestShieldPercentageThisMission, 0) + "]");
+            Logging.Log("Lowest Armor %: [" + Math.Round(LowestArmorPercentageThisMission, 0) + "]");
+            Logging.Log("Lowest Capacitor %: [" + Math.Round(LowestCapacitorPercentageThisMission, 0) + "]");
+            Logging.Log("Repair Cycle Time: [" + RepairCycleTimeThisMission + "]");
+            Logging.Log("MissionXMLIsAvailable: [" + MissionSettings.MissionXMLIsAvailable + "]");
+            Logging.Log("MissionCompletionerrors: [" + MissionCompletionErrors + "]");
+            Logging.Log("the stats below may not yet be correct and need some TLC");
             var weaponNumber = 0;
             foreach (var weapon in Cache.Instance.Weapons)
             {
                 weaponNumber++;
                 if (Time.Instance.ReloadTimePerModule != null && Time.Instance.ReloadTimePerModule.ContainsKey(weapon.ItemId))
                 {
-                    Logging.Log("Statistics", "Time Spent Reloading: [" + weaponNumber + "][" + Time.Instance.ReloadTimePerModule[weapon.ItemId] + "]",
-                        Logging.White);
+                    Logging.Log("Time Spent Reloading: [" + weaponNumber + "][" + Time.Instance.ReloadTimePerModule[weapon.ItemId] + "]");
                 }
             }
-            Logging.Log("Statistics", "Time Spent IN Mission: [" + TimeSpentInMission_seconds + "sec]", Logging.White);
-            Logging.Log("Statistics", "Time Spent In Range: [" + TimeSpentInMissionInRange + "]", Logging.White);
-            Logging.Log("Statistics", "Time Spent Out of Range: [" + TimeSpentInMissionOutOfRange + "]", Logging.White);
+            Logging.Log("Time Spent IN Mission: [" + TimeSpentInMission_seconds + "sec]");
+            Logging.Log("Time Spent In Range: [" + TimeSpentInMissionInRange + "]");
+            Logging.Log("Time Spent Out of Range: [" + TimeSpentInMissionOutOfRange + "]");
 
             if (MissionStats3Log)
             {
@@ -430,7 +426,7 @@ namespace Questor.Modules.Logging
                 line3 += "\r\n";
 
                 // The mission is finished
-                Logging.Log("Statistics", "writing mission log3 to  [ " + MissionStats3LogFile + " ]", Logging.White);
+                Logging.Log("writing mission log3 to  [ " + MissionStats3LogFile + " ]");
                 File.AppendAllText(MissionStats3LogFile, line3);
             }
             if (MissionDungeonIdLog)
@@ -453,7 +449,7 @@ namespace Questor.Modules.Logging
                 line4 += "\r\n";
 
                 // The mission is finished
-                Logging.Log("Statistics", "writing mission dungeonID log to  [ " + MissionDungeonIdLogFile + " ]", Logging.White);
+                Logging.Log("writing mission dungeonID log to  [ " + MissionDungeonIdLogFile + " ]");
                 File.AppendAllText(MissionDungeonIdLogFile, line4);
             }
 
@@ -504,7 +500,7 @@ namespace Questor.Modules.Logging
                     if (!Cache.Instance.InWarp)
                     {
                         _States.CurrentStatisticsState = StatisticsState.Idle;
-                        Logging.Log("Statistics", "StatisticsState.LogAllEntities", Logging.Debug);
+                        Logging.Log("StatisticsState.LogAllEntities");
                         LogEntities(Cache.Instance.EntitiesOnGrid.ToList());
                     }
                     _States.CurrentStatisticsState = StatisticsState.Idle;
@@ -514,7 +510,7 @@ namespace Questor.Modules.Logging
                     if (!Cache.Instance.InWarp)
                     {
                         _States.CurrentStatisticsState = StatisticsState.Idle;
-                        Logging.Log("Statistics", "StatisticsState.LogAllEntities", Logging.Debug);
+                        Logging.Log("StatisticsState.LogAllEntities");
                         LogEntities(Combat.Combat.PotentialCombatTargets.Where(i => i.IsOnGridWithMe).ToList());
                     }
                     _States.CurrentStatisticsState = StatisticsState.Idle;
@@ -524,7 +520,7 @@ namespace Questor.Modules.Logging
                     if (!Cache.Instance.InWarp)
                     {
                         _States.CurrentStatisticsState = StatisticsState.Idle;
-                        Logging.Log("Statistics", "StatisticsState.LogAllEntities", Logging.Debug);
+                        Logging.Log("StatisticsState.LogAllEntities");
                         LogEntities(Combat.Combat.PotentialCombatTargets.Where(i => i.IsHighValueTarget).ToList());
                     }
                     _States.CurrentStatisticsState = StatisticsState.Idle;
@@ -534,7 +530,7 @@ namespace Questor.Modules.Logging
                     if (!Cache.Instance.InWarp)
                     {
                         _States.CurrentStatisticsState = StatisticsState.Idle;
-                        Logging.Log("Statistics", "StatisticsState.LogAllEntities", Logging.Debug);
+                        Logging.Log("StatisticsState.LogAllEntities");
                         LogEntities(Combat.Combat.PotentialCombatTargets.Where(i => i.IsLowValueTarget).ToList());
                     }
                     _States.CurrentStatisticsState = StatisticsState.Idle;
@@ -550,7 +546,7 @@ namespace Questor.Modules.Logging
                         if (Cache.Instance.InSpace || Cache.Instance.InStation)
                         {
                             _States.CurrentStatisticsState = StatisticsState.Idle;
-                            Logging.Log("Statistics", "StatisticsState.ModuleInfo", Logging.Debug);
+                            Logging.Log("StatisticsState.ModuleInfo");
                             ModuleInfo(Cache.Instance.Modules);
                         }
                     }
@@ -562,7 +558,7 @@ namespace Questor.Modules.Logging
                         if (Cache.Instance.InSpace)
                         {
                             _States.CurrentStatisticsState = StatisticsState.Idle;
-                            Logging.Log("Statistics", "StatisticsState.ListClassInstanceInfo", Logging.Debug);
+                            Logging.Log("StatisticsState.ListClassInstanceInfo");
                             ListClassInstanceInfo();
                         }
                     }
@@ -574,7 +570,7 @@ namespace Questor.Modules.Logging
                         if (Cache.Instance.InSpace)
                         {
                             _States.CurrentStatisticsState = StatisticsState.Idle;
-                            Logging.Log("Statistics", "StatisticsState.ListIgnoredTargets", Logging.Debug);
+                            Logging.Log("StatisticsState.ListIgnoredTargets");
                             ListIgnoredTargets();
                         }
                     }
@@ -586,7 +582,7 @@ namespace Questor.Modules.Logging
                         if (Cache.Instance.InSpace)
                         {
                             _States.CurrentStatisticsState = StatisticsState.Idle;
-                            Logging.Log("Statistics", "StatisticsState.ListDronePriorityTargets", Logging.Debug);
+                            Logging.Log("StatisticsState.ListDronePriorityTargets");
                             ListDronePriorityTargets(Drones.DronePriorityEntities);
                         }
                     }
@@ -598,7 +594,7 @@ namespace Questor.Modules.Logging
                         if (Cache.Instance.InSpace)
                         {
                             _States.CurrentStatisticsState = StatisticsState.Idle;
-                            Logging.Log("Statistics", "StatisticsState.ListTargetedandTargeting", Logging.Debug);
+                            Logging.Log("StatisticsState.ListTargetedandTargeting");
                             ListTargetedandTargeting(Cache.Instance.TotalTargetsandTargeting);
                         }
                     }
@@ -610,7 +606,7 @@ namespace Questor.Modules.Logging
                         if (Cache.Instance.EntitiesOnGrid.Any())
                         {
                             _States.CurrentStatisticsState = StatisticsState.Idle;
-                            Logging.Log("Statistics", "StatisticsState.PocketObjectStatistics", Logging.Debug);
+                            Logging.Log("StatisticsState.PocketObjectStatistics");
                             PocketObjectStatistics(Cache.Instance.EntitiesOnGrid.ToList(), true);
                         }
                     }
@@ -620,7 +616,7 @@ namespace Questor.Modules.Logging
                     if (Cache.Instance.InStation && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(20))
                     {
                         _States.CurrentStatisticsState = StatisticsState.Idle;
-                        Logging.Log("Statistics", "StatisticsState.ListItemHangarItems", Logging.Debug);
+                        Logging.Log("StatisticsState.ListItemHangarItems");
                         List<ItemCache> ItemsToList;
                         if (Cache.Instance.ItemHangar != null && Cache.Instance.ItemHangar.Items.Any())
                         {
@@ -639,7 +635,7 @@ namespace Questor.Modules.Logging
                     if (Cache.Instance.InStation && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(20))
                     {
                         _States.CurrentStatisticsState = StatisticsState.Idle;
-                        Logging.Log("Statistics", "StatisticsState.ListLootHangarItems", Logging.Debug);
+                        Logging.Log("StatisticsState.ListLootHangarItems");
                         List<ItemCache> ItemsToList;
                         if (Cache.Instance.LootHangar != null && Cache.Instance.LootHangar.Items.Any())
                         {
@@ -658,7 +654,7 @@ namespace Questor.Modules.Logging
                     if (Cache.Instance.InStation && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(20))
                     {
                         _States.CurrentStatisticsState = StatisticsState.Idle;
-                        Logging.Log("Statistics", "StatisticsState.ListLootContainerItems", Logging.Debug);
+                        Logging.Log("StatisticsState.ListLootContainerItems");
                         List<ItemCache> ItemsToList;
                         if (Cache.Instance.LootContainer != null && Cache.Instance.LootContainer.Items.Any())
                         {

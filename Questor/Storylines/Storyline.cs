@@ -305,7 +305,7 @@ namespace Questor.Storylines
                     //    return missionsInJournal.FirstOrDefault(m => m.AgentId == Cache.Instance.CurrentStorylineAgentId);
 
                     missionsInJournal = missionsInJournal.Where(m => !Cache.Instance.AgentBlacklist.Contains(m.AgentId)).ToList();
-                    Logging.Log("Storyline", "Currently have  [" + missionsInJournal.Count() + "] missions available", Logging.Yellow);
+                    Logging.Log("Currently have  [" + missionsInJournal.Count() + "] missions available");
                     if (Logging.DebugStorylineMissions)
                     {
                         var i = 1;
@@ -345,22 +345,20 @@ namespace Questor.Storylines
                             var mission = notCompatibleStorylines.FirstOrDefault(m => m.State == (int) MissionState.Offered);
                             if (mission != null)
                             {
-                                Logging.Log("Storyline", "Removing storyline mission offer [" + mission.Name + "] to make room for new storylines.",
-                                    Logging.White);
+                                Logging.Log("Removing storyline mission offer [" + mission.Name + "] to make room for new storylines.");
                                 mission.RemoveOffer();
                             }
                         }
                     }
 
-                    Logging.Log("Storyline",
-                        "Currently have  [" + missionsInJournal.Count() + "] storyline missions questor knows how to do and are not blacklisted", Logging.Yellow);
+                    Logging.Log("Currently have  [" + missionsInJournal.Count() + "] storyline missions questor knows how to do and are not blacklisted");
                     missionsInJournal.ToList();
                     //missions = missions.Where(m => !Settings.Instance.MissionGreylist.Any(b => b.ToLower() == Logging.FilterPath(m.Name).ToLower()));
                     return missionsInJournal.FirstOrDefault();
                 }
                 catch (Exception exception)
                 {
-                    Logging.Log("Storyline.StorylineMission", "StorylineMission - Exception: [" + exception + "]", Logging.Debug);
+                    Logging.Log("StorylineMission - Exception: [" + exception + "]");
                     return null;
                 }
             }
@@ -389,7 +387,7 @@ namespace Questor.Storylines
             }
             catch (Exception exception)
             {
-                Logging.Log("Storyline.Reset", "IterateShipTargetValues - Exception: [" + exception + "]", Logging.Debug);
+                Logging.Log("IterateShipTargetValues - Exception: [" + exception + "]");
                 return;
             }
         }
@@ -412,15 +410,14 @@ namespace Questor.Storylines
                 var storylineagent = Cache.Instance.DirectEve.GetAgentById(Cache.Instance.CurrentStorylineAgentId);
                 if (storylineagent == null)
                 {
-                    Logging.Log("Storyline", "Unknown agent [" + Cache.Instance.CurrentStorylineAgentId + "]", Logging.Yellow);
+                    Logging.Log("Unknown agent [" + Cache.Instance.CurrentStorylineAgentId + "]");
                     AgentInteraction.UseStorylineAgentAsActiveAgent = false;
                     _States.CurrentStorylineState = StorylineState.Done;
                     return;
                 }
 
-                Logging.Log("Storyline",
-                    "Going to do [" + currentStorylineMission.Name + "] for agent [" + storylineagent.Name + "] AgentID[" +
-                    Cache.Instance.CurrentStorylineAgentId + "]", Logging.Yellow);
+                Logging.Log("Going to do [" + currentStorylineMission.Name + "] for agent [" + storylineagent.Name + "] AgentID[" +
+                    Cache.Instance.CurrentStorylineAgentId + "]");
                 MissionSettings.MissionName = currentStorylineMission.Name;
                 AgentInteraction.UseStorylineAgentAsActiveAgent = true;
                 _highSecChecked = false;
@@ -429,7 +426,7 @@ namespace Questor.Storylines
             }
             catch (Exception exception)
             {
-                Logging.Log("Storyline.IdleState", "IterateShipTargetValues - Exception: [" + exception + "]", Logging.Debug);
+                Logging.Log("IterateShipTargetValues - Exception: [" + exception + "]");
                 return;
             }
         }
@@ -461,7 +458,7 @@ namespace Questor.Storylines
                 {
                     if (!Traveler.SetStationDestination(storylineagent.StationId))
                     {
-                        Logging.Log("Storyline", "GotoAgent: Unable to find route to storyline agent. Skipping.", Logging.Yellow);
+                        Logging.Log("GotoAgent: Unable to find route to storyline agent. Skipping.");
                         _States.CurrentStorylineState = StorylineState.Done;
                         return;
                     }
@@ -478,7 +475,7 @@ namespace Questor.Storylines
                         _highSecCounter++;
                         return;
                     }
-                    Logging.Log("Storyline", "GotoAgent: Unable to determine whether route is all high security status or not. Skipping.", Logging.Yellow);
+                    Logging.Log("GotoAgent: Unable to determine whether route is all high security status or not. Skipping.");
                     _States.CurrentStorylineState = StorylineState.Done;
                     _highSecCounter = 0;
                     return;
@@ -486,7 +483,7 @@ namespace Questor.Storylines
 
                 if (!Cache.Instance.RouteIsAllHighSecBool)
                 {
-                    Logging.Log("Storyline", "GotoAgent: Route to agent is through low-sec systems. Skipping.", Logging.Yellow);
+                    Logging.Log("GotoAgent: Route to agent is through low-sec systems. Skipping.");
                     _States.CurrentStorylineState = StorylineState.Done;
                     return;
                 }
@@ -529,7 +526,7 @@ namespace Questor.Storylines
             // Yes, open the ships cargo
             if (Cache.Instance.CurrentShipsCargo == null)
             {
-                if (Logging.DebugUnloadLoot) Logging.Log("BringSpoilsOfWar", "if (Cache.Instance.CurrentShipsCargo == null)", Logging.Teal);
+                if (Logging.DebugUnloadLoot) Logging.Log("if (Cache.Instance.CurrentShipsCargo == null)");
                 return false;
             }
 
@@ -544,12 +541,12 @@ namespace Questor.Storylines
                 {
                     if (Cache.Instance.CurrentShipsCargo.Capacity - Cache.Instance.CurrentShipsCargo.UsedCapacity - (item.Volume*item.Quantity) < 0)
                     {
-                        Logging.Log("Storyline", "We are full, not moving anything else", Logging.Yellow);
+                        Logging.Log("We are full, not moving anything else");
                         _States.CurrentStorylineState = StorylineState.Done;
                         return true;
                     }
 
-                    Logging.Log("Storyline", "Moving [" + item.TypeName + "][" + item.ItemId + "] to cargo", Logging.Yellow);
+                    Logging.Log("Moving [" + item.TypeName + "][" + item.ItemId + "] to cargo");
                     Cache.Instance.CurrentShipsCargo.Add(item, item.Quantity);
                     return false;
                 }
@@ -557,7 +554,7 @@ namespace Questor.Storylines
                 return false;
             }
 
-            if (Logging.DebugStorylineMissions) Logging.Log("BringSpoilsOfWar", "There are more items to move: waiting for locks to clear.", Logging.White);
+            if (Logging.DebugStorylineMissions) Logging.Log("There are more items to move: waiting for locks to clear.");
             return false;
         }
 
@@ -591,7 +588,7 @@ namespace Questor.Storylines
                 case StorylineState.DeclineMission:
                     if (_States.CurrentAgentInteractionState == AgentInteractionState.Idle)
                     {
-                        Logging.Log("Storyline.AgentInteraction", "Start conversation [Decline Mission]", Logging.Yellow);
+                        Logging.Log("Start conversation [Decline Mission]");
 
                         _States.CurrentAgentInteractionState = AgentInteractionState.StartConversation;
                         AgentInteraction.Purpose = AgentInteractionPurpose.DeclineMission;
@@ -612,7 +609,7 @@ namespace Questor.Storylines
                     //Logging.Log("Storyline: AcceptMission!!-");
                     if (_States.CurrentAgentInteractionState == AgentInteractionState.Idle)
                     {
-                        Logging.Log("Storyline.AgentInteraction", "Start conversation [Start Mission]", Logging.Yellow);
+                        Logging.Log("Start conversation [Start Mission]");
 
                         _States.CurrentAgentInteractionState = AgentInteractionState.StartConversation;
                         AgentInteraction.Purpose = AgentInteractionPurpose.StartMission;
@@ -642,7 +639,7 @@ namespace Questor.Storylines
                 case StorylineState.CompleteMission:
                     if (_States.CurrentAgentInteractionState == AgentInteractionState.Idle)
                     {
-                        Logging.Log("AgentInteraction", "Start Conversation [Complete Mission]", Logging.Yellow);
+                        Logging.Log("Start Conversation [Complete Mission]");
 
                         _States.CurrentAgentInteractionState = AgentInteractionState.StartConversation;
                         AgentInteraction.Purpose = AgentInteractionPurpose.CompleteMission;
@@ -664,9 +661,8 @@ namespace Questor.Storylines
                 case StorylineState.BlacklistAgent:
 
                     Cache.Instance.AgentBlacklist.Add(Cache.Instance.CurrentStorylineAgentId);
-                    Logging.Log("Storyline",
-                        "BlacklistAgent: The agent that provided us with this storyline mission has been added to the session blacklist AgentId[" +
-                        Cache.Instance.CurrentStorylineAgentId + "]", Logging.White);
+                    Logging.Log("BlacklistAgent: The agent that provided us with this storyline mission has been added to the session blacklist AgentId[" +
+                        Cache.Instance.CurrentStorylineAgentId + "]");
 
 
                     var currentStorylines =
@@ -681,8 +677,7 @@ namespace Questor.Storylines
                         var mission = currentStorylines.FirstOrDefault();
                         if (mission != null)
                         {
-                            Logging.Log("Storyline", "Removing storyline mission [" + mission.Name + "] because it's against a blacklisted faction.",
-                                Logging.Orange);
+                            Logging.Log("Removing storyline mission [" + mission.Name + "] because it's against a blacklisted faction.");
                             mission.RemoveOffer();
                         }
                     }

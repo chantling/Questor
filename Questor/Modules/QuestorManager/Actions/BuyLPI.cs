@@ -83,7 +83,7 @@ namespace QuestorManager.Actions
                         {
                             if (_loyaltyPointTimeout < DateTime.UtcNow)
                             {
-                                Logging.Log("BuyLPI", "It seems we have no loyalty points left", Logging.White);
+                                Logging.Log("It seems we have no loyalty points left");
                                 _States.CurrentBuyLPIState = BuyLPIState.Done;
                                 break;
                             }
@@ -95,7 +95,7 @@ namespace QuestorManager.Actions
                         // Find the offer
                         if (_offer == null)
                         {
-                            Logging.Log("BuyLPI", "Can't find offer with type name/id: " + Item + "!", Logging.White);
+                            Logging.Log("Can't find offer with type name/id: " + Item + "!");
                             _States.CurrentBuyLPIState = BuyLPIState.Done;
                             break;
                         }
@@ -111,7 +111,7 @@ namespace QuestorManager.Actions
                         // Check LP
                         if (_lastLoyaltyPoints < _offer.LoyaltyPointCost)
                         {
-                            Logging.Log("BuyLPI", "Not enough loyalty points left", Logging.White);
+                            Logging.Log("Not enough loyalty points left");
 
                             _States.CurrentBuyLPIState = BuyLPIState.Done;
                             break;
@@ -120,7 +120,7 @@ namespace QuestorManager.Actions
                         // Check ISK
                         if (Cache.Instance.DirectEve.Me.Wealth < _offer.IskCost)
                         {
-                            Logging.Log("BuyLPI", "Not enough ISK left", Logging.White);
+                            Logging.Log("Not enough ISK left");
 
                             _States.CurrentBuyLPIState = BuyLPIState.Done;
                             break;
@@ -135,8 +135,8 @@ namespace QuestorManager.Actions
                             {
                                 if (ship == null || ship.Quantity < requiredItem.Quantity)
                                 {
-                                    Logging.Log("BuyLPI", "Missing [" + requiredItem.Quantity + "] x [" +
-                                                          requiredItem.TypeName + "]", Logging.White);
+                                    Logging.Log("Missing [" + requiredItem.Quantity + "] x [" +
+                                                          requiredItem.TypeName + "]");
 
                                     //if(!_form.chkBuyItems.Checked)
                                     //{
@@ -145,8 +145,7 @@ namespace QuestorManager.Actions
                                     //    break;
                                     //}
 
-                                    Logging.Log("BuyLPI", "Are buying the item [" + requiredItem.TypeName + "]",
-                                        Logging.White);
+                                    Logging.Log("Are buying the item [" + requiredItem.TypeName + "]");
                                     _requiredUnit = Convert.ToInt32(requiredItem.Quantity);
                                     _requiredItemId = requiredItem.TypeId;
                                     _States.CurrentBuyLPIState = BuyLPIState.OpenMarket;
@@ -176,7 +175,7 @@ namespace QuestorManager.Actions
 
                 case BuyLPIState.BuyItems:
 
-                    Logging.Log("BuyLPI", "Opening Market", Logging.White);
+                    Logging.Log("Opening Market");
 
                     if (marketWindow != null && marketWindow.DetailTypeId != _requiredItemId)
                     {
@@ -193,7 +192,7 @@ namespace QuestorManager.Actions
 
                         if (order == null)
                         {
-                            Logging.Log("BuyLPI", "No orders", Logging.White);
+                            Logging.Log("No orders");
                             _States.CurrentBuyLPIState = BuyLPIState.Done;
                             break;
                         }
@@ -201,7 +200,7 @@ namespace QuestorManager.Actions
                         order.Buy(_requiredUnit, DirectOrderRange.Station);
                     }
 
-                    Logging.Log("BuyLPI", "Buy Item", Logging.White);
+                    Logging.Log("Buy Item");
 
                     _States.CurrentBuyLPIState = BuyLPIState.CheckPetition;
 
@@ -215,7 +214,7 @@ namespace QuestorManager.Actions
 
                         if (offer2 != null)
                         {
-                            Logging.Log("BuyLPI", "Accepting [" + offer2.TypeName + "]", Logging.White);
+                            Logging.Log("Accepting [" + offer2.TypeName + "]");
                             offer2.AcceptOfferFromWindow();
                         }
                     }
@@ -229,7 +228,7 @@ namespace QuestorManager.Actions
                     Unit = Unit - 1;
                     if (Unit <= 0)
                     {
-                        Logging.Log("BuyLPI", "Quantity limit reached", Logging.White);
+                        Logging.Log("Quantity limit reached");
 
                         _States.CurrentBuyLPIState = BuyLPIState.Done;
                         break;

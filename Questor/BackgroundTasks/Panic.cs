@@ -96,9 +96,8 @@ namespace Questor.Modules.BackgroundTasks
 
             if (Settings.Instance.WatchForActiveWars && Cache.Instance.IsCorpInWar)
             {
-                Logging.Logging.Log("Cache",
-                    "Your corp is involved in a war [" + Cache.Instance.IsCorpInWar + "] and WatchForActiveWars [" + Settings.Instance.WatchForActiveWars +
-                    "], Starting panic!", Logging.Logging.Orange);
+                Logging.Logging.Log("Your corp is involved in a war [" + Cache.Instance.IsCorpInWar + "] and WatchForActiveWars [" + Settings.Instance.WatchForActiveWars +
+                    "], Starting panic!");
                 _States.CurrentPanicState = PanicState.StartPanicking;
                 //return;
             }
@@ -107,7 +106,7 @@ namespace Questor.Modules.BackgroundTasks
             {
                 if (!Cache.Instance.InMission && Cache.Instance.ActiveShip.GroupId == (int) Group.Capsule)
                 {
-                    Logging.Logging.Log("Panic", "You are in a Capsule, you must have died :(", Logging.Logging.Red);
+                    Logging.Logging.Log("You are in a Capsule, you must have died :(");
                     _States.CurrentPanicState = PanicState.BookmarkMyWreck;
                     //_States.CurrentPanicState = PanicState.StartPanicking;
                     return true;
@@ -116,13 +115,12 @@ namespace Questor.Modules.BackgroundTasks
                 if (Combat.Combat.PotentialCombatTargets.Any())
                 {
                     if (Logging.Logging.DebugPanic)
-                        Logging.Logging.Log("Panic.Normal", "We have been locked by [" + Combat.Combat.TargetedBy.Count() + "] Entities", Logging.Logging.Debug);
+                        Logging.Logging.Log("We have been locked by [" + Combat.Combat.TargetedBy.Count() + "] Entities");
                     var EntitiesThatAreWarpScramblingMe = Combat.Combat.PotentialCombatTargets.Where(t => t.IsWarpScramblingMe).ToList();
                     if (EntitiesThatAreWarpScramblingMe.Any())
                     {
                         if (Logging.Logging.DebugPanic)
-                            Logging.Logging.Log("Panic.Normal", "We have been warp scrambled by [" + EntitiesThatAreWarpScramblingMe.Count() + "] Entities",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("We have been warp scrambled by [" + EntitiesThatAreWarpScramblingMe.Count() + "] Entities");
                         if (Drones.UseDrones)
                             Drones.AddDronePriorityTargets(EntitiesThatAreWarpScramblingMe, DronePriority.WarpScrambler, "Panic",
                                 Drones.AddWarpScramblersToDronePriorityTargetList);
@@ -136,8 +134,7 @@ namespace Questor.Modules.BackgroundTasks
                         if (EntitiesThatAreWebbingMe.Any())
                         {
                             if (Logging.Logging.DebugPanic)
-                                Logging.Logging.Log("Panic.Normal", "We have been webbed by [" + EntitiesThatAreWebbingMe.Count() + "] Entities",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("We have been webbed by [" + EntitiesThatAreWebbingMe.Count() + "] Entities");
                             if (Drones.UseDrones)
                                 Drones.AddDronePriorityTargets(EntitiesThatAreWebbingMe, DronePriority.Webbing, "Panic",
                                     Drones.AddWebifiersToDronePriorityTargetList);
@@ -149,8 +146,7 @@ namespace Questor.Modules.BackgroundTasks
                         if (EntitiesThatAreTargetPaintingMe.Any())
                         {
                             if (Logging.Logging.DebugPanic)
-                                Logging.Logging.Log("Panic.Normal", "We have been target painted by [" + EntitiesThatAreTargetPaintingMe.Count() + "] Entities",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("We have been target painted by [" + EntitiesThatAreTargetPaintingMe.Count() + "] Entities");
                             if (Drones.UseDrones)
                                 Drones.AddDronePriorityTargets(EntitiesThatAreTargetPaintingMe, DronePriority.PriorityKillTarget, "Panic",
                                     Drones.AddTargetPaintersToDronePriorityTargetList);
@@ -163,8 +159,7 @@ namespace Questor.Modules.BackgroundTasks
                     if (EntitiesThatAreNeutralizingMe.Any())
                     {
                         if (Logging.Logging.DebugPanic)
-                            Logging.Logging.Log("Panic.Normal", "We have been neuted by [" + EntitiesThatAreNeutralizingMe.Count() + "] Entities",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("We have been neuted by [" + EntitiesThatAreNeutralizingMe.Count() + "] Entities");
                         if (Drones.UseDrones)
                             Drones.AddDronePriorityTargets(EntitiesThatAreNeutralizingMe, DronePriority.PriorityKillTarget, "Panic",
                                 Drones.AddNeutralizersToDronePriorityTargetList);
@@ -176,8 +171,7 @@ namespace Questor.Modules.BackgroundTasks
                     if (EntitiesThatAreJammingMe.Any())
                     {
                         if (Logging.Logging.DebugPanic)
-                            Logging.Logging.Log("Panic.Normal", "We have been ECMd by [" + EntitiesThatAreJammingMe.Count() + "] Entities",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("We have been ECMd by [" + EntitiesThatAreJammingMe.Count() + "] Entities");
                         if (Drones.UseDrones)
                             Drones.AddDronePriorityTargets(EntitiesThatAreJammingMe, DronePriority.PriorityKillTarget, "Panic", Drones.AddECMsToDroneTargetList);
                         Combat.Combat.AddPrimaryWeaponPriorityTargets(EntitiesThatAreJammingMe, PrimaryWeaponPriority.Jamming, "Panic",
@@ -188,8 +182,7 @@ namespace Questor.Modules.BackgroundTasks
                     if (EntitiesThatAreSensorDampeningMe.Any())
                     {
                         if (Logging.Logging.DebugPanic)
-                            Logging.Logging.Log("Panic.Normal", "We have been Sensor Damped by [" + EntitiesThatAreSensorDampeningMe.Count() + "] Entities",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("We have been Sensor Damped by [" + EntitiesThatAreSensorDampeningMe.Count() + "] Entities");
                         if (Drones.UseDrones)
                             Drones.AddDronePriorityTargets(EntitiesThatAreSensorDampeningMe, DronePriority.PriorityKillTarget, "Panic",
                                 Drones.AddDampenersToDronePriorityTargetList);
@@ -206,8 +199,7 @@ namespace Questor.Modules.BackgroundTasks
                         if (EntitiesThatAreTrackingDisruptingMe.Any())
                         {
                             if (Logging.Logging.DebugPanic)
-                                Logging.Logging.Log("Panic.Normal",
-                                    "We have been Tracking Disrupted by [" + EntitiesThatAreTrackingDisruptingMe.Count() + "] Entities", Logging.Logging.Debug);
+                                Logging.Logging.Log("We have been Tracking Disrupted by [" + EntitiesThatAreTrackingDisruptingMe.Count() + "] Entities");
                             if (Drones.UseDrones)
                                 Drones.AddDronePriorityTargets(EntitiesThatAreTrackingDisruptingMe, DronePriority.PriorityKillTarget, "Panic",
                                     Drones.AddTrackingDisruptorsToDronePriorityTargetList);
@@ -225,10 +217,9 @@ namespace Questor.Modules.BackgroundTasks
                     foreach (var target in Drones.DronePriorityEntities)
                     {
                         icount++;
-                        Logging.Logging.Log("Panic.ListDronePriorityTargets",
-                            "[" + icount + "][" + target.Name + "][" + target.MaskedId + "][" + Math.Round(target.Distance/1000, 0) + "k away] WARP[" +
+                        Logging.Logging.Log("[" + icount + "][" + target.Name + "][" + target.MaskedId + "][" + Math.Round(target.Distance / 1000, 0) + "k away] WARP[" +
                             target.IsWarpScramblingMe + "] ECM[" + target.IsJammingMe + "] Damp[" + target.IsSensorDampeningMe + "] TP[" +
-                            target.IsTargetPaintingMe + "] NEUT[" + target.IsNeutralizingMe + "]", Logging.Logging.Teal);
+                            target.IsTargetPaintingMe + "] NEUT[" + target.IsNeutralizingMe + "]");
                         continue;
                     }
 
@@ -236,10 +227,9 @@ namespace Questor.Modules.BackgroundTasks
                     foreach (var target in Combat.Combat.PrimaryWeaponPriorityEntities)
                     {
                         icount++;
-                        Logging.Logging.Log("Panic.ListPrimaryWeaponPriorityTargets",
-                            "[" + icount + "][" + target.Name + "][" + target.MaskedId + "][" + Math.Round(target.Distance/1000, 0) + "k away] WARP[" +
+                        Logging.Logging.Log("[" + icount + "][" + target.Name + "][" + target.MaskedId + "][" + Math.Round(target.Distance / 1000, 0) + "k away] WARP[" +
                             target.IsWarpScramblingMe + "] ECM[" + target.IsJammingMe + "] Damp[" + target.IsSensorDampeningMe + "] TP[" +
-                            target.IsTargetPaintingMe + "] NEUT[" + target.IsNeutralizingMe + "]", Logging.Logging.Teal);
+                            target.IsTargetPaintingMe + "] NEUT[" + target.IsNeutralizingMe + "]");
                         continue;
                     }
                 }
@@ -259,11 +249,10 @@ namespace Questor.Modules.BackgroundTasks
                         if (DateTime.UtcNow > Time.Instance.LastInWarp.AddSeconds(30))
                         {
                             // Only check for cap-panic while in a mission, not while doing anything else
-                            Logging.Logging.Log("Panic",
-                                "Start panicking, capacitor [" + Math.Round(Cache.Instance.ActiveShip.CapacitorPercentage, 0) + "%] below [" +
+                            Logging.Logging.Log("Start panicking, capacitor [" + Math.Round(Cache.Instance.ActiveShip.CapacitorPercentage, 0) + "%] below [" +
                                 MinimumCapacitorPct + "%] S[" + Math.Round(Cache.Instance.ActiveShip.ShieldPercentage, 0) + "%] A[" +
                                 Math.Round(Cache.Instance.ActiveShip.ArmorPercentage, 0) + "%] C[" +
-                                Math.Round(Cache.Instance.ActiveShip.CapacitorPercentage, 0) + "%]", Logging.Logging.Red);
+                                Math.Round(Cache.Instance.ActiveShip.CapacitorPercentage, 0) + "%]");
 
                             //Questor.panic_attempts_this_mission;
                             Statistics.PanicAttemptsThisMission++;
@@ -276,10 +265,9 @@ namespace Questor.Modules.BackgroundTasks
 
                 if (Cache.Instance.ActiveShip.ShieldPercentage < MinimumShieldPct)
                 {
-                    Logging.Logging.Log("Panic",
-                        "Start panicking, shield [" + Math.Round(Cache.Instance.ActiveShip.ShieldPercentage, 0) + "%] below [" + MinimumShieldPct + "%] S[" +
+                    Logging.Logging.Log("Start panicking, shield [" + Math.Round(Cache.Instance.ActiveShip.ShieldPercentage, 0) + "%] below [" + MinimumShieldPct + "%] S[" +
                         Math.Round(Cache.Instance.ActiveShip.ShieldPercentage, 0) + "%] A[" + Math.Round(Cache.Instance.ActiveShip.ArmorPercentage, 0) + "%] C[" +
-                        Math.Round(Cache.Instance.ActiveShip.CapacitorPercentage, 0) + "%]", Logging.Logging.Red);
+                        Math.Round(Cache.Instance.ActiveShip.CapacitorPercentage, 0) + "%]");
                     Statistics.PanicAttemptsThisMission++;
                     Statistics.PanicAttemptsThisPocket++;
                     _States.CurrentPanicState = PanicState.StartPanicking;
@@ -288,10 +276,9 @@ namespace Questor.Modules.BackgroundTasks
 
                 if (Cache.Instance.ActiveShip.ArmorPercentage < MinimumArmorPct)
                 {
-                    Logging.Logging.Log("Panic",
-                        "Start panicking, armor [" + Math.Round(Cache.Instance.ActiveShip.ArmorPercentage, 0) + "%] below [" + MinimumArmorPct + "%] S[" +
+                    Logging.Logging.Log("Start panicking, armor [" + Math.Round(Cache.Instance.ActiveShip.ArmorPercentage, 0) + "%] below [" + MinimumArmorPct + "%] S[" +
                         Math.Round(Cache.Instance.ActiveShip.ShieldPercentage, 0) + "%] A[" + Math.Round(Cache.Instance.ActiveShip.ArmorPercentage, 0) + "%] C[" +
-                        Math.Round(Cache.Instance.ActiveShip.CapacitorPercentage, 0) + "%]", Logging.Logging.Red);
+                        Math.Round(Cache.Instance.ActiveShip.CapacitorPercentage, 0) + "%]");
                     Statistics.PanicAttemptsThisMission++;
                     Statistics.PanicAttemptsThisPocket++;
                     _States.CurrentPanicState = PanicState.StartPanicking;
@@ -305,7 +292,7 @@ namespace Questor.Modules.BackgroundTasks
                 {
                     if (Cache.Instance.ActiveShip.GroupId == (int) Group.Capsule)
                     {
-                        Logging.Logging.Log("Panic", "You are in a Capsule, you must have died in a mission :(", Logging.Logging.Red);
+                        Logging.Logging.Log("You are in a Capsule, you must have died in a mission :(");
                         _States.CurrentPanicState = PanicState.BookmarkMyWreck;
                     }
 
@@ -320,7 +307,7 @@ namespace Questor.Modules.BackgroundTasks
                         Statistics.PanicAttemptsThisMission++;
                         Statistics.PanicAttemptsThisPocket++;
                         _States.CurrentPanicState = PanicState.StartPanicking;
-                        Logging.Logging.Log("Panic", "Start panicking, mission invaded by [" + frigates + "] Frigates", Logging.Logging.Red);
+                        Logging.Logging.Log("Start panicking, mission invaded by [" + frigates + "] Frigates");
                     }
 
                     if (Settings.Instance.CruiserInvasionLimit > 0 && cruisers >= Settings.Instance.CruiserInvasionLimit)
@@ -330,7 +317,7 @@ namespace Questor.Modules.BackgroundTasks
                         Statistics.PanicAttemptsThisMission++;
                         Statistics.PanicAttemptsThisPocket++;
                         _States.CurrentPanicState = PanicState.StartPanicking;
-                        Logging.Logging.Log("Panic", "Start panicking, mission invaded by [" + cruisers + "] Cruisers", Logging.Logging.Red);
+                        Logging.Logging.Log("Start panicking, mission invaded by [" + cruisers + "] Cruisers");
                     }
 
                     if (Settings.Instance.BattlecruiserInvasionLimit > 0 && battlecruisers >= Settings.Instance.BattlecruiserInvasionLimit)
@@ -340,7 +327,7 @@ namespace Questor.Modules.BackgroundTasks
                         Statistics.PanicAttemptsThisMission++;
                         Statistics.PanicAttemptsThisPocket++;
                         _States.CurrentPanicState = PanicState.StartPanicking;
-                        Logging.Logging.Log("Panic", "Start panicking, mission invaded by [" + battlecruisers + "] BattleCruisers", Logging.Logging.Red);
+                        Logging.Logging.Log("Start panicking, mission invaded by [" + battlecruisers + "] BattleCruisers");
                     }
 
                     if (Settings.Instance.BattleshipInvasionLimit > 0 && battleships >= Settings.Instance.BattleshipInvasionLimit)
@@ -350,7 +337,7 @@ namespace Questor.Modules.BackgroundTasks
                         Statistics.PanicAttemptsThisMission++;
                         Statistics.PanicAttemptsThisPocket++;
                         _States.CurrentPanicState = PanicState.StartPanicking;
-                        Logging.Logging.Log("Panic", "Start panicking, mission invaded by [" + battleships + "] BattleShips", Logging.Logging.Red);
+                        Logging.Logging.Log("Start panicking, mission invaded by [" + battleships + "] BattleShips");
                     }
 
                     if (_delayedResume)
@@ -359,9 +346,8 @@ namespace Questor.Modules.BackgroundTasks
                         _randomDelay += Settings.Instance.InvasionMinimumDelay;
                         foreach (var enemy in Cache.Instance.EntitiesNotSelf.Where(e => e.IsPlayer))
                         {
-                            Logging.Logging.Log("Panic",
-                                "Invaded by: PlayerName [" + enemy.Name + "] ShipTypeID [" + enemy.TypeId + "] Distance [" + Math.Round(enemy.Distance, 0)/1000 +
-                                "k] Velocity [" + Math.Round(enemy.Velocity, 0) + "]", Logging.Logging.Red);
+                            Logging.Logging.Log("Invaded by: PlayerName [" + enemy.Name + "] ShipTypeID [" + enemy.TypeId + "] Distance [" + Math.Round(enemy.Distance, 0) / 1000 +
+                                "k] Velocity [" + Math.Round(enemy.Velocity, 0) + "]");
                         }
                     }
                 }
@@ -397,7 +383,7 @@ namespace Questor.Modules.BackgroundTasks
 
             if (Cache.Instance.InStation)
             {
-                Logging.Logging.Log("Panic", "Entered a station, lower panic mode", Logging.Logging.White);
+                Logging.Logging.Log("Entered a station, lower panic mode");
                 //Settings.Instance.LoadSettings(false);
                 _States.CurrentPanicState = PanicState.Panic;
                 return;
@@ -407,9 +393,8 @@ namespace Questor.Modules.BackgroundTasks
             if (_States.CurrentPanicState == PanicState.StartPanicking &&
                 Cache.Instance.DistanceFromMe(_lastNormalX, _lastNormalY, _lastNormalZ) > (int) Distances.PanicDistanceToConsiderSafelyWarpedOff)
             {
-                Logging.Logging.Log("Panic",
-                    "We have warped off:  My ShipType: [" + Logging.Logging.Yellow + Cache.Instance.ActiveShip.TypeName + Logging.Logging.White +
-                    "] My ShipName [" + Logging.Logging.Yellow + Cache.Instance.ActiveShip.GivenName + Logging.Logging.White + "]", Logging.Logging.White);
+                Logging.Logging.Log("We have warped off:  My ShipType: [" + Logging.Logging.Yellow + Cache.Instance.ActiveShip.TypeName + Logging.Logging.White +
+                    "] My ShipName [" + Logging.Logging.Yellow + Cache.Instance.ActiveShip.GivenName + Logging.Logging.White + "]");
                 _States.CurrentPanicState = PanicState.Panicking;
             }
 
@@ -449,10 +434,9 @@ namespace Questor.Modules.BackgroundTasks
                         if (WarpScrambledBy != null && DateTime.UtcNow > _nextWarpScrambledWarning)
                         {
                             _nextWarpScrambledWarning = DateTime.UtcNow.AddSeconds(20);
-                            Logging.Logging.Log("Panic",
-                                "We are scrambled by: [" + Logging.Logging.White + WarpScrambledBy.Name + Logging.Logging.Orange + "][" + Logging.Logging.White +
+                            Logging.Logging.Log("We are scrambled by: [" + Logging.Logging.White + WarpScrambledBy.Name + Logging.Logging.Orange + "][" + Logging.Logging.White +
                                 Math.Round(WarpScrambledBy.Distance, 0) + Logging.Logging.Orange + "][" + Logging.Logging.White + WarpScrambledBy.Id +
-                                Logging.Logging.Orange + "]", Logging.Logging.Orange);
+                                Logging.Logging.Orange + "]");
                             _lastWarpScrambled = DateTime.UtcNow;
                         }
                     }
@@ -463,16 +447,14 @@ namespace Questor.Modules.BackgroundTasks
                     {
                         if (station.WarpTo())
                         {
-                            Logging.Logging.Log("Panic",
-                                "Warping to [" + Logging.Logging.Yellow + station.Name + Logging.Logging.Red + "][" + Logging.Logging.Yellow +
-                                Math.Round((station.Distance/1000)/149598000, 2) + Logging.Logging.Red + " AU away]", Logging.Logging.Red);
+                            Logging.Logging.Log("Warping to [" + Logging.Logging.Yellow + station.Name + Logging.Logging.Red + "][" + Logging.Logging.Yellow +
+                                Math.Round((station.Distance / 1000) / 149598000, 2) + Logging.Logging.Red + " AU away]");
                             Drones.IsMissionPocketDone = true;
                         }
                     }
                     else
-                        Logging.Logging.Log("Panic",
-                            "Warping will be attempted again after [" + Math.Round(Time.Instance.NextWarpAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) +
-                            "sec]", Logging.Logging.Red);
+                        Logging.Logging.Log("Warping will be attempted again after [" + Math.Round(Time.Instance.NextWarpAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) +
+                            "sec]");
 
                     //if (Cache.Instance.ActiveShip.GroupId == (int)Group.Capsule)
                     //{
@@ -485,9 +467,8 @@ namespace Questor.Modules.BackgroundTasks
                 {
                     if (station.Dock())
                     {
-                        Logging.Logging.Log("Panic",
-                            "Docking with [" + Logging.Logging.Yellow + station.Name + Logging.Logging.Red + "][" + Logging.Logging.Yellow +
-                            Math.Round((station.Distance/1000)/149598000, 2) + Logging.Logging.Red + " AU away]", Logging.Logging.Red);
+                        Logging.Logging.Log("Docking with [" + Logging.Logging.Yellow + station.Name + Logging.Logging.Red + "][" + Logging.Logging.Yellow +
+                            Math.Round((station.Distance / 1000) / 149598000, 2) + Logging.Logging.Red + " AU away]");
                     }
 
                     return;
@@ -499,22 +480,18 @@ namespace Questor.Modules.BackgroundTasks
                     {
                         if (station.Approach())
                         {
-                            Logging.Logging.Log("Panic", "Approaching to [" + station.Name + "] which is [" + Math.Round(station.Distance/1000, 0) + "k away]",
-                                Logging.Logging.Red);
+                            Logging.Logging.Log("Approaching to [" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]");
                             return;
                         }
 
                         return;
                     }
 
-                    Logging.Logging.Log("Panic", "Already Approaching to: [" + station.Name + "] which is [" + Math.Round(station.Distance/1000, 0) + "k away]",
-                        Logging.Logging.Red);
+                    Logging.Logging.Log("Already Approaching to: [" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]");
                     return;
                 }
 
-                Logging.Logging.Log("Panic",
-                    "Approaching has been delayed for [" + Math.Round(Time.Instance.NextWarpAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]",
-                    Logging.Logging.Red);
+                Logging.Logging.Log("Approaching has been delayed for [" + Math.Round(Time.Instance.NextWarpAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]");
                 return;
             }
 
@@ -522,7 +499,7 @@ namespace Questor.Modules.BackgroundTasks
             {
                 if (DateTime.UtcNow.Subtract(Time.Instance.LastLoggingAction).TotalSeconds > 15)
                 {
-                    Logging.Logging.Log("Panic", "No station found in local?", Logging.Logging.Red);
+                    Logging.Logging.Log("No station found in local?");
                 }
 
                 if (Cache.Instance.SafeSpotBookmarks.Any() &&
@@ -546,7 +523,7 @@ namespace Questor.Modules.BackgroundTasks
 
                             if (Combat.Combat.TargetedBy.Any(t => t.IsWarpScramblingMe))
                             {
-                                Logging.Logging.Log("Panic", "We are still warp scrambled!", Logging.Logging.Red);
+                                Logging.Logging.Log("We are still warp scrambled!");
                                 //This runs every 'tick' so we should see it every 1.5 seconds or so
                                 _lastWarpScrambled = DateTime.UtcNow;
                                 return;
@@ -560,18 +537,15 @@ namespace Questor.Modules.BackgroundTasks
                                     var DistanceToBm = Cache.Instance.DistanceFromMe(offridSafeSpotBookmark.X ?? 0,
                                         offridSafeSpotBookmark.Y ?? 0,
                                         offridSafeSpotBookmark.Z ?? 0);
-                                    Logging.Logging.Log("Panic",
-                                        "Warping to safespot bookmark [" + offridSafeSpotBookmark.Title + "][" + Math.Round((DistanceToBm/1000)/149598000, 2) +
-                                        " AU away]", Logging.Logging.Red);
+                                    Logging.Logging.Log("Warping to safespot bookmark [" + offridSafeSpotBookmark.Title + "][" + Math.Round((DistanceToBm / 1000) / 149598000, 2) +
+                                        " AU away]");
                                     return;
                                 }
 
                                 return;
                             }
 
-                            Logging.Logging.Log("Panic",
-                                "Warping has been delayed for [" + Math.Round(Time.Instance.NextWarpAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]",
-                                Logging.Logging.Red);
+                            Logging.Logging.Log("Warping has been delayed for [" + Math.Round(Time.Instance.NextWarpAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]");
                             return;
                         }
                     }
@@ -587,7 +561,7 @@ namespace Questor.Modules.BackgroundTasks
 
                         if (Combat.Combat.TargetedBy.Any(t => t.IsWarpScramblingMe))
                         {
-                            Logging.Logging.Log("Panic", "We are still warp scrambled!", Logging.Logging.Red);
+                            Logging.Logging.Log("We are still warp scrambled!");
                             //This runs every 'tick' so we should see it every 1.5 seconds or so
                             _lastWarpScrambled = DateTime.UtcNow;
                             return;
@@ -598,24 +572,21 @@ namespace Questor.Modules.BackgroundTasks
                         {
                             if (Cache.Instance.Star.WarpTo())
                             {
-                                Logging.Logging.Log("Panic",
-                                    "Warping to [" + Logging.Logging.Yellow + Cache.Instance.Star.Name + Logging.Logging.Red + "][" + Logging.Logging.Yellow +
-                                    Math.Round((Cache.Instance.Star.Distance/1000)/149598000, 2) + Logging.Logging.Red + " AU away]", Logging.Logging.Red);
+                                Logging.Logging.Log("Warping to [" + Logging.Logging.Yellow + Cache.Instance.Star.Name + Logging.Logging.Red + "][" + Logging.Logging.Yellow +
+                                    Math.Round((Cache.Instance.Star.Distance / 1000) / 149598000, 2) + Logging.Logging.Red + " AU away]");
                                 return;
                             }
 
                             return;
                         }
 
-                        Logging.Logging.Log("Panic",
-                            "Warping has been delayed for [" + Math.Round(Time.Instance.NextWarpAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]",
-                            Logging.Logging.Red);
+                        Logging.Logging.Log("Warping has been delayed for [" + Math.Round(Time.Instance.NextWarpAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]");
                         return;
                     }
                 }
             }
 
-            Logging.Logging.Log("Panic", "At a safe location, lower panic mode", Logging.Logging.Red);
+            Logging.Logging.Log("At a safe location, lower panic mode");
             //Settings.Instance.LoadSettings(false);
             _States.CurrentPanicState = PanicState.Panic;
             return;
@@ -651,9 +622,8 @@ namespace Questor.Modules.BackgroundTasks
                 if (Cache.Instance.IsCorpInWar && Settings.Instance.WatchForActiveWars)
                 {
                     if (Logging.Logging.DebugWatchForActiveWars)
-                        Logging.Logging.Log("Panic",
-                            "Cache.Instance.IsCorpInWar [" + Cache.Instance.IsCorpInWar + "] and Settings.Instance.WatchForActiveWars [" +
-                            Settings.Instance.WatchForActiveWars + "] staying in panic (effectively paused in station)", Logging.Logging.Debug);
+                        Logging.Logging.Log("Cache.Instance.IsCorpInWar [" + Cache.Instance.IsCorpInWar + "] and Settings.Instance.WatchForActiveWars [" +
+                            Settings.Instance.WatchForActiveWars + "] staying in panic (effectively paused in station)");
                     Cache.Instance.Paused = true;
                     Settings.Instance.AutoStart = false;
                     return false;
@@ -664,7 +634,7 @@ namespace Questor.Modules.BackgroundTasks
                     if (!Cache.Instance.RepairItems("Repair Function")) return false; //attempt to use repair facilities if avail in station
                 }
 
-                Logging.Logging.Log("Panic", "We're in a station, resume mission", Logging.Logging.Red);
+                Logging.Logging.Log("We're in a station, resume mission");
                 _States.CurrentPanicState = _delayedResume ? PanicState.DelayedResume : PanicState.Resume;
             }
 
@@ -677,13 +647,13 @@ namespace Questor.Modules.BackgroundTasks
                 {
                     Arm.NeedRepair = true;
                 }
-                Logging.Logging.Log("Panic", "We have recovered, resume mission", Logging.Logging.Red);
+                Logging.Logging.Log("We have recovered, resume mission");
                 _States.CurrentPanicState = _delayedResume ? PanicState.DelayedResume : PanicState.Resume;
             }
 
             if (_States.CurrentPanicState == PanicState.DelayedResume)
             {
-                Logging.Logging.Log("Panic", "Delaying resume for " + _randomDelay + " seconds", Logging.Logging.Red);
+                Logging.Logging.Log("Delaying resume for " + _randomDelay + " seconds");
                 Drones.IsMissionPocketDone = false;
                 _resumeTime = DateTime.UtcNow.AddSeconds(_randomDelay);
             }

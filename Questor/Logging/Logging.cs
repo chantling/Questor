@@ -15,6 +15,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using Questor.Modules.Lookup;
+using System.Runtime.CompilerServices;
 
 namespace Questor.Modules.Logging
 {
@@ -23,15 +24,15 @@ namespace Questor.Modules.Logging
         public delegate void Message(string msg);
 
         //list of colors
-        public const string Green = "\ag"; //traveler mission control
-        public const string Yellow = "\ay";
-        public const string Blue = "\ab"; //DO NOT USE - blends into default lavish GUIs background.
-        public const string Red = "\ar"; //error panic
-        public const string Orange = "\ao"; //error can fix
-        public const string Purple = "\ap"; //combat
-        public const string Magenta = "\am"; //drones
-        public const string Teal = "\at"; //log debug
-        public const string White = "\aw"; //questor
+        public const string Green = ""; //traveler mission control
+        public const string Yellow = "";
+        public const string Blue = ""; //DO NOT USE - blends into default lavish GUIs background.
+        public const string Red = ""; //error panic
+        public const string Orange = ""; //error can fix
+        public const string Purple = ""; //combat
+        public const string Magenta = ""; //drones
+        public const string Teal = ""; //log debug
+        public const string White = ""; //questor
         public const string Debug = Teal; //log debug
 
         public static string PathToCurrentDirectory;
@@ -209,7 +210,7 @@ namespace Questor.Modules.Logging
 
         public static event Message OnMessage;
 
-        public static void Log(string DescriptionOfWhere, string line, string color = "\ag", bool verbose = false)
+        public static void Log(string line, bool verbose = false, [CallerMemberName]string DescriptionOfWhere = "")
         {
             try
             {
@@ -233,11 +234,7 @@ namespace Questor.Modules.Logging
                 }
 
                 colorLogLine = line;
-                redactedColorLogLine = String.Format("{0:HH:mm:ss} {1}", DateTimeForLogs,
-                    Orange + "[" + Yellow + DescriptionOfWhere + Orange + "] " + color + FilterSensitiveInfo(colorLogLine));
-                    //In memory Console Log with sensitive info redacted
-
-                plainLogLine = FilterColorsFromLogs(line);
+                plainLogLine = line;
                 
                 
                 var plainLogLineWithTime = String.Format("{0:HH:mm:ss} {1}", DateTimeForLogs,
@@ -439,34 +436,7 @@ namespace Questor.Modules.Logging
             }
             catch (Exception exception)
             {
-                Log("Cache.FilterPath", "Exception [" + exception + "]", Debug);
-                return null;
-            }
-        }
-
-        public static string FilterColorsFromLogs(string line)
-        {
-            try
-            {
-                if (line == null)
-                    return string.Empty;
-
-                line = line.Replace("\ag", "");
-                line = line.Replace("\ay", "");
-                line = line.Replace("\ab", "");
-                line = line.Replace("\ar", "");
-                line = line.Replace("\ao", "");
-                line = line.Replace("\ap", "");
-                line = line.Replace("\am", "");
-                line = line.Replace("\at", "");
-                line = line.Replace("\aw", "");
-                while (line.IndexOf("  ", StringComparison.Ordinal) >= 0)
-                    line = line.Replace("  ", " ");
-                return line.Trim();
-            }
-            catch (Exception exception)
-            {
-                BasicLog("FilterSensitiveInfo", exception.Message);
+                Log("Exception [" + exception + "]");
                 return null;
             }
         }
@@ -478,27 +448,27 @@ namespace Questor.Modules.Logging
 
             try
             {
-                if (DebugMaintainConsoleLogs) Log("Logging.MaintainConsoleLogs", "ConsoleLogPath is [" + ConsoleLogPath + "]", White);
+                if (DebugMaintainConsoleLogs) Log("ConsoleLogPath is [" + ConsoleLogPath + "]");
                 var fileListing = new DirectoryInfo(ConsoleLogPath);
 
                 if (fileListing.Exists)
                 {
-                    if (DebugMaintainConsoleLogs) Log("Logging.MaintainConsoleLogs", "if (fileListing.Exists)", White);
+                    if (DebugMaintainConsoleLogs) Log("if (fileListing.Exists)");
                     foreach (var log in fileListing.GetFiles(searchpattern))
                     {
                         if (DebugMaintainConsoleLogs)
-                            Log("Logging.MaintainConsoleLogs", "foreach (FileInfo log in fileListing.GetFiles(searchpattern))", White);
+                            Log("foreach (FileInfo log in fileListing.GetFiles(searchpattern))");
                         if (log.LastWriteTime <= keepdate)
                         {
-                            if (DebugMaintainConsoleLogs) Log("Logging.MaintainConsoleLogs", "if (log.LastWriteTime <= keepdate)", White);
+                            if (DebugMaintainConsoleLogs) Log("if (log.LastWriteTime <= keepdate)");
                             try
                             {
-                                Log("Logging", "Removing old console log named [" + log.Name + "] Dated [" + log.LastWriteTime + "]", White);
+                                Log("Removing old console log named [" + log.Name + "] Dated [" + log.LastWriteTime + "]");
                                 log.Delete();
                             }
                             catch (Exception ex)
                             {
-                                Log("Logging", "Unable to delete log [" + ex.Message + "]", White);
+                                Log("Unable to delete log [" + ex.Message + "]");
                             }
                         }
                     }

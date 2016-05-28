@@ -21,7 +21,7 @@ namespace Questor.Modules.Actions
 
         public SolarSystemDestination2(long solarSystemId)
         {
-            Logging.Logging.Log("QuestorManager.SolarSystemDestination", "Destination set to solar system id [" + solarSystemId + "]", Logging.Logging.White);
+            Logging.Logging.Log("Destination set to solar system id [" + solarSystemId + "]");
             SolarSystemId = solarSystemId;
         }
 
@@ -35,7 +35,7 @@ namespace Questor.Modules.Actions
                     if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(45))
                         //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
                     {
-                        Logging.Logging.Log("QuestorManager.SolarSystemDestination", "Exiting station", Logging.Logging.White);
+                        Logging.Logging.Log("Exiting station");
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
                         Time.Instance.LastDockAction = DateTime.UtcNow;
                         _nextAction = DateTime.UtcNow.AddSeconds(30);
@@ -47,7 +47,7 @@ namespace Questor.Modules.Actions
             }
 
             // The task was to get to the solar system, we are there :)
-            Logging.Logging.Log("QuestorManager.SolarSystemDestination", "Arrived in system", Logging.Logging.White);
+            Logging.Logging.Log("Arrived in system");
             return true;
         }
     }

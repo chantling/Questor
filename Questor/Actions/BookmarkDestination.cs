@@ -23,18 +23,18 @@ namespace Questor.Modules.Actions
         {
             if (bookmark == null)
             {
-                Logging.Logging.Log("QuestorManager.BookmarkDestination", "Invalid bookmark destination!", Logging.Logging.White);
+                Logging.Logging.Log("Invalid bookmark destination!");
 
                 SolarSystemId = Cache.Instance.DirectEve.Session.SolarSystemId ?? -1;
                 BookmarkId = -1;
                 return;
             }
 
-            Logging.Logging.Log("QuestorManager.BookmarkDestination", "Destination set to bookmark [" + bookmark.Title + "]", Logging.Logging.White);
+            Logging.Logging.Log("Destination set to bookmark [" + bookmark.Title + "]");
             var location = GetBookmarkLocation(bookmark);
             if (location == null)
             {
-                Logging.Logging.Log("QuestorManager.BookmarkDestination", "Invalid bookmark destination!", Logging.Logging.White);
+                Logging.Logging.Log("Invalid bookmark destination!");
 
                 SolarSystemId = Cache.Instance.DirectEve.Session.SolarSystemId ?? -1;
                 BookmarkId = -1;
@@ -86,7 +86,7 @@ namespace Questor.Modules.Actions
                     //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
                 {
                     // We are apparently in a station that is incorrect
-                    Logging.Logging.Log("QuestorManager.BookmarkDestination", "We're docked in the wrong station, undocking", Logging.Logging.White);
+                    Logging.Logging.Log("We're docked in the wrong station, undocking");
 
                     Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
                     Time.Instance.LastDockAction = DateTime.UtcNow;
@@ -102,7 +102,7 @@ namespace Questor.Modules.Actions
             {
                 var arrived = StationDestination2.PerformFinalDestinationTask(bookmark.Entity.Id, bookmark.Entity.Name, ref nextAction);
                 if (arrived)
-                    Logging.Logging.Log("QuestorManager.BookmarkDestination", "Arrived at bookmark [" + bookmark.Title + "]", Logging.Logging.White);
+                    Logging.Logging.Log("Arrived at bookmark [" + bookmark.Title + "]");
                 return arrived;
             }
 
@@ -115,8 +115,7 @@ namespace Questor.Modules.Actions
                     if (DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(45))
                         //do not try to leave the station until you have been docked for at least 45seconds! (this gives some overhead to load the station env + session change timer)
                     {
-                        Logging.Logging.Log("QuestorManager.BookmarkDestination", "We're docked but our destination is in space, undocking",
-                            Logging.Logging.White);
+                        Logging.Logging.Log("We're docked but our destination is in space, undocking");
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
                         Time.Instance.LastDockAction = DateTime.UtcNow;
                         nextAction = DateTime.UtcNow.AddSeconds(30);
@@ -136,16 +135,14 @@ namespace Questor.Modules.Actions
             // This bookmark has no x / y / z, assume we are there.
             if (bookmark.X == -1 || bookmark.Y == -1 || bookmark.Z == -1)
             {
-                Logging.Logging.Log("QuestorManager.BookmarkDestination",
-                    "Arrived at the bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.White + "][No XYZ]", Logging.Logging.White);
+                Logging.Logging.Log("Arrived at the bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.White + "][No XYZ]");
                 return true;
             }
 
             var distance = Cache.Instance.DistanceFromMe(bookmark.X ?? 0, bookmark.Y ?? 0, bookmark.Z ?? 0);
             if (distance < warpDistance)
             {
-                Logging.Logging.Log("QuestorManager.BookmarkDestination",
-                    "Arrived at the bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.White + "]", Logging.Logging.White);
+                Logging.Logging.Log("Arrived at the bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.White + "]");
                 return true;
             }
 
@@ -154,17 +151,15 @@ namespace Questor.Modules.Actions
 
             if (Cache.Instance.GateInGrid() && (distance/1000) < (int) Distances.MaxPocketsDistanceKm)
             {
-                Logging.Logging.Log("QuestorManager.BookmarkDestination",
-                    "Bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.White + "][" + Logging.Logging.Yellow +
-                    Math.Round((distance/1000)/149598000, 2) + Logging.Logging.White + "] AU away. Which is [" + Logging.Logging.Yellow +
-                    Math.Round((distance/1000), 2) + Logging.Logging.White + "].", Logging.Logging.White);
+                Logging.Logging.Log("Bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.White + "][" + Logging.Logging.Yellow +
+                    Math.Round((distance / 1000) / 149598000, 2) + Logging.Logging.White + "] AU away. Which is [" + Logging.Logging.Yellow +
+                    Math.Round((distance / 1000), 2) + Logging.Logging.White + "].");
             }
 
             if (bookmark.WarpTo())
             {
-                Logging.Logging.Log("QuestorManager.BookmarkDestination",
-                    "Warping to bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.White + "][" + Math.Round((distance/1000)/149598000, 2) +
-                    "] AU away. Which is [" + Math.Round((distance/1000), 2) + "]", Logging.Logging.White);
+                Logging.Logging.Log("Warping to bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.White + "][" + Math.Round((distance / 1000) / 149598000, 2) +
+                    "] AU away. Which is [" + Math.Round((distance / 1000), 2) + "]");
                 nextAction = DateTime.UtcNow.AddSeconds(30);
                 Time.Instance.NextWarpAction = DateTime.UtcNow.AddSeconds(5);
                 return false;

@@ -55,7 +55,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.allBookmarks", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return new List<DirectBookmark>();
                     ;
                 }
@@ -99,7 +99,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("UndockBookmark", "[" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("[" + exception + "]");
                     return null;
                 }
             }
@@ -126,7 +126,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.SafeSpotBookmarks", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                 }
 
                 return new List<DirectBookmark>();
@@ -150,7 +150,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("AfterMissionSalvageBookmarks", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                     return new List<DirectBookmark>();
                 }
             }
@@ -166,7 +166,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("AgedDate", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                     return DateTime.UtcNow.AddMinutes(-45);
                 }
             }
@@ -184,8 +184,7 @@ namespace Questor.Modules.Caching
                         DirectBookmark _SalvagingBookmark;
                         if (Salvage.FirstSalvageBookmarksInSystem)
                         {
-                            Logging.Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "Salvaging at first bookmark from system",
-                                Logging.Logging.White);
+                            Logging.Logging.Log("Salvaging at first bookmark from system");
                             _SalvagingBookmarks = Instance.BookmarksByLabel(Settings.Instance.BookmarkPrefix + " ");
                             if (_SalvagingBookmarks != null && _SalvagingBookmarks.Any())
                             {
@@ -197,7 +196,7 @@ namespace Questor.Modules.Caching
                             return null;
                         }
 
-                        Logging.Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "Salvaging at first oldest bookmarks", Logging.Logging.White);
+                        Logging.Logging.Log("Salvaging at first oldest bookmarks");
                         _SalvagingBookmarks = Instance.BookmarksByLabel(Settings.Instance.BookmarkPrefix + " ");
                         if (_SalvagingBookmarks != null && _SalvagingBookmarks.Any())
                         {
@@ -212,7 +211,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("GetSalvagingBookmark", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                     return null;
                 }
             }
@@ -236,14 +235,13 @@ namespace Questor.Modules.Caching
 
                     if (bm != null)
                     {
-                        Logging.Logging.Log("CombatMissionsBehavior.BeginAftermissionSalvaging", "GetTravelBookmark [" + bm.Title + "][" + bm.LocationId + "]",
-                            Logging.Logging.White);
+                        Logging.Logging.Log("GetTravelBookmark [" + bm.Title + "][" + bm.LocationId + "]");
                     }
                     return bm;
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("GetTravelBookmark", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                     return null;
                 }
             }
@@ -262,7 +260,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.BookmarkById", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return null;
             }
         }
@@ -285,7 +283,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.BookmarkById", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return null;
             }
         }
@@ -306,7 +304,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.BookmarksThatContain", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return null;
             }
         }
@@ -344,16 +342,14 @@ namespace Questor.Modules.Caching
                 }
                 else
                 {
-                    Logging.Logging.Log("CreateBookmark",
-                        "We already have over 100 AfterMissionSalvage bookmarks: their must be a issue processing or deleting bookmarks. No additional bookmarks will be created until the number of salvage bookmarks drops below 100.",
-                        Logging.Logging.Orange);
+                    Logging.Logging.Log("We already have over 100 AfterMissionSalvage bookmarks: their must be a issue processing or deleting bookmarks. No additional bookmarks will be created until the number of salvage bookmarks drops below 100.");
                 }
 
                 return;
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("CreateBookmark", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return;
             }
         }
@@ -383,16 +379,16 @@ namespace Questor.Modules.Caching
                     _bookmarkDeletionAttempt++;
                     if (_bookmarkDeletionAttempt <= bookmarksInLocal.Count() + 60)
                     {
-                        Logging.Logging.Log(module, "removing salvage bookmark:" + onGridBookmark.Title, Logging.Logging.White);
+                        Logging.Logging.Log("removing salvage bookmark:" + onGridBookmark.Title);
                         onGridBookmark.Delete();
-                        Logging.Logging.Log(module, "after: removing salvage bookmark:" + onGridBookmark.Title, Logging.Logging.White);
+                        Logging.Logging.Log("after: removing salvage bookmark:" + onGridBookmark.Title);
                         NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(Instance.RandomNumber(2, 6));
                         return false;
                     }
 
                     if (_bookmarkDeletionAttempt > bookmarksInLocal.Count() + 60)
                     {
-                        Logging.Logging.Log(module, "error removing bookmark!" + onGridBookmark.Title, Logging.Logging.White);
+                        Logging.Logging.Log("error removing bookmark!" + onGridBookmark.Title);
                         _States.CurrentQuestorState = QuestorState.Error;
                         return false;
                     }
@@ -407,7 +403,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("DeleteBookmarksOnGrid", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return true;
             }
         }
@@ -417,9 +413,8 @@ namespace Questor.Modules.Caching
             if (DateTime.UtcNow < NextBookmarkDeletionAttempt)
             {
                 if (Logging.Logging.DebugSalvage)
-                    Logging.Logging.Log("DeleteUselessSalvageBookmarks",
-                        "NextBookmarkDeletionAttempt is still [" + NextBookmarkDeletionAttempt.Subtract(DateTime.UtcNow).TotalSeconds +
-                        "] sec in the future... waiting", Logging.Logging.Debug);
+                    Logging.Logging.Log("NextBookmarkDeletionAttempt is still [" + NextBookmarkDeletionAttempt.Subtract(DateTime.UtcNow).TotalSeconds +
+                        "] sec in the future... waiting");
                 return false;
             }
 
@@ -438,9 +433,7 @@ namespace Questor.Modules.Caching
                     if (_bookmarkDeletionAttempt <=
                         uselessSalvageBookmarks.Count(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0) + 60)
                     {
-                        Logging.Logging.Log(module,
-                            "removing a salvage bookmark that aged more than [" + Salvage.AgeofSalvageBookmarksToExpire + "]" + uselessSalvageBookmark.Title,
-                            Logging.Logging.White);
+                        Logging.Logging.Log("removing a salvage bookmark that aged more than [" + Salvage.AgeofSalvageBookmarksToExpire + "]" + uselessSalvageBookmark.Title);
                         NextBookmarkDeletionAttempt = DateTime.UtcNow.AddSeconds(5 + Settings.Instance.RandomNumber(1, 5));
                         uselessSalvageBookmark.Delete();
                         return false;
@@ -449,7 +442,7 @@ namespace Questor.Modules.Caching
                     if (_bookmarkDeletionAttempt >
                         uselessSalvageBookmarks.Count(e => e.CreatedOn != null && e.CreatedOn.Value.CompareTo(bmExpirationDate) < 0) + 60)
                     {
-                        Logging.Logging.Log(module, "error removing bookmark!" + uselessSalvageBookmark.Title, Logging.Logging.White);
+                        Logging.Logging.Log("error removing bookmark!" + uselessSalvageBookmark.Title);
                         _States.CurrentQuestorState = QuestorState.Error;
                         return false;
                     }
@@ -459,7 +452,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("Cache.DeleteUselessSalvageBookmarks", "Exception:" + ex.Message, Logging.Logging.White);
+                Logging.Logging.Log("Exception:" + ex.Message);
             }
 
             return true;

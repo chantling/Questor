@@ -40,8 +40,7 @@ namespace Questor.Modules.Caching
                         {
                             if (!Instance.InStation)
                             {
-                                Logging.Logging.Log("LPStore", "Opening LP Store: We are not in station?! There is no LP Store in space, waiting...",
-                                    Logging.Logging.Orange);
+                                Logging.Logging.Log("Opening LP Store: We are not in station?! There is no LP Store in space, waiting...");
                                 return null;
                             }
 
@@ -53,7 +52,7 @@ namespace Questor.Modules.Caching
                                 {
                                     if (DateTime.UtcNow > Time.Instance.NextLPStoreAction)
                                     {
-                                        Logging.Logging.Log("LPStore", "Opening loyalty point store", Logging.Logging.White);
+                                        Logging.Logging.Log("Opening loyalty point store");
                                         Time.Instance.NextLPStoreAction = DateTime.UtcNow.AddSeconds(Instance.RandomNumber(30, 240));
                                         Instance.DirectEve.ExecuteCommand(DirectCmd.OpenLpstore);
                                         Statistics.LogWindowActionToWindowLog("LPStore", "Opening LPStore");
@@ -76,7 +75,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("LPStore", "Unable to define LPStore [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Unable to define LPStore [" + exception + "]");
                     return null;
                 }
             }
@@ -95,8 +94,7 @@ namespace Questor.Modules.Caching
                         {
                             if (!Instance.InStation || Instance.InSpace)
                             {
-                                Logging.Logging.Log("FittingManager",
-                                    "Opening Fitting Manager: We are not in station?! There is no Fitting Manager in space, waiting...", Logging.Logging.Debug);
+                                Logging.Logging.Log("Opening Fitting Manager: We are not in station?! There is no Fitting Manager in space, waiting...");
                                 return null;
                             }
 
@@ -114,7 +112,7 @@ namespace Questor.Modules.Caching
 
                                 if (DateTime.UtcNow > Time.Instance.NextWindowAction)
                                 {
-                                    Logging.Logging.Log("FittingManager", "Opening Fitting Manager Window", Logging.Logging.White);
+                                    Logging.Logging.Log("Opening Fitting Manager Window");
                                     Time.Instance.NextWindowAction = DateTime.UtcNow.AddSeconds(Instance.RandomNumber(10, 24));
                                     Instance.DirectEve.OpenFitingManager();
                                     Statistics.LogWindowActionToWindowLog("FittingManager", "Opening FittingManager");
@@ -122,9 +120,8 @@ namespace Questor.Modules.Caching
                                 }
 
                                 if (Logging.Logging.DebugFittingMgr)
-                                    Logging.Logging.Log("FittingManager",
-                                        "NextWindowAction is still in the future [" + Time.Instance.NextWindowAction.Subtract(DateTime.UtcNow).TotalSeconds +
-                                        "] sec", Logging.Logging.Debug);
+                                    Logging.Logging.Log("NextWindowAction is still in the future [" + Time.Instance.NextWindowAction.Subtract(DateTime.UtcNow).TotalSeconds +
+                                        "] sec");
                                 return null;
                             }
 
@@ -134,13 +131,12 @@ namespace Questor.Modules.Caching
                         return _fittingManagerWindow;
                     }
 
-                    Logging.Logging.Log("FittingManager", "Opening Fitting Manager: We are not in station?! There is no Fitting Manager in space, waiting...",
-                        Logging.Logging.Debug);
+                    Logging.Logging.Log("Opening Fitting Manager: We are not in station?! There is no Fitting Manager in space, waiting...");
                     return null;
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("FittingManager", "Unable to define FittingManagerWindow [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Unable to define FittingManagerWindow [" + exception + "]");
                     return null;
                 }
             }
@@ -181,7 +177,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.GetWindowByName", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
             }
 
             return null;
@@ -191,20 +187,20 @@ namespace Questor.Modules.Caching
         {
             var windows = Instance.Windows;
 
-            Logging.Logging.Log(module, "DebugInventoryWindows: *** Start Listing Inventory Windows ***", Logging.Logging.White);
+            Logging.Logging.Log("DebugInventoryWindows: *** Start Listing Inventory Windows ***");
             var windownumber = 0;
             foreach (var window in windows)
             {
                 if (window.Type.ToLower().Contains("inventory"))
                 {
                     windownumber++;
-                    Logging.Logging.Log(module, "----------------------------  #[" + windownumber + "]", Logging.Logging.White);
-                    Logging.Logging.Log(module, "DebugInventoryWindows.Name:    [" + window.Name + "]", Logging.Logging.White);
-                    Logging.Logging.Log(module, "DebugInventoryWindows.Type:    [" + window.Type + "]", Logging.Logging.White);
-                    Logging.Logging.Log(module, "DebugInventoryWindows.Caption: [" + window.Caption + "]", Logging.Logging.White);
+                    Logging.Logging.Log("----------------------------  #[" + windownumber + "]");
+                    Logging.Logging.Log("DebugInventoryWindows.Name:    [" + window.Name + "]");
+                    Logging.Logging.Log("DebugInventoryWindows.Type:    [" + window.Type + "]");
+                    Logging.Logging.Log("DebugInventoryWindows.Caption: [" + window.Caption + "]");
                 }
             }
-            Logging.Logging.Log(module, "DebugInventoryWindows: ***  End Listing Inventory Windows  ***", Logging.Logging.White);
+            Logging.Logging.Log("DebugInventoryWindows: ***  End Listing Inventory Windows  ***");
             return true;
         }
 
@@ -219,9 +215,7 @@ namespace Questor.Modules.Caching
 
             try
             {
-                Logging.Logging.Log(module,
-                    "Stacking CargoHold: waiting [" + Math.Round(Time.Instance.NextOpenCargoAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]",
-                    Logging.Logging.White);
+                Logging.Logging.Log("Stacking CargoHold: waiting [" + Math.Round(Time.Instance.NextOpenCargoAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]");
                 if (Instance.CurrentShipsCargo != null)
                 {
                     try
@@ -247,7 +241,7 @@ namespace Questor.Modules.Caching
                     }
                     catch (Exception exception)
                     {
-                        Logging.Logging.Log(module, "Stacking Item Hangar failed [" + exception + "]", Logging.Logging.Teal);
+                        Logging.Logging.Log("Stacking Item Hangar failed [" + exception + "]");
                         return true;
                     }
                 }
@@ -255,7 +249,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("StackCargoHold", "Unable to complete StackCargoHold [" + exception + "]", Logging.Logging.Teal);
+                Logging.Logging.Log("Unable to complete StackCargoHold [" + exception + "]");
                 return true;
             }
         }
@@ -272,9 +266,7 @@ namespace Questor.Modules.Caching
                 {
                     if ((DateTime.UtcNow.Subtract(Time.Instance.NextOpenCargoAction).TotalSeconds) > 0)
                     {
-                        Logging.Logging.Log("CloseCargoHold",
-                            "waiting [" + Math.Round(Time.Instance.NextOpenCargoAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]",
-                            Logging.Logging.White);
+                        Logging.Logging.Log("waiting [" + Math.Round(Time.Instance.NextOpenCargoAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]");
                     }
 
                     return false;
@@ -283,7 +275,7 @@ namespace Questor.Modules.Caching
                 if (Instance.CurrentShipsCargo == null || Instance.CurrentShipsCargo.Window == null)
                 {
                     Instance._currentShipsCargo = null;
-                    Logging.Logging.Log("CloseCargoHold", "Cargohold was not open, no need to close", Logging.Logging.White);
+                    Logging.Logging.Log("Cargohold was not open, no need to close");
                     return true;
                 }
 
@@ -292,7 +284,7 @@ namespace Questor.Modules.Caching
                     if (Instance.CurrentShipsCargo.Window == null)
                     {
                         Instance._currentShipsCargo = null;
-                        Logging.Logging.Log("CloseCargoHold", "Cargohold is closed", Logging.Logging.White);
+                        Logging.Logging.Log("Cargohold is closed");
                         return true;
                     }
 
@@ -311,7 +303,7 @@ namespace Questor.Modules.Caching
                     }
 
                     Instance._currentShipsCargo = null;
-                    Logging.Logging.Log("CloseCargoHold", "Cargohold is probably closed", Logging.Logging.White);
+                    Logging.Logging.Log("Cargohold is probably closed");
                     return true;
                 }
 
@@ -319,7 +311,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("CloseCargoHold", "Unable to complete CloseCargoHold [" + exception + "]", Logging.Logging.Teal);
+                Logging.Logging.Log("Unable to complete CloseCargoHold [" + exception + "]");
                 return true;
             }
         }
@@ -338,24 +330,22 @@ namespace Questor.Modules.Caching
             if (Instance.PrimaryInventoryWindow == null)
             {
                 if (Logging.Logging.DebugHangars)
-                    Logging.Logging.Log("debug", "Cache.Instance.InventoryWindow is null, opening InventoryWindow", Logging.Logging.Teal);
+                    Logging.Logging.Log("Cache.Instance.InventoryWindow is null, opening InventoryWindow");
 
                 // No, command it to open
                 Instance.DirectEve.ExecuteCommand(DirectCmd.OpenInventory);
                 Statistics.LogWindowActionToWindowLog("Inventory (main)", "Open Inventory");
                 Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(Instance.RandomNumber(2, 3));
-                Logging.Logging.Log(module,
-                    "Opening Inventory Window: waiting [" + Math.Round(Time.Instance.NextOpenHangarAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]",
-                    Logging.Logging.White);
+                Logging.Logging.Log("Opening Inventory Window: waiting [" + Math.Round(Time.Instance.NextOpenHangarAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]");
                 return false;
             }
 
             if (Instance.PrimaryInventoryWindow != null)
             {
-                if (Logging.Logging.DebugHangars) Logging.Logging.Log("debug", "Cache.Instance.InventoryWindow exists", Logging.Logging.Teal);
+                if (Logging.Logging.DebugHangars) Logging.Logging.Log("Cache.Instance.InventoryWindow exists");
                 if (Instance.PrimaryInventoryWindow.IsReady)
                 {
-                    if (Logging.Logging.DebugHangars) Logging.Logging.Log("debug", "Cache.Instance.InventoryWindow exists and is ready", Logging.Logging.Teal);
+                    if (Logging.Logging.DebugHangars) Logging.Logging.Log("Cache.Instance.InventoryWindow exists and is ready");
                     return true;
                 }
 
@@ -378,7 +368,7 @@ namespace Questor.Modules.Caching
 
             if (!Instance.InStation)
             {
-                Logging.Logging.Log(module, "Closing LP Store: We are not in station?!", Logging.Logging.Orange);
+                Logging.Logging.Log("Closing LP Store: We are not in station?!");
                 return false;
             }
 
@@ -387,7 +377,7 @@ namespace Questor.Modules.Caching
                 Instance.LPStore = Instance.Windows.OfType<DirectLoyaltyPointStoreWindow>().FirstOrDefault();
                 if (Instance.LPStore != null)
                 {
-                    Logging.Logging.Log(module, "Closing loyalty point store", Logging.Logging.White);
+                    Logging.Logging.Log("Closing loyalty point store");
                     Instance.LPStore.Close();
                     Statistics.LogWindowActionToWindowLog("LPStore", "Closing LPStore");
                     return false;
@@ -410,7 +400,7 @@ namespace Questor.Modules.Caching
 
                 if (Instance.Windows.OfType<DirectFittingManagerWindow>().FirstOrDefault() != null)
                 {
-                    Logging.Logging.Log(module, "Closing Fitting Manager Window", Logging.Logging.White);
+                    Logging.Logging.Log("Closing Fitting Manager Window");
                     Instance.FittingManagerWindow.Close();
                     Statistics.LogWindowActionToWindowLog("FittingManager", "Closing FittingManager");
                     Instance.FittingManagerWindow = null;
@@ -448,9 +438,7 @@ namespace Questor.Modules.Caching
                     Instance.DirectEve.ExecuteCommand(DirectCmd.OpenMarket);
                     Statistics.LogWindowActionToWindowLog("MarketWindow", "Opening MarketWindow");
                     Time.Instance.NextWindowAction = DateTime.UtcNow.AddSeconds(Instance.RandomNumber(2, 4));
-                    Logging.Logging.Log(module,
-                        "Opening Market Window: waiting [" + Math.Round(Time.Instance.NextWindowAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]",
-                        Logging.Logging.White);
+                    Logging.Logging.Log("Opening Market Window: waiting [" + Math.Round(Time.Instance.NextWindowAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]");
                     return false;
                 }
 
@@ -511,9 +499,7 @@ namespace Questor.Modules.Caching
                         if (containerToOpen.OpenCargo())
                         {
                             Time.Instance.NextLootAction = DateTime.UtcNow.AddMilliseconds(Time.Instance.LootingDelay_milliseconds);
-                            Logging.Logging.Log(module,
-                                "Opening Container: waiting [" + Math.Round(Time.Instance.NextLootAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + " sec]",
-                                Logging.Logging.White);
+                            Logging.Logging.Log("Opening Container: waiting [" + Math.Round(Time.Instance.NextLootAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + " sec]");
                             return false;
                         }
 
@@ -522,13 +508,13 @@ namespace Questor.Modules.Caching
 
                     if (!Instance.ContainerInSpace.Window.IsReady)
                     {
-                        Logging.Logging.Log(module, "Container window is not ready", Logging.Logging.White);
+                        Logging.Logging.Log("Container window is not ready");
                         return false;
                     }
 
                     if (Instance.ContainerInSpace.Window.IsPrimary())
                     {
-                        Logging.Logging.Log(module, "Opening Container window as secondary", Logging.Logging.White);
+                        Logging.Logging.Log("Opening Container window as secondary");
                         Instance.ContainerInSpace.Window.OpenAsSecondary();
                         Statistics.LogWindowActionToWindowLog("ContainerInSpace", "Opening ContainerInSpace");
                         Time.Instance.NextLootAction = DateTime.UtcNow.AddMilliseconds(Time.Instance.LootingDelay_milliseconds);
@@ -538,7 +524,7 @@ namespace Questor.Modules.Caching
 
                 return true;
             }
-            Logging.Logging.Log(module, "Not in space or not in scoop range", Logging.Logging.Orange);
+            Logging.Logging.Log("Not in space or not in scoop range");
             return true;
         }
 
@@ -562,8 +548,7 @@ namespace Questor.Modules.Caching
 
                 if (Instance.InStation && !Instance.DirectEve.hasRepairFacility())
                 {
-                    Logging.Logging.Log(module, "This station does not have repair facilities to use! aborting attempt to use non-existent repair facility.",
-                        Logging.Logging.Orange);
+                    Logging.Logging.Log("This station does not have repair facilities to use! aborting attempt to use non-existent repair facility.");
                     return true;
                 }
 
@@ -589,9 +574,8 @@ namespace Questor.Modules.Caching
                                 if (window.Html.Contains("Repairing these items will cost"))
                                 {
                                     if (window.Html != null)
-                                        Logging.Logging.Log("RepairItems",
-                                            "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Logging.White);
-                                    Logging.Logging.Log(module, "Closing Quote for Repairing All with YES", Logging.Logging.White);
+                                        Logging.Logging.Log("Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]");
+                                    Logging.Logging.Log("Closing Quote for Repairing All with YES");
                                     window.AnswerModal("Yes");
                                     doneUsingRepairWindow = true;
                                     return false;
@@ -600,9 +584,8 @@ namespace Questor.Modules.Caching
                                 if (window.Html.Contains("How much would you like to repair?"))
                                 {
                                     if (window.Html != null)
-                                        Logging.Logging.Log("RepairItems",
-                                            "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Logging.White);
-                                    Logging.Logging.Log(module, "Closing Quote for Repairing All with OK", Logging.Logging.White);
+                                        Logging.Logging.Log("Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]");
+                                    Logging.Logging.Log("Closing Quote for Repairing All with OK");
                                     window.AnswerModal("OK");
                                     doneUsingRepairWindow = true;
                                     return false;
@@ -614,9 +597,8 @@ namespace Questor.Modules.Caching
                     if (repairQuote != null && repairQuote.IsModal && repairQuote.IsKillable)
                     {
                         if (repairQuote.Html != null)
-                            Logging.Logging.Log("RepairItems",
-                                "Content of modal window (HTML): [" + (repairQuote.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Logging.White);
-                        Logging.Logging.Log(module, "Closing Quote for Repairing All with OK", Logging.Logging.White);
+                            Logging.Logging.Log("Content of modal window (HTML): [" + (repairQuote.Html).Replace("\n", "").Replace("\r", "") + "]");
+                        Logging.Logging.Log("Closing Quote for Repairing All with OK");
                         repairQuote.AnswerModal("OK");
                         doneUsingRepairWindow = true;
                         return false;
@@ -624,7 +606,7 @@ namespace Questor.Modules.Caching
 
                     if (repairWindow == null)
                     {
-                        Logging.Logging.Log(module, "Opening repairshop window", Logging.Logging.White);
+                        Logging.Logging.Log("Opening repairshop window");
                         Instance.DirectEve.OpenRepairShop();
                         Statistics.LogWindowActionToWindowLog("RepairWindow", "Opening RepairWindow");
                         Time.Instance.NextRepairItemsAction = DateTime.UtcNow.AddSeconds(Settings.Instance.RandomNumber(1, 3));
@@ -633,12 +615,12 @@ namespace Questor.Modules.Caching
 
                     if (Instance.ItemHangar == null)
                     {
-                        Logging.Logging.Log(module, "if (Cache.Instance.ItemHangar == null)", Logging.Logging.White);
+                        Logging.Logging.Log("if (Cache.Instance.ItemHangar == null)");
                         return false;
                     }
                     if (Instance.ShipHangar == null)
                     {
-                        Logging.Logging.Log(module, "if (Cache.Instance.ShipHangar == null)", Logging.Logging.White);
+                        Logging.Logging.Log("if (Cache.Instance.ShipHangar == null)");
                         return false;
                     }
 
@@ -649,7 +631,7 @@ namespace Questor.Modules.Caching
 
                     if (Instance.ShipHangar.Items == null)
                     {
-                        Logging.Logging.Log(module, "Cache.Instance.ShipHangar.Items == null", Logging.Logging.White);
+                        Logging.Logging.Log("Cache.Instance.ShipHangar.Items == null");
                         return false;
                     }
 
@@ -667,16 +649,16 @@ namespace Questor.Modules.Caching
                     {
                         if (String.IsNullOrEmpty(repairWindow.AvgDamage()))
                         {
-                            Logging.Logging.Log(module, "Add items to repair list", Logging.Logging.White);
+                            Logging.Logging.Log("Add items to repair list");
                             repairWindow.RepairItems(repairAllItems);
                             Time.Instance.NextRepairItemsAction = DateTime.UtcNow.AddSeconds(Settings.Instance.RandomNumber(2, 4));
                             return false;
                         }
 
-                        Logging.Logging.Log(module, "Repairing Items: repairWindow.AvgDamage: " + repairWindow.AvgDamage(), Logging.Logging.White);
+                        Logging.Logging.Log("Repairing Items: repairWindow.AvgDamage: " + repairWindow.AvgDamage());
                         if (repairWindow.AvgDamage() == "Avg: 0,0 % Damaged")
                         {
-                            Logging.Logging.Log(module, "Repairing Items: Zero Damage: skipping repair.", Logging.Logging.White);
+                            Logging.Logging.Log("Repairing Items: Zero Damage: skipping repair.");
                             repairWindow.Close();
                             Statistics.LogWindowActionToWindowLog("RepairWindow", "Closing RepairWindow");
                             return true;
@@ -687,15 +669,15 @@ namespace Questor.Modules.Caching
                         return false;
                     }
 
-                    Logging.Logging.Log(module, "No items available, nothing to repair.", Logging.Logging.Orange);
+                    Logging.Logging.Log("No items available, nothing to repair.");
                     return true;
                 }
-                Logging.Logging.Log(module, "Not in station.", Logging.Logging.Orange);
+                Logging.Logging.Log("Not in station.");
                 return false;
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("Cache.RepairItems", "Exception:" + ex, Logging.Logging.White);
+                Logging.Logging.Log("Exception:" + ex);
                 return false;
             }
         }
@@ -715,8 +697,7 @@ namespace Questor.Modules.Caching
                     if (window.Type.Contains("form.Inventory"))
                     {
                         if (Logging.Logging.DebugHangars)
-                            Logging.Logging.Log(module, "ClosePrimaryInventoryWindow: Closing Primary Inventory Window Named [" + window.Name + "]",
-                                Logging.Logging.White);
+                            Logging.Logging.Log("ClosePrimaryInventoryWindow: Closing Primary Inventory Window Named [" + window.Name + "]");
                         window.Close();
                         Statistics.LogWindowActionToWindowLog("Inventory (main)", "Close Inventory");
                         Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddMilliseconds(500);
@@ -728,7 +709,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("ClosePrimaryInventoryWindow", "Unable to complete ClosePrimaryInventoryWindow [" + exception + "]", Logging.Logging.Teal);
+                Logging.Logging.Log("Unable to complete ClosePrimaryInventoryWindow [" + exception + "]");
                 return false;
             }
         }
@@ -740,20 +721,19 @@ namespace Questor.Modules.Caching
                 if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(10))
                 {
                     if (Logging.Logging.DebugHangars)
-                        Logging.Logging.Log("OpenAndSelectInvItem",
-                            "Debug: if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)", Logging.Logging.Teal);
+                        Logging.Logging.Log("Debug: if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(20) && !Cache.Instance.InSpace)");
                     return false;
                 }
 
                 if (DateTime.UtcNow < Time.Instance.NextOpenHangarAction)
                 {
                     if (Logging.Logging.DebugHangars)
-                        Logging.Logging.Log("OpenAndSelectInvItem", "Debug: if (DateTime.UtcNow < NextOpenHangarAction)", Logging.Logging.Teal);
+                        Logging.Logging.Log("Debug: if (DateTime.UtcNow < NextOpenHangarAction)");
                     return false;
                 }
 
                 if (Logging.Logging.DebugHangars)
-                    Logging.Logging.Log("OpenAndSelectInvItem", "Debug: about to: if (!Cache.Instance.OpenInventoryWindow", Logging.Logging.Teal);
+                    Logging.Logging.Log("Debug: about to: if (!Cache.Instance.OpenInventoryWindow");
 
                 if (!Instance.OpenInventoryWindow(module)) return false;
 
@@ -764,19 +744,19 @@ namespace Questor.Modules.Caching
                 {
                     var idsInInvTreeView = Instance.PrimaryInventoryWindow.GetIdsFromTree(false);
                     if (Logging.Logging.DebugHangars)
-                        Logging.Logging.Log("OpenAndSelectInvItem", "Debug: IDs Found in the Inv Tree [" + idsInInvTreeView.Count() + "]", Logging.Logging.Teal);
+                        Logging.Logging.Log("Debug: IDs Found in the Inv Tree [" + idsInInvTreeView.Count() + "]");
 
                     if (Instance.PrimaryInventoryWindow.ExpandCorpHangarView())
                     {
                         Statistics.LogWindowActionToWindowLog("Corporate Hangar", "ExpandCorpHangar executed");
-                        Logging.Logging.Log(module, "ExpandCorpHangar executed", Logging.Logging.Teal);
+                        Logging.Logging.Log("ExpandCorpHangar executed");
                         Time.Instance.NextOpenHangarAction = DateTime.UtcNow.AddSeconds(4);
                         return false;
                     }
 
                     foreach (var itemInTree in idsInInvTreeView)
                     {
-                        Logging.Logging.Log(module, "ID: " + itemInTree, Logging.Logging.Red);
+                        Logging.Logging.Log("ID: " + itemInTree);
                     }
                     return false;
                 }
@@ -785,7 +765,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("ListInvTree", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return false;
             }
         }

@@ -18,10 +18,10 @@ namespace Questor
 
         public static void Main(string[] args)
         {
-            Logging.Log("Startup", "Args:", Logging.Teal);
+            Logging.Log("Args:");
             foreach (var s in args)
             {
-                Logging.Log("Startup ", s, Logging.Teal);
+                Logging.Log(s);
             }
 
             if (args.Length != 2)
@@ -54,7 +54,7 @@ namespace Questor
                 return;
             }
 
-            Logging.Log("Startup", "Loading DirectEve with " + Cache.D3DVersion, Logging.Teal);
+            Logging.Log("Loading DirectEve with " + Cache.D3DVersion);
             if (!Cache.LoadDirectEVEInstance(Cache.D3DVersion)) return;
 
             Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;
@@ -64,11 +64,11 @@ namespace Questor
                 questorUI = new QuestorUI();
                 //questorUI.Visible = (Cache.Instance.WCFClient.GetPipeProxy.IsMainFormMinimized() && Cache.Instance.WCFClient.GetPipeProxy.GetEVESettings().ToggleHideShowOnMinimize) || Cache.Instance.WCFClient.GetPipeProxy.GetEveAccount(Cache.Instance.EveAccount.CharacterName).Hidden;
 
-                Logging.Log("Startup", "Launching Questor", Logging.Teal);
+                Logging.Log("Launching Questor");
                 _questor = new Questor();
 
 
-                Logging.Log("Startup", "Launching QuestorUI", Logging.Teal);
+                Logging.Log("Launching QuestorUI");
                 Application.Run(questorUI);
 
 
@@ -77,11 +77,11 @@ namespace Questor
                     Thread.Sleep(50);
                 }
 
-                Logging.Log("Startup", "Exiting Questor", Logging.Teal);
+                Logging.Log("Exiting Questor");
             }
             catch (Exception ex)
             {
-                Logging.Log("Startup", "Exception [" + ex + "]", Logging.Teal);
+                Logging.Log("Exception [" + ex + "]");
             }
             finally
             {

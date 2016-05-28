@@ -52,30 +52,29 @@ namespace Questor.Storylines
             if (string.IsNullOrEmpty(Settings.Instance.TransportShipName.ToLower()))
             {
                 _States.CurrentArmState = ArmState.NotEnoughAmmo;
-                Logging.Log("Arm.ActivateTransportShip", "Could not find transportshipName in settings!", Logging.Orange);
+                Logging.Log("Could not find transportshipName in settings!");
                 return StorylineState.BlacklistAgent;
             }
 
             try
             {
-                if (Logging.DebugArm) Logging.Log("Arm.ActivateTransportShip", "try", Logging.White);
+                if (Logging.DebugArm) Logging.Log("try");
                 if (Cache.Instance.ActiveShip.GivenName.ToLower() != Settings.Instance.TransportShipName.ToLower())
                 {
                     if (Logging.DebugArm)
-                        Logging.Log("Arm.ActivateTransportShip", "if (Cache.Instance.ActiveShip.GivenName.ToLower() != transportshipName.ToLower())",
-                            Logging.White);
+                        Logging.Log("if (Cache.Instance.ActiveShip.GivenName.ToLower() != transportshipName.ToLower())");
                     if (!Cache.Instance.ShipHangar.Items.Any()) return StorylineState.Arm; //no ships?!?
 
                     if (Logging.DebugArm)
-                        Logging.Log("Arm.ActivateTransportShip", "if (!Cache.Instance.ShipHangar.Items.Any()) return StorylineState.Arm; done", Logging.White);
+                        Logging.Log("if (!Cache.Instance.ShipHangar.Items.Any()) return StorylineState.Arm; done");
 
                     var ships = Cache.Instance.ShipHangar.Items;
-                    if (Logging.DebugArm) Logging.Log("Arm.ActivateTransportShip", "List<DirectItem> ships = Cache.Instance.ShipHangar.Items;", Logging.White);
+                    if (Logging.DebugArm) Logging.Log("List<DirectItem> ships = Cache.Instance.ShipHangar.Items;");
 
                     foreach (
                         var ship in ships.Where(ship => ship.GivenName != null && ship.GivenName.ToLower() == Settings.Instance.TransportShipName.ToLower()))
                     {
-                        Logging.Log("Arm", "Making [" + ship.GivenName + "] active", Logging.White);
+                        Logging.Log("Making [" + ship.GivenName + "] active");
                         ship.ActivateShip();
                         _nextGenericCourierStorylineAction = DateTime.UtcNow.AddSeconds(Time.Instance.SwitchShipsDelay_seconds);
                         return StorylineState.Arm;
@@ -86,10 +85,9 @@ namespace Questor.Storylines
             }
             catch (Exception exception)
             {
-                Logging.Log("GenericCourierStoryline", "Exception thrown while attempting to switch to transport ship: [" + exception + "]", Logging.White);
-                Logging.Log("GenericCourierStoryline",
-                    "blacklisting this storyline agent for this session because we could not switch to the configured TransportShip named [" +
-                    Settings.Instance.TransportShipName + "]", Logging.White);
+                Logging.Log("Exception thrown while attempting to switch to transport ship: [" + exception + "]");
+                Logging.Log("blacklisting this storyline agent for this session because we could not switch to the configured TransportShip named [" +
+                    Settings.Instance.TransportShipName + "]");
                 return StorylineState.BlacklistAgent;
             }
 
@@ -97,7 +95,7 @@ namespace Questor.Storylines
             {
                 if (Cache.Instance.ActiveShip.GivenName.ToLower() == Settings.Instance.TransportShipName.ToLower())
                 {
-                    Logging.Log("Arm.ActivateTransportShip", "Done", Logging.White);
+                    Logging.Log("Done");
                     _States.CurrentArmState = ArmState.Done;
                     return StorylineState.GotoAgent;
                 }
@@ -203,7 +201,7 @@ namespace Questor.Storylines
             // Move items
             foreach (var item in from.Items.Where(i => i.GroupId == (int) Group.MiscSpecialMissionItems || i.GroupId == (int) Group.Livestock))
             {
-                Logging.Log("GenericCourier", "Moving [" + item.TypeName + "][" + item.ItemId + "] to " + (pickup ? "cargo" : "hangar"), Logging.White);
+                Logging.Log("Moving [" + item.TypeName + "][" + item.ItemId + "] to " + (pickup ? "cargo" : "hangar"));
                 to.Add(item, item.Stacksize);
             }
             _nextGenericCourierStorylineAction = DateTime.UtcNow.AddSeconds(10);

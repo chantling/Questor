@@ -66,7 +66,7 @@ namespace Questor.Modules.Lookup
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Settings Initialization", "Exception: [" + exception + "]", Logging.Logging.Red);
+                Logging.Logging.Log("Exception: [" + exception + "]");
                 return;
             }
         }
@@ -225,7 +225,7 @@ namespace Questor.Modules.Lookup
         {
             try
             {
-                Logging.Logging.Log("ReadSettingsFromXML", "Start reading settings from xml async");
+                Logging.Logging.Log("Start reading settings from xml async");
                 Cache.Instance.IsLoadingSettings = true;
                 Instance.CommonSettingsFileName = (string) CharacterSettingsXml.Element("commonSettingsFileName") ?? "common.xml";
                 Instance.CommonSettingsPath = System.IO.Path.Combine(Instance.Path, Instance.CommonSettingsFileName);
@@ -236,9 +236,8 @@ namespace Questor.Modules.Lookup
                     CommonSettingsXml = XDocument.Load(Instance.CommonSettingsPath).Root;
                     if (CommonSettingsXml == null)
                     {
-                        Logging.Logging.Log("Settings",
-                            "found [" + Instance.CommonSettingsPath +
-                            "] but was unable to load it: FATAL ERROR - use the provided settings.xml to create that file.", Logging.Logging.Red);
+                        Logging.Logging.Log("found [" + Instance.CommonSettingsPath +
+                            "] but was unable to load it: FATAL ERROR - use the provided settings.xml to create that file.");
                     }
                 }
                 else
@@ -255,8 +254,8 @@ namespace Questor.Modules.Lookup
                         // this should never happen as we load the characters xml here if the common xml is missing. adding this does quiet some warnings though
 
                 if (Instance.CommonXMLExists)
-                    Logging.Logging.Log("Settings", "Loading Settings from [" + Instance.CommonSettingsPath + "] and", Logging.Logging.Green);
-                Logging.Logging.Log("Settings", "Loading Settings from [" + Logging.Logging.CharacterSettingsPath + "]", Logging.Logging.Green);
+                    Logging.Logging.Log("Loading Settings from [" + Instance.CommonSettingsPath + "] and");
+                Logging.Logging.Log("Loading Settings from [" + Logging.Logging.CharacterSettingsPath + "]");
                 //
                 // these are listed by feature and should likely be re-ordered to reflect that
                 //
@@ -522,7 +521,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Major Feature Settings: Exception [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Major Feature Settings: Exception [" + exception + "]");
                 }
 
 
@@ -534,19 +533,17 @@ namespace Questor.Modules.Lookup
                                                                 CharacterSettingsXml.Element("characterNamesForMasterToInviteToFleet");
                 if (xmlCharacterNamesForMasterToInviteToFleet != null)
                 {
-                    Logging.Logging.Log("Settings", "Loading CharacterNames For Master To Invite To Fleet", Logging.Logging.White);
+                    Logging.Logging.Log("Loading CharacterNames For Master To Invite To Fleet");
                     var i = 1;
                     foreach (var CharacterToInvite in xmlCharacterNamesForMasterToInviteToFleet.Elements("character"))
                     {
                         Instance.CharacterNamesForMasterToInviteToFleet.Add((string) CharacterToInvite);
                         if (Logging.Logging.DebugFleetSupportMaster)
-                            Logging.Logging.Log("Settings.LoadFleetList", "[" + i + "] CharacterName [" + (string) CharacterToInvite + "]", Logging.Logging.Teal);
+                            Logging.Logging.Log("[" + i + "] CharacterName [" + (string)CharacterToInvite + "]");
                         i++;
                     }
                     if (Instance.FleetSupportMaster)
-                        Logging.Logging.Log("Settings",
-                            "        CharacterNamesForMasterToInviteToFleet now has [" + CharacterNamesForMasterToInviteToFleet.Count + "] entries",
-                            Logging.Logging.White);
+                        Logging.Logging.Log("        CharacterNamesForMasterToInviteToFleet now has [" + CharacterNamesForMasterToInviteToFleet.Count + "] entries");
                 }
 
                 //
@@ -565,7 +562,7 @@ namespace Questor.Modules.Lookup
 
                     var relativeMissionsPath = (string) CharacterSettingsXml.Element("missionsPath") ?? (string) CommonSettingsXml.Element("missionsPath");
                     MissionSettings.MissionsPath = System.IO.Path.Combine(Instance.Path, relativeMissionsPath);
-                    Logging.Logging.Log("Settings", "MissionsPath is: [" + MissionSettings.MissionsPath + "]", Logging.Logging.White);
+                    Logging.Logging.Log("MissionsPath is: [" + MissionSettings.MissionsPath + "]");
 
                     MissionSettings.RequireMissionXML = (bool?) CharacterSettingsXml.Element("requireMissionXML") ??
                                                         (bool?) CommonSettingsXml.Element("requireMissionXML") ?? false;
@@ -581,7 +578,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Agent Standings and Mission Settings: Exception [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Agent Standings and Mission Settings: Exception [" + exception + "]");
                 }
 
 
@@ -597,7 +594,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Local watch Settings: Exception [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Local watch Settings: Exception [" + exception + "]");
                 }
 
                 //
@@ -628,7 +625,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Invasion Settings: Exception [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Invasion Settings: Exception [" + exception + "]");
                 }
 
                 // minimum delay to stay docked
@@ -664,7 +661,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Ship Name Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Ship Name Settings [" + exception + "]");
                 }
 
                 try
@@ -676,7 +673,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading UseHomebookmark [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading UseHomebookmark [" + exception + "]");
                 }
 
                 //
@@ -689,20 +686,20 @@ namespace Questor.Modules.Lookup
                     LootHangarTabName = (string) CharacterSettingsXml.Element("lootHangar") ?? (string) CommonSettingsXml.Element("lootHangar");
                     if (string.IsNullOrEmpty(Instance.LootHangarTabName))
                     {
-                        Logging.Logging.Log("Settings", "LootHangar [" + "ItemsHangar" + "]", Logging.Logging.White);
+                        Logging.Logging.Log("LootHangar [" + "ItemsHangar" + "]");
                     }
                     else
                     {
-                        Logging.Logging.Log("Settings", "LootHangar [" + Instance.LootHangarTabName + "]", Logging.Logging.White);
+                        Logging.Logging.Log("LootHangar [" + Instance.LootHangarTabName + "]");
                     }
                     AmmoHangarTabName = (string) CharacterSettingsXml.Element("ammoHangar") ?? (string) CommonSettingsXml.Element("ammoHangar");
                     if (string.IsNullOrEmpty(Instance.AmmoHangarTabName))
                     {
-                        Logging.Logging.Log("Settings", "AmmoHangar [" + "ItemHangar" + "]", Logging.Logging.White);
+                        Logging.Logging.Log("AmmoHangar [" + "ItemHangar" + "]");
                     }
                     else
                     {
-                        Logging.Logging.Log("Settings", "AmmoHangar [" + Instance.AmmoHangarTabName + "]", Logging.Logging.White);
+                        Logging.Logging.Log("AmmoHangar [" + Instance.AmmoHangarTabName + "]");
                     }
                     BookmarkHangar = (string) CharacterSettingsXml.Element("bookmarkHangar") ?? (string) CommonSettingsXml.Element("bookmarkHangar");
                     LootContainerName = (string) CharacterSettingsXml.Element("lootContainer") ?? (string) CommonSettingsXml.Element("lootContainer");
@@ -719,7 +716,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Hangar Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Hangar Settings [" + exception + "]");
                 }
 
                 //
@@ -782,7 +779,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Loot and Salvage Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Loot and Salvage Settings [" + exception + "]");
                 }
 
                 //
@@ -872,7 +869,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Weapon and targeting Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Weapon and targeting Settings [" + exception + "]");
                 }
                 // ------------------
 
@@ -904,7 +901,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Script and Booster Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Script and Booster Settings [" + exception + "]");
                 }
 
                 //
@@ -930,7 +927,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Speed and Movement Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Speed and Movement Settings [" + exception + "]");
                 }
 
                 //
@@ -946,7 +943,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Tanking Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Tanking Settings [" + exception + "]");
                 }
 
                 //
@@ -968,7 +965,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Panic Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Panic Settings [" + exception + "]");
                 }
                 // ------------------
 
@@ -1014,7 +1011,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Drone Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Drone Settings [" + exception + "]");
                 }
 
 
@@ -1043,7 +1040,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Ammo Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Ammo Settings [" + exception + "]");
                 }
 
 
@@ -1071,19 +1068,19 @@ namespace Questor.Modules.Lookup
                         }
                         else
                         {
-                            Logging.Logging.Log("Settings", "agentList exists in your characters config but no agents were listed.", Logging.Logging.Red);
+                            Logging.Logging.Log("agentList exists in your characters config but no agents were listed.");
                         }
                     }
                     else
                     {
-                        Logging.Logging.Log("Settings", "Error! No Agents List specified.", Logging.Logging.Red);
+                        Logging.Logging.Log("Error! No Agents List specified.");
                     }
 
                     //}
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Agent Settings [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Agent Settings [" + exception + "]");
                 }
 
 //				return;
@@ -1099,7 +1096,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading Mission Blacklists/GreyLists [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading Mission Blacklists/GreyLists [" + exception + "]");
                 }
 
                 //
@@ -1120,7 +1117,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Error Loading AgentStandings requirements [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Error Loading AgentStandings requirements [" + exception + "]");
                 }
 
                 // at what memory usage do we need to restart this session?
@@ -1162,12 +1159,12 @@ namespace Questor.Modules.Lookup
                 Logging.Logging.ConsoleLogDaysOfLogsToKeep = (int?) CharacterSettingsXml.Element("consoleLogDaysOfLogsToKeep") ??
                                                              (int?) CommonSettingsXml.Element("consoleLogDaysOfLogsToKeep") ?? 14;
                 Cache.Instance.IsLoadingSettings = false;
-                Logging.Logging.Log("ReadSettingsFromXML", "Done reading settings from xml async");
+                Logging.Logging.Log("Done reading settings from xml async");
                 //Logging.tryToLogToFile = (bool?)CharacterSettingsXml.Element("tryToLogToFile") ?? (bool?)CommonSettingsXml.Element("tryToLogToFile") ?? true;
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Settings", "ReadSettingsFromXML: Exception [" + exception + "]", Logging.Logging.Teal);
+                Logging.Logging.Log("ReadSettingsFromXML: Exception [" + exception + "]");
                 Cache.Instance.IsLoadingSettings = false;
             }
         }
@@ -1198,7 +1195,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("Settings", "Exception trying to find CharacterName [" + ex + "]", Logging.Logging.White);
+                    Logging.Logging.Log("Exception trying to find CharacterName [" + ex + "]");
                     Instance.CharacterName = "AtLoginScreenNoCharactersLoggedInYet";
                 }
 
@@ -1211,9 +1208,7 @@ namespace Questor.Modules.Lookup
                     {
                         Cleanup.ReasonToStopQuestor =
                             "CharacterName not defined! - Are we still logged in? Did we lose connection to eve? Questor should be restarting here.";
-                        Logging.Logging.Log("Settings",
-                            "CharacterName not defined! - Are we still logged in? Did we lose connection to eve? Questor should be restarting here.",
-                            Logging.Logging.White);
+                        Logging.Logging.Log("CharacterName not defined! - Are we still logged in? Did we lose connection to eve? Questor should be restarting here.");
                         Instance.CharacterName = "NoCharactersLoggedInAnymore";
                         Time.EnteredCloseQuestor_DateTime = DateTime.UtcNow;
                         Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
@@ -1222,7 +1217,7 @@ namespace Questor.Modules.Lookup
                         return;
                     }
 
-                    Logging.Logging.Log("Settings", "CharacterName not defined! - Are we logged in yet? Did we lose connection to eve?", Logging.Logging.White);
+                    Logging.Logging.Log("CharacterName not defined! - Are we logged in yet? Did we lose connection to eve?");
                     Instance.CharacterName = "AtLoginScreenNoCharactersLoggedInYet";
                     //Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
                 }
@@ -1246,7 +1241,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("Settings", "Exception [" + ex + "]", Logging.Logging.White);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                 }
 
                 if (!File.Exists(Logging.Logging.CharacterSettingsPath) && !Instance.DefaultSettingsLoaded)
@@ -1255,8 +1250,7 @@ namespace Questor.Modules.Lookup
                     _States.CurrentQuestorState = QuestorState.Error;
                     _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.Error;
                     _States.CurrentCombatMissionCtrlState = CombatMissionCtrlState.Error;
-                    Logging.Logging.Log("Settings", "ERROR: if (!File.Exists(Logging.CharacterSettingsPath) && !Settings.Instance.DefaultSettingsLoaded)",
-                        Logging.Logging.White);
+                    Logging.Logging.Log("ERROR: if (!File.Exists(Logging.CharacterSettingsPath) && !Settings.Instance.DefaultSettingsLoaded)");
                 }
                 else //if the settings file exists - load the characters settings XML
                 {
@@ -1270,9 +1264,7 @@ namespace Questor.Modules.Lookup
 
                     if (CharacterSettingsXml == null)
                     {
-                        Logging.Logging.Log("Settings",
-                            "unable to find [" + Logging.Logging.CharacterSettingsPath + "] FATAL ERROR - use the provided settings.xml to create that file.",
-                            Logging.Logging.Red);
+                        Logging.Logging.Log("unable to find [" + Logging.Logging.CharacterSettingsPath + "] FATAL ERROR - use the provided settings.xml to create that file.");
                     }
                     else
                     {
@@ -1323,7 +1315,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Settings", "Problem creating directories for logs [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Problem creating directories for logs [" + exception + "]");
                 }
                 //create all the logging directories even if they are not configured to be used - we can adjust this later if it really bugs people to have some potentially empty directories.
 
@@ -1333,10 +1325,8 @@ namespace Questor.Modules.Lookup
                     {
                         SettingsLoadedICount++;
                         if (Instance.CommonXMLExists)
-                            Logging.Logging.Log("Settings",
-                                "[" + SettingsLoadedICount + "] Done Loading Settings from [" + Instance.CommonSettingsPath + "] and", Logging.Logging.Green);
-                        Logging.Logging.Log("Settings",
-                            "[" + SettingsLoadedICount + "] Done Loading Settings from [" + Logging.Logging.CharacterSettingsPath + "]", Logging.Logging.Green);
+                            Logging.Logging.Log("[" + SettingsLoadedICount + "] Done Loading Settings from [" + Instance.CommonSettingsPath + "] and");
+                        Logging.Logging.Log("[" + SettingsLoadedICount + "] Done Loading Settings from [" + Logging.Logging.CharacterSettingsPath + "]");
 
                         //SettingsLoaded(this, new EventArgs());
                     }
@@ -1344,7 +1334,7 @@ namespace Questor.Modules.Lookup
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("Settings", "Problem creating directories for logs [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Problem creating directories for logs [" + ex + "]");
             }
         }
 

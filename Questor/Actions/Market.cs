@@ -423,7 +423,7 @@ namespace Questor.Modules.Actions
             var directItem = Cache.Instance.ItemHangar.Items.FirstOrDefault(i => i.ItemId == _currentItem.Id);
             if (directItem == null)
             {
-                Logging.Logging.Log(module, "Item " + _currentItem.Name + " no longer exists in the hanger", Logging.Logging.White);
+                Logging.Logging.Log("Item " + _currentItem.Name + " no longer exists in the hanger");
                 return false;
             }
 
@@ -716,30 +716,30 @@ namespace Questor.Modules.Actions
         {
             if (refine)
             {
-                if (Logging.Logging.DebugValuedump) Logging.Logging.Log(module, "RefineItems: if (refine)", Logging.Logging.Debug);
+                if (Logging.Logging.DebugValuedump) Logging.Logging.Log("RefineItems: if (refine)");
 
                 if (Cache.Instance.ItemHangar == null) return false;
                 var reprocessingWindow = Cache.Instance.Windows.OfType<DirectReprocessingWindow>().FirstOrDefault();
 
                 if (reprocessingWindow == null)
                 {
-                    if (Logging.Logging.DebugValuedump) Logging.Logging.Log(module, "RefineItems: if (reprocessingWindow == null)", Logging.Logging.Debug);
+                    if (Logging.Logging.DebugValuedump) Logging.Logging.Log("RefineItems: if (reprocessingWindow == null)");
 
                     if (DateTime.UtcNow.Subtract(_lastExecute).TotalSeconds > Time.Instance.Marketlookupdelay_seconds)
                     {
                         IEnumerable<DirectItem> refineItems = Cache.Instance.ItemHangar.Items.Where(i => ItemsToRefine.Any(r => r.Id == i.ItemId)).ToList();
                         if (refineItems.Any())
                         {
-                            if (Logging.Logging.DebugValuedump) Logging.Logging.Log(module, "RefineItems: if (refineItems.Any())", Logging.Logging.Debug);
+                            if (Logging.Logging.DebugValuedump) Logging.Logging.Log("RefineItems: if (refineItems.Any())");
 
                             Cache.Instance.DirectEve.ReprocessStationItems(refineItems);
                             if (Logging.Logging.DebugValuedump)
-                                Logging.Logging.Log(module, "RefineItems: Cache.Instance.DirectEve.ReprocessStationItems(refineItems);", Logging.Logging.Debug);
+                                Logging.Logging.Log("RefineItems: Cache.Instance.DirectEve.ReprocessStationItems(refineItems);");
                             _lastExecute = DateTime.UtcNow;
                             return false;
                         }
 
-                        if (Logging.Logging.DebugValuedump) Logging.Logging.Log(module, "RefineItems: if (refineItems.Any()) was false", Logging.Logging.Debug);
+                        if (Logging.Logging.DebugValuedump) Logging.Logging.Log("RefineItems: if (refineItems.Any()) was false");
                         return false;
                     }
 
@@ -748,14 +748,12 @@ namespace Questor.Modules.Actions
 
                 if (reprocessingWindow.NeedsQuote)
                 {
-                    if (Logging.Logging.DebugValuedump) Logging.Logging.Log(module, "RefineItems: if (reprocessingWindow.NeedsQuote)", Logging.Logging.Debug);
+                    if (Logging.Logging.DebugValuedump) Logging.Logging.Log("RefineItems: if (reprocessingWindow.NeedsQuote)");
 
                     if (DateTime.UtcNow.Subtract(_lastExecute).TotalSeconds > Time.Instance.Marketlookupdelay_seconds)
                     {
                         if (Logging.Logging.DebugValuedump)
-                            Logging.Logging.Log(module,
-                                "RefineItems: if (DateTime.UtcNow.Subtract(_lastExecute).TotalSeconds > Time.Instance.Marketlookupdelay_seconds)",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("RefineItems: if (DateTime.UtcNow.Subtract(_lastExecute).TotalSeconds > Time.Instance.Marketlookupdelay_seconds)");
 
                         reprocessingWindow.GetQuotes();
                         _lastExecute = DateTime.UtcNow;
@@ -763,33 +761,29 @@ namespace Questor.Modules.Actions
                     }
 
                     if (Logging.Logging.DebugValuedump)
-                        Logging.Logging.Log(module,
-                            "RefineItems: waiting for: if (DateTime.UtcNow.Subtract(_lastExecute).TotalSeconds > Time.Instance.Marketlookupdelay_seconds)",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("RefineItems: waiting for: if (DateTime.UtcNow.Subtract(_lastExecute).TotalSeconds > Time.Instance.Marketlookupdelay_seconds)");
                     return false;
                 }
 
-                if (Logging.Logging.DebugValuedump) Logging.Logging.Log(module, "RefineItems: // Wait till we have a quote", Logging.Logging.Debug);
+                if (Logging.Logging.DebugValuedump) Logging.Logging.Log("RefineItems: // Wait till we have a quote");
 
                 // Wait till we have a quote
                 if (reprocessingWindow.Quotes.Count == 0)
                 {
                     if (Logging.Logging.DebugValuedump)
-                        Logging.Logging.Log(module, "RefineItems: if (reprocessingWindow.Quotes.Count == 0)", Logging.Logging.Debug);
+                        Logging.Logging.Log("RefineItems: if (reprocessingWindow.Quotes.Count == 0)");
                     _lastExecute = DateTime.UtcNow;
                     return false;
                 }
 
                 if (Logging.Logging.DebugValuedump)
-                    Logging.Logging.Log(module, "RefineItems: // Wait another 5 seconds to view the quote and then reprocess the stuff", Logging.Logging.Debug);
+                    Logging.Logging.Log("RefineItems: // Wait another 5 seconds to view the quote and then reprocess the stuff");
 
                 // Wait another 5 seconds to view the quote and then reprocess the stuff
                 if (DateTime.UtcNow.Subtract(_lastExecute).TotalSeconds > Time.Instance.Marketlookupdelay_seconds)
                 {
                     if (Logging.Logging.DebugValuedump)
-                        Logging.Logging.Log(module,
-                            "RefineItems: if (DateTime.UtcNow.Subtract(_lastExecute).TotalSeconds > Time.Instance.Marketlookupdelay_seconds)",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("RefineItems: if (DateTime.UtcNow.Subtract(_lastExecute).TotalSeconds > Time.Instance.Marketlookupdelay_seconds)");
                     // TODO: We should wait for the items to appear in our hangar and then sell them...
                     reprocessingWindow.Reprocess();
                     return true;
@@ -797,14 +791,14 @@ namespace Questor.Modules.Actions
             }
             else
             {
-                if (Logging.Logging.DebugValuedump) Logging.Logging.Log(module, "RefineItems: if (!refine)", Logging.Logging.Debug);
+                if (Logging.Logging.DebugValuedump) Logging.Logging.Log("RefineItems: if (!refine)");
 
                 if (Cache.Instance.CurrentShipsCargo == null) return false;
 
                 IEnumerable<DirectItem> refineItems = Cache.Instance.ItemHangar.Items.Where(i => ItemsToRefine.Any(r => r.Id == i.ItemId)).ToList();
                 if (refineItems.Any())
                 {
-                    Logging.Logging.Log("Arm", "Moving loot to refine to CargoHold", Logging.Logging.White);
+                    Logging.Logging.Log("Moving loot to refine to CargoHold");
 
                     Cache.Instance.CurrentShipsCargo.Add(refineItems);
                     _lastExecute = DateTime.UtcNow;

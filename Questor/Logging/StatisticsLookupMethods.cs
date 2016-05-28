@@ -26,14 +26,14 @@ namespace Questor.Modules.Logging
     {
         public static bool ListClassInstanceInfo()
         {
-            Logging.Log("debug", "--------------------------- Start (listed below)-----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Start (listed below)-----------------------------");
             if (Cache.Instance.EntitiesOnGrid.Any())
             {
-                Logging.Log("debug", "InvType Class Instances: [" + InvType.InvTypeInstances + "]", Logging.Debug);
-                Logging.Log("debug", "Cache Class Instances: [" + Cache.CacheInstances + "]", Logging.Debug);
-                Logging.Log("debug", "Settings Class Instances: [" + Settings.SettingsInstances + "]", Logging.Debug);
+                Logging.Log("InvType Class Instances: [" + InvType.InvTypeInstances + "]");
+                Logging.Log("Cache Class Instances: [" + Cache.CacheInstances + "]");
+                Logging.Log("Settings Class Instances: [" + Settings.SettingsInstances + "]");
             }
-            Logging.Log("debug", "--------------------------- Done  (listed above) -----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Done  (listed above) -----------------------------");
 
 
             return true;
@@ -41,31 +41,28 @@ namespace Questor.Modules.Logging
 
         public static bool ListIgnoredTargets()
         {
-            Logging.Log("IgnoreTargets", "--------------------------- Start (listed below)-----------------------------", Logging.Yellow);
-            Logging.Log("IgnoreTargets", "Note: Ignore Targets are based on Text Matching. If you ignore: Angel Warlord you ignore all of them on the field!",
-                Logging.Debug);
+            Logging.Log("--------------------------- Start (listed below)-----------------------------");
+            Logging.Log("Note: Ignore Targets are based on Text Matching. If you ignore: Angel Warlord you ignore all of them on the field!");
             if (CombatMissionCtrl.IgnoreTargets.Any())
             {
                 var icount = 0;
                 foreach (var ignoreTarget in CombatMissionCtrl.IgnoreTargets)
                 {
                     icount++;
-                    Logging.Log(icount.ToString(), "[" + ignoreTarget + "] of a total of [" + CombatMissionCtrl.IgnoreTargets.Count() + "]", Logging.Debug);
+                    Logging.Log("[" + ignoreTarget + "] of a total of [" + CombatMissionCtrl.IgnoreTargets.Count() + "]");
                 }
             }
-            Logging.Log("IgnoreTargets", "--------------------------- Done  (listed above) -----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Done  (listed above) -----------------------------");
             return true;
         }
 
         public static bool ListDronePriorityTargets(IEnumerable<EntityCache> primaryDroneTargets)
         {
-            Logging.Log("DPT", "--------------------------- Start (listed below)-----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Start (listed below)-----------------------------");
             if (Drones.PreferredDroneTarget != null)
             {
-                Logging.Log("DPT",
-                    "[" + 0 + "] PreferredDroneTarget [" + Drones.PreferredDroneTarget.Name + "][" + Math.Round(Drones.PreferredDroneTarget.Distance/1000, 0) +
-                    "k] IsInOptimalRange [" + Drones.PreferredDroneTarget.IsInOptimalRange + "] IsTarget [" + Drones.PreferredDroneTarget.IsTarget + "]",
-                    Logging.Debug);
+                Logging.Log("[" + 0 + "] PreferredDroneTarget [" + Drones.PreferredDroneTarget.Name + "][" + Math.Round(Drones.PreferredDroneTarget.Distance / 1000, 0) +
+                    "k] IsInOptimalRange [" + Drones.PreferredDroneTarget.IsInOptimalRange + "] IsTarget [" + Drones.PreferredDroneTarget.IsTarget + "]");
             }
 
             primaryDroneTargets = primaryDroneTargets.ToList();
@@ -75,19 +72,18 @@ namespace Questor.Modules.Logging
                 foreach (var dronePriorityTarget in primaryDroneTargets.OrderBy(i => i.DronePriorityLevel).ThenBy(i => i.Name))
                 {
                     icount++;
-                    Logging.Log(icount.ToString(),
-                        "[" + dronePriorityTarget.Name + "][" + Math.Round(dronePriorityTarget.Distance/1000, 0) + "k] IsInOptimalRange [" +
+                    Logging.Log("[" + dronePriorityTarget.Name + "][" + Math.Round(dronePriorityTarget.Distance / 1000, 0) + "k] IsInOptimalRange [" +
                         dronePriorityTarget.IsInOptimalRange + "] IsTarget [" + dronePriorityTarget.IsTarget + "] DronePriorityLevel [" +
-                        dronePriorityTarget.DronePriorityLevel + "]", Logging.Debug);
+                        dronePriorityTarget.DronePriorityLevel + "]");
                 }
             }
-            Logging.Log("DPT", "--------------------------- Done  (listed above) -----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Done  (listed above) -----------------------------");
             return true;
         }
 
         public static bool ListTargetedandTargeting(IEnumerable<EntityCache> targetedandTargeting)
         {
-            Logging.Log("List", "--------------------------- Start (listed below)-----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Start (listed below)-----------------------------");
             targetedandTargeting = targetedandTargeting.ToList();
             if (targetedandTargeting.Any())
             {
@@ -95,15 +91,14 @@ namespace Questor.Modules.Logging
                 foreach (var targetedandTargetingEntity in targetedandTargeting.OrderBy(i => i.Distance).ThenBy(i => i.Name))
                 {
                     icount++;
-                    Logging.Log(icount.ToString(),
-                        "[" + targetedandTargetingEntity.Name + "][" + Math.Round(targetedandTargetingEntity.Distance/1000, 0) + "k] IsIgnored [" +
+                    Logging.Log("[" + targetedandTargetingEntity.Name + "][" + Math.Round(targetedandTargetingEntity.Distance / 1000, 0) + "k] IsIgnored [" +
                         targetedandTargetingEntity.IsIgnored + "] IsInOptimalRange [" + targetedandTargetingEntity.IsInOptimalRange + "] isTarget [" +
                         targetedandTargetingEntity.IsTarget + "] isTargeting [" + targetedandTargetingEntity.IsTargeting + "] IsPrimaryWeaponPriorityTarget [" +
                         targetedandTargetingEntity.IsPrimaryWeaponPriorityTarget + "] IsDronePriorityTarget [" +
-                        targetedandTargetingEntity.IsDronePriorityTarget + "]", Logging.Debug);
+                        targetedandTargetingEntity.IsDronePriorityTarget + "]");
                 }
             }
-            Logging.Log("List", "--------------------------- Done  (listed above)-----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Done  (listed above)-----------------------------");
             return true;
         }
 
@@ -156,7 +151,7 @@ namespace Questor.Modules.Logging
             }
             catch (Exception ex)
             {
-                Logging.Log("Statistics", "Exception while logging to file [" + ex.Message + "]", Logging.White);
+                Logging.Log("Exception while logging to file [" + ex.Message + "]");
                 return false;
             }
         }
@@ -175,7 +170,7 @@ namespace Questor.Modules.Logging
                 }
                 catch (Exception ex)
                 {
-                    Logging.Log("Statistics", "PocketObjectStatistics: is cache.Instance.MissionName null?: exception was [" + ex.Message + "]", Logging.White);
+                    Logging.Log("PocketObjectStatistics: is cache.Instance.MissionName null?: exception was [" + ex.Message + "]");
                 }
 
                 PocketObjectStatisticsFile = Path.Combine(
@@ -183,8 +178,7 @@ namespace Questor.Modules.Logging
                     Logging.FilterPath(Cache.Instance.DirectEve.Me.Name) + " - " + currentPocketName + " - " +
                     CombatMissionCtrl.PocketNumber + " - ObjectStatistics.csv");
 
-                Logging.Log("Statistics.ObjectStatistics",
-                    "Logging info on the [" + things.Count + "] objects in this pocket to [" + PocketObjectStatisticsFile + "]", Logging.White);
+                Logging.Log("Logging info on the [" + things.Count + "] objects in this pocket to [" + PocketObjectStatisticsFile + "]");
 
                 if (File.Exists(PocketObjectStatisticsFile))
                 {
@@ -216,7 +210,7 @@ namespace Questor.Modules.Logging
 
         public static bool LogEntities(List<EntityCache> things, bool force = false)
         {
-            Logging.Log("Entities", "--------------------------- Start (listed below)-----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Start (listed below)-----------------------------");
             things = things.ToList();
             if (things.Any())
             {
@@ -224,20 +218,18 @@ namespace Questor.Modules.Logging
                 foreach (var thing in things.OrderBy(i => i.Distance))
                 {
                     icount++;
-                    Logging.Log(icount.ToString(),
-                        thing.Name + "[" + Math.Round(thing.Distance/1000, 0) + "k] GroupID[" + thing.GroupId + "] ID[" + thing.MaskedId + "] isSentry[" +
-                        thing.IsSentry + "] IsHVT[" + thing.IsHighValueTarget + "] IsLVT[" + thing.IsLowValueTarget + "] IsIgnored[" + thing.IsIgnored + "]",
-                        Logging.Debug);
+                    Logging.Log(thing.Name + "[" + Math.Round(thing.Distance / 1000, 0) + "k] GroupID[" + thing.GroupId + "] ID[" + thing.MaskedId + "] isSentry[" +
+                        thing.IsSentry + "] IsHVT[" + thing.IsHighValueTarget + "] IsLVT[" + thing.IsLowValueTarget + "] IsIgnored[" + thing.IsIgnored + "]");
                 }
             }
-            Logging.Log("Entities", "--------------------------- Done  (listed above)-----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Done  (listed above)-----------------------------");
 
             return true;
         }
 
         public static bool ListItems(IEnumerable<ItemCache> ItemsToList)
         {
-            Logging.Log("Items", "--------------------------- Start (listed below)-----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Start (listed below)-----------------------------");
             ItemsToList = ItemsToList.ToList();
             if (ItemsToList.Any())
             {
@@ -245,17 +237,17 @@ namespace Questor.Modules.Logging
                 foreach (var item in ItemsToList.OrderBy(i => i.TypeId).ThenBy(i => i.GroupId))
                 {
                     icount++;
-                    Logging.Log(icount.ToString(), "[" + item.Name + "] GroupID [" + item.GroupId + "], IsContraband [" + item.IsContraband + "]", Logging.Debug);
+                    Logging.Log("[" + item.Name + "] GroupID [" + item.GroupId + "], IsContraband [" + item.IsContraband + "]");
                 }
             }
-            Logging.Log("Items", "--------------------------- Done  (listed above)-----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Done  (listed above)-----------------------------");
 
             return true;
         }
 
         public static bool ModuleInfo(IEnumerable<ModuleCache> _modules)
         {
-            Logging.Log("ModuleInfo", "--------------------------- Start (listed below)-----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Start (listed below)-----------------------------");
             _modules = _modules.ToList();
             if (_modules != null && _modules.Any())
             {
@@ -263,13 +255,12 @@ namespace Questor.Modules.Logging
                 foreach (var _module in _modules.OrderBy(i => i.TypeId).ThenBy(i => i.GroupId))
                 {
                     icount++;
-                    Logging.Log(icount.ToString(),
-                        "TypeID [" + _module.TypeId + "] GroupID [" + _module.GroupId + "] isOnline [" + _module.IsOnline + "] isActivatable [" +
+                    Logging.Log("TypeID [" + _module.TypeId + "] GroupID [" + _module.GroupId + "] isOnline [" + _module.IsOnline + "] isActivatable [" +
                         _module.IsActivatable + "] IsActive [" + _module.IsActive + "] OptimalRange [" + _module.OptimalRange + "] Falloff [" + _module.FallOff +
-                        "] Duration [" + _module.Duration + "] IsActive [" + _module.IsActive + "]", Logging.Debug);
+                        "] Duration [" + _module.Duration + "] IsActive [" + _module.IsActive + "]");
                 }
             }
-            Logging.Log("ModuleInfo", "--------------------------- Done  (listed above)-----------------------------", Logging.Yellow);
+            Logging.Log("--------------------------- Done  (listed above)-----------------------------");
 
 
             return true;

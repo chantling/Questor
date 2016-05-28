@@ -57,7 +57,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("AgentsDeclineTimes", "Exception [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                 }
             }
 
@@ -68,7 +68,7 @@ namespace Questor.Modules.Lookup
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("AgentsDeclineTimes", "Exception [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                 }
             }
 

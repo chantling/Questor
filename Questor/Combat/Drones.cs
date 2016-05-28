@@ -151,16 +151,14 @@ namespace Questor.Modules.Combat
                 if (MissionSettings.PocketUseDrones != null)
                 {
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.useDrones", "We are using PocketDrones setting [" + MissionSettings.PocketUseDrones + "]",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("We are using PocketDrones setting [" + MissionSettings.PocketUseDrones + "]");
                     return (bool) MissionSettings.PocketUseDrones;
                 }
 
                 if (MissionSettings.MissionUseDrones != null)
                 {
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.useDrones", "We are using MissionDrones setting [" + MissionSettings.PocketUseDrones + "]",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("We are using MissionDrones setting [" + MissionSettings.PocketUseDrones + "]");
                     return (bool) MissionSettings.MissionUseDrones;
                 }
 
@@ -245,7 +243,7 @@ namespace Questor.Modules.Combat
                     {
                         _preferredDroneTarget = null;
                         PreferredDroneTargetID = null;
-                        Logging.Logging.Log("PreferredPrimaryWeaponTarget.Set", "[ null ]", Logging.Logging.Debug);
+                        Logging.Logging.Log("[ null ]");
                         return;
                     }
                 }
@@ -256,7 +254,7 @@ namespace Questor.Modules.Combat
                         _preferredDroneTarget = value;
                         PreferredDroneTargetID = value.Id;
                         if (Logging.Logging.DebugGetBestTarget)
-                            Logging.Logging.Log("PreferredPrimaryWeaponTarget.Set", value + " [" + value.MaskedId + "]", Logging.Logging.Debug);
+                            Logging.Logging.Log(value + " [" + value.MaskedId + "]");
                         return;
                     }
                 }
@@ -298,7 +296,7 @@ namespace Questor.Modules.Combat
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.DronePriorityEntities", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -338,7 +336,7 @@ namespace Questor.Modules.Combat
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.DronePriorityEntities", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -375,7 +373,7 @@ namespace Questor.Modules.Combat
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("Dronebay", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                     return null;
                 }
             }
@@ -404,7 +402,7 @@ namespace Questor.Modules.Combat
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("RemoveDronePriorityTargets", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return false;
             }
         }
@@ -418,9 +416,8 @@ namespace Questor.Modules.Combat
                 {
                     foreach (var entityToAdd in entitiesToAdd)
                     {
-                        Logging.Logging.Log("RemovingPWPT",
-                            "adding [" + entityToAdd.Name + "][" + Math.Round(entityToAdd.Distance/1000, 0) + "k][" + entityToAdd.MaskedId +
-                            "] to the PWPT List", Logging.Logging.Debug);
+                        Logging.Logging.Log("adding [" + entityToAdd.Name + "][" + Math.Round(entityToAdd.Distance / 1000, 0) + "k][" + entityToAdd.MaskedId +
+                            "] to the PWPT List");
                         AddDronePriorityTarget(entityToAdd, DronePriority.PriorityKillTarget, "AddDPTByName");
                         continue;
                     }
@@ -428,12 +425,12 @@ namespace Questor.Modules.Combat
                     return;
                 }
 
-                Logging.Logging.Log("Adding DPT", "[" + stringEntitiesToAdd + "] was not found on grid", Logging.Logging.Debug);
+                Logging.Logging.Log("[" + stringEntitiesToAdd + "] was not found on grid");
                 return;
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("AddDronePriorityTargetsByName", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return;
             }
         }
@@ -445,17 +442,17 @@ namespace Questor.Modules.Combat
                 var entitiesToRemove = Cache.Instance.EntitiesByName(stringEntitiesToRemove, Cache.Instance.EntitiesOnGrid).ToList();
                 if (entitiesToRemove.Any())
                 {
-                    Logging.Logging.Log("RemovingDPT", "removing [" + stringEntitiesToRemove + "] from the DPT List", Logging.Logging.Debug);
+                    Logging.Logging.Log("removing [" + stringEntitiesToRemove + "] from the DPT List");
                     RemoveDronePriorityTargets(entitiesToRemove);
                     return;
                 }
 
-                Logging.Logging.Log("RemovingDPT", "[" + stringEntitiesToRemove + "] was not found on grid", Logging.Logging.Debug);
+                Logging.Logging.Log("[" + stringEntitiesToRemove + "] was not found on grid");
                 return;
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("RemovedDronePriorityTargetsByName", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -480,7 +477,7 @@ namespace Questor.Modules.Combat
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("AddDronePriorityTargets", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -493,8 +490,7 @@ namespace Questor.Modules.Combat
                     if ((ewarEntity.IsIgnored) || DronePriorityTargets.Any(p => p.EntityID == ewarEntity.Id))
                     {
                         if (Logging.Logging.DebugAddDronePriorityTarget)
-                            Logging.Logging.Log("AddDronePriorityTargets", "if ((target.IsIgnored) || DronePriorityTargets.Any(p => p.Id == target.Id))",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("if ((target.IsIgnored) || DronePriorityTargets.Any(p => p.Id == target.Id))");
                         return;
                     }
 
@@ -505,10 +501,9 @@ namespace Questor.Modules.Combat
                         {
                             DronePriorityTargetCount = DronePriorityTargets.Count();
                         }
-                        Logging.Logging.Log(module,
-                            "Adding [" + ewarEntity.Name + "] Speed [" + Math.Round(ewarEntity.Velocity, 2) + " m/s] Distance [" +
-                            Math.Round(ewarEntity.Distance/1000, 2) + "] [ID: " + ewarEntity.MaskedId + "] as a drone priority target [" + priority.ToString() +
-                            "] we have [" + DronePriorityTargetCount + "] other DronePriorityTargets", Logging.Logging.Teal);
+                        Logging.Logging.Log("Adding [" + ewarEntity.Name + "] Speed [" + Math.Round(ewarEntity.Velocity, 2) + " m/s] Distance [" +
+                            Math.Round(ewarEntity.Distance / 1000, 2) + "] [ID: " + ewarEntity.MaskedId + "] as a drone priority target [" + priority.ToString() +
+                            "] we have [" + DronePriorityTargetCount + "] other DronePriorityTargets");
                         _dronePriorityTargets.Add(new PriorityTarget {Name = ewarEntity.Name, EntityID = ewarEntity.Id, DronePriority = priority});
                     }
 
@@ -516,15 +511,14 @@ namespace Questor.Modules.Combat
                 }
 
                 if (Logging.Logging.DebugAddDronePriorityTarget)
-                    Logging.Logging.Log(module,
-                        "UseDrones is [" + UseDrones.ToString() + "] AddWarpScramblersToDronePriorityTargetList is [" +
+                    Logging.Logging.Log("UseDrones is [" + UseDrones.ToString() + "] AddWarpScramblersToDronePriorityTargetList is [" +
                         AddWarpScramblersToDronePriorityTargetList + "] [" + ewarEntity.Name +
-                        "] was not added as a Drone PriorityTarget (why did we even try?)", Logging.Logging.Teal);
+                        "] was not added as a Drone PriorityTarget (why did we even try?)");
                 return;
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("AddDronePriorityTarget", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -592,18 +586,17 @@ namespace Questor.Modules.Combat
             if (Logging.Logging.DebugDisableGetBestDroneTarget || !UseDrones)
             {
                 if (Logging.Logging.DebugGetBestDroneTarget)
-                    Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "!Cache.Instance.UseDrones - drones are disabled currently",
-                        Logging.Logging.Teal);
+                    Logging.Logging.Log("!Cache.Instance.UseDrones - drones are disabled currently");
                 return true;
             }
 
             if (Logging.Logging.DebugGetBestDroneTarget)
-                Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "Attempting to get Best Drone Target", Logging.Logging.Teal);
+                Logging.Logging.Log("Attempting to get Best Drone Target");
 
             if (DateTime.UtcNow < Time.Instance.NextGetBestDroneTarget)
             {
                 if (Logging.Logging.DebugGetBestDroneTarget)
-                    Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "Cant GetBest yet....Too Soon!", Logging.Logging.Teal);
+                    Logging.Logging.Log("Cant GetBest yet....Too Soon!");
                 return false;
             }
 
@@ -626,9 +619,7 @@ namespace Questor.Modules.Combat
                 (PreferredDroneTarget != null && Cache.Instance.EntitiesOnGrid.Any(t => t.Id == PreferredDroneTarget.Id)))
             {
                 if (Logging.Logging.DebugGetBestDroneTarget)
-                    Logging.Logging.Log(callingroutine + " GetBestDroneTarget:",
-                        "We have a PreferredDroneTarget [" + PreferredDroneTarget.Name + "] that was chosen less than 6 sec ago, and is still alive.",
-                        Logging.Logging.Teal);
+                    Logging.Logging.Log("We have a PreferredDroneTarget [" + PreferredDroneTarget.Name + "] that was chosen less than 6 sec ago, and is still alive.");
                 return true;
             }
 
@@ -650,14 +641,12 @@ namespace Questor.Modules.Combat
             if (currentDroneTarget != null)
             {
                 if (Logging.Logging.DebugGetBestDroneTarget)
-                    Logging.Logging.Log(callingroutine + " GetBestDroneTarget: currentDroneTarget", "Checking Low Health", Logging.Logging.Teal);
+                    Logging.Logging.Log("Checking Low Health");
                 if (currentDroneTarget.IsEntityIShouldKeepShootingWithDrones)
                 {
                     if (Logging.Logging.DebugGetBestDroneTarget)
-                        Logging.Logging.Log(callingroutine + " GetBestDroneTarget:",
-                            "currentDroneTarget [" + currentDroneTarget.Name + "][" + Math.Round(currentDroneTarget.Distance/1000, 2) + "k][" +
-                            currentDroneTarget.MaskedId + " GroupID [" + currentDroneTarget.GroupId + "]] has less than 80% shields, keep killing this target",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("currentDroneTarget [" + currentDroneTarget.Name + "][" + Math.Round(currentDroneTarget.Distance / 1000, 2) + "k][" +
+                            currentDroneTarget.MaskedId + " GroupID [" + currentDroneTarget.GroupId + "]] has less than 80% shields, keep killing this target");
                     PreferredDroneTarget = currentDroneTarget;
                     Time.Instance.LastPreferredDroneTargetDateTime = DateTime.UtcNow;
                     return true;
@@ -667,9 +656,8 @@ namespace Questor.Modules.Combat
             if (currentDroneTarget != null && currentDroneTarget.IsReadyToShoot && currentDroneTarget.IsLowValueTarget)
             {
                 if (Logging.Logging.DebugGetBestDroneTarget)
-                    Logging.Logging.Log(callingroutine + " GetBestDroneTarget: currentDroneTarget",
-                        "We have a currentTarget [" + currentDroneTarget.Name + "][" + currentDroneTarget.MaskedId + "][" +
-                        Math.Round(currentDroneTarget.Distance/1000, 2) + "k], testing conditions", Logging.Logging.Teal);
+                    Logging.Logging.Log("We have a currentTarget [" + currentDroneTarget.Name + "][" + currentDroneTarget.MaskedId + "][" +
+                        Math.Round(currentDroneTarget.Distance / 1000, 2) + "k], testing conditions");
 
                 #region Is our current target any other drone priority target?
 
@@ -677,16 +665,15 @@ namespace Questor.Modules.Combat
                 // Is our current target any other drone priority target? AND if our target is just a PriorityKillTarget assume ALL E-war is more important.
                 //
                 if (Logging.Logging.DebugGetBestDroneTarget)
-                    Logging.Logging.Log(callingroutine + " GetBestDroneTarget: currentTarget", "Checking Priority", Logging.Logging.Teal);
+                    Logging.Logging.Log("Checking Priority");
                 if (DronePriorityEntities.Any(pt => pt.IsReadyToShoot
                                                     && pt.Nearest5kDistance < MaxDroneRange
                                                     && pt.Id == currentDroneTarget.Id
                                                     && !currentDroneTarget.IsHigherPriorityPresent))
                 {
                     if (Logging.Logging.DebugGetBestDroneTarget)
-                        Logging.Logging.Log(callingroutine + " GetBestDroneTarget:",
-                            "CurrentTarget [" + currentDroneTarget.Name + "][" + Math.Round(currentDroneTarget.Distance/1000, 2) + "k][" +
-                            currentDroneTarget.MaskedId + "] GroupID [" + currentDroneTarget.GroupId + "]", Logging.Logging.Debug);
+                        Logging.Logging.Log("CurrentTarget [" + currentDroneTarget.Name + "][" + Math.Round(currentDroneTarget.Distance / 1000, 2) + "k][" +
+                            currentDroneTarget.MaskedId + "] GroupID [" + currentDroneTarget.GroupId + "]");
                     PreferredDroneTarget = currentDroneTarget;
                     Time.Instance.LastPreferredDroneTargetDateTime = DateTime.UtcNow;
                     return true;
@@ -700,14 +687,12 @@ namespace Questor.Modules.Combat
                 // Is our current target already low health? keep shooting the same target if so...
                 //
                 if (Logging.Logging.DebugGetBestDroneTarget)
-                    Logging.Logging.Log(callingroutine + " GetBestDroneTarget: currentDroneTarget", "Checking Low Health", Logging.Logging.Teal);
+                    Logging.Logging.Log("Checking Low Health");
                 if (currentDroneTarget.IsEntityIShouldKeepShootingWithDrones)
                 {
                     if (Logging.Logging.DebugGetBestDroneTarget)
-                        Logging.Logging.Log(callingroutine + " GetBestDroneTarget:",
-                            "currentDroneTarget [" + currentDroneTarget.Name + "][" + Math.Round(currentDroneTarget.Distance/1000, 2) + "k][" +
-                            currentDroneTarget.MaskedId + " GroupID [" + currentDroneTarget.GroupId + "]] has less than 80% shields, keep killing this target",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("currentDroneTarget [" + currentDroneTarget.Name + "][" + Math.Round(currentDroneTarget.Distance / 1000, 2) + "k][" +
+                            currentDroneTarget.MaskedId + " GroupID [" + currentDroneTarget.GroupId + "]] has less than 80% shields, keep killing this target");
                     PreferredDroneTarget = currentDroneTarget;
                     Time.Instance.LastPreferredDroneTargetDateTime = DateTime.UtcNow;
                     return true;
@@ -720,17 +705,14 @@ namespace Questor.Modules.Combat
                 if (!currentDroneTarget.IsHigherPriorityPresent)
                 {
                     if (Logging.Logging.DebugGetBestDroneTarget)
-                        Logging.Logging.Log(callingroutine + " GetBestDroneTarget: currentDroneTarget", "Does the currentTarget exist? Can it be hit?",
-                            Logging.Logging.Teal);
+                        Logging.Logging.Log("Does the currentTarget exist? Can it be hit?");
                     if (currentDroneTarget.IsReadyToShoot && currentDroneTarget.Nearest5kDistance < MaxDroneRange)
                     {
                         if (Logging.Logging.DebugGetBestDroneTarget)
-                            Logging.Logging.Log(callingroutine + " GetBestDroneTarget:",
-                                "if  the currentDroneTarget exists and the target is the right size then continue shooting it;", Logging.Logging.Debug);
+                            Logging.Logging.Log("if  the currentDroneTarget exists and the target is the right size then continue shooting it;");
                         if (Logging.Logging.DebugGetBestDroneTarget)
-                            Logging.Logging.Log(callingroutine + " GetBestDroneTarget:",
-                                "currentDroneTarget is [" + currentDroneTarget.Name + "][" + Math.Round(currentDroneTarget.Distance/1000, 2) + "k][" +
-                                currentDroneTarget.MaskedId + "] GroupID [" + currentDroneTarget.GroupId + "]", Logging.Logging.Debug);
+                            Logging.Logging.Log("currentDroneTarget is [" + currentDroneTarget.Name + "][" + Math.Round(currentDroneTarget.Distance / 1000, 2) + "k][" +
+                                currentDroneTarget.MaskedId + "] GroupID [" + currentDroneTarget.GroupId + "]");
 
                         PreferredDroneTarget = currentDroneTarget;
                         Time.Instance.LastPreferredDroneTargetDateTime = DateTime.UtcNow;
@@ -787,7 +769,7 @@ namespace Questor.Modules.Combat
             // Get the closest primary weapon priority target
             //
             if (Logging.Logging.DebugGetBestDroneTarget)
-                Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "Checking Closest DronePriorityTarget", Logging.Logging.Teal);
+                Logging.Logging.Log("Checking Closest DronePriorityTarget");
             EntityCache dronePriorityTarget = null;
             try
             {
@@ -807,9 +789,8 @@ namespace Questor.Modules.Combat
             if (dronePriorityTarget != null)
             {
                 if (Logging.Logging.DebugGetBestDroneTarget)
-                    Logging.Logging.Log(callingroutine + " GetBestDroneTarget:",
-                        "dronePriorityTarget is [" + dronePriorityTarget.Name + "][" + Math.Round(dronePriorityTarget.Distance/1000, 2) + "k][" +
-                        dronePriorityTarget.MaskedId + "] GroupID [" + dronePriorityTarget.GroupId + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("dronePriorityTarget is [" + dronePriorityTarget.Name + "][" + Math.Round(dronePriorityTarget.Distance / 1000, 2) + "k][" +
+                        dronePriorityTarget.MaskedId + "] GroupID [" + dronePriorityTarget.GroupId + "]");
                 PreferredDroneTarget = dronePriorityTarget;
                 Time.Instance.LastPreferredDroneTargetDateTime = DateTime.UtcNow;
                 return true;
@@ -823,7 +804,7 @@ namespace Questor.Modules.Combat
             // This is where CombatMissionCtrl would pass targets to GetBestDroneTarget
             //
             if (Logging.Logging.DebugGetBestDroneTarget)
-                Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "Checking Calling Target", Logging.Logging.Teal);
+                Logging.Logging.Log("Checking Calling Target");
             if (_potentialTargets != null && _potentialTargets.Any())
             {
                 EntityCache callingDroneTarget = null;
@@ -838,12 +819,10 @@ namespace Questor.Modules.Combat
                 if (callingDroneTarget != null && callingDroneTarget.IsReadyToShoot)
                 {
                     if (Logging.Logging.DebugGetBestDroneTarget)
-                        Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "if (callingDroneTarget != null && !callingDroneTarget.IsIgnored)",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("if (callingDroneTarget != null && !callingDroneTarget.IsIgnored)");
                     if (Logging.Logging.DebugGetBestDroneTarget)
-                        Logging.Logging.Log(callingroutine + " GetBestDroneTarget:",
-                            "callingDroneTarget is [" + callingDroneTarget.Name + "][" + Math.Round(callingDroneTarget.Distance/1000, 2) + "k][" +
-                            callingDroneTarget.MaskedId + "] GroupID [" + callingDroneTarget.GroupId + "]", Logging.Logging.Debug);
+                        Logging.Logging.Log("callingDroneTarget is [" + callingDroneTarget.Name + "][" + Math.Round(callingDroneTarget.Distance / 1000, 2) + "k][" +
+                            callingDroneTarget.MaskedId + "] GroupID [" + callingDroneTarget.GroupId + "]");
                     AddDronePriorityTarget(callingDroneTarget, DronePriority.PriorityKillTarget, " GetBestDroneTarget: callingDroneTarget");
                     PreferredDroneTarget = callingDroneTarget;
                     Time.Instance.LastPreferredDroneTargetDateTime = DateTime.UtcNow;
@@ -858,13 +837,13 @@ namespace Questor.Modules.Combat
             #region Get the closest Low Value Target
 
             if (Logging.Logging.DebugGetBestDroneTarget)
-                Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "Checking Closest Low Value", Logging.Logging.Teal);
+                Logging.Logging.Log("Checking Closest Low Value");
             EntityCache lowValueTarget = null;
 
             if (Combat.PotentialCombatTargets.Any())
             {
                 if (Logging.Logging.DebugGetBestDroneTarget)
-                    Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "get closest: if (potentialCombatTargets.Any())", Logging.Logging.Teal);
+                    Logging.Logging.Log("get closest: if (potentialCombatTargets.Any())");
 
                 lowValueTarget = Combat.PotentialCombatTargets.Where(t => t.IsLowValueTarget && t.IsReadyToShoot)
                     .OrderBy(t => t.IsEwarTarget)
@@ -883,7 +862,7 @@ namespace Questor.Modules.Combat
             // Get the closest low value target //excluding things going too fast for guns to hit (if you have guns fitted)
             //
             if (Logging.Logging.DebugGetBestDroneTarget)
-                Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "Checking closest Low Value", Logging.Logging.Teal);
+                Logging.Logging.Log("Checking closest Low Value");
             EntityCache highValueTarget = null;
             if (Combat.PotentialCombatTargets.Any())
             {
@@ -902,18 +881,17 @@ namespace Questor.Modules.Combat
             if (lowValueTarget != null || highValueTarget != null)
             {
                 if (Logging.Logging.DebugGetBestDroneTarget)
-                    Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "Checking use High Value", Logging.Logging.Teal);
+                    Logging.Logging.Log("Checking use High Value");
                 if (Logging.Logging.DebugGetBestDroneTarget)
                 {
                     if (highValueTarget != null)
                     {
-                        Logging.Logging.Log(callingroutine + " GetBestDroneTarget:",
-                            "highValueTarget is [" + highValueTarget.Name + "][" + Math.Round(highValueTarget.Distance/1000, 2) + "k][" +
-                            highValueTarget.MaskedId + "] GroupID [" + highValueTarget.GroupId + "]", Logging.Logging.Debug);
+                        Logging.Logging.Log("highValueTarget is [" + highValueTarget.Name + "][" + Math.Round(highValueTarget.Distance / 1000, 2) + "k][" +
+                            highValueTarget.MaskedId + "] GroupID [" + highValueTarget.GroupId + "]");
                     }
                     else
                     {
-                        Logging.Logging.Log(callingroutine + " GetBestDroneTarget:", "highValueTarget is [ null ]", Logging.Logging.Debug);
+                        Logging.Logging.Log("highValueTarget is [ null ]");
                     }
                 }
                 PreferredDroneTarget = lowValueTarget ?? highValueTarget ?? null;
@@ -924,7 +902,7 @@ namespace Questor.Modules.Combat
             #endregion
 
             if (Logging.Logging.DebugGetBestDroneTarget)
-                Logging.Logging.Log("GetBestDroneTarget: none", "Could not determine a suitable Drone target", Logging.Logging.Debug);
+                Logging.Logging.Log("Could not determine a suitable Drone target");
 
             #region If we did not find anything at all (wtf!?!?)
 
@@ -932,19 +910,18 @@ namespace Questor.Modules.Combat
             {
                 if (Cache.Instance.Targets.Any())
                 {
-                    Logging.Logging.Log("GetBestDroneTarget (Drones): none", ".", Logging.Logging.Debug);
-                    Logging.Logging.Log("GetBestDroneTarget (Drones): none", "*** ALL LOCKED/LOCKING TARGETS LISTED BELOW", Logging.Logging.Debug);
+                    Logging.Logging.Log(".");
+                    Logging.Logging.Log("*** ALL LOCKED/LOCKING TARGETS LISTED BELOW");
                     var LockedTargetNumber = 0;
                     foreach (var __target in Cache.Instance.Targets)
                     {
                         LockedTargetNumber++;
-                        Logging.Logging.Log("GetBestDroneTarget (Drones): none",
-                            "*** Target: [" + LockedTargetNumber + "][" + __target.Name + "][" + Math.Round(__target.Distance/1000, 2) + "k][" +
+                        Logging.Logging.Log("*** Target: [" + LockedTargetNumber + "][" + __target.Name + "][" + Math.Round(__target.Distance / 1000, 2) + "k][" +
                             __target.MaskedId + "][isTarget: " + __target.IsTarget + "][isTargeting: " + __target.IsTargeting + "] GroupID [" + __target.GroupId +
-                            "]", Logging.Logging.Debug);
+                            "]");
                     }
-                    Logging.Logging.Log("GetBestDroneTarget (Drones): none", "*** ALL LOCKED/LOCKING TARGETS LISTED ABOVE", Logging.Logging.Debug);
-                    Logging.Logging.Log("GetBestDroneTarget (Drones): none", ".", Logging.Logging.Debug);
+                    Logging.Logging.Log("*** ALL LOCKED/LOCKING TARGETS LISTED ABOVE");
+                    Logging.Logging.Log(".");
                 }
 
                 if (Combat.PotentialCombatTargets.Any(t => !t.IsTarget && !t.IsTargeting))
@@ -952,25 +929,20 @@ namespace Questor.Modules.Combat
                     if (CombatMissionCtrl.IgnoreTargets.Any())
                     {
                         var IgnoreCount = CombatMissionCtrl.IgnoreTargets.Count;
-                        Logging.Logging.Log("GetBestDroneTarget (Drones): none", "Ignore List has [" + IgnoreCount + "] Entities in it.", Logging.Logging.Debug);
+                        Logging.Logging.Log("Ignore List has [" + IgnoreCount + "] Entities in it.");
                     }
 
-                    Logging.Logging.Log("GetBestDroneTarget (Drones): none",
-                        "***** ALL [" + Combat.PotentialCombatTargets.Count() + "] potentialCombatTargets LISTED BELOW (not yet targeted or targeting)",
-                        Logging.Logging.Debug);
+                    Logging.Logging.Log("***** ALL [" + Combat.PotentialCombatTargets.Count() + "] potentialCombatTargets LISTED BELOW (not yet targeted or targeting)");
                     var potentialCombatTargetNumber = 0;
                     foreach (var potentialCombatTarget in Combat.PotentialCombatTargets)
                     {
                         potentialCombatTargetNumber++;
-                        Logging.Logging.Log("GetBestDroneTarget (Drones): none",
-                            "***** Unlocked [" + potentialCombatTargetNumber + "]: [" + potentialCombatTarget.Name + "][" +
-                            Math.Round(potentialCombatTarget.Distance/1000, 2) + "k][" + potentialCombatTarget.MaskedId + "][isTarget: " +
-                            potentialCombatTarget.IsTarget + "] GroupID [" + potentialCombatTarget.GroupId + "]", Logging.Logging.Debug);
+                        Logging.Logging.Log("***** Unlocked [" + potentialCombatTargetNumber + "]: [" + potentialCombatTarget.Name + "][" +
+                            Math.Round(potentialCombatTarget.Distance / 1000, 2) + "k][" + potentialCombatTarget.MaskedId + "][isTarget: " +
+                            potentialCombatTarget.IsTarget + "] GroupID [" + potentialCombatTarget.GroupId + "]");
                     }
-                    Logging.Logging.Log("GetBestDroneTarget (Drones): none",
-                        "***** ALL [" + Combat.PotentialCombatTargets.Count() + "] potentialCombatTargets LISTED ABOVE (not yet targeted or targeting)",
-                        Logging.Logging.Debug);
-                    Logging.Logging.Log("GetBestDroneTarget (Drones): none", ".", Logging.Logging.Debug);
+                    Logging.Logging.Log("***** ALL [" + Combat.PotentialCombatTargets.Count() + "] potentialCombatTargets LISTED ABOVE (not yet targeted or targeting)");
+                    Logging.Logging.Log(".");
                 }
             }
 
@@ -1045,17 +1017,16 @@ namespace Questor.Modules.Combat
         {
             try
             {
-                if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.EngageTarget", "Entering EngageTarget()", Logging.Logging.Debug);
+                if (Logging.Logging.DebugDrones) Logging.Logging.Log("Entering EngageTarget()");
 
                 // Find the first active weapon's target
                 //TargetingCache.CurrentDronesTarget = Cache.Instance.EntityById(_lastTarget);
 
                 if (Logging.Logging.DebugDrones)
-                    Logging.Logging.Log("Drones.EngageTarget",
-                        "MaxDroneRange [" + MaxDroneRange + "] lowValueTargetTargeted [" + Combat.lowValueTargetsTargeted.Count() + "] LVTT InDroneRange [" +
+                    Logging.Logging.Log("MaxDroneRange [" + MaxDroneRange + "] lowValueTargetTargeted [" + Combat.lowValueTargetsTargeted.Count() + "] LVTT InDroneRange [" +
                         Combat.lowValueTargetsTargeted.Count(i => i.Distance < MaxDroneRange) + "] highValueTargetTargeted [" +
                         Combat.highValueTargetsTargeted.Count() + "] HVTT InDroneRange [" +
-                        Combat.highValueTargetsTargeted.Count(i => i.Distance < MaxDroneRange) + "]", Logging.Logging.Debug);
+                        Combat.highValueTargetsTargeted.Count(i => i.Distance < MaxDroneRange) + "]");
                 // Return best possible low value target
 
                 if (PreferredDroneTarget == null || !PreferredDroneTarget.IsFrigate)
@@ -1068,8 +1039,7 @@ namespace Questor.Modules.Combat
                 if (droneTarget == null)
                 {
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.EngageTarget", "PreferredDroneTarget is null, picking a target using a simple rule set...",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("PreferredDroneTarget is null, picking a target using a simple rule set...");
                     if (Cache.Instance.Targets.Any(i => !i.IsContainer && !i.IsBadIdea && i.Distance < MaxDroneRange))
                     {
                         droneTarget =
@@ -1080,7 +1050,7 @@ namespace Questor.Modules.Combat
                                 .FirstOrDefault();
                         if (droneTarget == null)
                         {
-                            Logging.Logging.Log("EngageTarget", "DroneToShoot is Null, this is bad.", Logging.Logging.Debug);
+                            Logging.Logging.Log("DroneToShoot is Null, this is bad.");
                         }
                     }
                 }
@@ -1090,22 +1060,19 @@ namespace Questor.Modules.Combat
                     if (droneTarget.IsReadyToShoot && droneTarget.Distance < MaxDroneRange)
                     {
                         if (Logging.Logging.DebugDrones)
-                            Logging.Logging.Log("Drones.EngageTarget",
-                                "if (DroneToShoot != null && DroneToShoot.IsReadyToShoot && DroneToShoot.Distance < Cache.Instance.MaxDroneRange)",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("if (DroneToShoot != null && DroneToShoot.IsReadyToShoot && DroneToShoot.Distance < Cache.Instance.MaxDroneRange)");
 
                         // Nothing to engage yet, probably re-targeting
                         if (!droneTarget.IsTarget)
                         {
-                            if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.EngageTarget", "if (!DroneToShoot.IsTarget)", Logging.Logging.Debug);
+                            if (Logging.Logging.DebugDrones) Logging.Logging.Log("if (!DroneToShoot.IsTarget)");
                             return;
                         }
 
                         if (droneTarget.IsBadIdea) //&& !DroneToShoot.IsAttacking)
                         {
                             if (Logging.Logging.DebugDrones)
-                                Logging.Logging.Log("Drones.EngageTarget", "if (DroneToShoot.IsBadIdea && !DroneToShoot.IsAttacking) return;",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("if (DroneToShoot.IsBadIdea && !DroneToShoot.IsAttacking) return;");
                             return;
                         }
 
@@ -1116,10 +1083,9 @@ namespace Questor.Modules.Combat
                                 ActiveDrones.All(i => i.FollowId == PreferredDroneTargetID && (i.Mode == 1 || i.Mode == 6 || i.Mode == 10)))
                             {
                                 if (Logging.Logging.DebugDrones)
-                                    Logging.Logging.Log("Drones.EngageTarget",
-                                        "if (LastDroneTargetID [" + LastTargetIDDronesEngaged + "] == DroneToShoot.Id [" + droneTarget.Id +
+                                    Logging.Logging.Log("if (LastDroneTargetID [" + LastTargetIDDronesEngaged + "] == DroneToShoot.Id [" + droneTarget.Id +
                                         "] && Cache.Instance.ActiveDrones.Any(i => i.FollowId != Cache.Instance.PreferredDroneTargetID) [" +
-                                        ActiveDrones.Any(i => i.FollowId != PreferredDroneTargetID) + "])", Logging.Logging.Debug);
+                                        ActiveDrones.Any(i => i.FollowId != PreferredDroneTargetID) + "])");
                                 return;
                             }
                         }
@@ -1141,9 +1107,8 @@ namespace Questor.Modules.Combat
                                     if (LastDroneFightCmd.AddSeconds(10) < DateTime.UtcNow &&
                                         Cache.Instance.DirectEve.GetLastModuleBlocked.AddSeconds(5) < DateTime.UtcNow)
                                     {
-                                        Logging.Logging.Log("Drones",
-                                            "Engaging [ " + ActiveDrones.Count() + " ] drones on [" + droneTarget.Name + "][ID: " + droneTarget.MaskedId + "]" +
-                                            Math.Round(droneTarget.Distance/1000, 0) + "k away]", Logging.Logging.Magenta);
+                                        Logging.Logging.Log("Engaging [ " + ActiveDrones.Count() + " ] drones on [" + droneTarget.Name + "][ID: " + droneTarget.MaskedId + "]" +
+                                            Math.Round(droneTarget.Distance / 1000, 0) + "k away]");
                                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdDronesEngage);
                                         // Save target id (so we do not constantly switch)
                                         LastDroneFightCmd = DateTime.UtcNow;
@@ -1157,10 +1122,8 @@ namespace Questor.Modules.Combat
                                 if (DateTime.UtcNow > Time.Instance.NextMakeActiveTargetAction)
                                 {
                                     droneTarget.MakeActiveTarget();
-                                    Logging.Logging.Log("Drones",
-                                        "[" + droneTarget.Name + "][ID: " + droneTarget.MaskedId + "]IsActiveTarget[" + droneTarget.IsActiveTarget + "][" +
-                                        Math.Round(droneTarget.Distance/1000, 0) + "k away] has been made the ActiveTarget (needed for drones)",
-                                        Logging.Logging.Magenta);
+                                    Logging.Logging.Log("[" + droneTarget.Name + "][ID: " + droneTarget.MaskedId + "]IsActiveTarget[" + droneTarget.IsActiveTarget + "][" +
+                                        Math.Round(droneTarget.Distance / 1000, 0) + "k away] has been made the ActiveTarget (needed for drones)");
                                     Time.Instance.NextMakeActiveTargetAction = DateTime.UtcNow.AddSeconds(5 + Cache.Instance.RandomNumber(0, 3));
                                 }
                             }
@@ -1168,19 +1131,17 @@ namespace Questor.Modules.Combat
                     }
 
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.EngageTarget",
-                            "if (DroneToShoot != null && DroneToShoot.IsReadyToShoot && DroneToShoot.Distance < Cache.Instance.MaxDroneRange)",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("if (DroneToShoot != null && DroneToShoot.IsReadyToShoot && DroneToShoot.Distance < Cache.Instance.MaxDroneRange)");
                     return;
                 }
 
                 if (Logging.Logging.DebugDrones)
-                    Logging.Logging.Log("Drones.EngageTarget", "if (Cache.Instance.PreferredDroneTargetID != null)", Logging.Logging.Debug);
+                    Logging.Logging.Log("if (Cache.Instance.PreferredDroneTargetID != null)");
                 return;
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("Drones.EngageTarget", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -1196,7 +1157,7 @@ namespace Questor.Modules.Combat
             {
                 if ((!Cache.Instance.InSpace && !Cache.Instance.InStation))
                 {
-                    Logging.Logging.Log(module, "Closing Drone Bay: We are not in station or space?!", Logging.Logging.Orange);
+                    Logging.Logging.Log("Closing Drone Bay: We are not in station or space?!");
                     return false;
                 }
 
@@ -1213,9 +1174,7 @@ namespace Questor.Modules.Combat
                 if (DroneBay.Window != null)
                 {
                     Time.Instance.NextDroneBayAction = DateTime.UtcNow.AddSeconds(2 + Cache.Instance.RandomNumber(1, 3));
-                    Logging.Logging.Log(module,
-                        "Closing Drone Bay: waiting [" + Math.Round(Time.Instance.NextDroneBayAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]",
-                        Logging.Logging.White);
+                    Logging.Logging.Log("Closing Drone Bay: waiting [" + Math.Round(Time.Instance.NextDroneBayAction.Subtract(DateTime.UtcNow).TotalSeconds, 0) + "sec]");
                     DroneBay.Window.Close();
                     Statistics.LogWindowActionToWindowLog("Dronebay", "Closing DroneBay");
                     return true;
@@ -1225,7 +1184,7 @@ namespace Questor.Modules.Combat
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("CloseDroneBay", "Unable to complete CloseDroneBay [" + exception + "]", Logging.Logging.Teal);
+                Logging.Logging.Log("Unable to complete CloseDroneBay [" + exception + "]");
                 return false;
             }
         }
@@ -1238,7 +1197,7 @@ namespace Questor.Modules.Combat
                 if (!UseDrones)
                 {
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.ShouldWeLaunchDrones", "UseDrones is [" + UseDrones + "] Not Launching Drones", Logging.Logging.Debug);
+                        Logging.Logging.Log("UseDrones is [" + UseDrones + "] Not Launching Drones");
                     return false;
                 }
 
@@ -1246,8 +1205,7 @@ namespace Questor.Modules.Combat
                 if (IsMissionPocketDone)
                 {
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.ShouldWeLaunchDrones", "IsMissionPocketDone [" + IsMissionPocketDone + "] Not Launching Drones",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("IsMissionPocketDone [" + IsMissionPocketDone + "] Not Launching Drones");
                     return false;
                 }
 
@@ -1255,9 +1213,8 @@ namespace Questor.Modules.Combat
                 if (Cache.Instance.ActiveShip.ShieldPercentage <= DroneMinimumShieldPct)
                 {
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.ShouldWeLaunchDrones",
-                            "My Ships ShieldPercentage [" + Cache.Instance.ActiveShip.ShieldPercentage + "] is below [" + DroneMinimumShieldPct +
-                            "] Not Launching Drones", Logging.Logging.Debug);
+                        Logging.Logging.Log("My Ships ShieldPercentage [" + Cache.Instance.ActiveShip.ShieldPercentage + "] is below [" + DroneMinimumShieldPct +
+                            "] Not Launching Drones");
                     return false;
                 }
 
@@ -1265,9 +1222,8 @@ namespace Questor.Modules.Combat
                 if (Cache.Instance.ActiveShip.ArmorPercentage <= DroneMinimumArmorPct)
                 {
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.ShouldWeLaunchDrones",
-                            "My Ships ArmorPercentage [" + Cache.Instance.ActiveShip.ArmorPercentage + "] is below [" + DroneMinimumArmorPct +
-                            "] Not Launching Drones", Logging.Logging.Debug);
+                        Logging.Logging.Log("My Ships ArmorPercentage [" + Cache.Instance.ActiveShip.ArmorPercentage + "] is below [" + DroneMinimumArmorPct +
+                            "] Not Launching Drones");
                     return false;
                 }
 
@@ -1275,9 +1231,8 @@ namespace Questor.Modules.Combat
                 if (Cache.Instance.ActiveShip.CapacitorPercentage <= DroneMinimumCapacitorPct)
                 {
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.ShouldWeLaunchDrones",
-                            "My Ships CapacitorPercentage [" + Cache.Instance.ActiveShip.CapacitorPercentage + "] is below [" + DroneMinimumCapacitorPct +
-                            "] Not Launching Drones", Logging.Logging.Debug);
+                        Logging.Logging.Log("My Ships CapacitorPercentage [" + Cache.Instance.ActiveShip.CapacitorPercentage + "] is below [" + DroneMinimumCapacitorPct +
+                            "] Not Launching Drones");
                     return false;
                 }
 
@@ -1288,9 +1243,8 @@ namespace Questor.Modules.Combat
                     !Cache.Instance.Targets.Any(e => e.IsLargeCollidable))
                 {
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.ShouldWeLaunchDrones",
-                            "We have nothing Aggressed; MaxDroneRange [" + MaxDroneRange + "] DroneControlrange [" + DroneControlRange + "] TargetingRange [" +
-                            Combat.MaxTargetRange + "]", Logging.Logging.Debug);
+                        Logging.Logging.Log("We have nothing Aggressed; MaxDroneRange [" + MaxDroneRange + "] DroneControlrange [" + DroneControlRange + "] TargetingRange [" +
+                            Combat.MaxTargetRange + "]");
                     return false;
                 }
 
@@ -1303,8 +1257,7 @@ namespace Questor.Modules.Combat
                                  e.IsAttacking) && e.Distance < MaxDroneRange))
                     {
                         if (Logging.Logging.DebugDrones)
-                            Logging.Logging.Log("Drones.ShouldWeLaunchDrones",
-                                "QuestorState is [" + _States.CurrentQuestorState.ToString() + "] We have nothing to shoot;", Logging.Logging.Debug);
+                            Logging.Logging.Log("QuestorState is [" + _States.CurrentQuestorState.ToString() + "] We have nothing to shoot;");
                         return false;
                     }
                 }
@@ -1328,7 +1281,7 @@ namespace Questor.Modules.Combat
 
                     // Do not launch the drones until the delay has passed
                     if (Logging.Logging.DebugDrones)
-                        Logging.Logging.Log("Drones.ShouldWeLaunchDrones", "We are still in _lastRecall delay.", Logging.Logging.Debug);
+                        Logging.Logging.Log("We are still in _lastRecall delay.");
                     return false;
                 }
 
@@ -1358,7 +1311,7 @@ namespace Questor.Modules.Combat
 
                 if (!UseDrones)
                 {
-                    Logging.Logging.Log("Drones", "Recalling [ " + ActiveDrones.Count() + " ] drones: UseDrones is [" + UseDrones + "]", Logging.Logging.Magenta);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones: UseDrones is [" + UseDrones + "]");
                     return true;
                 }
 
@@ -1376,27 +1329,24 @@ namespace Questor.Modules.Combat
                                 .FirstOrDefault(e => !e.IsSentry || (e.IsSentry && Combat.KillSentries) || (e.IsSentry && e.IsEwarTarget));
                         if (__closestTargetedBy != null)
                         {
-                            Logging.Logging.Log("Drones", "The closest target that is targeting ME is at [" + __closestTargetedBy.Distance + "]k",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("The closest target that is targeting ME is at [" + __closestTargetedBy.Distance + "]k");
                         }
                     }
 
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones: There are [" +
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones: There are [" +
                         Combat.PotentialCombatTargets.Count(
                             e => e.IsInDroneRange && (!e.IsSentry || (e.IsSentry && Combat.KillSentries) || (e.IsSentry && e.IsEwarTarget))) +
-                        "] PotentialCombatTargets not targeting us within My MaxDroneRange: [" + Math.Round(MaxDroneRange/1000, 0) + "k] Targeting Range Is [" +
-                        Math.Round(Combat.MaxTargetRange/1000, 0) + "k] We have [" + TargtedByCount + "] total things targeting us and [" +
+                        "] PotentialCombatTargets not targeting us within My MaxDroneRange: [" + Math.Round(MaxDroneRange / 1000, 0) + "k] Targeting Range Is [" +
+                        Math.Round(Combat.MaxTargetRange / 1000, 0) + "k] We have [" + TargtedByCount + "] total things targeting us and [" +
                         Combat.PotentialCombatTargets.Count(e => !e.IsSentry || (e.IsSentry && Combat.KillSentries) || (e.IsSentry && e.IsEwarTarget)) +
-                        "] total PotentialCombatTargets", Logging.Logging.Magenta);
+                        "] total PotentialCombatTargets");
 
                     if (Logging.Logging.DebugDrones)
                     {
                         foreach (var PCTInDroneRange in Combat.PotentialCombatTargets.Where(i => i.IsInDroneRange && i.IsTargetedBy))
                         {
-                            Logging.Logging.Log("Drones",
-                                "Recalling Drones Details:  PCTInDroneRange [" + PCTInDroneRange.Name + "][" + PCTInDroneRange.MaskedId + "] at [" +
-                                Math.Round(PCTInDroneRange.Distance/1000, 2) + "] not targeting us yet", Logging.Logging.Magenta);
+                            Logging.Logging.Log("Recalling Drones Details:  PCTInDroneRange [" + PCTInDroneRange.Name + "][" + PCTInDroneRange.MaskedId + "] at [" +
+                                Math.Round(PCTInDroneRange.Distance / 1000, 2) + "] not targeting us yet");
                         }
                     }
 
@@ -1405,97 +1355,85 @@ namespace Questor.Modules.Combat
 
                 if (IsMissionPocketDone && !WarpScrambled)
                 {
-                    Logging.Logging.Log("Drones", "Recalling [ " + ActiveDrones.Count() + " ] drones: We are done with this pocket.", Logging.Logging.Magenta);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones: We are done with this pocket.");
                     return true;
                 }
 
                 if (_activeDronesShieldTotalOnLastPulse > GetActiveDroneShieldTotal() + 5)
                 {
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones: shields! [Old: " + _activeDronesShieldTotalOnLastPulse.ToString("N2") + "][New: " +
-                        GetActiveDroneShieldTotal().ToString("N2") + "]", Logging.Logging.Magenta);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones: shields! [Old: " + _activeDronesShieldTotalOnLastPulse.ToString("N2") + "][New: " +
+                        GetActiveDroneShieldTotal().ToString("N2") + "]");
                     return true;
                 }
 
                 if (_activeDronesArmorTotalOnLastPulse > GetActiveDroneArmorTotal() + 5)
                 {
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones: armor! [Old:" + _activeDronesArmorTotalOnLastPulse.ToString("N2") + "][New: " +
-                        GetActiveDroneArmorTotal().ToString("N2") + "]", Logging.Logging.Magenta);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones: armor! [Old:" + _activeDronesArmorTotalOnLastPulse.ToString("N2") + "][New: " +
+                        GetActiveDroneArmorTotal().ToString("N2") + "]");
                     return true;
                 }
 
                 if (_activeDronesStructureTotalOnLastPulse > GetActiveDroneStructureTotal() + 5)
                 {
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones: structure! [Old:" + _activeDronesStructureTotalOnLastPulse.ToString("N2") +
-                        "][New: " + GetActiveDroneStructureTotal().ToString("N2") + "]", Logging.Logging.Magenta);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones: structure! [Old:" + _activeDronesStructureTotalOnLastPulse.ToString("N2") +
+                        "][New: " + GetActiveDroneStructureTotal().ToString("N2") + "]");
                     return true;
                 }
 
                 if (_activeDronesShieldPercentageOnLastPulse > GetActiveDroneShieldPercentage() + 1)
                 {
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones: shields! [Old: " + _activeDronesShieldPercentageOnLastPulse.ToString("N2") +
-                        "][New: " + GetActiveDroneShieldPercentage().ToString("N2") + "]", Logging.Logging.Magenta);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones: shields! [Old: " + _activeDronesShieldPercentageOnLastPulse.ToString("N2") +
+                        "][New: " + GetActiveDroneShieldPercentage().ToString("N2") + "]");
                     return true;
                 }
 
                 if (_activeDronesArmorPercentageOnLastPulse > GetActiveDroneArmorPercentage() + 1)
                 {
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones: armor! [Old:" + _activeDronesArmorPercentageOnLastPulse.ToString("N2") + "][New: " +
-                        GetActiveDroneArmorPercentage().ToString("N2") + "]", Logging.Logging.Magenta);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones: armor! [Old:" + _activeDronesArmorPercentageOnLastPulse.ToString("N2") + "][New: " +
+                        GetActiveDroneArmorPercentage().ToString("N2") + "]");
                     return true;
                 }
 
                 if (_activeDronesStructurePercentageOnLastPulse > GetActiveDroneStructurePercentage() + 1)
                 {
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones: structure! [Old:" + _activeDronesStructurePercentageOnLastPulse.ToString("N2") +
-                        "][New: " + GetActiveDroneStructurePercentage().ToString("N2") + "]", Logging.Logging.Magenta);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones: structure! [Old:" + _activeDronesStructurePercentageOnLastPulse.ToString("N2") +
+                        "][New: " + GetActiveDroneStructurePercentage().ToString("N2") + "]");
                     return true;
                 }
 
                 if (ActiveDrones.Count() < _lastDroneCount)
                 {
                     // Did we lose a drone? (this should be covered by total's as well though)
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones: We lost a drone! [Old:" + _lastDroneCount + "][New: " + ActiveDrones.Count() + "]",
-                        Logging.Logging.Orange);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones: We lost a drone! [Old:" + _lastDroneCount + "][New: " + ActiveDrones.Count() + "]");
                     return true;
                 }
 
                 if ((Combat.PotentialCombatTargets.Any() && !Combat.PotentialCombatTargets.Any(i => i.IsTargeting || i.IsTarget)) &&
                     !DronesDontNeedTargetsBecauseWehaveThemSetOnAggressive)
                 {
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones due to [" + Cache.Instance.Targets.Count() + "] targets being locked. Locking [" +
-                        Cache.Instance.Targeting.Count() + "] targets atm", Logging.Logging.Orange);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones due to [" + Cache.Instance.Targets.Count() + "] targets being locked. Locking [" +
+                        Cache.Instance.Targeting.Count() + "] targets atm");
                     return true;
                 }
 
                 if (Cache.Instance.ActiveShip.ShieldPercentage < lowShieldWarning && !WarpScrambled)
                 {
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones due to shield [" + Math.Round(Cache.Instance.ActiveShip.ShieldPercentage, 0) +
-                        "%] below [" + lowShieldWarning + "%] minimum", Logging.Logging.Orange);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones due to shield [" + Math.Round(Cache.Instance.ActiveShip.ShieldPercentage, 0) +
+                        "%] below [" + lowShieldWarning + "%] minimum");
                     return true;
                 }
 
                 if (Cache.Instance.ActiveShip.ArmorPercentage < lowArmorWarning && !WarpScrambled)
                 {
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones due to armor [" + Math.Round(Cache.Instance.ActiveShip.ArmorPercentage, 0) +
-                        "%] below [" + lowArmorWarning + "%] minimum", Logging.Logging.Orange);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones due to armor [" + Math.Round(Cache.Instance.ActiveShip.ArmorPercentage, 0) +
+                        "%] below [" + lowArmorWarning + "%] minimum");
                     return true;
                 }
 
                 if (Cache.Instance.ActiveShip.CapacitorPercentage < lowCapWarning && !WarpScrambled)
                 {
-                    Logging.Logging.Log("Drones",
-                        "Recalling [ " + ActiveDrones.Count() + " ] drones due to capacitor [" + Math.Round(Cache.Instance.ActiveShip.CapacitorPercentage, 0) +
-                        "%] below [" + lowCapWarning + "%] minimum", Logging.Logging.Orange);
+                    Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones due to capacitor [" + Math.Round(Cache.Instance.ActiveShip.CapacitorPercentage, 0) +
+                        "%] below [" + lowCapWarning + "%] minimum");
                     return true;
                 }
 
@@ -1503,19 +1441,19 @@ namespace Questor.Modules.Combat
                 {
                     if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.GotoBase && !WarpScrambled)
                     {
-                        Logging.Logging.Log("Drones", "Recalling [ " + ActiveDrones.Count() + " ] drones due to gotobase state", Logging.Logging.Orange);
+                        Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones due to gotobase state");
                         return true;
                     }
 
                     if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.GotoMission && !WarpScrambled)
                     {
-                        Logging.Logging.Log("Drones", "Recalling [ " + ActiveDrones.Count() + " ] drones due to gotomission state", Logging.Logging.Orange);
+                        Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones due to gotomission state");
                         return true;
                     }
 
                     if (_States.CurrentCombatMissionBehaviorState == CombatMissionsBehaviorState.Panic && !WarpScrambled)
                     {
-                        Logging.Logging.Log("Drones", "Recalling [ " + ActiveDrones.Count() + " ] drones due to panic state", Logging.Logging.Orange);
+                        Logging.Logging.Log("Recalling [ " + ActiveDrones.Count() + " ] drones due to panic state");
                         return true;
                     }
                 }
@@ -1525,7 +1463,7 @@ namespace Questor.Modules.Combat
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("ShouldWeRecallDrones", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return false;
             }
         }
@@ -1534,7 +1472,7 @@ namespace Questor.Modules.Combat
         {
             if (_nextDroneAction > DateTime.UtcNow || Logging.Logging.DebugDisableDrones) return false;
 
-            if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.ProcessState", "Entering Drones.ProcessState", Logging.Logging.Debug);
+            if (Logging.Logging.DebugDrones) Logging.Logging.Log("Entering Drones.ProcessState");
             _nextDroneAction = DateTime.UtcNow.AddMilliseconds(1200);
 
             if (Cache.Instance.InStation || // There is really no combat in stations (yet)
@@ -1544,23 +1482,22 @@ namespace Questor.Modules.Combat
                 )
             {
                 if (Logging.Logging.DebugDrones)
-                    Logging.Logging.Log("Drones.ProcessState",
-                        "InStation [" + Cache.Instance.InStation + "] InSpace [" + Cache.Instance.InSpace + "] IsCloaked [" +
-                        Cache.Instance.ActiveShip.Entity.IsCloaked + "] - doing nothing", Logging.Logging.Debug);
+                    Logging.Logging.Log("InStation [" + Cache.Instance.InStation + "] InSpace [" + Cache.Instance.InSpace + "] IsCloaked [" +
+                        Cache.Instance.ActiveShip.Entity.IsCloaked + "] - doing nothing");
                 _States.CurrentDroneState = DroneState.Idle;
                 return false;
             }
 
             if (!UseDrones && ActiveDrones.Any())
             {
-                if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.ProcessState", "UseDrones [" + UseDrones + "]", Logging.Logging.Debug);
+                if (Logging.Logging.DebugDrones) Logging.Logging.Log("UseDrones [" + UseDrones + "]");
                 if (!RecallingDronesState()) return false;
                 return false;
             }
 
             if (ActiveDrones == null)
             {
-                if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.ProcessState", "ActiveDrones == null", Logging.Logging.Debug);
+                if (Logging.Logging.DebugDrones) Logging.Logging.Log("ActiveDrones == null");
                 _States.CurrentDroneState = DroneState.Idle;
                 return false;
             }
@@ -1568,7 +1505,7 @@ namespace Questor.Modules.Combat
             if (Cache.Instance.MyShipEntity.IsShipWithNoDroneBay)
             {
                 if (Logging.Logging.DebugDrones)
-                    Logging.Logging.Log("Drones.ProcessState", "IsShipWithNoDronesBay - Setting useDrones to false.", Logging.Logging.Debug);
+                    Logging.Logging.Log("IsShipWithNoDronesBay - Setting useDrones to false.");
                 UseDrones = false;
                 _States.CurrentDroneState = DroneState.Idle;
                 return false;
@@ -1577,7 +1514,7 @@ namespace Questor.Modules.Combat
             if (!ActiveDrones.Any() && Cache.Instance.InWarp)
             {
                 if (Logging.Logging.DebugDrones)
-                    Logging.Logging.Log("Drones.ProcessState", "No Active Drones in space and we are InWarp - doing nothing", Logging.Logging.Debug);
+                    Logging.Logging.Log("No Active Drones in space and we are InWarp - doing nothing");
                 RemoveDronePriorityTargets(DronePriorityEntities.ToList());
                 _States.CurrentDroneState = DroneState.Idle;
                 return false;
@@ -1585,7 +1522,7 @@ namespace Questor.Modules.Combat
 
             if (!Cache.Instance.EntitiesOnGrid.Any())
             {
-                if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.ProcessState", "Nothing to shoot on grid - doing nothing", Logging.Logging.Debug);
+                if (Logging.Logging.DebugDrones) Logging.Logging.Log("Nothing to shoot on grid - doing nothing");
                 RemoveDronePriorityTargets(DronePriorityEntities.ToList());
                 _States.CurrentDroneState = DroneState.Idle;
                 return false;
@@ -1641,7 +1578,7 @@ namespace Questor.Modules.Combat
 
         private static bool LaunchDronesState()
         {
-            if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.Launch", "LaunchAllDrones", Logging.Logging.Debug);
+            if (Logging.Logging.DebugDrones) Logging.Logging.Log("LaunchAllDrones");
             // Launch all drones
             _launchTimeout = DateTime.UtcNow;
             Cache.Instance.ActiveShip.LaunchAllDrones();
@@ -1651,11 +1588,11 @@ namespace Questor.Modules.Combat
 
         private static bool LaunchingDronesState()
         {
-            if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.Launching", "Entering Launching State...", Logging.Logging.Debug);
+            if (Logging.Logging.DebugDrones) Logging.Logging.Log("Entering Launching State...");
             // We haven't launched anything yet, keep waiting
             if (!ActiveDrones.Any())
             {
-                if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.Launching", "No Drones in space yet. waiting", Logging.Logging.Debug);
+                if (Logging.Logging.DebugDrones) Logging.Logging.Log("No Drones in space yet. waiting");
                 if (DateTime.UtcNow.Subtract(_launchTimeout).TotalSeconds > 10)
                 {
                     // Relaunch if tries < 5
@@ -1675,7 +1612,7 @@ namespace Questor.Modules.Combat
             // Are we done launching?
             if (_lastDroneCount == ActiveDrones.Count())
             {
-                Logging.Logging.Log("Drones", "[" + ActiveDrones.Count() + "] Drones Launched", Logging.Logging.Magenta);
+                Logging.Logging.Log("[" + ActiveDrones.Count() + "] Drones Launched");
                 _States.CurrentDroneState = DroneState.Fighting;
                 return true;
             }
@@ -1690,14 +1627,14 @@ namespace Questor.Modules.Combat
             {
                 if (Statistics.OutOfDronesCount >= 3)
                 {
-                    Logging.Logging.Log("Drones", "We are Out of Drones! AGAIN - Headed back to base to stay!", Logging.Logging.Red);
+                    Logging.Logging.Log("We are Out of Drones! AGAIN - Headed back to base to stay!");
                     _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
                     Statistics.MissionCompletionErrors = 10;
                         //this effectively will stop questor in station so we do not try to do this mission again, this needs human intervention if we have lots this many drones
                     Statistics.OutOfDronesCount++;
                 }
 
-                Logging.Logging.Log("Drones", "We are Out of Drones! - Headed back to base to Re-Arm", Logging.Logging.Red);
+                Logging.Logging.Log("We are Out of Drones! - Headed back to base to Re-Arm");
                 _States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
                 Statistics.OutOfDronesCount++;
                 return true;
@@ -1709,11 +1646,11 @@ namespace Questor.Modules.Combat
         private static bool FightingDronesState()
         {
             if (Logging.Logging.DebugDrones)
-                Logging.Logging.Log("Drones.Fighting", "Should we recall our drones? This is a possible list of reasons why we should", Logging.Logging.Debug);
+                Logging.Logging.Log("Should we recall our drones? This is a possible list of reasons why we should");
 
             if (!ActiveDrones.Any())
             {
-                Logging.Logging.Log("Drones", "Apparently we have lost all our drones", Logging.Logging.Orange);
+                Logging.Logging.Log("Apparently we have lost all our drones");
                 _States.CurrentDroneState = DroneState.Idle;
                 return false;
             }
@@ -1724,10 +1661,9 @@ namespace Questor.Modules.Combat
                 if (WarpScrambledBy != null && DateTime.UtcNow > _nextWarpScrambledWarning)
                 {
                     _nextWarpScrambledWarning = DateTime.UtcNow.AddSeconds(20);
-                    Logging.Logging.Log("Drones",
-                        "We are scrambled by: [" + Logging.Logging.White + WarpScrambledBy.Name + Logging.Logging.Orange + "][" + Logging.Logging.White +
+                    Logging.Logging.Log("We are scrambled by: [" + Logging.Logging.White + WarpScrambledBy.Name + Logging.Logging.Orange + "][" + Logging.Logging.White +
                         Math.Round(WarpScrambledBy.Distance, 0) + Logging.Logging.Orange + "][" + Logging.Logging.White + WarpScrambledBy.Id +
-                        Logging.Logging.Orange + "]", Logging.Logging.Orange);
+                        Logging.Logging.Orange + "]");
                     WarpScrambled = true;
                 }
             }
@@ -1744,11 +1680,11 @@ namespace Questor.Modules.Combat
                 return true;
             }
 
-            if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.Fighting", "EngageTarget(); - before", Logging.Logging.Debug);
+            if (Logging.Logging.DebugDrones) Logging.Logging.Log("EngageTarget(); - before");
 
             EngageTarget();
 
-            if (Logging.Logging.DebugDrones) Logging.Logging.Log("Drones.Fighting", "EngageTarget(); - after", Logging.Logging.Debug);
+            if (Logging.Logging.DebugDrones) Logging.Logging.Log("EngageTarget(); - after");
             // We lost a drone and did not recall, assume panicking and launch (if any) additional drones
             if (ActiveDrones.Count() < _lastDroneCount)
             {
@@ -1835,7 +1771,7 @@ namespace Questor.Modules.Combat
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("Drones.ProcessState", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return;
             }
         }
@@ -1864,7 +1800,7 @@ namespace Questor.Modules.Combat
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Drones.InvalidateCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
             }
         }
     }

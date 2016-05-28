@@ -78,7 +78,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("ItemCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
             }
         }
 
@@ -334,7 +334,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("ItemCache.IsMissionItem", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                     return false;
                 }
             }
@@ -391,7 +391,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("ItemCache.IskPerM3", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                     return null;
                 }
             }
@@ -417,7 +417,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("ItemCache.Value", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                     return null;
                 }
             }

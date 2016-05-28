@@ -28,7 +28,7 @@ namespace Questor.Storylines
 
             if (Cache.Instance.ActiveShip == null || Cache.Instance.ActiveShip.GivenName == null)
             {
-                if (Logging.DebugArm) Logging.Log("StorylineState.Arm", "if (Cache.Instance.ActiveShip == null)", Logging.Debug);
+                if (Logging.DebugArm) Logging.Log("if (Cache.Instance.ActiveShip == null)");
                 _nextAction = DateTime.UtcNow.AddSeconds(3);
                 return StorylineState.Arm;
             }
@@ -44,14 +44,14 @@ namespace Questor.Storylines
                 if (ships.Any(s => s.GroupId == (int) Group.Shuttle && s.IsSingleton && s.GivenName != null))
                 {
                     ships.FirstOrDefault(s => s.GivenName != null && s.GroupId == (int) Group.Shuttle && s.IsSingleton).ActivateShip();
-                    Logging.Log("MaterialsForWarPreparation", "Found a shuttle - Making Shuttle active", Logging.White);
+                    Logging.Log("Found a shuttle - Making Shuttle active");
                     _nextAction = DateTime.UtcNow.AddSeconds(Time.Instance.SwitchShipsDelay_seconds);
                     return StorylineState.GotoAgent;
                 }
 
                 foreach (var ship in ships.Where(ship => ship.GivenName != null && ship.GivenName.ToLower() == Settings.Instance.TransportShipName.ToLower()))
                 {
-                    Logging.Log("MaterialsForWarPreparation", "Making [" + ship.GivenName + "] active", Logging.White);
+                    Logging.Log("Making [" + ship.GivenName + "] active");
                     ship.ActivateShip();
                     _nextAction = DateTime.UtcNow.AddSeconds(Time.Instance.SwitchShipsDelay_seconds);
                     return StorylineState.Arm;
@@ -59,7 +59,7 @@ namespace Questor.Storylines
 
                 if (Cache.Instance.ActiveShip.GivenName.ToLower() != Settings.Instance.TransportShipName.ToLower())
                 {
-                    Logging.Log("StorylineState.Arm", "Missing TransportShip named [" + Settings.Instance.TransportShipName + "]", Logging.Debug);
+                    Logging.Log("Missing TransportShip named [" + Settings.Instance.TransportShipName + "]");
                     return StorylineState.GotoAgent;
                 }
             }
@@ -70,14 +70,12 @@ namespace Questor.Storylines
             if (!items.Any())
             {
                 if (Logging.DebugArm)
-                    Logging.Log("StorylineState.Arm", "Ore for MaterialsForWar: typeID [" + MissionSettings.MaterialsForWarOreID + "] not found in ItemHangar",
-                        Logging.Debug);
+                    Logging.Log("Ore for MaterialsForWar: typeID [" + MissionSettings.MaterialsForWarOreID + "] not found in ItemHangar");
                 items = Cache.Instance.AmmoHangar.Items.Where(k => k.TypeId == MissionSettings.MaterialsForWarOreID).ToList();
                 if (!items.Any())
                 {
                     if (Logging.DebugArm)
-                        Logging.Log("StorylineState.Arm",
-                            "Ore for MaterialsForWar: typeID [" + MissionSettings.MaterialsForWarOreID + "] not found in AmmoHangar", Logging.Debug);
+                        Logging.Log("Ore for MaterialsForWar: typeID [" + MissionSettings.MaterialsForWarOreID + "] not found in AmmoHangar");
                     //
                     // if we do not have the ore... either we can blacklist it right here, or continue normally
                     //
@@ -108,14 +106,12 @@ namespace Questor.Storylines
             {
                 var moveOreQuantity = Math.Min(item.Stacksize, oreToLoad);
                 Cache.Instance.CurrentShipsCargo.Add(item, moveOreQuantity);
-                Logging.Log("StorylineState.Arm",
-                    "Moving [" + moveOreQuantity + "] units of Ore [" + item.TypeName + "] Stack size: [" + item.Stacksize + "] from hangar to CargoHold",
-                    Logging.White);
+                Logging.Log("Moving [" + moveOreQuantity + "] units of Ore [" + item.TypeName + "] Stack size: [" + item.Stacksize + "] from hangar to CargoHold");
                 _nextAction = DateTime.UtcNow.AddSeconds(Cache.Instance.RandomNumber(3, 6));
                 return StorylineState.Arm; // you can only move one set of items per frame
             }
 
-            Logging.Log("StorylineState.Arm", "defined TransportShip found, going in active ship", Logging.White);
+            Logging.Log("defined TransportShip found, going in active ship");
             return StorylineState.GotoAgent;
         }
 
@@ -159,9 +155,8 @@ namespace Questor.Storylines
                 var thisOreInhangar = Cache.Instance.ItemHangar.Items.FirstOrDefault(i => i.TypeId == oreid);
                 if (thisOreInhangar != null)
                 {
-                    Logging.Log("MaterialsForWarPreparation",
-                        "We have [" + Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == oreid).Sum(i => i.Quantity).ToString(CultureInfo.InvariantCulture) +
-                        "] " + thisOreInhangar.TypeName + " in the item hangar accepting mission", Logging.White);
+                    Logging.Log("We have [" + Cache.Instance.ItemHangar.Items.Where(i => i.TypeId == oreid).Sum(i => i.Quantity).ToString(CultureInfo.InvariantCulture) +
+                        "] " + thisOreInhangar.TypeName + " in the item hangar accepting mission");
                 }
 
                 // Close the market window if there is one
@@ -180,10 +175,9 @@ namespace Questor.Storylines
                 var thisOreInhangar = Cache.Instance.CurrentShipsCargo.Items.FirstOrDefault(i => i.TypeId == oreid);
                 if (thisOreInhangar != null)
                 {
-                    Logging.Log("MaterialsForWarPreparation",
-                        "We have [" +
+                    Logging.Log("We have [" +
                         Cache.Instance.CurrentShipsCargo.Items.Where(i => i.TypeId == oreid).Sum(i => i.Quantity).ToString(CultureInfo.InvariantCulture) + "] " +
-                        thisOreInhangar.TypeName + " in the CargoHold accepting mission", Logging.White);
+                        thisOreInhangar.TypeName + " in the CargoHold accepting mission");
                 }
 
                 // Close the market window if there is one
@@ -202,7 +196,7 @@ namespace Questor.Storylines
                 {
                     _nextAction = DateTime.UtcNow.AddSeconds(10);
 
-                    Logging.Log("MaterialsForWarPreparation", "Opening market window", Logging.White);
+                    Logging.Log("Opening market window");
 
                     directEve.ExecuteCommand(DirectCmd.OpenMarket);
                     Statistics.LogWindowActionToWindowLog("MarketWindow", "MarketWindow Opened");
@@ -221,7 +215,7 @@ namespace Questor.Storylines
                     // No, load the ore orders
                     marketWindow.LoadTypeId(oreid);
 
-                    Logging.Log("MaterialsForWarPreparation", "Loading market window", Logging.White);
+                    Logging.Log("Loading market window");
 
                     _nextAction = DateTime.UtcNow.AddSeconds(5);
                     return StorylineState.PreAcceptMission;
@@ -256,8 +250,7 @@ namespace Questor.Storylines
                 orders = marketWindow.SellOrders.Where(o => o.StationId == directEve.Session.StationId).ToList();
                 if (!orders.Any() || orders.Sum(o => o.VolumeRemaining) < orequantity)
                 {
-                    Logging.Log("MaterialsForWarPreparation",
-                        "Not enough (reasonably priced) ore available! Blacklisting agent for this Questor session! maxPrice [" + maxPrice + "]", Logging.Orange);
+                    Logging.Log("Not enough (reasonably priced) ore available! Blacklisting agent for this Questor session! maxPrice [" + maxPrice + "]");
 
                     // Close the market window
                     marketWindow.Close();
@@ -278,7 +271,7 @@ namespace Questor.Storylines
                         var remaining = Math.Min(neededQuantity, order.VolumeRemaining);
                         order.Buy(remaining, DirectOrderRange.Station);
 
-                        Logging.Log("MaterialsForWarPreparation", "Buying [" + remaining + "] ore", Logging.White);
+                        Logging.Log("Buying [" + remaining + "] ore");
 
                         // Wait for the order to go through
                         _nextAction = DateTime.UtcNow.AddSeconds(10);

@@ -36,9 +36,8 @@ namespace Questor.Modules.Actions
                 if (_undockAttempts + Cache.Instance.RandomNumber(0, 4) > 10)
                     //If we are having to retry at all there is likely something very wrong. Make it non-obvious if we do have to restart by restarting at diff intervals.
                 {
-                    Logging.Logging.Log("TravelerDestination.StationDestination",
-                        "This is not the destination station, we have tried to undock [" + _undockAttempts +
-                        "] times - and it is evidentially not working (lag?) - restarting Questor (and EVE)", Logging.Logging.Green);
+                    Logging.Logging.Log("This is not the destination station, we have tried to undock [" + _undockAttempts +
+                        "] times - and it is evidentially not working (lag?) - restarting Questor (and EVE)");
                     Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true; //this will perform a graceful restart
                     return;
                 }
@@ -48,7 +47,7 @@ namespace Questor.Modules.Actions
                 {
                     if (DateTime.UtcNow > Time.Instance.NextUndockAction)
                     {
-                        Logging.Logging.Log("TravelerDestination.SolarSystemDestination", "Exiting station", Logging.Logging.White);
+                        Logging.Logging.Log("Exiting station");
                         Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.CmdExitStation);
                         Time.Instance.LastDockAction = DateTime.UtcNow;
                         Time.Instance.LastSessionChange = DateTime.UtcNow;
@@ -59,9 +58,8 @@ namespace Questor.Modules.Actions
                     }
 
                     if (Logging.Logging.DebugTraveler)
-                        Logging.Logging.Log("TravelerDestination.SolarSystemDestination",
-                            "LastInSpace is more than 45 sec old (we are docked), but NextUndockAction is still in the future [" +
-                            Time.Instance.NextUndockAction.Subtract(DateTime.UtcNow).TotalSeconds + "seconds]", Logging.Logging.White);
+                        Logging.Logging.Log("LastInSpace is more than 45 sec old (we are docked), but NextUndockAction is still in the future [" +
+                            Time.Instance.NextUndockAction.Subtract(DateTime.UtcNow).TotalSeconds + "seconds]");
                     return;
                 }
 
@@ -89,9 +87,8 @@ namespace Questor.Modules.Actions
                                     Cache.Instance.UndockBookmark.Z ?? 0);
                                 if (distance < (int) Distances.WarptoDistance)
                                 {
-                                    Logging.Logging.Log("TravelerDestination.useInstaBookmark",
-                                        "Arrived at undock bookmark [" + Logging.Logging.Yellow + Cache.Instance.UndockBookmark.Title + Logging.Logging.Green +
-                                        "]", Logging.Logging.White);
+                                    Logging.Logging.Log("Arrived at undock bookmark [" + Logging.Logging.Yellow + Cache.Instance.UndockBookmark.Title + Logging.Logging.Green +
+                                        "]");
                                     Cache.Instance.UndockBookmark = null;
                                     return true;
                                 }
@@ -100,9 +97,8 @@ namespace Questor.Modules.Actions
                                 {
                                     if (Cache.Instance.UndockBookmark.WarpTo())
                                     {
-                                        Logging.Logging.Log("TravelerDestination.useInstaBookmark",
-                                            "Warping to undock bookmark [" + Logging.Logging.Yellow + Cache.Instance.UndockBookmark.Title +
-                                            Logging.Logging.Green + "][" + Math.Round((distance/1000)/149598000, 2) + " AU away]", Logging.Logging.White);
+                                        Logging.Logging.Log("Warping to undock bookmark [" + Logging.Logging.Yellow + Cache.Instance.UndockBookmark.Title +
+                                            Logging.Logging.Green + "][" + Math.Round((distance / 1000) / 149598000, 2) + " AU away]");
                                         //if (!Combat.ReloadAll(Cache.Instance.EntitiesNotSelf.OrderBy(t => t.Distance).FirstOrDefault(t => t.Distance < (double)Distance.OnGridWithMe))) return false;
                                         _nextTravelerDestinationAction = DateTime.UtcNow.AddSeconds(10);
                                         return true;
@@ -115,32 +111,28 @@ namespace Questor.Modules.Actions
                             }
 
                             if (Logging.Logging.DebugUndockBookmarks)
-                                Logging.Logging.Log("useInstaBookmark",
-                                    "Bookmark Named [" + Cache.Instance.UndockBookmark.Title +
-                                    "] was somehow picked as an UndockBookmark but it is not in local with us! continuing without it.", Logging.Logging.Debug);
+                                Logging.Logging.Log("Bookmark Named [" + Cache.Instance.UndockBookmark.Title +
+                                    "] was somehow picked as an UndockBookmark but it is not in local with us! continuing without it.");
                             return true;
                         }
 
                         if (Logging.Logging.DebugUndockBookmarks)
-                            Logging.Logging.Log("useInstaBookmark",
-                                "No undock bookmarks in local matching our undockPrefix [" + Settings.Instance.UndockBookmarkPrefix + "] continuing without it.",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("No undock bookmarks in local matching our undockPrefix [" + Settings.Instance.UndockBookmarkPrefix + "] continuing without it.");
                         return true;
                     }
 
                     if (Logging.Logging.DebugUndockBookmarks)
-                        Logging.Logging.Log("useInstaBookmark", "Not currently on grid with a station or a stargate: continue traveling", Logging.Logging.Debug);
+                        Logging.Logging.Log("Not currently on grid with a station or a stargate: continue traveling");
                     return true;
                 }
 
                 if (Logging.Logging.DebugUndockBookmarks)
-                    Logging.Logging.Log("useInstaBookmark",
-                        "InSpace [" + Cache.Instance.InSpace + "]: waiting until we have been undocked or in system a few seconds", Logging.Logging.Debug);
+                    Logging.Logging.Log("InSpace [" + Cache.Instance.InSpace + "]: waiting until we have been undocked or in system a few seconds");
                 return false;
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("TravelerDestination.SolarSystemDestination", "Exception [" + exception + "]", Logging.Logging.White);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -150,8 +142,7 @@ namespace Questor.Modules.Actions
     {
         public SolarSystemDestination(long solarSystemId)
         {
-            Logging.Logging.Log("TravelerDestination.SolarSystemDestination", "Destination set to solar system id [" + solarSystemId + "]",
-                Logging.Logging.White);
+            Logging.Logging.Log("Destination set to solar system id [" + solarSystemId + "]");
             SolarSystemId = solarSystemId;
         }
 
@@ -178,7 +169,7 @@ namespace Questor.Modules.Actions
             if (!useInstaBookmark()) return false;
 
             // The task was to get to the solar system, we're there :)
-            Logging.Logging.Log("TravelerDestination.SolarSystemDestination", "Arrived in system", Logging.Logging.White);
+            Logging.Logging.Log("Arrived in system");
             Cache.Instance.MissionBookmarkTimerSet = false;
             return true;
         }
@@ -191,16 +182,14 @@ namespace Questor.Modules.Actions
             var station = Cache.Instance.DirectEve.Navigation.GetLocation(stationId);
             if (station == null || !station.ItemId.HasValue || !station.SolarSystemId.HasValue)
             {
-                Logging.Logging.Log("TravelerDestination.StationDestination",
-                    "Invalid station id [" + Logging.Logging.Yellow + StationId + Logging.Logging.Green + "]", Logging.Logging.Red);
+                Logging.Logging.Log("Invalid station id [" + Logging.Logging.Yellow + StationId + Logging.Logging.Green + "]");
                 SolarSystemId = Cache.Instance.DirectEve.Session.SolarSystemId ?? -1;
                 StationId = -1;
                 StationName = "";
                 return;
             }
 
-            Logging.Logging.Log("TravelerDestination.StationDestination",
-                "Destination set to [" + Logging.Logging.Yellow + station.Name + Logging.Logging.Green + "]", Logging.Logging.Green);
+            Logging.Logging.Log("Destination set to [" + Logging.Logging.Yellow + station.Name + Logging.Logging.Green + "]");
             StationId = stationId;
             StationName = station.Name;
             SolarSystemId = station.SolarSystemId.Value;
@@ -208,8 +197,7 @@ namespace Questor.Modules.Actions
 
         public StationDestination(long solarSystemId, long stationId, string stationName)
         {
-            Logging.Logging.Log("TravelerDestination.StationDestination",
-                "Destination set to [" + Logging.Logging.Yellow + stationName + Logging.Logging.Green + "]", Logging.Logging.Green);
+            Logging.Logging.Log("Destination set to [" + Logging.Logging.Yellow + stationName + Logging.Logging.Green + "]");
             SolarSystemId = solarSystemId;
             StationId = stationId;
             StationName = stationName;
@@ -229,7 +217,7 @@ namespace Questor.Modules.Actions
         {
             if (Cache.Instance.InStation && Cache.Instance.DirectEve.Session.StationId == stationId)
             {
-                Logging.Logging.Log("TravelerDestination.StationDestination", "Arrived in station", Logging.Logging.Green);
+                Logging.Logging.Log("Arrived in station");
                 return true;
             }
 
@@ -278,9 +266,8 @@ namespace Questor.Modules.Actions
             {
                 if (station.Dock())
                 {
-                    Logging.Logging.Log("TravelerDestination.StationDestination",
-                        "Dock at [" + Logging.Logging.Yellow + station.Name + Logging.Logging.Green + "] which is [" + Math.Round(station.Distance/1000, 0) +
-                        "k away]", Logging.Logging.Green);
+                    Logging.Logging.Log("Dock at [" + Logging.Logging.Yellow + station.Name + Logging.Logging.Green + "] which is [" + Math.Round(station.Distance / 1000, 0) +
+                        "k away]");
                     return false; //we do not return true until we actually appear in the destination (station in this case)
                 }
 
@@ -291,8 +278,7 @@ namespace Questor.Modules.Actions
             {
                 if (station.Approach())
                 {
-                    Logging.Logging.Log("TravelerDestination.StationDestination",
-                        "Approaching [" + station.Name + "] which is [" + Math.Round(station.Distance/1000, 0) + "k away]", Logging.Logging.White);
+                    Logging.Logging.Log("Approaching [" + station.Name + "] which is [" + Math.Round(station.Distance / 1000, 0) + "k away]");
                 }
 
                 return false;
@@ -300,9 +286,8 @@ namespace Questor.Modules.Actions
 
             if (station.WarpTo())
             {
-                Logging.Logging.Log("TravelerDestination.StationDestination",
-                    "Warp to and dock at [" + Logging.Logging.Yellow + station.Name + Logging.Logging.Green + "][" +
-                    Math.Round((station.Distance/1000)/149598000, 2) + " AU away]", Logging.Logging.Green);
+                Logging.Logging.Log("Warp to and dock at [" + Logging.Logging.Yellow + station.Name + Logging.Logging.Green + "][" +
+                    Math.Round((station.Distance / 1000) / 149598000, 2) + " AU away]");
                 return false;
             }
 
@@ -316,15 +301,14 @@ namespace Questor.Modules.Actions
         {
             if (bookmark == null)
             {
-                Logging.Logging.Log("TravelerDestination.BookmarkDestination", "Invalid bookmark destination!", Logging.Logging.Red);
+                Logging.Logging.Log("Invalid bookmark destination!");
 
                 SolarSystemId = Cache.Instance.DirectEve.Session.SolarSystemId ?? -1;
                 BookmarkId = -1;
                 return;
             }
 
-            Logging.Logging.Log("TravelerDestination.BookmarkDestination",
-                "Destination set to bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]", Logging.Logging.Green);
+            Logging.Logging.Log("Destination set to bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]");
             BookmarkId = bookmark.BookmarkId ?? -1;
             SolarSystemId = bookmark.LocationId ?? -1;
         }
@@ -356,8 +340,7 @@ namespace Questor.Modules.Actions
                 var arrived = StationDestination.PerformFinalDestinationTask(bookmark.Entity.Id, bookmark.Entity.Name);
                 if (arrived)
                 {
-                    Logging.Logging.Log("TravelerDestination.BookmarkDestination",
-                        "Arrived at bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]", Logging.Logging.Green);
+                    Logging.Logging.Log("Arrived at bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]");
                 }
 
                 return arrived;
@@ -395,19 +378,15 @@ namespace Questor.Modules.Actions
                 var distanceToUndockBookmark = Cache.Instance.DistanceFromMe(bookmark.X ?? 0, bookmark.Y ?? 0, bookmark.Z ?? 0);
                 if (distanceToUndockBookmark < (int) Distances.WarptoDistance)
                 {
-                    Logging.Logging.Log("TravelerDestination.BookmarkDestination",
-                        "Arrived at undock bookmark [" + Logging.Logging.Yellow + Cache.Instance.UndockBookmark.Title + Logging.Logging.Green + "]",
-                        Logging.Logging.Green);
+                    Logging.Logging.Log("Arrived at undock bookmark [" + Logging.Logging.Yellow + Cache.Instance.UndockBookmark.Title + Logging.Logging.Green + "]");
                     Cache.Instance.UndockBookmark = null;
                 }
                 else
                 {
                     if (Cache.Instance.UndockBookmark.WarpTo())
                     {
-                        Logging.Logging.Log("TravelerDestination.BookmarkDestination",
-                            "Warping to undock bookmark [" + Logging.Logging.Yellow + Cache.Instance.UndockBookmark.Title + Logging.Logging.Green + "][" +
-                            Logging.Logging.Yellow + Math.Round((distanceToUndockBookmark/1000)/149598000, 2) + Logging.Logging.Green + " AU away]",
-                            Logging.Logging.Green);
+                        Logging.Logging.Log("Warping to undock bookmark [" + Logging.Logging.Yellow + Cache.Instance.UndockBookmark.Title + Logging.Logging.Green + "][" +
+                            Logging.Logging.Yellow + Math.Round((distanceToUndockBookmark / 1000) / 149598000, 2) + Logging.Logging.Green + " AU away]");
                         _nextTravelerDestinationAction = DateTime.UtcNow.AddSeconds(Time.Instance.TravelerInWarpedNextCommandDelay_seconds);
                         //if (!Combat.ReloadAll(Cache.Instance.EntitiesNotSelf.OrderBy(t => t.Distance).FirstOrDefault(t => t.Distance < (double)Distance.OnGridWithMe))) return false;
                         return false;
@@ -418,16 +397,14 @@ namespace Questor.Modules.Actions
             // This bookmark has no x / y / z, assume we are there.
             if (bookmark.X == -1 || bookmark.Y == -1 || bookmark.Z == -1)
             {
-                Logging.Logging.Log("TravelerDestination.BookmarkDestination",
-                    "Arrived at the bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "][No XYZ]", Logging.Logging.Green);
+                Logging.Logging.Log("Arrived at the bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "][No XYZ]");
                 return true;
             }
 
             var distance = Cache.Instance.DistanceFromMe(bookmark.X ?? 0, bookmark.Y ?? 0, bookmark.Z ?? 0);
             if (distance < warpDistance)
             {
-                Logging.Logging.Log("TravelerDestination.BookmarkDestination",
-                    "Arrived at the bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]", Logging.Logging.Green);
+                Logging.Logging.Log("Arrived at the bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]");
                 return true;
             }
 
@@ -436,8 +413,7 @@ namespace Questor.Modules.Actions
 
             if (Math.Round((distance/1000)) < (int) Distances.MaxPocketsDistanceKm && Cache.Instance.AccelerationGates.Count() != 0)
             {
-                Logging.Logging.Log("TravelerDestination.BookmarkDestination", "Warp to bookmark in same pocket requested but acceleration gate found delaying.",
-                    Logging.Logging.White);
+                Logging.Logging.Log("Warp to bookmark in same pocket requested but acceleration gate found delaying.");
                 return true;
             }
 
@@ -451,9 +427,8 @@ namespace Questor.Modules.Actions
             {
                 if (bookmark.WarpTo(MissionSettings.MissionWarpAtDistanceRange*1000))
                 {
-                    Logging.Logging.Log("TravelerDestination.BookmarkDestination",
-                        "Warping to bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "][" + Logging.Logging.Yellow + " At " +
-                        MissionSettings.MissionWarpAtDistanceRange + Logging.Logging.Green + " km]", Logging.Logging.Green);
+                    Logging.Logging.Log("Warping to bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "][" + Logging.Logging.Yellow + " At " +
+                        MissionSettings.MissionWarpAtDistanceRange + Logging.Logging.Green + " km]");
                     return true;
                 }
             }
@@ -461,9 +436,8 @@ namespace Questor.Modules.Actions
             {
                 if (bookmark.WarpTo())
                 {
-                    Logging.Logging.Log("TravelerDestination.BookmarkDestination",
-                        "Warping to bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "][" + Logging.Logging.Yellow +
-                        Math.Round((distance/1000)/149598000, 2) + Logging.Logging.Green + " AU away]", Logging.Logging.Green);
+                    Logging.Logging.Log("Warping to bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "][" + Logging.Logging.Yellow +
+                        Math.Round((distance / 1000) / 149598000, 2) + Logging.Logging.Green + " AU away]");
                     return true;
                 }
             }
@@ -480,9 +454,8 @@ namespace Questor.Modules.Actions
             {
                 if (DateTime.UtcNow > Time.Instance.MissionBookmarkTimeout.AddMinutes(2))
                 {
-                    Logging.Logging.Log("TravelerDestination",
-                        "MissionBookmarkTimeout [ " + Time.Instance.MissionBookmarkTimeout.ToShortTimeString() +
-                        " ] did not get reset from last usage: resetting it now", Logging.Logging.Red);
+                    Logging.Logging.Log("MissionBookmarkTimeout [ " + Time.Instance.MissionBookmarkTimeout.ToShortTimeString() +
+                        " ] did not get reset from last usage: resetting it now");
                     Time.Instance.MissionBookmarkTimeout = DateTime.UtcNow.AddYears(1);
                 }
 
@@ -501,21 +474,19 @@ namespace Questor.Modules.Actions
                     Cache.Instance.CloseQuestorCMDLogoff = false;
                     Cache.Instance.CloseQuestorCMDExitGame = true;
                     Cleanup.ReasonToStopQuestor = "TravelerDestination.MissionBookmarkDestination: Invalid mission bookmark! - Lag?! Closing EVE";
-                    Logging.Logging.Log("TravelerDestination", Cleanup.ReasonToStopQuestor, Logging.Logging.Red);
+                    Logging.Logging.Log(Cleanup.ReasonToStopQuestor);
                     Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
                 }
                 else
                 {
-                    Logging.Logging.Log("TravelDestination.MissionBookmarkDestination",
-                        "Invalid Mission Bookmark! retrying for another [ " +
-                        Math.Round(Time.Instance.MissionBookmarkTimeout.Subtract(DateTime.UtcNow).TotalSeconds, 0) + " ]sec", Logging.Logging.Green);
+                    Logging.Logging.Log("Invalid Mission Bookmark! retrying for another [ " +
+                        Math.Round(Time.Instance.MissionBookmarkTimeout.Subtract(DateTime.UtcNow).TotalSeconds, 0) + " ]sec");
                 }
             }
 
             if (bookmark != null)
             {
-                Logging.Logging.Log("TravelerDestination.MissionBookmarkDestination",
-                    "Destination set to mission bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]", Logging.Logging.Green);
+                Logging.Logging.Log("Destination set to mission bookmark [" + Logging.Logging.Yellow + bookmark.Title + Logging.Logging.Green + "]");
                 AgentId = bookmark.AgentId ?? -1;
                 Title = bookmark.Title;
                 SolarSystemId = bookmark.SolarSystemId ?? -1;

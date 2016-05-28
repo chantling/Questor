@@ -228,8 +228,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityGroupID.Any() && Cache.Instance.EntityGroupID.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.GroupID",
-                                        "We have [" + Cache.Instance.EntityGroupID.Count() + "] Entities in Cache.Instance.EntityGroupID", Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityGroupID.Count() + "] Entities in Cache.Instance.EntityGroupID");
                             }
 
                             if (Cache.Instance.EntityGroupID.Any())
@@ -244,7 +243,7 @@ namespace Questor.Modules.Caching
 
                             _groupID = _directEntity.GroupId;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.GroupID", "Adding [" + Name + "] to EntityGroupID as [" + _groupID + "]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityGroupID as [" + _groupID + "]");
 
                             Cache.Instance.EntityGroupID.Add(Id, (int) _groupID);
                             return (int) _groupID;
@@ -257,7 +256,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -283,7 +282,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -309,7 +308,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -338,7 +337,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return "!0!";
                 }
             }
@@ -357,8 +356,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityTypeID.Any() && Cache.Instance.EntityTypeID.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.TypeID",
-                                        "We have [" + Cache.Instance.EntityTypeID.Count() + "] Entities in Cache.Instance.EntityTypeID", Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityTypeID.Count() + "] Entities in Cache.Instance.EntityTypeID");
                             }
 
                             if (Cache.Instance.EntityTypeID.Any())
@@ -373,7 +371,7 @@ namespace Questor.Modules.Caching
 
                             _TypeId = _directEntity.TypeId;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.TypeId", "Adding [" + Name + "] to EntityTypeId as [" + _TypeId + "]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityTypeId as [" + _TypeId + "]");
                             Cache.Instance.EntityTypeID.Add(Id, (int) _TypeId);
                             return (int) _TypeId;
                         }
@@ -385,7 +383,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -411,7 +409,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -437,7 +435,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -476,7 +474,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -492,9 +490,8 @@ namespace Questor.Modules.Caching
                     {
                         if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                         {
-                            Logging.Logging.Log("EntityCache.Name",
-                                "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) + "k][" +
-                                MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                            Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" +
+                                MaskedId + "] was created more than 5 seconds ago (ugh!)");
                         }
 
                         if (_name == null)
@@ -502,8 +499,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityNames.Any() && Cache.Instance.EntityNames.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.Name",
-                                        "We have [" + Cache.Instance.EntityNames.Count() + "] Entities in Cache.Instance.EntityNames", Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityNames.Count() + "] Entities in Cache.Instance.EntityNames");
                             }
 
                             if (Cache.Instance.EntityNames.Any())
@@ -518,7 +514,7 @@ namespace Questor.Modules.Caching
 
                             _name = _directEntity.Name;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.Name", "Adding [" + MaskedId + "] to EntityName as [" + _name + "]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + MaskedId + "] to EntityName as [" + _name + "]");
                             Cache.Instance.EntityNames.Add(Id, _name);
                             return _name ?? string.Empty;
                         }
@@ -530,7 +526,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return string.Empty;
                 }
             }
@@ -546,9 +542,8 @@ namespace Questor.Modules.Caching
                     {
                         if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                         {
-                            Logging.Logging.Log("EntityCache.Name",
-                                "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) + "k][" +
-                                MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                            Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" +
+                                MaskedId + "] was created more than 5 seconds ago (ugh!)");
                         }
 
                         _typeName = _directEntity.TypeName;
@@ -559,7 +554,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return "";
                 }
             }
@@ -575,9 +570,8 @@ namespace Questor.Modules.Caching
                     {
                         if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                         {
-                            Logging.Logging.Log("EntityCache.Name",
-                                "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) + "k][" +
-                                MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                            Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" +
+                                MaskedId + "] was created more than 5 seconds ago (ugh!)");
                         }
                         if (String.IsNullOrEmpty(_givenName))
                         {
@@ -591,7 +585,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return "";
                 }
             }
@@ -607,9 +601,8 @@ namespace Questor.Modules.Caching
                     {
                         if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                         {
-                            Logging.Logging.Log("EntityCache.Name",
-                                "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) + "k][" +
-                                MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                            Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" +
+                                MaskedId + "] was created more than 5 seconds ago (ugh!)");
                         }
                         if (_distance == null)
                         {
@@ -623,7 +616,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -653,7 +646,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -680,7 +673,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -707,7 +700,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -734,7 +727,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -767,7 +760,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -800,7 +793,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -833,7 +826,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -860,7 +853,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -887,7 +880,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -914,7 +907,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -941,7 +934,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -968,7 +961,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1001,7 +994,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1028,7 +1021,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1055,7 +1048,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1085,7 +1078,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1115,7 +1108,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1145,7 +1138,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1175,7 +1168,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1202,7 +1195,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1229,7 +1222,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1256,7 +1249,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1283,7 +1276,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1310,7 +1303,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1337,7 +1330,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1364,7 +1357,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -1391,7 +1384,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1439,7 +1432,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                 }
 
                 return false;
@@ -1473,7 +1466,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1506,7 +1499,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1539,7 +1532,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1572,7 +1565,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1615,7 +1608,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1641,12 +1634,12 @@ namespace Questor.Modules.Caching
                         return _IsReadyToShoot ?? false;
                     }
 
-                    if (Logging.Logging.DebugIsReadyToShoot) Logging.Logging.Log("IsReadyToShoot", "_directEntity is null or invalid", Logging.Logging.Debug);
+                    if (Logging.Logging.DebugIsReadyToShoot) Logging.Logging.Log("_directEntity is null or invalid");
                     return false;
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1679,7 +1672,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1769,7 +1762,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1802,7 +1795,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1839,7 +1832,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1872,7 +1865,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1905,7 +1898,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -1938,7 +1931,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2033,7 +2026,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2067,7 +2060,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2098,7 +2091,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2124,7 +2117,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2165,7 +2158,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2191,7 +2184,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2225,7 +2218,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return PrimaryWeaponPriority.NotUsed;
                 }
             }
@@ -2256,7 +2249,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return DronePriority.NotUsed;
                 }
             }
@@ -2283,7 +2276,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2310,7 +2303,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2337,7 +2330,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2363,7 +2356,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2384,7 +2377,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2405,7 +2398,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2440,7 +2433,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2491,7 +2484,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return DronePriority.NotUsed;
                 }
             }
@@ -2542,7 +2535,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return PrimaryWeaponPriority.NotUsed;
                 }
             }
@@ -2578,7 +2571,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2610,7 +2603,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2642,7 +2635,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2674,7 +2667,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2706,7 +2699,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2738,7 +2731,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2770,7 +2763,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2791,7 +2784,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return 0;
                 }
             }
@@ -2816,9 +2809,8 @@ namespace Questor.Modules.Caching
                                 && ArmorPct*100 < Combat.Combat.DoNotSwitchTargetsIfTargetHasMoreThanThisArmorDamagePercentage)
                             {
                                 if (Logging.Logging.DebugGetBestTarget)
-                                    Logging.Logging.Log("EntityCache.IsEntityIShouldKeepShooting",
-                                        "[" + Name + "][" + Math.Round(Distance/1000, 2) + "k][" + MaskedId + " GroupID [" + GroupId +
-                                        "]] has less than 60% armor, keep killing this target", Logging.Logging.Debug);
+                                    Logging.Logging.Log("[" + Name + "][" + Math.Round(Distance / 1000, 2) + "k][" + MaskedId + " GroupID [" + GroupId +
+                                        "]] has less than 60% armor, keep killing this target");
                                 _isEntityIShouldKeepShooting = true;
                                 return (bool) _isEntityIShouldKeepShooting;
                             }
@@ -2834,7 +2826,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("EntityCache.IsEntityIShouldKeepShooting", "Exception: [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception: [" + ex + "]");
                 }
 
                 return false;
@@ -2861,9 +2853,8 @@ namespace Questor.Modules.Caching
                                 && ShieldPct*100 < 80)
                             {
                                 if (Logging.Logging.DebugGetBestTarget)
-                                    Logging.Logging.Log("EntityCache.IsEntityIShouldKeepShootingWithDrones",
-                                        "[" + Name + "][" + Math.Round(Distance/1000, 2) + "k][" + MaskedId + " GroupID [" + GroupId +
-                                        "]] has less than 60% armor, keep killing this target", Logging.Logging.Debug);
+                                    Logging.Logging.Log("[" + Name + "][" + Math.Round(Distance / 1000, 2) + "k][" + MaskedId + " GroupID [" + GroupId +
+                                        "]] has less than 60% armor, keep killing this target");
                                 _isEntityIShouldKeepShootingWithDrones = true;
                                 return (bool) _isEntityIShouldKeepShootingWithDrones;
                             }
@@ -2879,7 +2870,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("EntityCache.IsEntityIShouldKeepShooting", "Exception: [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception: [" + ex + "]");
                 }
 
                 return false;
@@ -2899,9 +2890,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsSentry.Any() && Cache.Instance.EntityIsSentry.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsSentry",
-                                        "We have [" + Cache.Instance.EntityIsSentry.Count() + "] Entities in Cache.Instance.EntityIsSentry",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsSentry.Count() + "] Entities in Cache.Instance.EntityIsSentry");
                             }
 
                             if (Cache.Instance.EntityIsSentry.Any())
@@ -2938,7 +2927,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -2982,31 +2971,24 @@ namespace Questor.Modules.Caching
                                     }
 
                                     if (Logging.Logging.DebugEntityCache)
-                                        Logging.Logging.Log("EntityCache.IsIgnored",
-                                            "[" + Name + "][" + Math.Round(Distance/1000, 0) + "k][" + MaskedId + "] isIgnored [" + _isIgnored + "]",
-                                            Logging.Logging.Debug);
+                                        Logging.Logging.Log("[" + Name + "][" + Math.Round(Distance / 1000, 0) + "k][" + MaskedId + "] isIgnored [" + _isIgnored + "]");
                                     return (bool) _isIgnored;
                                 }
 
                                 _isIgnored = false;
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("EntityCache.IsIgnored",
-                                        "[" + Name + "][" + Math.Round(Distance/1000, 0) + "k][" + MaskedId + "] isIgnored [" + _isIgnored + "]",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("[" + Name + "][" + Math.Round(Distance / 1000, 0) + "k][" + MaskedId + "] isIgnored [" + _isIgnored + "]");
                                 return (bool) _isIgnored;
                             }
 
                             _isIgnored = false;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("EntityCache.IsIgnored",
-                                    "[" + Name + "][" + Math.Round(Distance/1000, 0) + "k][" + MaskedId + "] isIgnored [" + _isIgnored + "]",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("[" + Name + "][" + Math.Round(Distance / 1000, 0) + "k][" + MaskedId + "] isIgnored [" + _isIgnored + "]");
                             return (bool) _isIgnored;
                         }
 
                         if (Logging.Logging.DebugEntityCache)
-                            Logging.Logging.Log("EntityCache.IsIgnored",
-                                "[" + Name + "][" + Math.Round(Distance/1000, 0) + "k][" + MaskedId + "] isIgnored [" + _isIgnored + "]", Logging.Logging.Debug);
+                            Logging.Logging.Log("[" + Name + "][" + Math.Round(Distance / 1000, 0) + "k][" + MaskedId + "] isIgnored [" + _isIgnored + "]");
                         return (bool) _isIgnored;
                     }
 
@@ -3014,7 +2996,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3052,7 +3034,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3079,7 +3061,7 @@ namespace Questor.Modules.Caching
                             catch (Exception exception)
                             {
                                 if (Logging.Logging.DebugShipTargetValues)
-                                    Logging.Logging.Log("TargetValue", "exception [" + exception + "]", Logging.Logging.Debug);
+                                    Logging.Logging.Log("exception [" + exception + "]");
                             }
 
                             if (value == null)
@@ -3115,7 +3097,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return -1;
                 }
             }
@@ -3134,9 +3116,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsHighValueTarget.Any() && Cache.Instance.EntityIsHighValueTarget.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsHighValueTarget",
-                                        "We have [" + Cache.Instance.EntityIsHighValueTarget.Count() + "] Entities in Cache.Instance.EntityIsHighValueTarget",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsHighValueTarget.Count() + "] Entities in Cache.Instance.EntityIsHighValueTarget");
                             }
 
                             if (Cache.Instance.EntityIsHighValueTarget.Any())
@@ -3159,16 +3139,14 @@ namespace Questor.Modules.Caching
                                         {
                                             _isHighValueTarget = false;
                                             if (Logging.Logging.DebugEntityCache)
-                                                Logging.Logging.Log("Entitycache.IsHighValueTarget",
-                                                    "Adding [" + Name + "] to EntityIsHighValueTarget as [" + _isHighValueTarget + "]", Logging.Logging.Debug);
+                                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsHighValueTarget as [" + _isHighValueTarget + "]");
                                             Cache.Instance.EntityIsHighValueTarget.Add(Id, (bool) _isHighValueTarget);
                                             return (bool) _isHighValueTarget;
                                         }
 
                                         _isHighValueTarget = true;
                                         if (Logging.Logging.DebugEntityCache)
-                                            Logging.Logging.Log("Entitycache.IsHighValueTarget",
-                                                "Adding [" + Name + "] to EntityIsHighValueTarget as [" + _isHighValueTarget + "]", Logging.Logging.Debug);
+                                            Logging.Logging.Log("Adding [" + Name + "] to EntityIsHighValueTarget as [" + _isHighValueTarget + "]");
                                         Cache.Instance.EntityIsHighValueTarget.Add(Id, (bool) _isHighValueTarget);
                                         return (bool) _isHighValueTarget;
                                     }
@@ -3186,8 +3164,7 @@ namespace Questor.Modules.Caching
 
                             _isHighValueTarget = false;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsHighValueTarget",
-                                    "Adding [" + Name + "] to EntityIsHighValueTarget as [" + _isHighValueTarget + "]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsHighValueTarget as [" + _isHighValueTarget + "]");
                             Cache.Instance.EntityIsHighValueTarget.Add(Id, (bool) _isHighValueTarget);
                             return (bool) _isHighValueTarget;
                         }
@@ -3199,7 +3176,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3218,9 +3195,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsLowValueTarget.Any() && Cache.Instance.EntityIsLowValueTarget.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsLowValueTarget",
-                                        "We have [" + Cache.Instance.EntityIsLowValueTarget.Count() + "] Entities in Cache.Instance.EntityIsLowValueTarget",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsLowValueTarget.Count() + "] Entities in Cache.Instance.EntityIsLowValueTarget");
                             }
 
                             if (Cache.Instance.EntityIsLowValueTarget.Any())
@@ -3241,8 +3216,7 @@ namespace Questor.Modules.Caching
                                     {
                                         _isLowValueTarget = false;
                                         if (Logging.Logging.DebugEntityCache)
-                                            Logging.Logging.Log("Entitycache.IsLowValueTarget",
-                                                "Adding [" + Name + "] to EntityIsLowValueTarget as [" + _isLowValueTarget + "]", Logging.Logging.Debug);
+                                            Logging.Logging.Log("Adding [" + Name + "] to EntityIsLowValueTarget as [" + _isLowValueTarget + "]");
                                         Cache.Instance.EntityIsLowValueTarget.Add(Id, (bool) _isLowValueTarget);
                                         return (bool) _isLowValueTarget;
                                     }
@@ -3251,24 +3225,21 @@ namespace Questor.Modules.Caching
                                     {
                                         _isLowValueTarget = false;
                                         if (Logging.Logging.DebugEntityCache)
-                                            Logging.Logging.Log("Entitycache.IsLowValueTarget",
-                                                "Adding [" + Name + "] to EntityIsLowValueTarget as [" + _isLowValueTarget + "]", Logging.Logging.Debug);
+                                            Logging.Logging.Log("Adding [" + Name + "] to EntityIsLowValueTarget as [" + _isLowValueTarget + "]");
                                         Cache.Instance.EntityIsLowValueTarget.Add(Id, (bool) _isLowValueTarget);
                                         return (bool) _isLowValueTarget;
                                     }
 
                                     _isLowValueTarget = true;
                                     if (Logging.Logging.DebugEntityCache)
-                                        Logging.Logging.Log("Entitycache.IsLowValueTarget",
-                                            "Adding [" + Name + "] to EntityIsLowValueTarget as [" + _isLowValueTarget + "]", Logging.Logging.Debug);
+                                        Logging.Logging.Log("Adding [" + Name + "] to EntityIsLowValueTarget as [" + _isLowValueTarget + "]");
                                     Cache.Instance.EntityIsLowValueTarget.Add(Id, (bool) _isLowValueTarget);
                                     return (bool) _isLowValueTarget;
                                 }
 
                                 _isLowValueTarget = false;
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsLowValueTarget",
-                                        "Adding [" + Name + "] to EntityIsLowValueTarget as [" + _isLowValueTarget + "]", Logging.Logging.Debug);
+                                    Logging.Logging.Log("Adding [" + Name + "] to EntityIsLowValueTarget as [" + _isLowValueTarget + "]");
                                 Cache.Instance.EntityIsLowValueTarget.Add(Id, (bool) _isLowValueTarget);
                                 return (bool) _isLowValueTarget;
                             }
@@ -3285,7 +3256,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3306,7 +3277,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -3333,7 +3304,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3366,7 +3337,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3393,7 +3364,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3427,7 +3398,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3462,7 +3433,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3491,7 +3462,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3514,9 +3485,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsFrigate.Any() && Cache.Instance.EntityIsFrigate.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsFrigate",
-                                        "We have [" + Cache.Instance.EntityIsFrigate.Count() + "] Entities in Cache.Instance.EntityIsFrigate",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsFrigate.Count() + "] Entities in Cache.Instance.EntityIsFrigate");
                             }
 
                             if (Cache.Instance.EntityIsFrigate.Any())
@@ -3543,8 +3512,7 @@ namespace Questor.Modules.Caching
 
                             _isFrigate = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsFrigate", "Adding [" + Name + "] to EntityIsFrigate as [" + _isFrigate + "]",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsFrigate as [" + _isFrigate + "]");
                             Cache.Instance.EntityIsFrigate.Add(Id, (bool) _isFrigate);
                             return (bool) _isFrigate;
                         }
@@ -3556,7 +3524,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3579,9 +3547,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsNPCFrigate.Any() && Cache.Instance.EntityIsNPCFrigate.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsNPCFrigate",
-                                        "We have [" + Cache.Instance.EntityIsNPCFrigate.Count() + "] Entities in Cache.Instance.EntityIsNPCFrigate",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsNPCFrigate.Count() + "] Entities in Cache.Instance.EntityIsNPCFrigate");
                             }
 
                             if (Cache.Instance.EntityIsNPCFrigate.Any())
@@ -3661,8 +3627,7 @@ namespace Questor.Modules.Caching
                             //result |= Name.Contains("Spider Drone"); //we *really* need to find out the GroupID of this one.
                             _isNPCFrigate = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsNPCFrigate", "Adding [" + Name + "] to EntityIsNPCFrigate as [" + _isNPCFrigate + "]",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsNPCFrigate as [" + _isNPCFrigate + "]");
                             Cache.Instance.EntityIsNPCFrigate.Add(Id, (bool) _isNPCFrigate);
                             return (bool) _isNPCFrigate;
                         }
@@ -3674,7 +3639,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3696,9 +3661,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsCruiser.Any() && Cache.Instance.EntityIsCruiser.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsCruiser",
-                                        "We have [" + Cache.Instance.EntityIsCruiser.Count() + "] Entities in Cache.Instance.EntityIsCruiser",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsCruiser.Count() + "] Entities in Cache.Instance.EntityIsCruiser");
                             }
 
                             if (Cache.Instance.EntityIsCruiser.Any())
@@ -3721,8 +3684,7 @@ namespace Questor.Modules.Caching
 
                             _isCruiser = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsCruiser", "Adding [" + Name + "] to EntityIsCruiser as [" + _isCruiser + "]",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsCruiser as [" + _isCruiser + "]");
                             Cache.Instance.EntityIsCruiser.Add(Id, (bool) _isCruiser);
                             return (bool) _isCruiser;
                         }
@@ -3734,7 +3696,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3756,9 +3718,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsNPCCruiser.Any() && Cache.Instance.EntityIsNPCCruiser.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsNPCCruiser",
-                                        "We have [" + Cache.Instance.EntityIsNPCCruiser.Count() + "] Entities in Cache.Instance.EntityIsNPCCruiser",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsNPCCruiser.Count() + "] Entities in Cache.Instance.EntityIsNPCCruiser");
                             }
 
                             if (Cache.Instance.EntityIsNPCCruiser.Any())
@@ -3807,8 +3767,7 @@ namespace Questor.Modules.Caching
                             result |= GroupId == (int) Group.Mission_Faction_Industrials;
                             _isNPCCruiser = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsNPCCruiser", "Adding [" + Name + "] to EntityIsNPCCruiser as [" + _isNPCCruiser + "]",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsNPCCruiser as [" + _isNPCCruiser + "]");
                             Cache.Instance.EntityIsNPCCruiser.Add(Id, (bool) _isNPCCruiser);
                             return (bool) _isNPCCruiser;
                         }
@@ -3820,7 +3779,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3842,9 +3801,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsBattleCruiser.Any() && Cache.Instance.EntityIsBattleCruiser.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsBattleCruiser",
-                                        "We have [" + Cache.Instance.EntityIsBattleCruiser.Count() + "] Entities in Cache.Instance.EntityIsBattleCruiser",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsBattleCruiser.Count() + "] Entities in Cache.Instance.EntityIsBattleCruiser");
                             }
 
                             if (Cache.Instance.EntityIsBattleCruiser.Any())
@@ -3863,8 +3820,7 @@ namespace Questor.Modules.Caching
                             result |= GroupId == (int) Group.StrategicCruiser; // Technically a cruiser, but hits hard enough to be a BC :)
                             _isBattleCruiser = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsBattleCruiser",
-                                    "Adding [" + Name + "] to EntityIsBattleCruiser as [" + _isBattleCruiser + "]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsBattleCruiser as [" + _isBattleCruiser + "]");
                             Cache.Instance.EntityIsBattleCruiser.Add(Id, (bool) _isBattleCruiser);
                             return (bool) _isBattleCruiser;
                         }
@@ -3876,7 +3832,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3898,9 +3854,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsNPCBattleCruiser.Any() && Cache.Instance.EntityIsNPCBattleCruiser.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsNPCBattleCruiser",
-                                        "We have [" + Cache.Instance.EntityIsNPCBattleCruiser.Count() + "] Entities in Cache.Instance.EntityIsNPCBattleCruiser",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsNPCBattleCruiser.Count() + "] Entities in Cache.Instance.EntityIsNPCBattleCruiser");
                             }
 
                             if (Cache.Instance.EntityIsNPCBattleCruiser.Any())
@@ -3942,8 +3896,7 @@ namespace Questor.Modules.Caching
                             result |= GroupId == (int) Group.Asteroid_Rogue_Drone_Commander_BattleCruiser;
                             _isNPCBattleCruiser = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsNPCBattleCruiser",
-                                    "Adding [" + Name + "] to EntityIsNPCBattleCruiser as [" + _isNPCBattleCruiser + "]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsNPCBattleCruiser as [" + _isNPCBattleCruiser + "]");
                             Cache.Instance.EntityIsNPCBattleCruiser.Add(Id, (bool) _isNPCBattleCruiser);
                             return (bool) _isNPCBattleCruiser;
                         }
@@ -3955,7 +3908,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -3977,9 +3930,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsBattleShip.Any() && Cache.Instance.EntityIsBattleShip.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsBattleShip",
-                                        "We have [" + Cache.Instance.EntityIsBattleShip.Count() + "] Entities in Cache.Instance.EntityIsBattleShip",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsBattleShip.Count() + "] Entities in Cache.Instance.EntityIsBattleShip");
                             }
 
                             if (Cache.Instance.EntityIsBattleShip.Any())
@@ -3999,8 +3950,7 @@ namespace Questor.Modules.Caching
                             result |= GroupId == (int) Group.Marauder;
                             _isBattleship = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsBattleShip", "Adding [" + Name + "] to EntityIsBattleShip as [" + _isBattleship + "]",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsBattleShip as [" + _isBattleship + "]");
                             Cache.Instance.EntityIsBattleShip.Add(Id, (bool) _isBattleship);
                             return (bool) _isBattleship;
                         }
@@ -4012,7 +3962,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4034,9 +3984,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsNPCBattleShip.Any() && Cache.Instance.EntityIsNPCBattleShip.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsNPCBattleShip",
-                                        "We have [" + Cache.Instance.EntityIsNPCBattleShip.Count() + "] Entities in Cache.Instance.EntityIsNPCBattleShip",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsNPCBattleShip.Count() + "] Entities in Cache.Instance.EntityIsNPCBattleShip");
                             }
 
                             if (Cache.Instance.EntityIsNPCBattleShip.Any())
@@ -4083,8 +4031,7 @@ namespace Questor.Modules.Caching
                             result |= GroupId == (int) Group.Mission_Faction_Battleship;
                             _isNPCBattleship = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsNPCBattleShip",
-                                    "Adding [" + Name + "] to EntityIsNPCBattleShip as [" + _isNPCBattleship + "]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsNPCBattleShip as [" + _isNPCBattleship + "]");
                             Cache.Instance.EntityIsNPCBattleShip.Add(Id, (bool) _isNPCBattleship);
                             return (bool) _isNPCBattleship;
                         }
@@ -4096,7 +4043,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4115,9 +4062,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsLargeCollidable.Any() && Cache.Instance.EntityIsLargeCollidable.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsLargeCollidable",
-                                        "We have [" + Cache.Instance.EntityIsLargeCollidable.Count() + "] Entities in Cache.Instance.EntityIsLargeCollidable",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsLargeCollidable.Count() + "] Entities in Cache.Instance.EntityIsLargeCollidable");
                             }
 
                             if (Cache.Instance.EntityIsLargeCollidable.Any())
@@ -4138,8 +4083,7 @@ namespace Questor.Modules.Caching
                             result |= GroupId == (int) Group.DeadSpaceOverseersBelongings;
                             _isLargeCollidable = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsLargeCollidableObject",
-                                    "Adding [" + Name + "] to EntityIsLargeCollidableObject as [" + _isLargeCollidable + "]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsLargeCollidableObject as [" + _isLargeCollidable + "]");
                             Cache.Instance.EntityIsLargeCollidable.Add(Id, (bool) _isLargeCollidable);
                             return (bool) _isLargeCollidable;
                         }
@@ -4151,7 +4095,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4170,9 +4114,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsMiscJunk.Any() && Cache.Instance.EntityIsMiscJunk.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsMiscJunk",
-                                        "We have [" + Cache.Instance.EntityIsMiscJunk.Count() + "] Entities in Cache.Instance.EntityIsMiscJunk",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsMiscJunk.Count() + "] Entities in Cache.Instance.EntityIsMiscJunk");
                             }
 
                             if (Cache.Instance.EntityIsMiscJunk.Any())
@@ -4192,8 +4134,7 @@ namespace Questor.Modules.Caching
                             result |= GroupId == (int) Group.GasCloud;
                             _isMiscJunk = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsMiscJunk", "Adding [" + Name + "] to EntityIsMiscJunk as [" + _isMiscJunk + "]",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsMiscJunk as [" + _isMiscJunk + "]");
                             Cache.Instance.EntityIsMiscJunk.Add(Id, (bool) _isMiscJunk);
                             return (bool) _isMiscJunk;
                         }
@@ -4205,7 +4146,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4224,9 +4165,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsBadIdea.Any() && Cache.Instance.EntityIsBadIdea.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsBadIdea",
-                                        "We have [" + Cache.Instance.EntityIsBadIdea.Count() + "] Entities in Cache.Instance.EntityIsBadIdea",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsBadIdea.Count() + "] Entities in Cache.Instance.EntityIsBadIdea");
                             }
 
                             if (Cache.Instance.EntityIsBadIdea.Any())
@@ -4259,8 +4198,7 @@ namespace Questor.Modules.Caching
                             result |= IsPlayer;
                             _IsBadIdea = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsBadIdea", "Adding [" + Name + "] to EntityIsBadIdea as [" + _IsBadIdea + "]",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsBadIdea as [" + _IsBadIdea + "]");
                             Cache.Instance.EntityIsBadIdea.Add(Id, (bool) _IsBadIdea);
                             return (bool) _IsBadIdea;
                         }
@@ -4272,7 +4210,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4295,7 +4233,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4314,9 +4252,7 @@ namespace Questor.Modules.Caching
                             if (Cache.Instance.EntityIsNPCByGroupID.Any() && Cache.Instance.EntityIsNPCByGroupID.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsNPCByGroupID",
-                                        "We have [" + Cache.Instance.EntityIsNPCByGroupID.Count() + "] Entities in Cache.Instance.EntityIsNPCByGroupID",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsNPCByGroupID.Count() + "] Entities in Cache.Instance.EntityIsNPCByGroupID");
                             }
 
                             if (Cache.Instance.EntityIsNPCByGroupID.Any())
@@ -4483,8 +4419,7 @@ namespace Questor.Modules.Caching
                             result |= GroupId == (int) Group.asteroid_rouge_drone_commander_frigate;
                             _isNpcByGroupID = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsNPCByGroupID", "Adding [" + Name + "] to EntityIsNPCByGroupID as [" + _isNpcByGroupID + "]",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsNPCByGroupID as [" + _isNpcByGroupID + "]");
                             Cache.Instance.EntityIsNPCByGroupID.Add(Id, (bool) _isNpcByGroupID);
                             return (bool) _isNpcByGroupID;
                         }
@@ -4496,7 +4431,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4516,9 +4451,8 @@ namespace Questor.Modules.Caching
                                 Cache.Instance.EntityIsEntutyIShouldLeaveAlone.Count() > DictionaryCountThreshhold)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("Entitycache.IsEntutyIShouldLeaveAlone",
-                                        "We have [" + Cache.Instance.EntityIsEntutyIShouldLeaveAlone.Count() +
-                                        "] Entities in Cache.Instance.EntityIsEntutyIShouldLeaveAlone", Logging.Logging.Debug);
+                                    Logging.Logging.Log("We have [" + Cache.Instance.EntityIsEntutyIShouldLeaveAlone.Count() +
+                                        "] Entities in Cache.Instance.EntityIsEntutyIShouldLeaveAlone");
                             }
 
                             if (Cache.Instance.EntityIsEntutyIShouldLeaveAlone.Any())
@@ -4538,8 +4472,7 @@ namespace Questor.Modules.Caching
                             result |= IsOreOrIce;
                             _isEntityIShouldLeaveAlone = result;
                             if (Logging.Logging.DebugEntityCache)
-                                Logging.Logging.Log("Entitycache.IsEntutyIShouldLeaveAlone",
-                                    "Adding [" + Name + "] to EntityIsEntutyIShouldLeaveAlone as [" + _isEntityIShouldLeaveAlone + "]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Adding [" + Name + "] to EntityIsEntutyIShouldLeaveAlone as [" + _isEntityIShouldLeaveAlone + "]");
                             Cache.Instance.EntityIsEntutyIShouldLeaveAlone.Add(Id, (bool) _isEntityIShouldLeaveAlone);
                             return (bool) _isEntityIShouldLeaveAlone;
                         }
@@ -4551,7 +4484,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4584,7 +4517,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4607,7 +4540,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4630,7 +4563,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4656,7 +4589,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4679,7 +4612,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4702,7 +4635,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4725,7 +4658,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4748,7 +4681,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4775,7 +4708,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4801,7 +4734,7 @@ namespace Questor.Modules.Caching
                                 //
                                 if (Drones.DroneBay.Volume == 0)
                                 {
-                                    if (Logging.Logging.DebugDrones) Logging.Logging.Log("IsShipWithNoDroneBay", "Dronebay Volume = 0", Logging.Logging.Debug);
+                                    if (Logging.Logging.DebugDrones) Logging.Logging.Log("Dronebay Volume = 0");
                                     //result = true; // no drone bay available
                                 }
                             }
@@ -4814,7 +4747,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4838,7 +4771,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4861,7 +4794,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4899,7 +4832,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4922,7 +4855,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return false;
                 }
             }
@@ -4945,7 +4878,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("DistanceFromEntity", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return 0;
             }
         }
@@ -4966,8 +4899,7 @@ namespace Questor.Modules.Caching
                                 && _PreExistingBookmark.Z == _directEntity.Z)
                             {
                                 if (Logging.Logging.DebugEntityCache)
-                                    Logging.Logging.Log("EntityCache.BookmarkThis", "We already have a bookmark for [" + Name + "] and do not need another.",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("We already have a bookmark for [" + Name + "] and do not need another.");
                                 return true;
                             }
                             continue;
@@ -4985,7 +4917,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
             }
 
             return false;
@@ -5022,17 +4954,14 @@ namespace Questor.Modules.Caching
                                             // If the bad idea is attacking, attack back
                                             if (IsBadIdea && !IsAttacking)
                                             {
-                                                Logging.Logging.Log("EntityCache.LockTarget",
-                                                    "[" + module + "] Attempted to target a player or concord entity! [" + Name + "] - aborting",
-                                                    Logging.Logging.White);
+                                                Logging.Logging.Log("[" + module + "] Attempted to target a player or concord entity! [" + Name + "] - aborting");
                                                 return false;
                                             }
 
                                             if (Distance >= 250001 || Distance > Combat.Combat.MaxTargetRange) //250k is the MAX targeting range in eve.
                                             {
-                                                Logging.Logging.Log("EntityCache.LockTarget",
-                                                    "[" + module + "] tried to lock [" + Name + "] which is [" + Math.Round(Distance/1000, 2) +
-                                                    "k] away. Do not try to lock things that you cant possibly target", Logging.Logging.Debug);
+                                                Logging.Logging.Log("[" + module + "] tried to lock [" + Name + "] which is [" + Math.Round(Distance / 1000, 2) +
+                                                    "k] away. Do not try to lock things that you cant possibly target");
                                                 return false;
                                             }
 
@@ -5052,10 +4981,9 @@ namespace Questor.Modules.Caching
                                                 var seconds = DateTime.UtcNow.Subtract(lastTargeted).TotalSeconds;
                                                 if (seconds < 20)
                                                 {
-                                                    Logging.Logging.Log("EntityCache.LockTarget",
-                                                        "[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance/1000, 2) + "k][" + MaskedId +
+                                                    Logging.Logging.Log("[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance / 1000, 2) + "k][" + MaskedId +
                                                         "][" + Cache.Instance.Targets.Count() + "] targets already, can reTarget in [" +
-                                                        Math.Round(20 - seconds, 0) + "]", Logging.Logging.White);
+                                                        Math.Round(20 - seconds, 0) + "]");
                                                     return false;
                                                 }
                                             }
@@ -5065,8 +4993,7 @@ namespace Questor.Modules.Caching
                                             if (!Statistics.BountyValues.ContainsKey(entId))
                                             {
                                                 var bounty = _directEntity.GetBounty();
-                                                Logging.Logging.Log("EntityCache.LockTarget", "Added bounty [" + bounty + "] ent.id [" + entId + "]",
-                                                    Logging.Logging.White);
+                                                Logging.Logging.Log("Added bounty [" + bounty + "] ent.id [" + entId + "]");
                                                 Statistics.BountyValues.AddOrUpdate(entId, bounty);
                                             }
 
@@ -5077,49 +5004,37 @@ namespace Questor.Modules.Caching
                                                 return true;
                                             }
 
-                                            Logging.Logging.Log("EntityCache.LockTarget",
-                                                "[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance/1000, 2) + "k][" + MaskedId + "][" +
-                                                Cache.Instance.Targets.Count() + "] targets already, LockTarget failed (unknown reason)", Logging.Logging.White);
+                                            Logging.Logging.Log("[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance / 1000, 2) + "k][" + MaskedId + "][" +
+                                                Cache.Instance.Targets.Count() + "] targets already, LockTarget failed (unknown reason)");
                                             return false;
                                         }
 
-                                        Logging.Logging.Log("EntityCache.LockTarget",
-                                            "[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance/1000, 2) + "k][" + MaskedId + "][" +
-                                            Cache.Instance.Targets.Count() + "] targets already, LockTarget failed: target was not in Entities List",
-                                            Logging.Logging.White);
+                                        Logging.Logging.Log("[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance / 1000, 2) + "k][" + MaskedId + "][" +
+                                            Cache.Instance.Targets.Count() + "] targets already, LockTarget failed: target was not in Entities List");
                                         return false;
                                     }
 
-                                    Logging.Logging.Log("EntityCache.LockTarget",
-                                        "[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance/1000, 2) + "k][" + MaskedId + "][" +
-                                        Cache.Instance.Targets.Count() + "] targets already, LockTarget aborted: target is already being targeted",
-                                        Logging.Logging.White);
+                                    Logging.Logging.Log("[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance / 1000, 2) + "k][" + MaskedId + "][" +
+                                        Cache.Instance.Targets.Count() + "] targets already, LockTarget aborted: target is already being targeted");
                                     return false;
                                 }
 
-                                Logging.Logging.Log("EntityCache.LockTarget",
-                                    "[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance/1000, 2) + "k][" + MaskedId + "][" +
-                                    Cache.Instance.Targets.Count() + "] targets already, we only have [" + Cache.Instance.MaxLockedTargets + "] slots!",
-                                    Logging.Logging.White);
+                                Logging.Logging.Log("[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance / 1000, 2) + "k][" + MaskedId + "][" +
+                                    Cache.Instance.Targets.Count() + "] targets already, we only have [" + Cache.Instance.MaxLockedTargets + "] slots!");
                                 return false;
                             }
 
-                            Logging.Logging.Log("EntityCache.LockTarget",
-                                "[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance/1000, 2) + "k][" + MaskedId + "][" +
-                                Cache.Instance.Targets.Count() + "] targets already, my targeting range is only [" + Combat.Combat.MaxTargetRange + "]!",
-                                Logging.Logging.White);
+                            Logging.Logging.Log("[" + module + "] tried to lock [" + Name + "][" + Math.Round(Distance / 1000, 2) + "k][" + MaskedId + "][" +
+                                Cache.Instance.Targets.Count() + "] targets already, my targeting range is only [" + Combat.Combat.MaxTargetRange + "]!");
                             return false;
                         }
 
-                        Logging.Logging.Log("EntityCache.LockTarget",
-                            "[" + module + "] tried to lock [" + Name + "][" + Cache.Instance.Targets.Count() + "] targets already, target is already dead!",
-                            Logging.Logging.White);
+                        Logging.Logging.Log("[" + module + "] tried to lock [" + Name + "][" + Cache.Instance.Targets.Count() + "] targets already, target is already dead!");
                         return false;
                     }
 
-                    Logging.Logging.Log("EntityCache.LockTarget",
-                        "[" + module + "] LockTarget request has been ignored for [" + Name + "][" + Math.Round(Distance/1000, 2) + "k][" + MaskedId + "][" +
-                        Cache.Instance.Targets.Count() + "] targets already, target is already locked!", Logging.Logging.White);
+                    Logging.Logging.Log("[" + module + "] LockTarget request has been ignored for [" + Name + "][" + Math.Round(Distance / 1000, 2) + "k][" + MaskedId + "][" +
+                        Cache.Instance.Targets.Count() + "] targets already, target is already locked!");
                     return false;
                 }
 
@@ -5127,7 +5042,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -5158,7 +5073,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -5180,9 +5095,8 @@ namespace Questor.Modules.Caching
                         {
                             if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                             {
-                                Logging.Logging.Log("EntityCache.Name",
-                                    "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) +
-                                    "k][" + MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                                Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) +
+                                    "k][" + MaskedId + "] was created more than 5 seconds ago (ugh!)");
                             }
 
                             if (Distance < 2500)
@@ -5198,27 +5112,24 @@ namespace Questor.Modules.Caching
                                 return true;
                             }
 
-                            Logging.Logging.Log("EntityCache.Jump",
-                                "we tried to jump through [" + Name + "] but it is [" + Math.Round(Distance/1000, 2) + "k away][" + MaskedId + "]",
-                                Logging.Logging.White);
+                            Logging.Logging.Log("we tried to jump through [" + Name + "] but it is [" + Math.Round(Distance / 1000, 2) + "k away][" + MaskedId + "]");
                             return false;
                         }
 
-                        Logging.Logging.Log("EntityCache.Jump", "[" + Name + "] DirecEntity is null or is not valid", Logging.Logging.Debug);
+                        Logging.Logging.Log("[" + Name + "] DirecEntity is null or is not valid");
                         return false;
                     }
 
-                    Logging.Logging.Log("EntityCache.Jump", "We have not yet been in space for 2 seconds, waiting", Logging.Logging.White);
+                    Logging.Logging.Log("We have not yet been in space for 2 seconds, waiting");
                     return false;
                 }
 
-                Logging.Logging.Log("EntityCache.Jump",
-                    "We still have [" + DateTime.UtcNow.Subtract(Time.Instance.NextJumpAction) + "] seconds until we should jump again.", Logging.Logging.White);
+                Logging.Logging.Log("We still have [" + DateTime.UtcNow.Subtract(Time.Instance.NextJumpAction) + "] seconds until we should jump again.");
                 return false;
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -5238,17 +5149,15 @@ namespace Questor.Modules.Caching
                     {
                         if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                         {
-                            Logging.Logging.Log("EntityCache.Name",
-                                "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) + "k][" +
-                                MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                            Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" +
+                                MaskedId + "] was created more than 5 seconds ago (ugh!)");
                         }
 
                         //we cant move in bastion mode, do not try
                         var bastionModules = Cache.Instance.Modules.Where(m => m.GroupId == (int) Group.Bastion && m.IsOnline).ToList();
                         if (bastionModules.Any(i => i.IsActive))
                         {
-                            Logging.Logging.Log("EntityCache.Activate", "BastionMode is active, we cannot move, aborting attempt to Activate Gate",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("BastionMode is active, we cannot move, aborting attempt to Activate Gate");
                             return false;
                         }
 
@@ -5259,18 +5168,17 @@ namespace Questor.Modules.Caching
                         return true;
                     }
 
-                    Logging.Logging.Log("EntityCache.Activate", "[" + Name + "] DirecEntity is null or is not valid", Logging.Logging.Debug);
+                    Logging.Logging.Log("[" + Name + "] DirecEntity is null or is not valid");
                     return false;
                 }
 
-                Logging.Logging.Log("EntityCache.Activate",
-                    "You have another [" + Time.Instance.NextActivateAction.Subtract(DateTime.UtcNow).TotalSeconds +
-                    "] sec before we should attempt to activate [" + Name + "], waiting.", Logging.Logging.Debug);
+                Logging.Logging.Log("You have another [" + Time.Instance.NextActivateAction.Subtract(DateTime.UtcNow).TotalSeconds +
+                    "] sec before we should attempt to activate [" + Name + "], waiting.");
                 return false;
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -5290,17 +5198,15 @@ namespace Questor.Modules.Caching
                     {
                         if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                         {
-                            Logging.Logging.Log("EntityCache.Name",
-                                "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) + "k][" +
-                                MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                            Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" +
+                                MaskedId + "] was created more than 5 seconds ago (ugh!)");
                         }
 
                         //we cant move in bastion mode, do not try
                         var bastionModules = Cache.Instance.Modules.Where(m => m.GroupId == (int) Group.Bastion && m.IsOnline).ToList();
                         if (bastionModules.Any(i => i.IsActive))
                         {
-                            Logging.Logging.Log("EntityCache.Approach", "BastionMode is active, we cannot move, aborting attempt to Approach",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("BastionMode is active, we cannot move, aborting attempt to Approach");
                             return false;
                         }
 
@@ -5319,7 +5225,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 Cache.Instance.Approaching = null;
                 return false;
             }
@@ -5335,17 +5241,15 @@ namespace Questor.Modules.Caching
                     {
                         if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                         {
-                            Logging.Logging.Log("EntityCache.Name",
-                                "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) + "k][" +
-                                MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                            Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" +
+                                MaskedId + "] was created more than 5 seconds ago (ugh!)");
                         }
 
                         //we cant move in bastion mode, do not try
                         var bastionModules = Cache.Instance.Modules.Where(m => m.GroupId == (int) Group.Bastion && m.IsOnline).ToList();
                         if (bastionModules.Any(i => i.IsActive))
                         {
-                            Logging.Logging.Log("EntityCache.Approach", "BastionMode is active, we cannot move, aborting attempt to Approach",
-                                Logging.Logging.Debug);
+                            Logging.Logging.Log("BastionMode is active, we cannot move, aborting attempt to Approach");
                             return false;
                         }
 
@@ -5362,7 +5266,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 Cache.Instance.Approaching = null;
                 return false;
             }
@@ -5383,22 +5287,20 @@ namespace Questor.Modules.Caching
                     {
                         if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                         {
-                            Logging.Logging.Log("EntityCache.Name",
-                                "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) + "k][" +
-                                MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                            Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" +
+                                MaskedId + "] was created more than 5 seconds ago (ugh!)");
                         }
 
                         //we cant move in bastion mode, do not try
                         var bastionModules = Cache.Instance.Modules.Where(m => m.GroupId == (int) Group.Bastion && m.IsOnline).ToList();
                         if (bastionModules.Any(i => i.IsActive))
                         {
-                            Logging.Logging.Log("EntityCache.Orbit", "BastionMode is active, we cannot move, aborting attempt to Orbit", Logging.Logging.Debug);
+                            Logging.Logging.Log("BastionMode is active, we cannot move, aborting attempt to Orbit");
                             return false;
                         }
 
                         _directEntity.Orbit(_orbitRange);
-                        Logging.Logging.Log("EntityCache",
-                            "Initiating Orbit [" + Name + "][at " + Math.Round(((double) _orbitRange/1000), 2) + "k][" + MaskedId + "]", Logging.Logging.Teal);
+                        Logging.Logging.Log("Initiating Orbit [" + Name + "][at " + Math.Round(((double)_orbitRange / 1000), 2) + "k][" + MaskedId + "]");
                         Time.Instance.NextOrbit = DateTime.UtcNow.AddSeconds(10 + Cache.Instance.RandomNumber(1, 15));
                         Cache.Instance.Approaching = this;
                         return true;
@@ -5411,7 +5313,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 Cache.Instance.Approaching = null;
                 return false;
             }
@@ -5434,9 +5336,8 @@ namespace Questor.Modules.Caching
                         {
                             if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                             {
-                                Logging.Logging.Log("EntityCache.Name",
-                                    "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) +
-                                    "k][" + MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                                Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) +
+                                    "k][" + MaskedId + "] was created more than 5 seconds ago (ugh!)");
                             }
 
                             //
@@ -5450,8 +5351,7 @@ namespace Questor.Modules.Caching
                                     var bastionModules = Cache.Instance.Modules.Where(m => m.GroupId == (int) Group.Bastion && m.IsOnline).ToList();
                                     if (bastionModules.Any(i => i.IsActive))
                                     {
-                                        Logging.Logging.Log("EntityCache.WarpTo", "BastionMode is active, we cannot warp, aborting attempt to warp",
-                                            Logging.Logging.Debug);
+                                        Logging.Logging.Log("BastionMode is active, we cannot warp, aborting attempt to warp");
                                         return false;
                                     }
 
@@ -5463,23 +5363,20 @@ namespace Questor.Modules.Caching
                                     return true;
                                 }
 
-                                Logging.Logging.Log("EntityCache.WarpTo",
-                                    "[" + Name + "] Distance [" + Math.Round(Distance/1000, 0) + "k] is not greater then 150k away, WarpTo aborted!",
-                                    Logging.Logging.Debug);
+                                Logging.Logging.Log("[" + Name + "] Distance [" + Math.Round(Distance / 1000, 0) + "k] is not greater then 150k away, WarpTo aborted!");
                                 return false;
                             }
 
-                            Logging.Logging.Log("EntityCache.WarpTo",
-                                "[" + Name + "] Distance [" + Math.Round(Distance/1000, 0) +
-                                "k] was greater than 5000AU away, we assume this an error!, WarpTo aborted!", Logging.Logging.Debug);
+                            Logging.Logging.Log("[" + Name + "] Distance [" + Math.Round(Distance / 1000, 0) +
+                                "k] was greater than 5000AU away, we assume this an error!, WarpTo aborted!");
                             return false;
                         }
 
-                        Logging.Logging.Log("EntityCache.WarpTo", "[" + Name + "] DirecEntity is null or is not valid", Logging.Logging.Debug);
+                        Logging.Logging.Log("[" + Name + "] DirecEntity is null or is not valid");
                         return false;
                     }
 
-                    Logging.Logging.Log("EntityCache.WarpTo", "We have not yet been in space at least 2 seconds, waiting", Logging.Logging.Debug);
+                    Logging.Logging.Log("We have not yet been in space at least 2 seconds, waiting");
                     return false;
                 }
 
@@ -5488,7 +5385,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -5508,9 +5405,8 @@ namespace Questor.Modules.Caching
                     {
                         if (DateTime.UtcNow.AddSeconds(-5) > ThisEntityCacheCreated)
                         {
-                            Logging.Logging.Log("EntityCache.Name",
-                                "The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance/1000, 0) + "k][" +
-                                MaskedId + "] was created more than 5 seconds ago (ugh!)", Logging.Logging.Debug);
+                            Logging.Logging.Log("The EntityCache instance that represents [" + _directEntity.Name + "][" + Math.Round(_directEntity.Distance / 1000, 0) + "k][" +
+                                MaskedId + "] was created more than 5 seconds ago (ugh!)");
                         }
 
                         _directEntity.AlignTo();
@@ -5526,7 +5422,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -5573,10 +5469,9 @@ namespace Questor.Modules.Caching
                         return false;
                     }
 
-                    Logging.Logging.Log("Dock",
-                        "We were last detected in space [" + DateTime.UtcNow.Subtract(Time.Instance.LastInSpace).TotalSeconds +
+                    Logging.Logging.Log("We were last detected in space [" + DateTime.UtcNow.Subtract(Time.Instance.LastInSpace).TotalSeconds +
                         "] seconds ago. We have been unDocked for [ " + DateTime.UtcNow.Subtract(Time.Instance.LastInStation).TotalSeconds +
-                        " ] seconds. we should not dock yet, waiting", Logging.Logging.Debug);
+                        " ] seconds. we should not dock yet, waiting");
                     return false;
                 }
 
@@ -5585,7 +5480,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -5610,7 +5505,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
                 return false;
             }
         }
@@ -5634,7 +5529,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("EntityCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
             }
         }
     }

@@ -39,11 +39,11 @@ namespace Questor.Modules.Lookup
 
                 if (!Cache.Instance.DirectEve.DoesInvTypeExistInTypeStorage(TypeId))
                 {
-                    Logging.Logging.Log("Ammo", "ERROR: TypeId: " + TypeId + " was NOT found in type storage. Fix your ammo type ids.", Logging.Logging.Debug);
+                    Logging.Logging.Log("ERROR: TypeId: " + TypeId + " was NOT found in type storage. Fix your ammo type ids.");
                 }
                 else
                 {
-                    Logging.Logging.Log("Ammo", "TypeId: " + TypeId + " was found in type storage", Logging.Logging.Debug);
+                    Logging.Logging.Log("TypeId: " + TypeId + " was found in type storage");
                 }
 
 //				
@@ -67,7 +67,7 @@ namespace Questor.Modules.Lookup
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Ammo", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
             }
         }
 

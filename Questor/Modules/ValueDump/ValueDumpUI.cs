@@ -29,7 +29,7 @@ namespace ValueDump
         public ValueDumpUI(bool _standaloneInstance)
         {
             Application.EnableVisualStyles();
-            Logging.Log("ValueDump", "Starting ValueDump", Logging.Orange);
+            Logging.Log("Starting ValueDump");
             InitializeComponent();
             _market = new Market();
 
@@ -47,8 +47,8 @@ namespace ValueDump
             }
             catch (Exception ex)
             {
-                Logging.Log("Startup", "Error on Loading DirectEve, maybe server is down", Logging.Orange);
-                Logging.Log("Startup", string.Format("DirectEVE: Exception {0}...", ex), Logging.White);
+                Logging.Log("Error on Loading DirectEve, maybe server is down");
+                Logging.Log(string.Format("DirectEVE: Exception {0}...", ex));
                 Cache.Instance.CloseQuestorCMDLogoff = false;
                 Cache.Instance.CloseQuestorCMDExitGame = true;
                 Cache.Instance.CloseQuestorEndProcess = true;
@@ -67,7 +67,7 @@ namespace ValueDump
             }
             catch (Exception ex)
             {
-                Logging.Log("ValueDump", string.Format("DirectEVE.OnFrame: Exception {0}...", ex), Logging.White);
+                Logging.Log(string.Format("DirectEVE.OnFrame: Exception {0}...", ex));
                 return;
             }
         }
@@ -146,13 +146,13 @@ namespace ValueDump
                     break;
 
                 case ValueDumpState.CheckMineralPrices:
-                    if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.CheckMineralPrices:", Logging.Debug);
+                    if (Logging.DebugValuedump) Logging.Log("case ValueDumpState.CheckMineralPrices:");
                     if (!Market.CheckMineralPrices("ValueDump", RefineCheckBox.Checked)) return;
                     _States.CurrentValueDumpState = ValueDumpState.SaveMineralPrices;
                     break;
 
                 case ValueDumpState.SaveMineralPrices:
-                    if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.SaveMineralPrices:", Logging.Debug);
+                    if (Logging.DebugValuedump) Logging.Log("case ValueDumpState.SaveMineralPrices:");
                     if (!Market.SaveMineralprices("ValueDump")) return;
                     _States.CurrentValueDumpState = ValueDumpState.Idle;
                     break;
@@ -177,7 +177,7 @@ namespace ValueDump
                     break;
 
                 case ValueDumpState.UpdatePrices:
-                    if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.UpdatePrices:", Logging.Debug);
+                    if (Logging.DebugValuedump) Logging.Log("case ValueDumpState.UpdatePrices:");
                     if (!Market.UpdatePrices("ValueDump", cbxSell.Checked, RefineCheckBox.Checked, cbxUndersell.Checked)) return;
                     //
                     // we are out of items
@@ -186,38 +186,38 @@ namespace ValueDump
                     break;
 
                 case ValueDumpState.NextItem:
-                    if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.NextItem:", Logging.Debug);
+                    if (Logging.DebugValuedump) Logging.Log("case ValueDumpState.NextItem:");
                     if (!Market.NextItem("ValueDump")) return;
                     _States.CurrentValueDumpState = ValueDumpState.StartQuickSell;
                     break;
 
                 case ValueDumpState.StartQuickSell:
-                    if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.StartQuickSell:", Logging.Debug);
+                    if (Logging.DebugValuedump) Logging.Log("case ValueDumpState.StartQuickSell:");
                     if (!Market.StartQuickSell("ValueDump", cbxSell.Checked)) return;
                     _States.CurrentValueDumpState = ValueDumpState.InspectOrder;
                     break;
 
                 case ValueDumpState.InspectOrder:
-                    if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.InspectOrder:", Logging.Debug);
+                    if (Logging.DebugValuedump) Logging.Log("case ValueDumpState.InspectOrder:");
                     if (!Market.Inspectorder("ValueDump", cbxSell.Checked, RefineCheckBox.Checked, cbxUndersell.Checked, (double) RefineEfficiencyInput.Value))
                         return;
                     _States.CurrentValueDumpState = ValueDumpState.WaitingToFinishQuickSell;
                     break;
 
                 case ValueDumpState.InspectRefinery:
-                    if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.InspectRefinery:", Logging.Debug);
+                    if (Logging.DebugValuedump) Logging.Log("case ValueDumpState.InspectRefinery:");
                     if (!Market.InspectRefinery("ValueDump", (double) RefineEfficiencyInput.Value)) return;
                     _States.CurrentValueDumpState = ValueDumpState.NextItem;
                     break;
 
                 case ValueDumpState.WaitingToFinishQuickSell:
-                    if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.WaitingToFinishQuickSell:", Logging.Debug);
+                    if (Logging.DebugValuedump) Logging.Log("case ValueDumpState.WaitingToFinishQuickSell:");
                     if (!Market.WaitingToFinishQuickSell("ValueDump")) return;
                     _States.CurrentValueDumpState = ValueDumpState.NextItem;
                     break;
 
                 case ValueDumpState.RefineItems:
-                    if (Logging.DebugValuedump) Logging.Log("ValueDump", "case ValueDumpState.RefineItems:", Logging.Debug);
+                    if (Logging.DebugValuedump) Logging.Log("case ValueDumpState.RefineItems:");
                     if (Market.RefineItems("ValueDump", RefineCheckBox.Checked)) return;
                     _States.CurrentValueDumpState = ValueDumpState.Idle;
                     break;
@@ -235,7 +235,7 @@ namespace ValueDump
             try
             {
                 // Wait for the items to load
-                Logging.Log("ValueDump", "Waiting for items", Logging.White);
+                Logging.Log("Waiting for items");
                 while (_States.CurrentValueDumpState != ValueDumpState.Idle)
                 {
                     Thread.Sleep(50);
@@ -282,7 +282,7 @@ namespace ValueDump
             }
             catch (Exception exception)
             {
-                Logging.Log("ValueDump.ProcessItems", "Exception: [" + exception + "]", Logging.Debug);
+                Logging.Log("Exception: [" + exception + "]");
             }
         }
 

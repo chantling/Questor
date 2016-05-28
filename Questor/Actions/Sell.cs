@@ -50,7 +50,7 @@ namespace Questor.Modules.Actions
                     var directItem = Cache.Instance.ItemHangar.Items.FirstOrDefault(i => (i.TypeId == Item));
                     if (directItem == null)
                     {
-                        Logging.Logging.Log("Sell", "Item " + Item + " no longer exists in the hanger", Logging.Logging.White);
+                        Logging.Logging.Log("Item " + Item + " no longer exists in the hanger");
                         break;
                     }
 
@@ -58,12 +58,12 @@ namespace Questor.Modules.Actions
                     if (Unit == 00)
                         Unit = directItem.Quantity;
 
-                    Logging.Logging.Log("Sell", "Starting QuickSell for " + Item, Logging.Logging.White);
+                    Logging.Logging.Log("Starting QuickSell for " + Item);
                     if (!directItem.QuickSell())
                     {
                         _lastAction = DateTime.UtcNow.AddSeconds(-5);
 
-                        Logging.Logging.Log("Sell", "QuickSell failed for " + Item + ", retrying in 5 seconds", Logging.Logging.White);
+                        Logging.Logging.Log("QuickSell failed for " + Item + ", retrying in 5 seconds");
                         break;
                     }
 
@@ -78,7 +78,7 @@ namespace Questor.Modules.Actions
                     // Mark as new execution
                     _lastAction = DateTime.UtcNow;
 
-                    Logging.Logging.Log("Sell", "Inspecting sell order for " + Item, Logging.Logging.White);
+                    Logging.Logging.Log("Inspecting sell order for " + Item);
                     _States.CurrentSellState = SellState.InspectOrder;
                     break;
 
@@ -90,7 +90,7 @@ namespace Questor.Modules.Actions
                     {
                         if ((!sellWindow.OrderId.HasValue || !sellWindow.Price.HasValue || !sellWindow.RemainingVolume.HasValue))
                         {
-                            Logging.Logging.Log("Sell", "No order available for " + Item, Logging.Logging.White);
+                            Logging.Logging.Log("No order available for " + Item);
 
                             sellWindow.Cancel();
                             _States.CurrentSellState = SellState.WaitingToFinishQuickSell;
@@ -99,8 +99,7 @@ namespace Questor.Modules.Actions
 
                         var price = sellWindow.Price.Value;
 
-                        Logging.Logging.Log("Sell", "Selling " + Unit + " of " + Item + " [Sell price: " + (price*Unit).ToString("#,##0.00") + "]",
-                            Logging.Logging.White);
+                        Logging.Logging.Log("Selling " + Unit + " of " + Item + " [Sell price: " + (price * Unit).ToString("#,##0.00") + "]");
                         sellWindow.Accept();
                         _States.CurrentSellState = SellState.WaitingToFinishQuickSell;
                     }

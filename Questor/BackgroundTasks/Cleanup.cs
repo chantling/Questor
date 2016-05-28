@@ -35,9 +35,9 @@ namespace Questor.Modules.BackgroundTasks
 
         public static void DirecteveDispose()
         {
-            Logging.Logging.Log("Questor", "started calling DirectEve.Dispose()", Logging.Logging.White);
+            Logging.Logging.Log("started calling DirectEve.Dispose()");
             Cache.Instance.DirectEve.Dispose(); //could this hang?
-            Logging.Logging.Log("Questor", "finished calling DirectEve.Dispose()", Logging.Logging.White);
+            Logging.Logging.Log("finished calling DirectEve.Dispose()");
             SignalToQuitQuestor = true;
         }
 
@@ -49,7 +49,7 @@ namespace Questor.Modules.BackgroundTasks
                 Cache.Instance.CloseQuestorCMDExitGame = true;
             }
 
-            Logging.Logging.Log("Questor", "Closing with: Process.GetCurrentProcess().Kill()", Logging.Logging.White);
+            Logging.Logging.Log("Closing with: Process.GetCurrentProcess().Kill()");
 
             DirecteveDispose();
 
@@ -81,7 +81,7 @@ namespace Questor.Modules.BackgroundTasks
                 {
                     if (window.Name.Contains("_ShipDroneBay_") && window.Caption.Contains("Drone Bay") && window.Type.Contains("Inventory"))
                     {
-                        Logging.Logging.Log("Cleanup", "CloseInventoryWindows: Closing Drone Bay Window", Logging.Logging.White);
+                        Logging.Logging.Log("CloseInventoryWindows: Closing Drone Bay Window");
                         window.Close();
                         _lastCleanupAction = DateTime.UtcNow;
                         return false;
@@ -89,7 +89,7 @@ namespace Questor.Modules.BackgroundTasks
 
                     if (window.Name.Contains("_ShipCargo_") && window.Caption.Contains("active ship") && window.Type.Contains("Inventory"))
                     {
-                        Logging.Logging.Log("Cleanup", "CloseInventoryWindows: Closing Cargo Bay Window", Logging.Logging.White);
+                        Logging.Logging.Log("CloseInventoryWindows: Closing Cargo Bay Window");
                         window.Close();
                         _lastCleanupAction = DateTime.UtcNow;
                         return false;
@@ -97,7 +97,7 @@ namespace Questor.Modules.BackgroundTasks
 
                     if (window.Name.Contains("_StationItems_") && window.Caption.Contains("Item hangar") && window.Type.Contains("Inventory"))
                     {
-                        Logging.Logging.Log("Cleanup", "CloseInventoryWindows: Closing Item Hangar Window", Logging.Logging.White);
+                        Logging.Logging.Log("CloseInventoryWindows: Closing Item Hangar Window");
                         window.Close();
                         _lastCleanupAction = DateTime.UtcNow;
                         return false;
@@ -105,7 +105,7 @@ namespace Questor.Modules.BackgroundTasks
 
                     if (window.Name.Contains("_StationShips_") && window.Caption.Contains("Ship hangar") && window.Type.Contains("Inventory"))
                     {
-                        Logging.Logging.Log("Cleanup", "CloseInventoryWindows: Closing Ship Hangar Window", Logging.Logging.White);
+                        Logging.Logging.Log("CloseInventoryWindows: Closing Ship Hangar Window");
                         window.Close();
                         _lastCleanupAction = DateTime.UtcNow;
                         return false;
@@ -113,8 +113,7 @@ namespace Questor.Modules.BackgroundTasks
 
                     if (window.Type.Contains("Inventory"))
                     {
-                        Logging.Logging.Log("Cleanup", "CloseInventoryWindows: Closing other Inventory Window named [ " + window.Name + "]",
-                            Logging.Logging.White);
+                        Logging.Logging.Log("CloseInventoryWindows: Closing other Inventory Window named [ " + window.Name + "]");
                         window.Close();
                         _lastCleanupAction = DateTime.UtcNow;
                         return false;
@@ -130,7 +129,7 @@ namespace Questor.Modules.BackgroundTasks
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("Cleanup", "Exception [" + ex + "]", Logging.Logging.White);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return false;
             }
         }
@@ -147,14 +146,12 @@ namespace Questor.Modules.BackgroundTasks
                 {
                     Cache.Instance.TotalMegaBytesOfMemoryUsed = ((currentProcess.WorkingSet64/1024)/1024);
                 }
-                Logging.Logging.Log("Cleanup", "EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB",
-                    Logging.Logging.White);
+                Logging.Logging.Log("EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB");
 
                 if (Cache.Instance.TotalMegaBytesOfMemoryUsed > (Settings.Instance.EVEProcessMemoryCeiling - 50))
                 {
-                    Logging.Logging.Log("Cleanup",
-                        "Memory usage is above the EVEProcessMemoryCeiling threshold. EVE instance: totalMegaBytesOfMemoryUsed - " +
-                        Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB", Logging.Logging.White);
+                    Logging.Logging.Log("Memory usage is above the EVEProcessMemoryCeiling threshold. EVE instance: totalMegaBytesOfMemoryUsed - " +
+                        Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB");
                     ReasonToStopQuestor = "Memory usage is above the EVEProcessMemoryCeiling threshold. EVE instance: totalMegaBytesOfMemoryUsed - " +
                                           Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB";
                     Cache.Instance.CloseQuestorCMDLogoff = false;
@@ -168,7 +165,7 @@ namespace Questor.Modules.BackgroundTasks
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("Cleanup", "Exception [" + ex + "]", Logging.Logging.White);
+                Logging.Logging.Log("Exception [" + ex + "]");
             }
         }
 
@@ -183,8 +180,7 @@ namespace Questor.Modules.BackgroundTasks
             if (DateTime.UtcNow < Time.Instance.LastSessionChange.AddSeconds(10))
             {
                 if (Logging.Logging.DebugCleanup)
-                    Logging.Logging.Log("Cleanup", "last session change was at [" + Time.Instance.LastSessionChange + "] waiting until 20 sec have passed",
-                        Logging.Logging.Teal);
+                    Logging.Logging.Log("last session change was at [" + Time.Instance.LastSessionChange + "] waiting until 20 sec have passed");
                 return;
             }
 
@@ -193,30 +189,27 @@ namespace Questor.Modules.BackgroundTasks
                 // When in warp there's nothing we can do, so ignore everything
                 if (Cache.Instance.InWarp)
                 {
-                    if (Logging.Logging.DebugCleanup) Logging.Logging.Log("Cleanup", "Processstate: we are in warp: do nothing", Logging.Logging.Teal);
+                    if (Logging.Logging.DebugCleanup) Logging.Logging.Log("Processstate: we are in warp: do nothing");
                     _States.CurrentSalvageState = SalvageState.Idle;
                     return;
                 }
 
-                if (Logging.Logging.DebugCleanup) Logging.Logging.Log("Cleanup", "Processstate: we are in space", Logging.Logging.Teal);
+                if (Logging.Logging.DebugCleanup) Logging.Logging.Log("Processstate: we are in space");
                 if (DateTime.UtcNow < Time.Instance.LastInStation.AddSeconds(10))
                 {
                     if (Logging.Logging.DebugCleanup)
-                        Logging.Logging.Log("Cleanup",
-                            "Processstate: last in station time is [" + Time.Instance.LastInStation + " waiting until 10 seconds have passed",
-                            Logging.Logging.Teal);
+                        Logging.Logging.Log("Processstate: last in station time is [" + Time.Instance.LastInStation + " waiting until 10 seconds have passed");
                     return;
                 }
             }
 
             if (Cache.Instance.InStation)
             {
-                if (Logging.Logging.DebugCleanup) Logging.Logging.Log("Cleanup", "Processstate: we are in station", Logging.Logging.Teal);
+                if (Logging.Logging.DebugCleanup) Logging.Logging.Log("Processstate: we are in station");
                 if (DateTime.UtcNow < Time.Instance.LastInSpace.AddSeconds(10))
                 {
                     if (Logging.Logging.DebugCleanup)
-                        Logging.Logging.Log("Cleanup",
-                            "Processstate: last in space time is [" + Time.Instance.LastInSpace + " waiting until 10 seconds have passed", Logging.Logging.Teal);
+                        Logging.Logging.Log("Processstate: last in space time is [" + Time.Instance.LastInSpace + " waiting until 10 seconds have passed");
                     return;
                 }
             }
@@ -239,7 +232,7 @@ namespace Questor.Modules.BackgroundTasks
                     if (!Cache.Instance.InSpace && !Cache.Instance.InStation && Settings.Instance.CharacterName != "AtLoginScreenNoCharactersLoggedInYet")
                     {
                         if (Logging.Logging.DebugCleanup)
-                            Logging.Logging.Log("Cleanup", "CheckModalWindows: We are in a session change, waiting 4 seconds", Logging.Logging.White);
+                            Logging.Logging.Log("CheckModalWindows: We are in a session change, waiting 4 seconds");
                         _lastCleanupAction = DateTime.UtcNow;
                         _States.CurrentCleanupState = CleanupState.Idle;
                         return;
@@ -248,7 +241,7 @@ namespace Questor.Modules.BackgroundTasks
                     if (Settings.Instance.CharacterName == "AtLoginScreenNoCharactersLoggedInYet" && Time.Instance.LastInStation.AddHours(1) > DateTime.UtcNow)
                     {
                         ReasonToStopQuestor = "we are no longer in a valid session (not logged in) and we had been logged in. restarting";
-                        Logging.Logging.Log("Cleanup", ReasonToStopQuestor, Logging.Logging.White);
+                        Logging.Logging.Log(ReasonToStopQuestor);
                         SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
                         CloseQuestor(ReasonToStopQuestor);
                         return;
@@ -257,22 +250,20 @@ namespace Questor.Modules.BackgroundTasks
                     if (Cache.Instance.Windows == null || !Cache.Instance.Windows.Any())
                     {
                         if (Logging.Logging.DebugCleanup)
-                            Logging.Logging.Log("Cleanup", "CheckModalWindows: Cache.Instance.Windows returned null or empty", Logging.Logging.White);
+                            Logging.Logging.Log("CheckModalWindows: Cache.Instance.Windows returned null or empty");
                         _lastCleanupAction = DateTime.UtcNow;
                         _States.CurrentCleanupState = CleanupState.Idle;
                         return;
                     }
-                    if (Logging.Logging.DebugCleanup) Logging.Logging.Log("Cleanup", "Checking Each window in Cache.Instance.Windows", Logging.Logging.Teal);
+                    if (Logging.Logging.DebugCleanup) Logging.Logging.Log("Checking Each window in Cache.Instance.Windows");
 
                     foreach (var window in Cache.Instance.Windows)
                     {
                         // Telecom messages are generally mission info messages: close them
                         if (window.Name == "telecom" && !Logging.Logging.DebugDoNotCloseTelcomWindows)
                         {
-                            Logging.Logging.Log("Cleanup", "Closing telecom message...", Logging.Logging.White);
-                            Logging.Logging.Log("Cleanup",
-                                "Content of telecom window (HTML): [" + (window.Html ?? string.Empty).Replace("\n", "").Replace("\r", "") + "]",
-                                Logging.Logging.White);
+                            Logging.Logging.Log("Closing telecom message...");
+                            Logging.Logging.Log("Content of telecom window (HTML): [" + (window.Html ?? string.Empty).Replace("\n", "").Replace("\r", "") + "]");
                             window.Close();
                         }
 
@@ -433,9 +424,8 @@ namespace Questor.Modules.BackgroundTasks
 
                             if (restartHarsh)
                             {
-                                Logging.Logging.Log("Cleanup: RestartWindow", "Restarting eve...", Logging.Logging.White);
-                                Logging.Logging.Log("Cleanup: RestartWindow",
-                                    "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]", Logging.Logging.White);
+                                Logging.Logging.Log("Restarting eve...");
+                                Logging.Logging.Log("Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                 Cache.Instance.CloseQuestorCMDLogoff = false;
                                 Cache.Instance.CloseQuestorCMDExitGame = true;
                                 Cache.Instance.CloseQuestorEndProcess = true;
@@ -447,9 +437,8 @@ namespace Questor.Modules.BackgroundTasks
 
                             if (restart)
                             {
-                                Logging.Logging.Log("Cleanup", "Restarting eve...", Logging.Logging.White);
-                                Logging.Logging.Log("Cleanup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]",
-                                    Logging.Logging.White);
+                                Logging.Logging.Log("Restarting eve...");
+                                Logging.Logging.Log("Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                 Cache.Instance.CloseQuestorCMDLogoff = false;
                                 Cache.Instance.CloseQuestorCMDExitGame = true;
                                 Cache.Instance.CloseQuestorEndProcess = false;
@@ -462,27 +451,25 @@ namespace Questor.Modules.BackgroundTasks
 
                             if (sayYes)
                             {
-                                Logging.Logging.Log("Cleanup", "Found a window that needs 'yes' chosen...", Logging.Logging.White);
-                                Logging.Logging.Log("Cleanup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]",
-                                    Logging.Logging.White);
+                                Logging.Logging.Log("Found a window that needs 'yes' chosen...");
+                                Logging.Logging.Log("Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                 window.AnswerModal("Yes");
                                 continue;
                             }
 
                             if (sayOk)
                             {
-                                Logging.Logging.Log("Cleanup", "Found a window that needs 'ok' chosen...", Logging.Logging.White);
+                                Logging.Logging.Log("Found a window that needs 'ok' chosen...");
 
                                 if (window.Html == null)
                                 {
-                                    Logging.Logging.Log("Cleanup", "WINDOW HTML == NULL", Logging.Logging.White);
+                                    Logging.Logging.Log("WINDOW HTML == NULL");
                                     continue;
                                 }
                                 else
                                 {
                                     // TODO: fix check if .html is still functional
-                                    Logging.Logging.Log("Cleanup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]",
-                                        Logging.Logging.White);
+                                    Logging.Logging.Log("Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]");
 
                                     if (window.Html.Contains("Repairing these items will cost"))
                                     {
@@ -505,9 +492,8 @@ namespace Questor.Modules.BackgroundTasks
 
                             if (gotoBaseNow)
                             {
-                                Logging.Logging.Log("Cleanup", "Evidently the cluster is dieing... and CCP is restarting the server", Logging.Logging.White);
-                                Logging.Logging.Log("Cleanup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]",
-                                    Logging.Logging.White);
+                                Logging.Logging.Log("Evidently the cluster is dieing... and CCP is restarting the server");
+                                Logging.Logging.Log("Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                 Cache.Instance.GotoBaseNow = true;
                                 Settings.Instance.AutoStart = false;
 
@@ -524,24 +510,22 @@ namespace Questor.Modules.BackgroundTasks
 
                             if (pause)
                             {
-                                Logging.Logging.Log("Cleanup", "This window indicates an error fitting the ship. pausing", Logging.Logging.White);
+                                Logging.Logging.Log("This window indicates an error fitting the ship. pausing");
                                 Cache.Instance.Paused = true;
                             }
 
                             if (close)
                             {
-                                Logging.Logging.Log("Cleanup", "Closing modal window...", Logging.Logging.White);
-                                Logging.Logging.Log("Cleanup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]",
-                                    Logging.Logging.White);
+                                Logging.Logging.Log("Closing modal window...");
+                                Logging.Logging.Log("Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                 window.Close();
                                 continue;
                             }
 
                             if (clearPocket)
                             {
-                                Logging.Logging.Log("Cleanup", "Closing modal window...", Logging.Logging.White);
-                                Logging.Logging.Log("Cleanup", "Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]",
-                                    Logging.Logging.White);
+                                Logging.Logging.Log("Closing modal window...");
+                                Logging.Logging.Log("Content of modal window (HTML): [" + (window.Html).Replace("\n", "").Replace("\r", "") + "]");
                                 window.Close();
                                 //
                                 //  queue up a clearpocket action;
@@ -607,10 +591,9 @@ namespace Questor.Modules.BackgroundTasks
                             {
                                 Cache.Instance.TotalMegaBytesOfMemoryUsed = ((currentProcess.WorkingSet64/1024)/1024 + 1);
                             }
-                            Logging.Logging.Log("Questor", "EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB",
-                                Logging.Logging.White);
+                            Logging.Logging.Log("EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB");
                             var MemoryManagerCommandToRun = "dotnet m1 memmanager.exe " + Settings.Instance.MemoryManagerTrimThreshold;
-                            Logging.Logging.Log("Cleanup.CleanupTasks", "EVEMemoryManager: running [ " + MemoryManagerCommandToRun + " ]", Logging.Logging.White);
+                            Logging.Logging.Log("EVEMemoryManager: running [ " + MemoryManagerCommandToRun + " ]");
 
                             MemoryManagerHasBeenRunThisIteration = true;
                         }
@@ -632,15 +615,11 @@ namespace Questor.Modules.BackgroundTasks
                             Logging.Logging.FilterPath(Cache.Instance.DirectEve.Me.Name).ToUpperInvariant(), StringComparison.OrdinalIgnoreCase) == 1
                         )
                     {
-                        Logging.Logging.Log("Cleanup", "DebugInfo:  Settings.Instance.CharacterName [" + Settings.Instance.CharacterName + "]",
-                            Logging.Logging.White);
-                        Logging.Logging.Log("Cleanup", "DebugInfo: Cache.Instance.DirectEve.Me.Name [" + Cache.Instance.DirectEve.Me.Name + "]",
-                            Logging.Logging.White);
+                        Logging.Logging.Log("DebugInfo:  Settings.Instance.CharacterName [" + Settings.Instance.CharacterName + "]");
+                        Logging.Logging.Log("DebugInfo: Cache.Instance.DirectEve.Me.Name [" + Cache.Instance.DirectEve.Me.Name + "]");
                         ReasonToStopQuestor =
                             "CharacterName not defined! - Are we still logged in? Did we lose connection to eve? Questor should be restarting here.";
-                        Logging.Logging.Log("Cleanup",
-                            "CharacterName not defined! - Are we still logged in? Did we lose connection to eve? Questor should be restarting here.",
-                            Logging.Logging.White);
+                        Logging.Logging.Log("CharacterName not defined! - Are we still logged in? Did we lose connection to eve? Questor should be restarting here.");
                         Settings.Instance.CharacterName = "NoCharactersLoggedInAnymore";
                         Time.EnteredCloseQuestor_DateTime = DateTime.UtcNow;
                         SignalToQuitQuestorAndEVEAndRestartInAMoment = true;

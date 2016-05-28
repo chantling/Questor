@@ -227,12 +227,12 @@ namespace Questor.Modules.Caching
                     if (!_isCorpInWar)
                     {
                         if (Logging.Logging.DebugWatchForActiveWars)
-                            Logging.Logging.Log("IsCorpInWar", "Your corp is not involved in any wars (yet)", Logging.Logging.Green);
+                            Logging.Logging.Log("Your corp is not involved in any wars (yet)");
                     }
                     else
                     {
                         if (Logging.Logging.DebugWatchForActiveWars)
-                            Logging.Logging.Log("IsCorpInWar", "Your corp is involved in a war, be careful", Logging.Logging.Orange);
+                            Logging.Logging.Log("Your corp is involved in a war, be careful");
                     }
 
                     return _isCorpInWar;
@@ -266,7 +266,7 @@ namespace Questor.Modules.Caching
                         if (_currentShipsCargo == null)
                         {
                             _currentShipsCargo = Instance.DirectEve.GetShipsCargo();
-                            if (Logging.Logging.DebugCargoHold) Logging.Logging.Log("CurrentShipsCargo", "_currentShipsCargo is null", Logging.Logging.Debug);
+                            if (Logging.Logging.DebugCargoHold) Logging.Logging.Log("_currentShipsCargo is null");
                         }
 
                         if (Instance.Windows.All(i => i.Type != "form.ActiveShipCargo"))
@@ -276,16 +276,14 @@ namespace Questor.Modules.Caching
                             {
                                 Statistics.LogWindowActionToWindowLog("CargoHold", "Opening CargoHold");
                                 if (Logging.Logging.DebugCargoHold)
-                                    Logging.Logging.Log("CurrentShipsCargo", "Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenCargoHoldOfActiveShip);",
-                                        Logging.Logging.Debug);
+                                    Logging.Logging.Log("Cache.Instance.DirectEve.ExecuteCommand(DirectCmd.OpenCargoHoldOfActiveShip);");
                                 Instance.DirectEve.ExecuteCommand(DirectCmd.OpenCargoHoldOfActiveShip);
                                 Time.Instance.NextOpenCurrentShipsCargoWindowAction = DateTime.UtcNow.AddMilliseconds(1000 + Instance.RandomNumber(0, 2000));
                             }
 
                             if (Logging.Logging.DebugCargoHold)
-                                Logging.Logging.Log("CurrentShipsCargo",
-                                    "Waiting on NextOpenCurrentShipsCargoWindowAction [" +
-                                    DateTime.UtcNow.Subtract(Time.Instance.NextOpenCurrentShipsCargoWindowAction).TotalSeconds + "sec]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Waiting on NextOpenCurrentShipsCargoWindowAction [" +
+                                    DateTime.UtcNow.Subtract(Time.Instance.NextOpenCurrentShipsCargoWindowAction).TotalSeconds + "sec]");
                         }
 
                         return _currentShipsCargo;
@@ -298,14 +296,12 @@ namespace Questor.Modules.Caching
                     }
 
                     if (Logging.Logging.DebugCargoHold)
-                        Logging.Logging.Log("CurrentShipsCargo",
-                            "Cache.Instance.MyShipEntity is null: We have a total of [" + EntityCount + "] entities available at the moment.",
-                            Logging.Logging.Debug);
+                        Logging.Logging.Log("Cache.Instance.MyShipEntity is null: We have a total of [" + EntityCount + "] entities available at the moment.");
                     return null;
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("CurrentShipsCargo", "Unable to complete ReadyCargoHold [" + exception + "]", Logging.Logging.Teal);
+                    Logging.Logging.Log("Unable to complete ReadyCargoHold [" + exception + "]");
                     return null;
                 }
             }
@@ -360,7 +356,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    if (Logging.Logging.DebugExceptions) Logging.Logging.Log("Cache.WeaponRange", "exception was:" + ex.Message, Logging.Logging.Teal);
+                    if (Logging.Logging.DebugExceptions) Logging.Logging.Log("exception was:" + ex.Message);
 
                     // Return max range
                     if (Instance.ActiveShip != null)
@@ -401,7 +397,7 @@ namespace Questor.Modules.Caching
                 catch (Exception ex)
                 {
                     if (Logging.Logging.DebugExceptions)
-                        Logging.Logging.Log("Cache.myCurrentAmmoInWeapon", "exception was:" + ex.Message, Logging.Logging.Teal);
+                        Logging.Logging.Log("exception was:" + ex.Message);
                     return null;
                 }
             }
@@ -422,16 +418,16 @@ namespace Questor.Modules.Caching
                                 if (MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1)
                                 {
                                     _currentAgent = MissionSettings.ListOfAgents.FirstOrDefault().Name;
-                                    Logging.Logging.Log("Cache.CurrentAgent", "Current Agent is [" + _currentAgent + "]", Logging.Logging.Debug);
+                                    Logging.Logging.Log("Current Agent is [" + _currentAgent + "]");
                                 }
                                 else
                                 {
-                                    Logging.Logging.Log("Cache.CurrentAgent", "MissionSettings.ListOfAgents == null ", Logging.Logging.White);
+                                    Logging.Logging.Log("MissionSettings.ListOfAgents == null ");
                                 }
                             }
                             catch (Exception ex)
                             {
-                                Logging.Logging.Log("Cache.CurrentAgent", "Exception [" + ex + "]", Logging.Logging.Debug);
+                                Logging.Logging.Log("Exception [" + ex + "]");
                                 return string.Empty;
                             }
                         }
@@ -443,7 +439,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("SelectNearestAgent", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                     return "";
                 }
             }
@@ -455,7 +451,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception ex)
                 {
-                    Logging.Logging.Log("SelectNearestAgent", "Exception [" + ex + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + ex + "]");
                 }
             }
         }
@@ -475,7 +471,7 @@ namespace Questor.Modules.Caching
                                 _agent = Instance.DirectEve.GetAgentByName(CurrentAgent);
                                 if (_agent == null)
                                 {
-                                    Logging.Logging.Log("Cache: CurrentAgent", "Agent == null", Logging.Logging.White);
+                                    Logging.Logging.Log("Agent == null");
                                 }
                             }
 
@@ -486,8 +482,7 @@ namespace Questor.Modules.Caching
 
                             if (_agent != null && !CurrentAgent.Equals(_agentName))
                             {
-                                Logging.Logging.Log("Cache: CurrentAgent", "New AgentId [" + _agent.AgentId + "] AgentName [" + CurrentAgent + "]",
-                                    Logging.Logging.White);
+                                Logging.Logging.Log("New AgentId [" + _agent.AgentId + "] AgentName [" + CurrentAgent + "]");
                                 Instance.AgentStationName = Instance.DirectEve.GetLocationName(Instance._agent.StationId);
                                 Instance.AgentStationID = Instance._agent.StationId;
                                 Instance.AgentSolarSystemID = Instance._agent.SolarSystemId;
@@ -501,21 +496,20 @@ namespace Questor.Modules.Caching
                         }
                         catch (Exception ex)
                         {
-                            Logging.Logging.Log("Cache.Agent",
-                                "Unable to process agent section of [" + Logging.Logging.CharacterSettingsPath +
-                                "] make sure you have a valid agent listed! Pausing so you can fix it. [" + ex.Message + "]", Logging.Logging.Debug);
+                            Logging.Logging.Log("Unable to process agent section of [" + Logging.Logging.CharacterSettingsPath +
+                                "] make sure you have a valid agent listed! Pausing so you can fix it. [" + ex.Message + "]");
                             Instance.Paused = true;
                         }
                     }
                     else
                     {
-                        Logging.Logging.Log("Cache.Agent", "if (!Settings.Instance.CharacterXMLExists)", Logging.Logging.Debug);
+                        Logging.Logging.Log("if (!Settings.Instance.CharacterXMLExists)");
                     }
                     return null;
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.Agent", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -537,7 +531,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.Modules", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -558,7 +552,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.Modules", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                     return null;
                 }
             }
@@ -638,7 +632,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log("Cache.Windows", "Exception [" + exception + "]", Logging.Logging.Debug);
+                    Logging.Logging.Log("Exception [" + exception + "]");
                 }
 
                 return null;
@@ -714,7 +708,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.InvalidateCache", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
             }
         }
 
@@ -727,22 +721,22 @@ namespace Questor.Modules.Caching
                 {
                     try
                     {
-                        Logging.Logging.Log("Startup", "Starting Instance of DirectEVE using StandaloneFramework", Logging.Logging.Debug);
+                        Logging.Logging.Log("Starting Instance of DirectEVE using StandaloneFramework");
                         Instance.DirectEve = new DirectEve.DirectEve(new StandaloneFramework(version));
                         TryLoadingDirectVE++;
-                        Logging.Logging.Log("Startup", "DirectEVE should now be active: see above for any messages from DirectEVE", Logging.Logging.Debug);
+                        Logging.Logging.Log("DirectEVE should now be active: see above for any messages from DirectEVE");
                         return true;
                     }
                     catch (Exception exception)
                     {
-                        Logging.Logging.Log("Startup", "exception [" + exception + "]", Logging.Logging.Orange);
+                        Logging.Logging.Log("exception [" + exception + "]");
                         continue;
                     }
                 }
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Startup", "exception [" + exception + "]", Logging.Logging.Orange);
+                Logging.Logging.Log("exception [" + exception + "]");
                 return false;
             }
 
@@ -750,7 +744,7 @@ namespace Questor.Modules.Caching
             {
                 try
                 {
-                    Logging.Logging.Log("Startup", "Error on Loading DirectEve, maybe server is down", Logging.Logging.Orange);
+                    Logging.Logging.Log("Error on Loading DirectEve, maybe server is down");
                     Instance.CloseQuestorCMDLogoff = false;
                     Instance.CloseQuestorCMDExitGame = true;
                     Instance.CloseQuestorEndProcess = true;
@@ -799,23 +793,20 @@ namespace Questor.Modules.Caching
 
                     if (alliance.Min() <= stand || corporation.Min() <= stand || personal.Min() <= stand)
                     {
-                        Logging.Logging.Log("Cache.LocalSafe",
-                            "Bad Standing Pilot Detected: [ " + localMember.Name + "] " + " [ " + number + " ] so far... of [ " + maxBad + " ] allowed",
-                            Logging.Logging.Orange);
+                        Logging.Logging.Log("Bad Standing Pilot Detected: [ " + localMember.Name + "] " + " [ " + number + " ] so far... of [ " + maxBad + " ] allowed");
                         number++;
                     }
 
                     if (number > maxBad)
                     {
-                        Logging.Logging.Log("Cache.LocalSafe", "[" + number + "] Bad Standing pilots in local, We should stay in station",
-                            Logging.Logging.Orange);
+                        Logging.Logging.Log("[" + number + "] Bad Standing pilots in local, We should stay in station");
                         return false;
                     }
                 }
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("LocalSafe", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
             }
 
             return true;
@@ -843,7 +834,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.CheckCargoForItem", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
             }
 
             return null;
@@ -879,16 +870,15 @@ namespace Questor.Modules.Caching
                                 continue;
                             }
 
-                            Logging.Logging.Log("CheckifRouteIsAllHighSec",
-                                "Jump number [" + _system + "of" + currentPath.Count() +
-                                "] in the route came back as null, we could not get the system name or sec level", Logging.Logging.Debug);
+                            Logging.Logging.Log("Jump number [" + _system + "of" + currentPath.Count() +
+                                "] in the route came back as null, we could not get the system name or sec level");
                         }
                     }
                 }
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.CheckifRouteIsAllHighSec", "Exception [" + exception + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + exception + "]");
             }
 
 
@@ -960,7 +950,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception ex)
             {
-                Logging.Logging.Log("ClearPerPocketCache", "Exception [" + ex + "]", Logging.Logging.Debug);
+                Logging.Logging.Log("Exception [" + ex + "]");
                 return;
             }
             finally
@@ -986,13 +976,13 @@ namespace Questor.Modules.Caching
 
                 if (!File.Exists(ShipTargetValuesXmlFile))
                 {
-                    Logging.Logging.Log(module, "IterateShipTargetValues - unable to find [" + ShipTargetValuesXmlFile + "]", Logging.Logging.White);
+                    Logging.Logging.Log("IterateShipTargetValues - unable to find [" + ShipTargetValuesXmlFile + "]");
                     return;
                 }
 
                 try
                 {
-                    Logging.Logging.Log(module, "IterateShipTargetValues - Loading [" + ShipTargetValuesXmlFile + "]", Logging.Logging.White);
+                    Logging.Logging.Log("IterateShipTargetValues - Loading [" + ShipTargetValuesXmlFile + "]");
                     var values = XDocument.Load(ShipTargetValuesXmlFile);
                     if (values.Root != null)
                     {
@@ -1004,7 +994,7 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log(module, "IterateShipTargetValues - Exception: [" + exception + "]", Logging.Logging.Red);
+                    Logging.Logging.Log("IterateShipTargetValues - Exception: [" + exception + "]");
                 }
             }
         }
@@ -1020,15 +1010,13 @@ namespace Questor.Modules.Caching
 
                 if (!File.Exists(UnloadLootTheseItemsAreLootItemsXmlFile))
                 {
-                    Logging.Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - unable to find [" + UnloadLootTheseItemsAreLootItemsXmlFile + "]",
-                        Logging.Logging.White);
+                    Logging.Logging.Log("IterateUnloadLootTheseItemsAreLootItems - unable to find [" + UnloadLootTheseItemsAreLootItemsXmlFile + "]");
                     return;
                 }
 
                 try
                 {
-                    Logging.Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - Loading [" + UnloadLootTheseItemsAreLootItemsXmlFile + "]",
-                        Logging.Logging.White);
+                    Logging.Logging.Log("IterateUnloadLootTheseItemsAreLootItems - Loading [" + UnloadLootTheseItemsAreLootItemsXmlFile + "]");
                     MissionSettings.UnloadLootTheseItemsAreLootItems = XDocument.Load(UnloadLootTheseItemsAreLootItemsXmlFile);
 
                     if (MissionSettings.UnloadLootTheseItemsAreLootItems.Root != null)
@@ -1041,13 +1029,12 @@ namespace Questor.Modules.Caching
                 }
                 catch (Exception exception)
                 {
-                    Logging.Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]", Logging.Logging.Red);
+                    Logging.Logging.Log("IterateUnloadLootTheseItemsAreLootItems - Exception: [" + exception + "]");
                 }
             }
             else
             {
-                Logging.Logging.Log(module, "IterateUnloadLootTheseItemsAreLootItems - unable to find [" + Logging.Logging.PathToCurrentDirectory + "]",
-                    Logging.Logging.White);
+                Logging.Logging.Log("IterateUnloadLootTheseItemsAreLootItems - unable to find [" + Logging.Logging.PathToCurrentDirectory + "]");
             }
         }
 
@@ -1086,7 +1073,7 @@ namespace Questor.Modules.Caching
             }
             catch (Exception exception)
             {
-                Logging.Logging.Log("Cache.Instance.GetAgentMission", "DirectEve.AgentMissions failed: [" + exception + "]", Logging.Logging.Teal);
+                Logging.Logging.Log("DirectEve.AgentMissions failed: [" + exception + "]");
                 return null;
             }
         }

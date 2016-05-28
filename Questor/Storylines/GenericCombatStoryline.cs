@@ -83,7 +83,7 @@ namespace Questor.Storylines
             catch (Exception ex)
             {
                 // Something went wrong!
-                Logging.Log("GenericCombatStoryline", "Something went wrong, blacklist this agent [" + ex.Message + "]", Logging.Orange);
+                Logging.Log("Something went wrong, blacklist this agent [" + ex.Message + "]");
                 return StorylineState.BlacklistAgent;
             }
         }
@@ -119,14 +119,14 @@ namespace Questor.Storylines
                     }
                     catch (Exception ex)
                     {
-                        Logging.Log("GenericCombatStoryline.WarpOut", "Exception: " + ex, Logging.Orange);
+                        Logging.Log("Exception: " + ex);
                     }
 
                     long solarid = Cache.Instance.DirectEve.Session.SolarSystemId ?? -1;
 
                     if (warpOutBookMark == null)
                     {
-                        Logging.Log("GenericCombatStoryline.WarpOut", "No Bookmark", Logging.Orange);
+                        Logging.Log("No Bookmark");
                         _state = GenericCombatStorylineState.GotoMission;
                         break;
                     }
@@ -135,7 +135,7 @@ namespace Questor.Storylines
                     {
                         if (Traveler.Destination == null)
                         {
-                            Logging.Log("GenericCombatStoryline.WarpOut", "Warp at " + warpOutBookMark.Title, Logging.White);
+                            Logging.Log("Warp at " + warpOutBookMark.Title);
                             Traveler.Destination = new BookmarkDestination(warpOutBookMark);
                             Defense.DoNotBreakInvul = true;
                         }
@@ -143,7 +143,7 @@ namespace Questor.Storylines
                         Traveler.ProcessState();
                         if (_States.CurrentTravelerState == TravelerState.AtDestination)
                         {
-                            Logging.Log("GenericCombatStoryline.WarpOut", "Safe!", Logging.White);
+                            Logging.Log("Safe!");
                             Defense.DoNotBreakInvul = false;
                             _state = GenericCombatStorylineState.GotoMission;
                             Traveler.Destination = null;
@@ -153,7 +153,7 @@ namespace Questor.Storylines
                         break;
                     }
 
-                    Logging.Log("GenericCombatStoryline.WarpOut", "No Bookmark in System", Logging.White);
+                    Logging.Log("No Bookmark in System");
                     _state = GenericCombatStorylineState.GotoMission;
                     break;
 
@@ -171,16 +171,15 @@ namespace Questor.Storylines
                         if (Settings.Instance.EveServerName == "Tranquility") nameOfBookmark = "Encounter";
                         if (Settings.Instance.EveServerName == "Serenity") nameOfBookmark = "遭遇战";
                         if (nameOfBookmark == "") nameOfBookmark = "Encounter";
-                        Logging.Log("GenericCombatStoryline",
-                            "Setting Destination to 1st bookmark from AgentID: [" + Cache.Instance.CurrentStorylineAgentId + "] with [" + nameOfBookmark +
-                            "] in the title", Logging.White);
+                        Logging.Log("Setting Destination to 1st bookmark from AgentID: [" + Cache.Instance.CurrentStorylineAgentId + "] with [" + nameOfBookmark +
+                            "] in the title");
                         Traveler.Destination =
                             new MissionBookmarkDestination(MissionSettings.GetMissionBookmark(Cache.Instance.CurrentStorylineAgentId, nameOfBookmark));
                     }
 
                     if (Combat.PotentialCombatTargets.Any())
                     {
-                        Logging.Log("GenericCombatStoryline", "Priority targets found while traveling, engaging!", Logging.White);
+                        Logging.Log("Priority targets found while traveling, engaging!");
                         Combat.ProcessState();
                     }
 
@@ -207,9 +206,8 @@ namespace Questor.Storylines
                         // Clear looted containers
                         Cache.Instance.LootedContainers.Clear();
 
-                        Logging.Log("GenericCombatStoryline",
-                            "Out of Ammo! - Not enough [" + MissionSettings.CurrentDamageType + "] ammo in cargohold: MinimumCharges: [" +
-                            Combat.MinimumAmmoCharges + "]", Logging.Orange);
+                        Logging.Log("Out of Ammo! - Not enough [" + MissionSettings.CurrentDamageType + "] ammo in cargohold: MinimumCharges: [" +
+                            Combat.MinimumAmmoCharges + "]");
                         return StorylineState.ReturnToAgent;
                     }
 
@@ -226,7 +224,7 @@ namespace Questor.Storylines
                         // Clear looted containers
                         Cache.Instance.LootedContainers.Clear();
 
-                        Logging.Log("MissionController", "Error", Logging.Red);
+                        Logging.Log("Error");
                         return StorylineState.ReturnToAgent;
                     }
                     break;
@@ -265,7 +263,7 @@ namespace Questor.Storylines
             {
                 if (Cache.Instance.Agent.Window != null)
                     Cache.Instance.Agent.Window.Close();
-                Logging.Log("GenericCombatStoryline", "Mission offer is in a Low Security System or faction blacklisted.", Logging.Orange);
+                Logging.Log("Mission offer is in a Low Security System or faction blacklisted.");
                     //do storyline missions in lowsec get blacklisted by: "public StorylineState Arm(Storyline storyline)"?
                 throw new Exception("Low security systems");
             }
