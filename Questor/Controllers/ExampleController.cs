@@ -18,12 +18,11 @@ namespace Questor.Controllers
 	{
 		enum ExampleControllerStates { Start, Print, End }
 
-		
 		ExampleControllerStates State { get; set; }
 
 		public ExampleController()
 		{
-			Logging.Log("Starting a new DefaultController");
+			Logging.Log("Starting a new ExampleController");
 		}
 
 		public override void DoWork()

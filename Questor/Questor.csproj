@@ -251,6 +251,7 @@
     <Compile Include="Lookup\ShipTargetValue.cs" />
     <Compile Include="Lookup\Time.cs" />
     <Compile Include="Lookup\TypeID.cs" />
+    <Compile Include="QuestorControllerManager.cs" />
     <Compile Include="States\AgentInteractionState.cs" />
     <Compile Include="States\ArmState.cs" />
     <Compile Include="States\BackgrounsBehaviorState.cs" />

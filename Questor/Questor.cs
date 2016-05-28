@@ -43,35 +43,12 @@ namespace Questor
         public Questor()
         {
             _lastQuestorPulse = DateTime.UtcNow;
-
             _combatMissionsBehavior = new CombatMissionsBehavior();
             _watch = new Stopwatch();
             Time.Instance.NextStartupAction = DateTime.UtcNow;
             _States.CurrentQuestorState = QuestorState.Idle;
-
-            if (Cache.Instance.DirectEve == null)
-            {
-                Logging.Log("Error on Loading DirectEve, maybe server is down");
-                Cache.Instance.CloseQuestorCMDLogoff = false;
-                Cache.Instance.CloseQuestorCMDExitGame = true;
-                Cache.Instance.CloseQuestorEndProcess = true;
-                Settings.Instance.AutoStart = true;
-                Cleanup.ReasonToStopQuestor = "Error on Loading DirectEve, maybe server is down";
-                Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
-                Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
-                return;
-            }
-
             Time.Instance.StartTime = DateTime.UtcNow;
             Time.Instance.QuestorStarted_DateTime = DateTime.UtcNow;
-
-            // get the current process
-            var currentProcess = Process.GetCurrentProcess();
-
-            // get the physical mem usage
-            Cache.Instance.TotalMegaBytesOfMemoryUsed = ((currentProcess.WorkingSet64 + 1/1024)/1024);
-            Logging.Log("EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB");
-
             Settings.Instance.CharacterMode = "none";
 
             try
@@ -82,18 +59,9 @@ namespace Questor
             catch (Exception ex)
             {
                 Logging.Log(string.Format("DirectEVE.OnFrame: Exception {0}...", ex));
-                Cache.Instance.CloseQuestorCMDLogoff = false;
-                Cache.Instance.CloseQuestorCMDExitGame = true;
-                Cache.Instance.CloseQuestorEndProcess = true;
-                Settings.Instance.AutoStart = true;
-                Cleanup.ReasonToStopQuestor = "Error on DirectEve.OnFrame, maybe the DirectEVE license server is down";
-                Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment = true;
-                Cleanup.CloseQuestor(Cleanup.ReasonToStopQuestor);
             }
 
-
             Logging.Log("Questor.");
-
             questor = this;
         }
 
