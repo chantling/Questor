@@ -28,7 +28,7 @@ namespace Questor.Controllers
 			RandomFactor = 1;
 		}
 		
-		protected bool CanWork { get { return DateTime.UtcNow > LocalPulse } }
+		protected bool CanWork { get { return DateTime.UtcNow > LocalPulse; } }
 
 		public abstract void DoWork();
 
