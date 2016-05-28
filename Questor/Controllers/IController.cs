@@ -15,7 +15,7 @@ namespace Questor.Controllers
 	/// <summary>
 	/// Description of IController.
 	/// </summary>
-  public interface IController
+	public interface IController : IDisposable
     {
         bool IsWorkDone { get; set; }
         void DoWork();

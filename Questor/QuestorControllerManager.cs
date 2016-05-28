@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using Questor.Controllers;
 using Questor;
 using Questor.Modules.Caching;
+using Questor.Modules.Logging;
 
 namespace Questor
 {
@@ -53,6 +54,10 @@ namespace Questor
 			RemovedFinishedControllers();
 		}
 		
+		public void AddController(IController controller)
+		{
+			ControllerList.Add(controller);
+		}
 		
 		public void RemoveAllControllers() {
 			ControllerList.RemoveWhere(s => s != null);

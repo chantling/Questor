@@ -736,7 +736,7 @@ namespace Questor
         {
             Logging.OnMessage -= AddLogInvoker;
             Cache.Instance.Paused = true;
-            Cache.Instance.DirectEve.OnFrame -= Questor.questor.EVEOnFrame;
+//            Cache.Instance.DirectEve.OnFrame -= Questor.questor.EVEOnFrame;
         }
     }
 }

@@ -6,88 +6,77 @@ using Questor.Modules.BackgroundTasks;
 using Questor.Modules.Caching;
 using Questor.Modules.Logging;
 using Questor.Modules.Lookup;
+using Questor.Controllers;
 
 namespace Questor
 {
-    public static class BeforeLogin
-    {
-        private static Questor _questor;
-        private static DateTime _lastServerStatusCheckWasNotOK = DateTime.MinValue;
+	public static class Program
+	{
+		public  static QuestorUI QuestorUIInstance { get; set; }
+		public static QuestorControllerManager QuestorControllerManagerInstance { get; set; }
 
-        public static QuestorUI questorUI { get; set; }
+		public static void Main(string[] args)
+		{
+			Logging.Log("Args:");
+			foreach (var s in args)
+			{
+				Logging.Log(s);
+			}
+			
+			Cache.Instance.CharName = args[0];
+			Cache.Instance.PipeName = args[1];
 
-        public static void Main(string[] args)
-        {
-            Logging.Log("Args:");
-            foreach (var s in args)
-            {
-                Logging.Log(s);
-            }
+			Cache.Instance.WCFClient.pipeName = Cache.Instance.PipeName;
+			Cache.Instance.WCFClient.GetPipeProxy.Ping();
 
-            if (args.Length != 2)
-            {
-                Environment.Exit(0);
-                Environment.FailFast("");
-            }
+			if (Cache.Instance.EveAccount == null || args.Length != 2)
+			{
+				Environment.Exit(0);
+				Environment.FailFast("");
+			}
 
-            Cache.Instance.CharName = args[0];
-            Cache.Instance.PipeName = args[1];
+			Logging.EVELoginUserName = Cache.Instance.EveAccount.AccountName;
+			Logging.EVELoginPassword = Cache.Instance.EveAccount.Password;
+			Logging.MyCharacterName = Cache.Instance.EveAccount.CharacterName;
 
-            Cache.Instance.WCFClient.pipeName = Cache.Instance.PipeName;
-            Cache.Instance.WCFClient.GetPipeProxy.Ping();
+			Cache.D3DVersion = Cache.Instance.EveAccount.DX11 ? D3DVersion.Direct3D11 : D3DVersion.Direct3D9;
 
-            if (Cache.Instance.EveAccount == null)
-            {
-                Environment.Exit(0);
-                Environment.FailFast("");
-            }
+			if (string.IsNullOrEmpty(Logging.EVELoginUserName) || string.IsNullOrEmpty(Logging.EVELoginPassword) ||
+			    string.IsNullOrEmpty(Logging.MyCharacterName))
+			{
+				return;
+			}
 
-            Logging.EVELoginUserName = Cache.Instance.EveAccount.AccountName;
-            Logging.EVELoginPassword = Cache.Instance.EveAccount.Password;
-            Logging.MyCharacterName = Cache.Instance.EveAccount.CharacterName;
+			Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;
 
-            Cache.D3DVersion = Cache.Instance.EveAccount.DX11 ? D3DVersion.Direct3D11 : D3DVersion.Direct3D9;
+			try
+			{
+				Logging.Log("Launching QuestorControllerManager");
+				
+				QuestorControllerManagerInstance = new QuestorControllerManager();
+				QuestorControllerManagerInstance.AddController(new QuestorController());
 
-            if (string.IsNullOrEmpty(Logging.EVELoginUserName) || string.IsNullOrEmpty(Logging.EVELoginPassword) ||
-                string.IsNullOrEmpty(Logging.MyCharacterName))
-            {
-                return;
-            }
-
-            Logging.Log("Loading DirectEve with " + Cache.D3DVersion);
-            if (!Cache.LoadDirectEVEInstance(Cache.D3DVersion)) return;
-
-            Time.Instance.LoginStarted_DateTime = DateTime.UtcNow;
-
-            try
-            {
-                questorUI = new QuestorUI();
-                //questorUI.Visible = (Cache.Instance.WCFClient.GetPipeProxy.IsMainFormMinimized() && Cache.Instance.WCFClient.GetPipeProxy.GetEVESettings().ToggleHideShowOnMinimize) || Cache.Instance.WCFClient.GetPipeProxy.GetEveAccount(Cache.Instance.EveAccount.CharacterName).Hidden;
-
-                Logging.Log("Launching Questor");
-                _questor = new Questor();
+				QuestorUIInstance = new QuestorUI();
+				Logging.Log("Launching QuestorControllerUI");
+				Application.Run(QuestorUIInstance);
 
 
-                Logging.Log("Launching QuestorUI");
-                Application.Run(questorUI);
+				while (!Cleanup.SignalToQuitQuestor)
+				{
+					Thread.Sleep(50);
+				}
 
-
-                while (!Cleanup.SignalToQuitQuestor)
-                {
-                    Thread.Sleep(50);
-                }
-
-                Logging.Log("Exiting Questor");
-            }
-            catch (Exception ex)
-            {
-                Logging.Log("Exception [" + ex + "]");
-            }
-            finally
-            {
-                Cleanup.DirecteveDispose();
-                AppDomain.Unload(AppDomain.CurrentDomain);
-            }
-        }
-    }
+				Logging.Log("Exiting Questor");
+			}
+			catch (Exception ex)
+			{
+				Logging.Log("Exception [" + ex + "]");
+			}
+			finally
+			{
+				Cleanup.DirecteveDispose();
+				AppDomain.Unload(AppDomain.CurrentDomain);
+			}
+		}
+	}
 }

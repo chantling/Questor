@@ -279,7 +279,7 @@ namespace Questor.Behaviors
             if (Logging.DebugAutoStart)
                 Logging.Log("DebugIdle: Autostart is currently [" + Settings.Instance.AutoStart + "]");
             Time.Instance.LastScheduleCheck = DateTime.UtcNow;
-            Questor.TimeCheck(); //Should we close questor due to stoptime or runtime?
+//            Questor.TimeCheck(); //Should we close questor due to stoptime or runtime?
 
             //Questor.WalletCheck(); //Should we close questor due to no wallet balance change? (stuck?)
         }

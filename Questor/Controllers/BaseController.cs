@@ -61,5 +61,33 @@ namespace Questor.Controllers
 		internal int HighRandom {
 			get { return GetRandom(5000,10000)*RandomFactor; }
 		}
+		
+		#region IDisposable implementation
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private bool m_Disposed = false;
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!m_Disposed)
+			{
+				if (disposing)
+				{
+				}
+				m_Disposed = true;
+			}
+		}
+
+		~BaseController()
+		{
+			Dispose(false);
+		}
+
+		#endregion
 	}
 }
