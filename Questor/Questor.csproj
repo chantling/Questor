@@ -134,6 +134,8 @@
     <Compile Include="Caching\ModuleCache.cs" />
     <Compile Include="Combat\Combat.cs" />
     <Compile Include="Combat\Drones.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\IController.cs" />
     <Compile Include="DirectEve\D3DDetour\D3D11.cs" />
     <Compile Include="DirectEve\D3DDetour\D3D9.cs" />
     <Compile Include="DirectEve\D3DDetour\D3DHook.cs" />
@@ -380,6 +382,7 @@
     <Folder Include="DirectEve\PythonBrowser" />
     <Folder Include="Modules\QuestorManager\Debugging" />
     <Folder Include="DirectEve" />
+    <Folder Include="Controllers" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
