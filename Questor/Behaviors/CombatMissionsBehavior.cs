@@ -1795,7 +1795,7 @@ namespace Questor.Behaviors
 						{
 							Logging.Log("CombatMissionsBehavior.Storyline", "We have completed the storyline, returning to base", Logging.White);
 							
-							Cache.Instance.CurrentAgent = Cache.Instance.SelectFirstAgent();
+							Cache.Instance.CurrentAgent = null; // just set it to null. the default agent will be then retrieved again by settings.xml
 							DirectAgent a = Cache.Instance.Agent;
 							
 							if(a != null) {

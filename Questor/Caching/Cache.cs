@@ -583,7 +583,7 @@ namespace Questor.Modules.Caching
 								
 								if(MissionSettings.ListOfAgents != null && MissionSettings.ListOfAgents.Count() >= 1) {
 									
-									_currentAgent = SelectFirstAgent(true);
+									_currentAgent = MissionSettings.ListOfAgents.FirstOrDefault().Name;
 									Logging.Log("Cache.CurrentAgent", "Current Agent is [" + _currentAgent + "]", Logging.Debug);
 									
 								} else
@@ -622,30 +622,6 @@ namespace Questor.Modules.Caching
 				}
 			}
 		}
-		
-		public string SelectFirstAgent(bool returnFirstOneIfNoneFound = false)
-		{
-			try
-			{
-				
-				if (!MissionSettings.ListOfAgents.Any()) return string.Empty;
-				AgentsList FirstAgent = MissionSettings.ListOfAgents.FirstOrDefault();
-
-				if (FirstAgent != null)
-				{
-					return FirstAgent.Name;
-				}
-
-				Logging.Log("SelectFirstAgent", "Unable to find the first agent, are your agents configured?", Logging.Debug);
-				return null;
-			}
-			catch (Exception exception)
-			{
-				Logging.Log("Cache.SelectFirstAgent", "Exception [" + exception + "]", Logging.Debug);
-				return null;
-			}
-		}
-
 		
 		// save the last used agentname/id to be able to retrieve the current agent by id
 		private static String _agentName = String.Empty;

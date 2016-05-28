@@ -22,8 +22,6 @@ namespace Questor.Modules.BackgroundTasks
 		private static bool MemoryManagerHasBeenRunThisIteration;
 		private static DateTime CloseQuestorDelay { get; set; }
 
-//		private static bool _closeQuestor10SecWarningDone;
-//		private static bool _closeQuestorCMDUplink = true;
 		public static bool CloseQuestorFlag = true;
 		private static bool FoundDuelInvitation;
 		private static DateTime FoundDuelInvitationTime = DateTime.UtcNow.AddDays(-1);
@@ -50,14 +48,8 @@ namespace Questor.Modules.BackgroundTasks
 
 		public static bool CloseQuestor(string Reason, bool restart = false)
 		{
-			// 30 seconds + 1 to 60 seconds + 1 to 60 seconds before restarting (this should make each instance a bit more spread out over 2 min)
-			int secRestart = Cache.Instance.RandomNumber(Time.Instance.ReLogDelayMinimum_seconds * 10, Time.Instance.ReLogDelayMaximum_seconds * 10);
-
-			// so that IF we changed the state we would not be caught in a loop of re-entering QuestorState.CloseQuestor
-			// keep in mind that CloseQuestor() itself DOES need to run multiple times across multiple iterations
-			// (roughly 20x before the timer expires and we actually close questor)
-			SessionState = "Quitting!!";
-			
+		
+			SessionState = "Quitting!!";	
 			if (!Cache.Instance.CloseQuestorCMDLogoff && !Cache.Instance.CloseQuestorCMDExitGame)
 			{
 				Cache.Instance.CloseQuestorCMDExitGame = true;
@@ -70,8 +62,6 @@ namespace Questor.Modules.BackgroundTasks
 			Process.GetCurrentProcess().Kill();
 			Environment.Exit(0);
 			Environment.FailFast("exit");
-			
-			
 			
 			return false;
 		}

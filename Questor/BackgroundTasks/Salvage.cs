@@ -186,7 +186,7 @@ namespace Questor.Modules.BackgroundTasks
 			{
 				if (Time.Instance.NextApproachAction < DateTime.UtcNow)
 				{
-					if (Cache.Instance.MyShipEntity.Velocity != 0 && DateTime.UtcNow > Time.Instance.NextApproachAction)
+					if (Cache.Instance.MyShipEntity.Velocity > 1 && DateTime.UtcNow > Time.Instance.NextApproachAction)
 					{
 						NavigateOnGrid.StopMyShip();
 						Logging.Log("Salvage.NavigateIntorangeOfWrecks", "Stop ship, ClosestWreck [" + Logging.Yellow + Math.Round(closestWreck.Distance, 0) + Logging.White + "m] is within scooprange [" + (int)Distances.SafeScoopRange + "m] and we were approaching", Logging.White);
