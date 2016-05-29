@@ -625,12 +625,8 @@ namespace Questor.Modules.Caching
                     if (Instance.InSpace && DateTime.UtcNow > Time.Instance.LastInStation.AddSeconds(20) ||
                         (Instance.InStation && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(20)))
                     {
-                		if(_windows == null && DirectEve.Windows != null && DirectEve.Windows.Count > 0) {
-                		
-                			_windows = DirectEve.Windows;
-                			return _windows;
+                        return _windows ?? (_windows = DirectEve.Windows);
                     }
-                	}
 
                     return new List<DirectWindow>();
                 }
