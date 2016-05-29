@@ -224,11 +224,7 @@ namespace Questor.Controllers
 					return false;
 				}
 
-				if (Logging.DebugQuestorEVEOnFrame)
-					Logging.Log("Cleanup.ProcessState();");
 				Cleanup.ProcessState();
-				if (Logging.DebugQuestorEVEOnFrame)
-					Logging.Log("Statistics.ProcessState();");
 				Statistics.ProcessState();
 
 				if (Cache.Instance.DirectEve.Session.IsReady)
@@ -268,6 +264,24 @@ namespace Questor.Controllers
 						(int) DateTime.UtcNow.Subtract(Time.Instance.QuestorStarted_DateTime).TotalMinutes;
 					Time.Instance.LastUpdateOfSessionRunningTime = DateTime.UtcNow;
 				}
+				
+				if (Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
+				{
+					if (_States.CurrentQuestorState != QuestorState.CloseQuestor)
+					{
+						_States.CurrentQuestorState = QuestorState.CloseQuestor;
+						Cleanup.BeginClosingQuestor();
+					}
+				}
+
+				// When in warp there's nothing we can do, so ignore everything
+				if (Cache.Instance.InSpace && Cache.Instance.InWarp)
+				{
+					if (Logging.DebugQuestorEVEOnFrame)
+						Logging.Log("if (Cache.Instance.InSpace && Cache.Instance.InWarp)");
+					return false;
+				}
+
 
 				return true;
 			}
@@ -327,9 +341,7 @@ namespace Questor.Controllers
 					return;
 				}
 
-
-				if (!Cache.Instance.DirectEve.Session.IsReady && !Cache.Instance.DirectEve.Login.AtLogin &&
-				    !Cache.Instance.DirectEve.Login.AtCharacterSelection)
+				if (!Cache.Instance.DirectEve.Session.IsReady)
 				{
 					_lastSessionNotReady = UTCNowAddDelay(7, 8);
 					return;
@@ -337,16 +349,6 @@ namespace Questor.Controllers
 
 				Cache.Instance.WCFClient.GetPipeProxy.SetEveAccountAttributeValue(Cache.Instance.CharName,
 				                                                                  "LastQuestorSessionReady", DateTime.UtcNow);
-
-
-				if (Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
-				{
-					if (_States.CurrentQuestorState != QuestorState.CloseQuestor)
-					{
-						_States.CurrentQuestorState = QuestorState.CloseQuestor;
-						Cleanup.BeginClosingQuestor();
-					}
-				}
 
 				if (Cache.Instance.InSpace) pulseDelay = Time.Instance.QuestorPulseInSpace_milliseconds;
 				if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
@@ -356,34 +358,6 @@ namespace Questor.Controllers
 				RunOnceAfterStartup();
 
 				Defense.ProcessState();
-
-				if (Cache.Instance.Paused)
-				{
-					if (Logging.DebugQuestorEVEOnFrame)
-						Logging.Log("if (Cache.Instance.Paused)");
-					Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-					Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
-					Cache.Instance.GotoBaseNow = false;
-					Cleanup.SessionState = string.Empty;
-					return;
-				}
-
-				if (Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
-				{
-					if (_States.CurrentQuestorState != QuestorState.CloseQuestor)
-					{
-						_States.CurrentQuestorState = QuestorState.CloseQuestor;
-						Cleanup.BeginClosingQuestor();
-					}
-				}
-
-				// When in warp there's nothing we can do, so ignore everything
-				if (Cache.Instance.InSpace && Cache.Instance.InWarp)
-				{
-					if (Logging.DebugQuestorEVEOnFrame)
-						Logging.Log("if (Cache.Instance.InSpace && Cache.Instance.InWarp)");
-					return;
-				}
 
 				switch (_States.CurrentQuestorState)
 				{

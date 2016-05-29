@@ -61,6 +61,9 @@ namespace Questor
 				Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
 				NavigateOnGrid.AvoidBumpingThingsTimeStamp = DateTime.UtcNow;
 				Cache.Instance.CanSafelyCloseQuestorWindow = true;
+				Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
+				Cache.Instance.MyWalletBalance = Cache.Instance.DirectEve.Me.Wealth;
+				Cache.Instance.GotoBaseNow = false;
 				return;
 			}
 
