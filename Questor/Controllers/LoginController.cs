@@ -362,8 +362,10 @@ namespace Questor.Controllers
 					{
 						
 						
-						
 						Logging.Log("SubEnd: " + Cache.Instance.DirectEve.Me.SubTimeEnd.ToString());
+						
+						Cache.Instance.WCFClient.GetPipeProxy.SetEveAccountAttributeValue(Cache.Instance.CharName,
+				                                                                  "SubEnd", Cache.Instance.DirectEve.Me.SubTimeEnd);
 						
 						
 						foreach (var slot in Cache.Instance.DirectEve.Login.CharacterSlots)
