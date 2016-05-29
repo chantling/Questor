@@ -23,25 +23,19 @@ namespace Questor.Controllers
 {
 	public class QuestorController : BaseController, IDisposable
 	{
-		private static DateTime _nextPulse = DateTime.MinValue;
-		private static DateTime _lastServerStatusCheckWasNotOK = DateTime.MinValue;
-		private static DateTime _lastSessionNotReady = DateTime.MinValue;
-		private static Random _random = new Random();
+		private static DateTime LastSessionNotReady { get; set; }
 
-		private readonly CombatMissionsBehavior _combatMissionsBehavior;
-		private readonly Stopwatch _watch;
+		private CombatMissionsBehavior CombatMissionsBehaviorInstance { get; set; }
+		private Stopwatch Watch { get; set; }
 
-		private DateTime _lastQuestorPulse;
-
-		private bool _runOnceAfterStartupalreadyProcessed;
-
-		private int pulseDelay = 800;
+		private DateTime LastQuestorPulse { get; set; }
+		private bool RunOnceAfterStartupalreadyProcessed { get; set; }
 
 		public QuestorController()
 		{
-			_lastQuestorPulse = DateTime.UtcNow;
-			_combatMissionsBehavior = new CombatMissionsBehavior();
-			_watch = new Stopwatch();
+			LastQuestorPulse = DateTime.UtcNow;
+			CombatMissionsBehaviorInstance = new CombatMissionsBehavior();
+			Watch = new Stopwatch();
 			Time.Instance.NextStartupAction = DateTime.UtcNow;
 			_States.CurrentQuestorState = QuestorState.Idle;
 			Time.Instance.StartTime = DateTime.UtcNow;
@@ -51,13 +45,13 @@ namespace Questor.Controllers
 
 		public void RunOnceAfterStartup()
 		{
-			if (!_runOnceAfterStartupalreadyProcessed &&
+			if (!RunOnceAfterStartupalreadyProcessed &&
 			    DateTime.UtcNow > Time.Instance.QuestorStarted_DateTime.AddSeconds(15) &&
 			    Cache.Instance.DirectEve.Session.CharacterId != null && Cache.Instance.DirectEve.Session.CharacterId > 0)
 			{
 				if (Settings.Instance.CharacterXMLExists && DateTime.UtcNow > Time.Instance.NextStartupAction)
 				{
-					_runOnceAfterStartupalreadyProcessed = true;
+					RunOnceAfterStartupalreadyProcessed = true;
 
 					Cache.Instance.IterateShipTargetValues("RunOnceAfterStartup");
 					// populates ship target values from an XML
@@ -71,7 +65,7 @@ namespace Questor.Controllers
 				{
 					Logging.Log("Settings.Instance.CharacterName is still null");
 					Time.Instance.NextStartupAction = DateTime.UtcNow.AddSeconds(10);
-					_runOnceAfterStartupalreadyProcessed = false;
+					RunOnceAfterStartupalreadyProcessed = false;
 					return;
 				}
 			}
@@ -79,15 +73,15 @@ namespace Questor.Controllers
 
 		public void DebugPerformanceClearandStartTimer()
 		{
-			_watch.Reset();
-			_watch.Start();
+			Watch.Reset();
+			Watch.Start();
 		}
 
 		public void DebugPerformanceStopandDisplayTimer(string whatWeAreTiming)
 		{
-			_watch.Stop();
+			Watch.Stop();
 			if (Logging.DebugPerformance)
-				Logging.Log(" took " + _watch.ElapsedMilliseconds + "ms");
+				Logging.Log(" took " + Watch.ElapsedMilliseconds + "ms");
 		}
 
 		protected DateTime UTCNowAddDelay(int minDelayInSeconds, int maxDelayInSeconds)
@@ -120,23 +114,13 @@ namespace Questor.Controllers
 		public static void WalletCheck()
 		{
 			Time.Instance.LastWalletCheck = DateTime.UtcNow;
-
-			//Logging.Log("[Questor] Wallet Balance Debug Info: LastKnownGoodConnectedTime = " + Settings.Instance.lastKnownGoodConnectedTime);
-			//Logging.Log("[Questor] Wallet Balance Debug Info: DateTime.UtcNow - LastKnownGoodConnectedTime = " + DateTime.UtcNow.Subtract(Settings.Instance.LastKnownGoodConnectedTime).TotalSeconds);
+			
 			if (Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes) > 1)
 			{
 				Logging.Log(String.Format("Wallet Balance Has Not Changed in [ {0} ] minutes.",
 				                          Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes, 0)));
 			}
 
-			if (Logging.DebugWalletBalance)
-			{
-				Logging.Log(String.Format("DEBUG: Wallet Balance [ {0} ] has been checked.",
-				                          Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes, 0)));
-			}
-
-			//Settings.Instance.WalletBalanceChangeLogOffDelay = 2;  //used for debugging purposes
-			//Logging.Log("Time.Instance.lastKnownGoodConnectedTime is currently: " + Time.Instance.LastKnownGoodConnectedTime);
 			if (Math.Round(DateTime.UtcNow.Subtract(Time.Instance.LastKnownGoodConnectedTime).TotalMinutes) <
 			    Settings.Instance.WalletBalanceChangeLogOffDelay)
 			{
@@ -172,10 +156,7 @@ namespace Questor.Controllers
 					return;
 				}
 
-				//
-				// it is assumed if you got this far that you are in space. If you are 'stuck' in a session change then you'll be stuck another 5 min until the timeout above.
-				//
-				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase;
+				_States.CurrentCombatMissionBehaviorState = CombatMissionsBehaviorState.GotoBase; // it is assumed if you got this far that you are in space. If you are 'stuck' in a session change then you'll be stuck another 5 min until the timeout above.
 
 				return;
 			}
@@ -185,8 +166,7 @@ namespace Questor.Controllers
 		{
 			try
 			{
-				// New frame, invalidate old cache
-				Cache.Instance.InvalidateCache();
+				Cache.Instance.InvalidateCache(); // New frame, invalidate old cache
 
 				if (DateTime.UtcNow <
 				    Time.Instance.QuestorStarted_DateTime.AddSeconds(Cache.Instance.RandomNumber(1, 4)))
@@ -198,8 +178,7 @@ namespace Questor.Controllers
 
 				if (!Cleanup.SignalToQuitQuestorAndEVEAndRestartInAMoment)
 				{
-					// Update settings (settings only load if character name changed)
-					if (!Settings.Instance.DefaultSettingsLoaded)
+					if (!Settings.Instance.DefaultSettingsLoaded) // Update settings (settings only load if character name changed)
 					{
 						Settings.Instance.LoadSettings();
 						return false;
@@ -217,8 +196,7 @@ namespace Questor.Controllers
 					Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
 				}
 
-				// Session is not ready yet, do not continue
-				if (!Cache.Instance.DirectEve.Session.IsReady)
+				if (!Cache.Instance.DirectEve.Session.IsReady) // Session is not ready yet, do not continue
 				{
 					Logging.Log("if (!Cache.Instance.DirectEve.Session.IsReady)");
 					return false;
@@ -246,9 +224,9 @@ namespace Questor.Controllers
 					return false;
 				}
 
-				// Check 3D rendering
+				
 				if (Cache.Instance.DirectEve.Session.IsInSpace &&
-				    Cache.Instance.DirectEve.Rendering3D != !Settings.Instance.Disable3D)
+				    Cache.Instance.DirectEve.Rendering3D != !Settings.Instance.Disable3D) // Check 3D rendering
 				{
 					Cache.Instance.DirectEve.Rendering3D = !Settings.Instance.Disable3D;
 				}
@@ -274,8 +252,8 @@ namespace Questor.Controllers
 					}
 				}
 
-				// When in warp there's nothing we can do, so ignore everything
-				if (Cache.Instance.InSpace && Cache.Instance.InWarp)
+				
+				if (Cache.Instance.InSpace && Cache.Instance.InWarp) // When in warp there's nothing we can do, so ignore everything
 				{
 					if (Logging.DebugQuestorEVEOnFrame)
 						Logging.Log("if (Cache.Instance.InSpace && Cache.Instance.InWarp)");
@@ -305,7 +283,7 @@ namespace Questor.Controllers
 		{
 			try
 			{
-				if (_nextPulse > DateTime.UtcNow)
+				if (LocalPulse > DateTime.UtcNow)
 				{
 					return;
 				}
@@ -316,42 +294,30 @@ namespace Questor.Controllers
 
 				if (!Program.QuestorUIInstance.tabControlMain.SelectedTab.Text.ToLower().Equals("questor"))
 				{
-					_nextPulse = DateTime.UtcNow.AddSeconds(2);
+					LocalPulse = DateTime.UtcNow.AddSeconds(2);
 					return;
 				}
 
 				if (DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(5))
 				{
-					// temorarily fix
-					//Logging.Log("LoginOnFrame", "if(DateTime.UtcNow < Time.Instance.LastDockAction.AddSeconds(8)", Logging.White);
-					_nextPulse = UTCNowAddDelay(1, 1);
+					LocalPulse = UTCNowAddDelay(1, 1);
 					return;
 				}
 
-				if (DateTime.UtcNow.Subtract(_lastQuestorPulse).TotalMilliseconds < pulseDelay)
+				if (DateTime.UtcNow < LastSessionNotReady)
 				{
-					return;
-				}
-				_lastQuestorPulse = DateTime.UtcNow;
-
-				if (DateTime.UtcNow < _lastSessionNotReady)
-				{
-					_nextPulse = UTCNowAddDelay(1, 2);
-					//Logging.Log("Questor.ProcessState", "if(GetNowAddDelay(8,10) > _lastSessionNotReady)", Logging.White);
+					LocalPulse = UTCNowAddDelay(1, 2);
 					return;
 				}
 
 				if (!Cache.Instance.DirectEve.Session.IsReady)
 				{
-					_lastSessionNotReady = UTCNowAddDelay(7, 8);
+					LastSessionNotReady = UTCNowAddDelay(7, 8);
 					return;
 				}
 
 				Cache.Instance.WCFClient.GetPipeProxy.SetEveAccountAttributeValue(Cache.Instance.CharName,
 				                                                                  "LastQuestorSessionReady", DateTime.UtcNow);
-
-				if (Cache.Instance.InSpace) pulseDelay = Time.Instance.QuestorPulseInSpace_milliseconds;
-				if (Cache.Instance.InStation) pulseDelay = Time.Instance.QuestorPulseInStation_milliseconds;
 
 				if (!OnframeProcessEveryPulse()) return;
 
@@ -362,7 +328,7 @@ namespace Questor.Controllers
 				switch (_States.CurrentQuestorState)
 				{
 					case QuestorState.Idle:
-						if (TimeCheck()) return; //Should we close questor due to stoptime or runtime?
+						if (TimeCheck()) return;
 
 						if (Cache.Instance.StopBot)
 						{
@@ -384,7 +350,7 @@ namespace Questor.Controllers
 
 					case QuestorState.CombatMissionsBehavior:
 
-						_combatMissionsBehavior.ProcessState();
+						CombatMissionsBehaviorInstance.ProcessState();
 						break;
 
 

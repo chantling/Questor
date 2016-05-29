@@ -14,7 +14,6 @@ namespace Questor.Modules.BackgroundTasks
         private static DateTime _lastCleanupAction;
         private static DateTime _lastCleanupProcessState;
         private static int _droneBayClosingAttempts;
-        private static bool MemoryManagerHasBeenRunThisIteration;
 
         public static bool CloseQuestorFlag = true;
         private static bool FoundDuelInvitation;
@@ -579,33 +578,6 @@ namespace Questor.Modules.BackgroundTasks
                     break;
 
                 case CleanupState.CleanupTasks:
-                    if (Settings.Instance.EVEMemoryManager) //https://github.com/VendanAndrews/EveMemManager
-                    {
-                        if (!MemoryManagerHasBeenRunThisIteration && Cache.Instance.InStation && DateTime.UtcNow > Time.Instance.LastInSpace.AddSeconds(20))
-                        {
-                            // get the current process
-                            var currentProcess = Process.GetCurrentProcess();
-
-                            // get the physical mem usage (this only runs between missions)
-                            if (currentProcess.WorkingSet64 != 0)
-                            {
-                                Cache.Instance.TotalMegaBytesOfMemoryUsed = ((currentProcess.WorkingSet64/1024)/1024 + 1);
-                            }
-                            Logging.Logging.Log("EVE instance: totalMegaBytesOfMemoryUsed - " + Cache.Instance.TotalMegaBytesOfMemoryUsed + " MB");
-                            var MemoryManagerCommandToRun = "dotnet m1 memmanager.exe " + Settings.Instance.MemoryManagerTrimThreshold;
-                            Logging.Logging.Log("EVEMemoryManager: running [ " + MemoryManagerCommandToRun + " ]");
-
-                            MemoryManagerHasBeenRunThisIteration = true;
-                        }
-
-                        if (MemoryManagerHasBeenRunThisIteration && Cache.Instance.InSpace && DateTime.UtcNow > Time.Instance.LastInStation.AddSeconds(300))
-                        {
-                            //
-                            // reset the flag so that MemManager.exe will run again when we are next in station.
-                            //
-                            MemoryManagerHasBeenRunThisIteration = false;
-                        }
-                    }
 
                     if (DateTime.UtcNow > Time.Instance.LastSessionChange.AddSeconds(30) && (
                         _States.CurrentQuestorState == QuestorState.CombatMissionsBehavior ||
