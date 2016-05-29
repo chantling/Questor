@@ -143,7 +143,9 @@ namespace QuestorManager
                 {
                     return;
                 }
-
+                
+                Cache.Instance.WCFClient.GetPipeProxy.SetEveAccountAttributeValue(Cache.Instance.CharName,
+				                                                                  "LastQuestorSessionReady", DateTime.UtcNow);
 
                 if (!QuestorUI.tabControlMain.SelectedTab.Text.ToLower().Equals("questormanager"))
                 {

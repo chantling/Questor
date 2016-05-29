@@ -298,17 +298,6 @@ namespace Questor.Controllers
 
 				Time.Instance.LastFrame = DateTime.UtcNow;
 
-				if (Cache.Instance.Paused)
-				{
-					// Chant - 05/02/2016 - Reset our timeouts so we don't exit every time we're paused for more than a few seconds
-					Time.Instance.LastSessionIsReady = DateTime.UtcNow;
-					Time.Instance.LastFrame = DateTime.UtcNow;
-					Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
-					NavigateOnGrid.AvoidBumpingThingsTimeStamp = DateTime.UtcNow;
-					Cache.Instance.CanSafelyCloseQuestorWindow = true;
-					return;
-				}
-
 				Cache.Instance.CanSafelyCloseQuestorWindow = false;
 
 				if (!Program.QuestorUIInstance.tabControlMain.SelectedTab.Text.ToLower().Equals("questor"))

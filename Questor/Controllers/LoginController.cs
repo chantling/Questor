@@ -360,6 +360,12 @@ namespace Questor.Controllers
 					                                Time.Instance.CharacterSelectionDelayMaximum_seconds*1000) &&
 					    DateTime.UtcNow > Cache.NextSlotActivate)
 					{
+						
+						
+						
+						Logging.Log("SubEnd: " + Cache.Instance.DirectEve.Me.SubTimeEnd.ToString());
+						
+						
 						foreach (var slot in Cache.Instance.DirectEve.Login.CharacterSlots)
 						{
 							if (slot.CharId.ToString(CultureInfo.InvariantCulture) != Logging.MyCharacterName &&

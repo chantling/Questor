@@ -15,6 +15,8 @@ using Questor.Controllers;
 using Questor;
 using Questor.Modules.Caching;
 using Questor.Modules.Logging;
+using Questor.Modules.Lookup;
+using Questor.Modules.BackgroundTasks;
 
 namespace Questor
 {
@@ -48,6 +50,23 @@ namespace Questor
 			if (DateTime.UtcNow < NextPulse)
 				return;
 			
+			#region header for every controller
+			
+			
+			if (Cache.Instance.Paused)
+			{
+				// Chant - 05/02/2016 - Reset our timeouts so we don't exit every time we're paused for more than a few seconds
+				Time.Instance.LastSessionIsReady = DateTime.UtcNow;
+				Time.Instance.LastFrame = DateTime.UtcNow;
+				Time.Instance.LastKnownGoodConnectedTime = DateTime.UtcNow;
+				NavigateOnGrid.AvoidBumpingThingsTimeStamp = DateTime.UtcNow;
+				Cache.Instance.CanSafelyCloseQuestorWindow = true;
+				return;
+			}
+
+			
+			#endregion end header for every controller
+			
 			foreach(IController controller in ControllerList.Where(a => !a.IsWorkDone).ToList()){
 				
 				var deps = controller.GetControllerDependencies();
@@ -58,7 +77,7 @@ namespace Questor
 					if(deps.All( d => ControllerList.Any( c => c.GetType().Equals(d.Key)  && c.IsWorkDone == d.Value))) {
 						
 						controller.DoWork();
-					} 
+					}
 					
 				} else {
 					// no dependencies
