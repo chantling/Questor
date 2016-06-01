@@ -164,8 +164,6 @@ namespace DirectEve
                     module.Charge.PyItem = pyCharge;
                 }
 
-               
-                Console.WriteLine(module.TypeId + " " + module.TypeName);
                 modules.Add(module);
             }
 
