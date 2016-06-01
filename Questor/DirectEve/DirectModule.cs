@@ -15,6 +15,7 @@ namespace DirectEve
     using System.Linq;
     using PySharp;
 
+    
     public class DirectModule : DirectItem
     {
 
@@ -135,7 +136,7 @@ namespace DirectEve
             foreach (var pyModule in pyModules)
             {
                 var module = new DirectModule(directEve, pyModule.Value);
-                module.PyItem = pyModule.Value.Attribute("sr").Attribute("moduleInfo");
+                module.PyItem = pyModule.Value.Attribute("moduleinfo");
                 module.ItemId = pyModule.Key;
                 module.IsOnline = (bool)pyModule.Value.Attribute("online");
 //                module.IsGoingOnline = (bool)pyModule.Value.Attribute("goingOnline");
@@ -163,6 +164,8 @@ namespace DirectEve
                     module.Charge.PyItem = pyCharge;
                 }
 
+               
+                Console.WriteLine(module.TypeId + " " + module.TypeName);
                 modules.Add(module);
             }
 
@@ -177,6 +180,7 @@ namespace DirectEve
             var pyModules = builtin.Attribute("uicore").Attribute("layer").Attribute("shipui").Attribute("sr").Attribute("modules").ToDictionary<long>();
             foreach (var pyModule in pyModules)
             {
+            	
                 var itemId = pyModule.Key;
                 var effect = pyModule.Value.Attribute("def_effect");
 
