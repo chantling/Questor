@@ -272,8 +272,8 @@ namespace Questor
 		{
 			if (_States.CurrentQuestorState == QuestorState.Mining ||
 			    _States.CurrentQuestorState == QuestorState.CombatHelperBehavior ||
-			    _States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior)
-				//_States.CurrentQuestorState == QuestorState.BackgroundBehavior)
+			    _States.CurrentQuestorState == QuestorState.DedicatedBookmarkSalvagerBehavior ||
+				_States.CurrentQuestorState == QuestorState.BackgroundBehavior) //Why was this commented out?  What BackgroundBehavior should be checking for wallet change?
 			{
 				if (Logging.DebugWalletBalance) Logging.Log("Questor.WalletCheck", "QuestorState is [" + _States.CurrentQuestorState.ToString() + "] which does not use WalletCheck", Logging.White);
 				return;
