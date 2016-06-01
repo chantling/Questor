@@ -417,7 +417,7 @@ namespace Questor.Modules.Actions
 			try
 			{
                 Logging.Log("Arm.ActivateSalvageShip", "SalvageShipName: " + Settings.Instance.SalvageShipName, Logging.White);
-                if (string.IsNullOrEmpty(Settings.Instance.SalvageShipName))
+				if (string.IsNullOrEmpty(Settings.Instance.SalvageShipName))
 				{
 					Logging.Log(WeAreInThisStateForLogs(), "Could not find salvageshipName: " + Settings.Instance.SalvageShipName + " in settings!", Logging.Orange);
 					ChangeArmState(ArmState.NotEnoughAmmo);
@@ -489,6 +489,7 @@ namespace Questor.Modules.Actions
 						return true;
 					}
 
+                    switchingShips = false;
 					_lastArmAction = DateTime.UtcNow;
 					return false;
 				}
@@ -1069,7 +1070,8 @@ namespace Questor.Modules.Actions
 			{
                 Logging.Log(WeAreInThisStateForLogs(), "ActivateCombatShip() Start", Logging.White);
                 MissionSettings.UseMissionShip = false;
-                MissionFitting currentMissionFitting = MissionSettings.FoundMissionFitting("return");
+                //MissionFitting currentMissionFitting = MissionSettings.FoundMissionFitting("return");
+                MissionFitting currentMissionFitting = MissionSettings.MissionFittingForThisMission;
 				if (string.IsNullOrEmpty(Combat.CombatShipName))
 				{
 					Logging.Log(WeAreInThisStateForLogs(), "Could not find CombatShipName: " + Combat.CombatShipName + " in settings!", Logging.Orange);
@@ -1124,9 +1126,9 @@ namespace Questor.Modules.Actions
                         Logging.Log(WeAreInThisStateForLogs(), "Unable to activate Combat Ship [" + Combat.CombatShipName + "]", Logging.White);
                         return false;
                     }
-                }
+				}
 
-                if (SwitchShipsOnly)
+				if (SwitchShipsOnly)
 				{
 					ChangeArmState(ArmState.Done, true);
 					SwitchShipsOnly = false;
